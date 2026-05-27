@@ -1,0 +1,100 @@
+http://serghei.net/docs/programming/c++/neural%20networks/ch14/399-402.html
+
+C++ Neural Networks and Fuzzy Logic 	 C++ Neural Networks and Fuzzy Logic
+by Valluru B. Rao
+M&T Books, IDG Books Worldwide, Inc.
+ISBN: 1558515526   Pub Date: 06/01/95  
+
+Previous 	Table of Contents 	Next
+
+
+Technical Analysis and Neural Network Preprocessing
+
+We cannot overstate the importance of preprocessing in developing a forecasting model. There is a large body of information related to the study of financial market behavior called Technical Analysis. You can use the mathematical studies defined by Technical Analysis to preprocess your input data to reveal predictive features. We will present a sampling of Technical Analysis studies that can be used, with formulae and graphs.
+Moving Averages
+
+Moving averages are used very widely to capture the underlying trend of a price move. Moving averages are simple filters that average data over a moving window. Popular moving averages include 5-, 10-, and 20 period moving averages. The formula is shown below for a simple moving average, SMA:
+
+     SMAt = ( Pt + Pt-1 + ...  Pt-n)/ n
+     where  n = the number of time periods back
+        P-n= price at n time periods back
+
+An exponential moving average is a weighted moving average that places more weight on the most recent data. The formula for this indicator, EMA is as follows:
+
+     EMAt = (1 - a)Pt + a ( EMAt-1)
+     where  a = smoothing constant  (typical 0.10)
+        Pt= price at time t
+
+Momentum and Rate of Change
+
+Momentum is really velocity, or rate of price change with time. The formula for this is
+
+     Mt =  ( Pt  -  Pt-a  )
+     where  a = lookback parameter
+     for a 5-day momentum value, a = 5
+
+The Rate of Change indicator is actually a ratio. It is the current price divided by the price some interval, a, ago divided by a constant. Specifically,
+
+     ROC = Pt / Pt-a  x 1000
+
+Relative Strength Index
+
+The Relative Strength Index (RSI) is the strength of up closes versus down closes over a certain time interval. It is calculated over a time interval T as :
+
+     RSI = 100 - [ 100 / (1 + RS )]
+     where  RS = average of x days. up closes/ average of x days. down
+  closes
+
+A typical time interval, T, is 14 days. The assumption with the use of RSI is that higher values up closes relative to down closes indicates a strong market, and the opposite indicates weak markets.
+Percentage R
+
+This indicator measures where in a recent range of prices today.s price falls. The indicator assumes that prices regress to their mean. A low %R indicates that prices are hitting the ceiling of a range, while a high %R indicates that prices are at their low in a range. The formula is:
+
+     %R = 100 x (HighX - P)/(HighX - LowX)
+     where  HighX is the highest price over the price interval of interest
+        LowX is the lowest price over the price interval of interest
+        P is the current price
+
+Herrick Payoff Index
+
+This indicator makes use of other market data that is available besides price information. It uses the volume of the security, which, for a stock, is the number of shares traded for a stock during a particular interval. It also uses the open interest, which is the value of the total number of open trades at a particular time. For a commodity future, this is the number of open short and long positions. This study attempts to measure the flow of money in and out of a market. The formula for this is as follows (note that a tick is the smallest permissible move in a given market) :
+
+     Let MP = mean price over a particular interval
+     OI = the larger of yesterday.s or today.s open interest
+
+then
+
+     K =[ (MPt - MPt-1 ) x dollar value of 1 tick move x volume ]
+       x [1 +/-  2/OI]
+     HPIt = HPIt-1  + [ 0.1 x (K -      HPIt-1 )] / 100,000
+
+MACD
+
+The MACD (moving average convergence divergence) indicator is the difference between two moving averages, and it tells you when short-term overbought or oversold conditions exist in the market. The formula is as follows:
+
+     Let OSC = EMA1 - EMA2,
+     where  EMA1 is for one smoothing constant and time period, for example
+     0.15 and 12   weeks
+          EMA2 is for another smoothing constant and time period,
+           for example
+     0.075 and 26   weeks
+
+then
+
+    MACDt = MACDt-1  + K x ( OSCt - MACDt-1 )
+    where K is a smoothing constant, for example, 0.2
+
+The final formula effectively does another exponential smoothing on the difference of the two moving averages, for example, over a 9-week period.
+.Stochastics.
+
+This indicator has absolutely nothing to do with stochastic processes. The reason for the name is a mystery, but the indicator is composed of two parts: %K and %D, which is a moving average of %K. The crossover of these lines indicates overbought and oversold areas. The formulas follow:
+
+     Raw %K = 100 x (P - LowX )/(HighX - LowX)
+     %Kt = [( %Kt-1   x 2  ) + Raw      %Kt ] /3
+     %Dt = [( %Dt-1   x 2  ) + %Kt ] /3
+
+
+Previous 	Table of Contents 	Next
+Copyright © IDG Books Worldwide, Inc.
+
+

@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `nutr_def`;
+CREATE TABLE `nutr_def` (, PRIMARY KEY ()) ENGINE=InnoDB;

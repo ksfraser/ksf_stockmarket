@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_dates`;
+CREATE TABLE `ck_dates` (, PRIMARY KEY ()) ENGINE=InnoDB;

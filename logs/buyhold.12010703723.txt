@@ -1,0 +1,1220 @@
+Updating user buyhold
+Adding $10000.00 to the portfolio
+Created transaction variable.  Adding transaction
+Created userBuy Hold
+5:46:24 BACKTEST [info] Setting symbol to IBM
+Jan 07 15:46:24 BACKTEST [info] Setting transactiondate to 2011-01-02
+Jan 07 15:46:24 BACKTEST [info] Setting startdate to 2011-01-02
+Jan 07 15:46:24 BACKTEST [info] Setting enddate to 2011-12-25
+Jan 07 15:46:24 BACKTEST [info] Setting number of shares to 0
+Jan 07 15:46:24 BACKTEST [info] Setting share cost to 0
+Jan 07 15:46:24 BACKTEST [info] Setting buybookvalue to 0
+Jan 07 15:46:24 BACKTEST [info] Setting winratio to 0
+Jan 07 15:46:24 BACKTEST [info] Setting loseratio to 0
+Jan 07 15:46:24 BACKTEST [info] Setting winsize to 0
+Jan 07 15:46:24 BACKTEST [info] Setting losesize to 0
+Jan 07 15:46:24 BACKTEST [info] Setting expectancy to 0
+Jan 07 15:46:24 BACKTEST [info] Setting successratio to 0
+Jan 07 15:46:24 BACKTEST [info] Setting transactionsets to 0
+Jan 07 15:46:24 BACKTEST [info] Setting lastaction to 
+Jan 07 15:46:24 BACKTEST [notice] RunStrategy Looping
+Jan 07 15:46:24 BACKTEST [notice] RunStrategy Start and End dates: 2011-01-02:2011-12-25
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Finding next trade date from 2011-01-02 for symbol IBM
+Jan 07 15:46:24 BACKTEST [info] Setting transactiondate to 2011-01-03
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Finding next trade date from 2011-01-03 for symbol IBM
+Jan 07 15:46:24 BACKTEST [info] Setting transactiondate to 2011-01-04
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Finding next trade date from 2011-01-04 for symbol IBM
+Jan 07 15:46:24 BACKTEST [info] Setting transactiondate to 2011-01-05
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Finding next trade date from 2011-01-05 for symbol IBM
+Jan 07 15:46:24 BACKTEST [info] Setting transactiondate to 2011-01-06
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Finding next trade date from 2011-01-06 for symbol IBM
+Jan 07 15:46:24 BACKTEST [info] Setting transactiondate to 2011-01-07
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Finding next trade date from 2011-01-07 for symbol IBM
+Jan 07 15:46:24 BACKTEST [info] Setting transactiondate to 2011-01-10
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Finding next trade date from 2011-01-10 for symbol IBM
+Jan 07 15:46:24 BACKTEST [info] Setting transactiondate to 2011-01-11
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:24 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-11 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-12
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-12 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-13
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-13 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-14
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-14 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-18
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-18 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-19
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-19 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-20
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-20 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-21
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-21 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-24
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-24 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-25
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-25 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-26
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-26 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-27
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-27 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-28
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-28 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-01-31
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-01-31 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-02-01
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-02-01 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-02-02
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-02-02 for symbol IBM
+Jan 07 15:46:25 BACKTEST [info] Setting transactiondate to 2011-02-03
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Setting action to None
+Jan 07 15:46:25 BACKTEST [info] Finding next trade date from 2011-02-03 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-04
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-04 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-07
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-07 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-08
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-08 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-09
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-09 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-10
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-10 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-11
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-11 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-14
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-14 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-15
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-15 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-16
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-16 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-17
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-17 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-18
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-18 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-22
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-22 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-23
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-23 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-24
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-24 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-25
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-25 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-02-28
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-02-28 for symbol IBM
+Jan 07 15:46:26 BACKTEST [info] Setting transactiondate to 2011-03-01
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Setting action to None
+Jan 07 15:46:26 BACKTEST [info] Finding next trade date from 2011-03-01 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-02
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-02 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-03
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-03 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-04
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-04 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-07
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-07 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-08
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-08 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-09
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-09 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-10
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-10 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-11
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-11 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-14
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-14 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-15
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-15 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-16
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-16 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-17
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-17 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-18
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-18 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-21
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-21 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-22
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-22 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-23
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-23 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-24
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Finding next trade date from 2011-03-24 for symbol IBM
+Jan 07 15:46:27 BACKTEST [info] Setting transactiondate to 2011-03-25
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:27 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-03-25 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-03-28
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-03-28 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-03-29
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-03-29 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-03-30
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-03-30 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-03-31
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-03-31 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-01
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-01 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-04
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-04 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-05
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-05 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-06
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-06 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-07
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-07 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-08
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-08 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-11
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-11 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-12
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-12 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-13
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-13 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-14
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-14 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-15
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-15 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-18
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-18 for symbol IBM
+Jan 07 15:46:28 BACKTEST [info] Setting transactiondate to 2011-04-19
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Setting action to None
+Jan 07 15:46:28 BACKTEST [info] Finding next trade date from 2011-04-19 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-04-20
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-04-20 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-04-21
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-04-21 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-04-25
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-04-25 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-04-26
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-04-26 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-04-27
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-04-27 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-04-28
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-04-28 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-04-29
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-04-29 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-05-02
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-05-02 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-05-03
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-05-03 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-05-04
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-05-04 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-05-05
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-05-05 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-05-06
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-05-06 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-05-09
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-05-09 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-05-10
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-05-10 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-05-11
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-05-11 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-05-12
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-05-12 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-05-13
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Finding next trade date from 2011-05-13 for symbol IBM
+Jan 07 15:46:29 BACKTEST [info] Setting transactiondate to 2011-05-16
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:29 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-05-16 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-05-17
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-05-17 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-05-18
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-05-18 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-05-19
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-05-19 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-05-20
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-05-20 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-05-23
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-05-23 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-05-24
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-05-24 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-05-25
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-05-25 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-05-26
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-05-26 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-05-27
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-05-27 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-05-31
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-05-31 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-06-01
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-06-01 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-06-02
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-06-02 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-06-03
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-06-03 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-06-06
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-06-06 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-06-07
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-06-07 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-06-08
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-06-08 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-06-09
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-06-09 for symbol IBM
+Jan 07 15:46:30 BACKTEST [info] Setting transactiondate to 2011-06-10
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Setting action to None
+Jan 07 15:46:30 BACKTEST [info] Finding next trade date from 2011-06-10 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-13
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-13 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-14
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-14 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-15
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-15 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-16
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-16 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-17
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-17 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-20
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-20 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-21
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-21 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-22
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-22 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-23
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-23 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-24
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-24 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-27
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-27 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-28
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-28 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-29
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-29 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-06-30
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-06-30 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-07-01
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-07-01 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-07-05
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-07-05 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-07-06
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-07-06 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-07-07
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Finding next trade date from 2011-07-07 for symbol IBM
+Jan 07 15:46:31 BACKTEST [info] Setting transactiondate to 2011-07-08
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:31 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-08 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-11
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-11 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-12
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-12 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-13
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-13 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-14
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-14 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-15
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-15 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-18
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-18 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-19
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-19 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-20
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-20 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-21
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-21 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-22
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-22 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-25
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-25 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-26
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-26 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-27
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-27 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-28
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-28 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-07-29
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-07-29 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-08-01
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-08-01 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-08-02
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-08-02 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-08-03
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-08-03 for symbol IBM
+Jan 07 15:46:32 BACKTEST [info] Setting transactiondate to 2011-08-04
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Setting action to None
+Jan 07 15:46:32 BACKTEST [info] Finding next trade date from 2011-08-04 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-05
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-05 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-08
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-08 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-09
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-09 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-10
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-10 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-11
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-11 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-12
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-12 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-15
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-15 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-16
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-16 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-17
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-17 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-18
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-18 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-19
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-19 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-22
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-22 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-23
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-23 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-24
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-24 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-25
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-25 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-26
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-26 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-29
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-29 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-30
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-30 for symbol IBM
+Jan 07 15:46:33 BACKTEST [info] Setting transactiondate to 2011-08-31
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Setting action to None
+Jan 07 15:46:33 BACKTEST [info] Finding next trade date from 2011-08-31 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-01
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-01 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-02
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-02 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-06
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-06 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-07
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-07 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-08
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-08 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-09
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-09 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-12
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-12 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-13
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-13 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-14
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-14 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-15
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-15 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-16
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-16 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-19
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-19 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-20
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-20 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-21
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-21 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-22
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-22 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-23
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-23 for symbol IBM
+Jan 07 15:46:34 BACKTEST [info] Setting transactiondate to 2011-09-26
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Setting action to None
+Jan 07 15:46:34 BACKTEST [info] Finding next trade date from 2011-09-26 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-09-27
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-09-27 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-09-28
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-09-28 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-09-29
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-09-29 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-09-30
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-09-30 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-03
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-03 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-04
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-04 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-05
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-05 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-06
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-06 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-07
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-07 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-10
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-10 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-11
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-11 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-12
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-12 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-13
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-13 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-14
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-14 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-17
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-17 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-18
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-18 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-19
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-19 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-20
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-20 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-21
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-21 for symbol IBM
+Jan 07 15:46:35 BACKTEST [info] Setting transactiondate to 2011-10-24
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Setting action to None
+Jan 07 15:46:35 BACKTEST [info] Finding next trade date from 2011-10-24 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-10-25
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-10-25 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-10-26
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-10-26 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-10-27
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-10-27 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-10-28
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-10-28 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-10-31
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-10-31 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-01
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-01 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-02
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-02 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-03
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-03 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-04
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-04 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-07
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-07 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-08
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-08 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-09
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-09 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-10
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-10 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-11
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-11 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-14
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-14 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-15
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-15 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-16
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-16 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-17
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-17 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-18
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-18 for symbol IBM
+Jan 07 15:46:36 BACKTEST [info] Setting transactiondate to 2011-11-21
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Setting action to None
+Jan 07 15:46:36 BACKTEST [info] Finding next trade date from 2011-11-21 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-11-22
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Finding next trade date from 2011-11-22 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-11-23
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Finding next trade date from 2011-11-23 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-11-25
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Finding next trade date from 2011-11-25 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-11-28
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Finding next trade date from 2011-11-28 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-11-29
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Finding next trade date from 2011-11-29 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-11-30
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Finding next trade date from 2011-11-30 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-12-01
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Finding next trade date from 2011-12-01 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-12-02
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Finding next trade date from 2011-12-02 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-12-05
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Finding next trade date from 2011-12-05 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-12-06
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Finding next trade date from 2011-12-06 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-12-07
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Finding next trade date from 2011-12-07 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-12-08
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Finding next trade date from 2011-12-08 for symbol IBM
+Jan 07 15:46:37 BACKTEST [info] Setting transactiondate to 2011-12-09
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Setting action to None
+Jan 07 15:46:37 BACKTEST [info] Shares for IBM on 2011-12-09 cost 193.635 H/L: 194.87:192.4
+Jan 07 15:46:37 BACKTEST [info] Setting share cost to 193.635
+Jan 07 15:46:37 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 15:46:37 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 07 15:46:37 BACKTEST [info] Setting number of shares to 0
+Jan 07 15:46:37 BACKTEST [info] Setting endcash to 10000
+Jan 07 15:46:37 BACKTEST [info] Setting successratio to 
+Jan 07 15:46:37 BACKTEST [info] Setting expectancy to 0
+Jan 07 15:46:37 BACKTEST [notice] Ending cash available after selling stocks: $10000 for a yield of 1 with a success ratio of  and an expectancy of $0 for each trade

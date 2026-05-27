@@ -1,0 +1,33 @@
+Setting cash to 10000.00
+Setting symbol to IBM
+Setting transactiondate to 2011-01-02
+Setting enddate to 2011-12-25
+Setting number of shares to 0
+Setting share cost to 0
+Adding user candlestick_simple
+Adding $10000.00 to the portfolio
+Created transaction variable.  Adding transaction
+Created userCandlestick Simple
+RunStrategy Looping
+Setting action to None
+Finding next trade date from 2011-01-02 for symbol IBM
+Setting transactiondate to 2011-01-03
+Candlestick Yesterday_Doji has action Alert and VALUE  50
+1 candlesticks with a total of 50 for average 50
+Setting action to None
+Setting action to None
+Finding next trade date from 2011-01-03 for symbol IBM
+Setting transactiondate to 2011-01-04
+Candlestick Doji has action Alert and VALUE  50
+Candlestick White_Doji has action sellstock and VALUE  1
+Candlestick Doji_Near has action Alert and VALUE  50
+3 candlesticks with a total of 101 for average 33.666666666667
+Setting action to sellstock
+tion to None
+Jan 04 18:57:38 BACKTEST [notice] Finding next trade date from 2011-01-03 for symbol IBM
+Jan 04 18:57:38 BACKTEST [notice] Setting transactiondate to 2011-01-04
+Jan 04 18:57:38 BACKTEST [notice] Candlestick Doji has action Alert and VALUE  50
+Jan 04 18:57:38 BACKTEST [notice] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 04 18:57:38 BACKTEST [notice] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 04 18:57:38 BACKTEST [notice] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 04 18:57:38 BACKTEST [notice] Setting action to sellstock

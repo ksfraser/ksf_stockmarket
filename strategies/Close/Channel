@@ -1,0 +1,6 @@
+A Channel is when you have both a short and a long position
+
+This Channel Breakout exit strategy close a position once the lower level
+has been triggered for a long position, as well as the upper level for a
+short position.
+

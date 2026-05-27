@@ -1,0 +1,92 @@
+/*<![CDATA[*/
+        /* =======
+        Template CSS
+	Add tooltips through 
+		text	<a class="info" href="">Text<span>tip</span></a>
+		images	<a class="info" href="javascript:void(0)">Text<span>tip<img src="file.jpg" alt="text" /></span></a>
+
+        ============*/
+
+        #* html { margin:0; padding:0;}
+        #html, body { height: 100%; }
+        #wrapper { min-height: 100%; }   /* div you want to stretch */
+        #body { margin:0 auto; text-align:center; background-color: #eeddbb; }
+        #p { margin: 1em; padding:1em; text-align:left }
+        #wrapper { margin: 0 auto; width:1000px; background-color: #ffeecc; border: 1px solid #666666; }
+        #header { margin: 1em 0; text-align:center; border-bottom: 1px solid #666666; }
+        #header h1 { margin: 1em 0; }
+        #footer { margin: 1em auto; padding: 1em; text-align:center; border-top: 1px solid #666666; }
+        #footer a { margin: 1em auto; padding: .15em; }
+        /* =======
+        Page specific CSS Below this line
+        ============*/
+
+
+        #h1,h2 {
+        #text-align:center;
+        #}
+
+        #h3 {
+        #text-decoration: underline;
+        #text-align: left;
+        #margin-left:5em;
+        #}
+
+        #h4 {
+        #margin: .5em 5em;
+        #text-align: left;
+        #}
+
+        #p {
+        #margin: 4px 5em;   /* ==> left and right margins are critical. see notes on page */
+        #padding: 4px 10px;
+        #text-align:justify;
+
+        #}
+
+        /*
+        =================================
+        start of Tooltip css code here
+        ================================= */
+
+        a.info{
+        position:relative;           /*this is the key*/
+        z-index:24;
+        background-color:#e0e0e0;    /* background colour of display text */
+        color:#000000;               /* colour of display text */
+        border:1px dotted #999;    /* border colour */
+        text-decoration:none;
+        font-style:italic;
+        }
+
+        a.info:hover {
+        z-index:25;
+        background-color:#ffff66;
+
+        }
+
+        a.info span{
+        display: none;  /* hide the span text using this css */
+        }
+
+        a.info:hover span{ /*the span will display just on :hover state*/
+        display:block;
+        position:absolute;
+        top: 1.5em;
+        left: 3em;
+        width:15em;
+        border:1px solid #ff0000; /* border colour */
+        background-color:#ffff99; /* background colour here */
+        color:#000000;         /* text colour */
+        text-align: center;
+        font-size: .8em;
+        font-style:italic;
+        z-index:30;
+        }
+
+        .images {
+        vertical-align:bottom;
+        }
+
+
+        /*]]>*/

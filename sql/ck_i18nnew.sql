@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_i18nnew`;
+CREATE TABLE `ck_i18nnew` (, PRIMARY KEY ()) ENGINE=InnoDB;

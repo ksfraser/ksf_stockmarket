@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `groups`;
+CREATE TABLE `groups` (, PRIMARY KEY ()) ENGINE=InnoDB;

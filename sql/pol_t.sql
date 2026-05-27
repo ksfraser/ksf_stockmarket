@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `pol_t`;
+CREATE TABLE `pol_t` (, PRIMARY KEY ()) ENGINE=InnoDB;

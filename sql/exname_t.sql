@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `exname_t`;
+CREATE TABLE `exname_t` (, PRIMARY KEY ()) ENGINE=InnoDB;

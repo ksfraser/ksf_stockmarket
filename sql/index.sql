@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `index`;
+CREATE TABLE `index` (, PRIMARY KEY ()) ENGINE=InnoDB;

@@ -1,0 +1,17 @@
+Use limit orders, not market orders.  Ensures a more guaranteed price reducing slip.
+
+In fast moving markets, wait until the price stabilizes before placing the limit order.
+Limit orders don't influence the market.
+On price bounces (random moves) place the limit at the bottom of the bounce.
+
+Buy strength, Sell Weakness
+
+If a bunch of signals come all at once, buy the strongest market and sell the weakest.  This also considers volume and liquidity.
+
+One way of determining strength is to determing how many N the price has moved since the breakout, and buy the market with the most N.
+
+Another to normalize markets: (Current price - close90) / CurrentN  
+Stronger have higher values
+
+
+

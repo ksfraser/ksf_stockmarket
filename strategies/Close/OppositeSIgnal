@@ -1,0 +1,5 @@
+
+
+Close a short on a stock if a BUY signal is recieved for that same stock
+
+sell a stock if a SHORT signal is recieved for that same stock

@@ -1,0 +1,1061 @@
+/* */
+#include "ta-lib/c/include/ta_func.h"
+#include "ta-lib/c/include/ta_libc.h"
+#include "stdlib.h"
+#include "stdio.h"
+#include "string.h"
+#include "../../ta-lib.example.h"
+#include "ksf_cdl.h"
+/* */
+/* */
+/*func*/ TA_CDL_DAT * calcCandlesticks( FILE *pfLogfile, int startIdx, int endIdx, TA_Real *openPrice, TA_Real *highPrice, TA_Real *lowPrice, TA_Real *closePrice, TA_CDL_DAT *cdldataarray, const TA_DAT dataarray ) {
+	TA_RetCode retCode;
+	int i;
+	int outBeg;
+	int outNbElement;
+	int iout[MAXROWS];
+	double doptInPenetration;
+	fprintf( pfLogfile, "%i TA_CDL2CROWS\n", __LINE__ );
+	retCode = TA_CDL2CROWS( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDL2CROWS = iout[i];
+		strcpy( cdldataarray[outBeg+i].symbol, dataarray[outBeg+i].symbol);
+		strcpy( cdldataarray[outBeg+i].date, dataarray[outBeg+i].date);
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDL3BLACKCROWS\n", __LINE__ );
+	retCode = TA_CDL3BLACKCROWS( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDL3BLACKCROWS = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDL3INSIDE\n", __LINE__ );
+	retCode = TA_CDL3INSIDE( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDL3INSIDE = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDL3LINESTRIKE\n", __LINE__ );
+	retCode = TA_CDL3LINESTRIKE( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDL3LINESTRIKE = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDL3OUTSIDE\n", __LINE__ );
+	retCode = TA_CDL3OUTSIDE( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDL3OUTSIDE = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDL3STARSINSOUTH\n", __LINE__ );
+	retCode = TA_CDL3STARSINSOUTH( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDL3STARSINSOUTH = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDL3WHITESOLDIERS\n", __LINE__ );
+	retCode = TA_CDL3WHITESOLDIERS( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDL3WHITESOLDIERS = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLADVANCEBLOCK\n", __LINE__ );
+	retCode = TA_CDLADVANCEBLOCK( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLADVANCEBLOCK = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLBELTHOLD\n", __LINE__ );
+	retCode = TA_CDLBELTHOLD( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLBELTHOLD = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLBREAKAWAY\n", __LINE__ );
+	retCode = TA_CDLBREAKAWAY( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLBREAKAWAY = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLCLOSINGMARUBOZU\n", __LINE__ );
+	retCode = TA_CDLCLOSINGMARUBOZU( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLCLOSINGMARUBOZU = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLCONCEALBABYSWALL\n", __LINE__ );
+	retCode = TA_CDLCONCEALBABYSWALL( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLCONCEALBABYSWALL = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLCOUNTERATTACK\n", __LINE__ );
+	retCode = TA_CDLCOUNTERATTACK( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLCOUNTERATTACK = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLDOJI\n", __LINE__ );
+	retCode = TA_CDLDOJI( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLDOJI = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLDOJISTAR\n", __LINE__ );
+	retCode = TA_CDLDOJISTAR( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLDOJISTAR = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLDRAGONFLYDOJI\n", __LINE__ );
+	retCode = TA_CDLDRAGONFLYDOJI( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLDRAGONFLYDOJI = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLENGULFING\n", __LINE__ );
+	retCode = TA_CDLENGULFING( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLENGULFING = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLGAPSIDESIDEWHITE\n", __LINE__ );
+	retCode = TA_CDLGAPSIDESIDEWHITE( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLGAPSIDESIDEWHITE = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLGRAVESTONEDOJI\n", __LINE__ );
+	retCode = TA_CDLGRAVESTONEDOJI( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLGRAVESTONEDOJI = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLHAMMER\n", __LINE__ );
+	retCode = TA_CDLHAMMER( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLHAMMER = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLHANGINGMAN\n", __LINE__ );
+	retCode = TA_CDLHANGINGMAN( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLHANGINGMAN = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLHARAMICROSS\n", __LINE__ );
+	retCode = TA_CDLHARAMICROSS( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLHARAMICROSS = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLHARAMI\n", __LINE__ );
+	retCode = TA_CDLHARAMI( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLHARAMI = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLHIGHWAVE\n", __LINE__ );
+	retCode = TA_CDLHIGHWAVE( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLHIGHWAVE = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLHIKKAKEMOD\n", __LINE__ );
+	retCode = TA_CDLHIKKAKEMOD( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLHIKKAKEMOD = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLHIKKAKE\n", __LINE__ );
+	retCode = TA_CDLHIKKAKE( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLHIKKAKE = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLHOMINGPIGEON\n", __LINE__ );
+	retCode = TA_CDLHOMINGPIGEON( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLHOMINGPIGEON = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLIDENTICAL3CROWS\n", __LINE__ );
+	retCode = TA_CDLIDENTICAL3CROWS( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLIDENTICAL3CROWS = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLINNECK\n", __LINE__ );
+	retCode = TA_CDLINNECK( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLINNECK = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLINVERTEDHAMMER\n", __LINE__ );
+	retCode = TA_CDLINVERTEDHAMMER( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLINVERTEDHAMMER = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLKICKINGBYLENGTH\n", __LINE__ );
+	retCode = TA_CDLKICKINGBYLENGTH( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLKICKINGBYLENGTH = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLKICKING\n", __LINE__ );
+	retCode = TA_CDLKICKING( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLKICKING = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLLADDERBOTTOM\n", __LINE__ );
+	retCode = TA_CDLLADDERBOTTOM( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLLADDERBOTTOM = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLLONGLEGGEDDOJI\n", __LINE__ );
+	retCode = TA_CDLLONGLEGGEDDOJI( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLLONGLEGGEDDOJI = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLLONGLINE\n", __LINE__ );
+	retCode = TA_CDLLONGLINE( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLLONGLINE = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLMARUBOZU\n", __LINE__ );
+	retCode = TA_CDLMARUBOZU( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLMARUBOZU = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLMATCHINGLOW\n", __LINE__ );
+	retCode = TA_CDLMATCHINGLOW( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLMATCHINGLOW = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLONNECK\n", __LINE__ );
+	retCode = TA_CDLONNECK( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLONNECK = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLPIERCING\n", __LINE__ );
+	retCode = TA_CDLPIERCING( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLPIERCING = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLRICKSHAWMAN\n", __LINE__ );
+	retCode = TA_CDLRICKSHAWMAN( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLRICKSHAWMAN = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLRISEFALL3METHODS\n", __LINE__ );
+	retCode = TA_CDLRISEFALL3METHODS( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLRISEFALL3METHODS = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLSEPARATINGLINES\n", __LINE__ );
+	retCode = TA_CDLSEPARATINGLINES( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLSEPARATINGLINES = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLSHOOTINGSTAR\n", __LINE__ );
+	retCode = TA_CDLSHOOTINGSTAR( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLSHOOTINGSTAR = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLSHORTLINE\n", __LINE__ );
+	retCode = TA_CDLSHORTLINE( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLSHORTLINE = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLSPINNINGTOP\n", __LINE__ );
+	retCode = TA_CDLSPINNINGTOP( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLSPINNINGTOP = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLSTALLEDPATTERN\n", __LINE__ );
+	retCode = TA_CDLSTALLEDPATTERN( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLSTALLEDPATTERN = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLSTICKSANDWICH\n", __LINE__ );
+	retCode = TA_CDLSTICKSANDWICH( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLSTICKSANDWICH = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLTAKURI\n", __LINE__ );
+	retCode = TA_CDLTAKURI( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLTAKURI = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLTASUKIGAP\n", __LINE__ );
+	retCode = TA_CDLTASUKIGAP( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLTASUKIGAP = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLTHRUSTING\n", __LINE__ );
+	retCode = TA_CDLTHRUSTING( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLTHRUSTING = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLTRISTAR\n", __LINE__ );
+	retCode = TA_CDLTRISTAR( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLTRISTAR = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLUNIQUE3RIVER\n", __LINE__ );
+	retCode = TA_CDLUNIQUE3RIVER( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLUNIQUE3RIVER = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLUPSIDEGAP2CROWS\n", __LINE__ );
+	retCode = TA_CDLUPSIDEGAP2CROWS( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLUPSIDEGAP2CROWS = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLXSIDEGAP3METHODS\n", __LINE__ );
+	retCode = TA_CDLXSIDEGAP3METHODS( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLXSIDEGAP3METHODS = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLABANDONEDBABY\n", __LINE__ );
+	retCode = TA_CDLABANDONEDBABY( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], doptInPenetration, &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLABANDONEDBABY = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLDARKCLOUDCOVER\n", __LINE__ );
+	retCode = TA_CDLDARKCLOUDCOVER( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], doptInPenetration, &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLDARKCLOUDCOVER = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLEVENINGDOJISTAR\n", __LINE__ );
+	retCode = TA_CDLEVENINGDOJISTAR( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], doptInPenetration, &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLEVENINGDOJISTAR = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLEVENINGSTAR\n", __LINE__ );
+	retCode = TA_CDLEVENINGSTAR( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], doptInPenetration, &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLEVENINGSTAR = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLMATHOLD\n", __LINE__ );
+	retCode = TA_CDLMATHOLD( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], doptInPenetration, &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLMATHOLD = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLMORNINGDOJISTAR\n", __LINE__ );
+	retCode = TA_CDLMORNINGDOJISTAR( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], doptInPenetration, &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLMORNINGDOJISTAR = iout[i];
+	}
+	
+	fprintf( pfLogfile, "%i TA_CDLMORNINGSTAR\n", __LINE__ );
+	retCode = TA_CDLMORNINGSTAR( startIdx, endIdx, &openPrice[0], &highPrice[0], &lowPrice[0], &closePrice[0], doptInPenetration, &outBeg, &outNbElement, &iout[0]); 
+	for( i=0; i < outNbElement; i++ )
+	{
+		cdldataarray[outBeg+i].CDLMORNINGSTAR = iout[i];
+	}
+	
+	return cdldataarray;
+}
+/*func*/ char * createQueryCandlesticks( TA_CDL_DAT* cdldataarray, int icdlcount, char *query_setfields, int setfields_size, char *query_setdata ) {
+	int ifieldcount = 0;
+		if( cdldataarray[icdlcount].CDL2CROWS != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDL2CROWS='%f'", cdldataarray[icdlcount].CDL2CROWS );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDL3BLACKCROWS != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDL3BLACKCROWS='%f'", cdldataarray[icdlcount].CDL3BLACKCROWS );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDL3INSIDE != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDL3INSIDE='%f'", cdldataarray[icdlcount].CDL3INSIDE );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDL3LINESTRIKE != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDL3LINESTRIKE='%f'", cdldataarray[icdlcount].CDL3LINESTRIKE );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDL3OUTSIDE != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDL3OUTSIDE='%f'", cdldataarray[icdlcount].CDL3OUTSIDE );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDL3STARSINSOUTH != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDL3STARSINSOUTH='%f'", cdldataarray[icdlcount].CDL3STARSINSOUTH );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDL3WHITESOLDIERS != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDL3WHITESOLDIERS='%f'", cdldataarray[icdlcount].CDL3WHITESOLDIERS );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLABANDONEDBABY != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLABANDONEDBABY='%f'", cdldataarray[icdlcount].CDLABANDONEDBABY );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLADVANCEBLOCK != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLADVANCEBLOCK='%f'", cdldataarray[icdlcount].CDLADVANCEBLOCK );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLBELTHOLD != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLBELTHOLD='%f'", cdldataarray[icdlcount].CDLBELTHOLD );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLBREAKAWAY != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLBREAKAWAY='%f'", cdldataarray[icdlcount].CDLBREAKAWAY );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLCLOSINGMARUBOZU != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLCLOSINGMARUBOZU='%f'", cdldataarray[icdlcount].CDLCLOSINGMARUBOZU );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLCONCEALBABYSWALL != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLCONCEALBABYSWALL='%f'", cdldataarray[icdlcount].CDLCONCEALBABYSWALL );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLCOUNTERATTACK != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLCOUNTERATTACK='%f'", cdldataarray[icdlcount].CDLCOUNTERATTACK );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLDARKCLOUDCOVER != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLDARKCLOUDCOVER='%f'", cdldataarray[icdlcount].CDLDARKCLOUDCOVER );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLDOJI != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLDOJI='%f'", cdldataarray[icdlcount].CDLDOJI );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLDOJISTAR != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLDOJISTAR='%f'", cdldataarray[icdlcount].CDLDOJISTAR );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLDRAGONFLYDOJI != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLDRAGONFLYDOJI='%f'", cdldataarray[icdlcount].CDLDRAGONFLYDOJI );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLENGULFING != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLENGULFING='%f'", cdldataarray[icdlcount].CDLENGULFING );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLEVENINGDOJISTAR != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLEVENINGDOJISTAR='%f'", cdldataarray[icdlcount].CDLEVENINGDOJISTAR );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLEVENINGSTAR != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLEVENINGSTAR='%f'", cdldataarray[icdlcount].CDLEVENINGSTAR );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLGAPSIDESIDEWHITE != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLGAPSIDESIDEWHITE='%f'", cdldataarray[icdlcount].CDLGAPSIDESIDEWHITE );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLGRAVESTONEDOJI != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLGRAVESTONEDOJI='%f'", cdldataarray[icdlcount].CDLGRAVESTONEDOJI );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLHAMMER != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLHAMMER='%f'", cdldataarray[icdlcount].CDLHAMMER );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLHANGINGMAN != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLHANGINGMAN='%f'", cdldataarray[icdlcount].CDLHANGINGMAN );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLHARAMICROSS != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLHARAMICROSS='%f'", cdldataarray[icdlcount].CDLHARAMICROSS );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLHARAMI != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLHARAMI='%f'", cdldataarray[icdlcount].CDLHARAMI );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLHIGHWAVE != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLHIGHWAVE='%f'", cdldataarray[icdlcount].CDLHIGHWAVE );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLHIKKAKEMOD != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLHIKKAKEMOD='%f'", cdldataarray[icdlcount].CDLHIKKAKEMOD );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLHIKKAKE != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLHIKKAKE='%f'", cdldataarray[icdlcount].CDLHIKKAKE );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLHOMINGPIGEON != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLHOMINGPIGEON='%f'", cdldataarray[icdlcount].CDLHOMINGPIGEON );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLIDENTICAL3CROWS != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLIDENTICAL3CROWS='%f'", cdldataarray[icdlcount].CDLIDENTICAL3CROWS );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLINNECK != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLINNECK='%f'", cdldataarray[icdlcount].CDLINNECK );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLINVERTEDHAMMER != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLINVERTEDHAMMER='%f'", cdldataarray[icdlcount].CDLINVERTEDHAMMER );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLKICKINGBYLENGTH != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLKICKINGBYLENGTH='%f'", cdldataarray[icdlcount].CDLKICKINGBYLENGTH );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLKICKING != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLKICKING='%f'", cdldataarray[icdlcount].CDLKICKING );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLLADDERBOTTOM != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLLADDERBOTTOM='%f'", cdldataarray[icdlcount].CDLLADDERBOTTOM );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLLONGLEGGEDDOJI != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLLONGLEGGEDDOJI='%f'", cdldataarray[icdlcount].CDLLONGLEGGEDDOJI );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLLONGLINE != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLLONGLINE='%f'", cdldataarray[icdlcount].CDLLONGLINE );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLMARUBOZU != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLMARUBOZU='%f'", cdldataarray[icdlcount].CDLMARUBOZU );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLMATCHINGLOW != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLMATCHINGLOW='%f'", cdldataarray[icdlcount].CDLMATCHINGLOW );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLMATHOLD != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLMATHOLD='%f'", cdldataarray[icdlcount].CDLMATHOLD );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLMORNINGDOJISTAR != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLMORNINGDOJISTAR='%f'", cdldataarray[icdlcount].CDLMORNINGDOJISTAR );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLMORNINGSTAR != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLMORNINGSTAR='%f'", cdldataarray[icdlcount].CDLMORNINGSTAR );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLONNECK != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLONNECK='%f'", cdldataarray[icdlcount].CDLONNECK );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLPIERCING != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLPIERCING='%f'", cdldataarray[icdlcount].CDLPIERCING );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLRICKSHAWMAN != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLRICKSHAWMAN='%f'", cdldataarray[icdlcount].CDLRICKSHAWMAN );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLRISEFALL3METHODS != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLRISEFALL3METHODS='%f'", cdldataarray[icdlcount].CDLRISEFALL3METHODS );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLSEPARATINGLINES != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLSEPARATINGLINES='%f'", cdldataarray[icdlcount].CDLSEPARATINGLINES );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLSHOOTINGSTAR != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLSHOOTINGSTAR='%f'", cdldataarray[icdlcount].CDLSHOOTINGSTAR );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLSHORTLINE != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLSHORTLINE='%f'", cdldataarray[icdlcount].CDLSHORTLINE );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLSPINNINGTOP != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLSPINNINGTOP='%f'", cdldataarray[icdlcount].CDLSPINNINGTOP );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLSTALLEDPATTERN != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLSTALLEDPATTERN='%f'", cdldataarray[icdlcount].CDLSTALLEDPATTERN );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLSTICKSANDWICH != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLSTICKSANDWICH='%f'", cdldataarray[icdlcount].CDLSTICKSANDWICH );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLTAKURI != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLTAKURI='%f'", cdldataarray[icdlcount].CDLTAKURI );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLTASUKIGAP != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLTASUKIGAP='%f'", cdldataarray[icdlcount].CDLTASUKIGAP );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLTHRUSTING != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLTHRUSTING='%f'", cdldataarray[icdlcount].CDLTHRUSTING );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLTRISTAR != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLTRISTAR='%f'", cdldataarray[icdlcount].CDLTRISTAR );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLUNIQUE3RIVER != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLUNIQUE3RIVER='%f'", cdldataarray[icdlcount].CDLUNIQUE3RIVER );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLUPSIDEGAP2CROWS != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLUPSIDEGAP2CROWS='%f'", cdldataarray[icdlcount].CDLUPSIDEGAP2CROWS );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+		
+		if( cdldataarray[icdlcount].CDLXSIDEGAP3METHODS != 0 )
+		{
+			if( ifieldcount > 0 )
+				strcat( query_setdata,  ", " );
+			memset( query_setfields, 0, setfields_size );
+			sprintf( query_setfields, "CDLXSIDEGAP3METHODS='%f'", cdldataarray[icdlcount].CDLXSIDEGAP3METHODS );
+			strcat( query_setdata, query_setfields );
+			ifieldcount++;
+		}
+	return query_setdata;
+}

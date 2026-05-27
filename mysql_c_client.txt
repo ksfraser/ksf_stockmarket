@@ -1,0 +1,10 @@
+Initialize the MySQL library by calling mysql_library_init(). This function exists in both the mysqlclient C client library and the mysqld embedded server library, so it is used whether you build a regular client program by linking with the -libmysqlclient flag, or an embedded server application by linking with the -libmysqld flag. 
+
+Initialize a connection handler by calling mysql_init() and connect to the server by calling mysql_real_connect(). 
+
+Issue SQL statements and process their results. (The following discussion provides more information about how to do this.) 
+
+Close the connection to the MySQL server by calling mysql_close(). 
+
+End use of the MySQL library by calling mysql_library_end(). 
+

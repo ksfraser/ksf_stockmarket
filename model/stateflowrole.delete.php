@@ -1,0 +1,5 @@
+<?php
+$thisclass = 'stateflowrole' ;
+$mode = "delete";
+require_once( '../controller/controller.php');
+?>

@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ftx_t`;
+CREATE TABLE `ftx_t` (, PRIMARY KEY ()) ENGINE=InnoDB;

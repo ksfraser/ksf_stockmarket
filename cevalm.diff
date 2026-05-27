@@ -1,0 +1,123 @@
+3,16d2
+< /***************************************************************
+< *
+< *	Calculate the scores that Buffet uses to evaluate stocks
+< *
+< *	Depends on
+< *		Having recent up to date BOND rates in table bondrate
+< *		Up to date currentprice in stockinfo
+< *		Up to date outstanding shares in fin_statement
+< *		Up to date incomegrowth in fin_statement
+< *		Up to date ownersearnings in fin_statement
+< *		fin_statment was updated in the last 35 days.
+< *
+< ****************************************************************/
+< 
+18c4
+< require_once( '../../local.php' );
+---
+> require_once( '../local.php' );
+25,29c11,14
+< require_once( '../../model/evalmarket.class.php' );
+< require_once( '../../model/evalfinancial.class.php' );
+< require_once( '../../model/fin_statement.class.php' );
+< require_once( '../../model/bondrate.class.php' );
+< require_once( '../../model/investorplace.class.php' );
+---
+> require_once( 'evalmarket.class.php' );
+> require_once( 'evalfinancial.class.php' );
+> require_once( 'fin_statement.class.php' );
+> require_once( 'bondrate.class.php' );
+31d15
+< $investorplace = new investorplace();
+33,41d16
+< 
+< /*****************************************
+< *
+< *	Get the next 10 years bond rates
+< *	to be used to calculate the risk
+< *	free return rate so that the future
+< *	value of the company can be calculated
+< *
+< ****************************************/
+47,50d21
+< /*****************************************
+< *	End BOND RATE SELECT
+< *****************************************/
+< 
+53,55c24,39
+< 
+< 
+< //value, marketcap, marginsafety, netvalue
+---
+> 		//idstockinfo
+> 		//ownerearnings
+> 		//retainearningsmv
+> 		//debtratio	totaldebt/totalassets
+> 		//acceptabledebt netincome/revenue
+> 		//roe  net_income/shareholder_equity - 15-20% is attractive investment
+> 		//lowcost operating margin > 10%
+> 
+> 		//ROA - net income / total assets - how well managemtn is using the company resources.
+> 		//ROCE (return on captial employed) = Net income/(Debt + shareholder equity)
+> 		//Profit Margins
+> 		//	Gross Profit Margin = Gross profit/Net Sales (revenue)
+> 		//	Operating = Operating profit/Net Sales
+> 		//		As the management controls the operating expenses, this value tells how well management is doing
+> 		//	Pretax = pretax profit/net sales
+> 		//	Net = Net Income/Net Sales
+60c44,45
+< 
+---
+> //ownerearnings =  netincome + depreciation + depletion + amortization - capitalexpenses - workingcapital
+> //update evalmarket set ownerearnings =  netincome + depreciation + depletion + amortization - capitalexpenses - workingcapital
+65,77c50
+< $finstatement->querystring = '
+< SELECT 	distinct(f.idstockinfo) as idstockinfo, 
+< 	f.outstandingshares * s.currentprice as marketcap, 
+< 	f.outstandingshares as outstandingshares, 
+< 	f.incomegrowth as incomegrowth,
+< 	f.ownerearnings as ownerearnings,
+< 	s.currentprice / f.earningpershare as pe
+< FROM 	stockinfo s, 
+< 	fin_statement f 
+< WHERE s.idstockinfo = f.idstockinfo
+< 	and f.lasteval > DATE_SUB(now(), INTERVAL 35 day)
+< ORDER BY f.lasteval desc';
+< 
+---
+> $finstatement->querystring = 'SELECT f.idstockinfo as idstockinfo, f.outstandingshares * currentprice as marketcap, f.netincome + f.depreciation + f.depletion + f.amortization - f.capitalexpenses - f.workingcapital as ownerearnings, f.netincome as netincome, f.depreciation as depreciation, f.depletion as depletion, f.amortization as amortization, f.capitalexpenses as capitalexpense, f.outstandingshares as outstandingshares, f.totaldebt / f.totalasset as debtratio, f.netincome / f.totalequity as roe, netincome / revenue as acceptabledebt, f.incomegrowth as growthrate FROM stockinfo s, fin_statement f where s.idstockinfo = f.idstockinfo';
+85c58
+< 	//$update['value'] = 100 * 1000000 * $update['ownerearnings'] / ( $discountrate - $update['incomegrowth'] );
+---
+> 	//$update['value'] = 100 * 1000000 * $update['ownerearnings'] / ( $discountrate - $update['growthrate'] );
+91c64
+< 	$growth = $update['incomegrowth'];
+---
+> 	$growth = $update['growthrate'];
+96c69
+< //	echo "growth = update['incomegrowth']: $growth\n";
+---
+> //	echo "growth = update['growthrate']: $growth\n";
+104,105d76
+< 		if( $discount < 10 )
+< 			$discount = 10;
+121,122c92,93
+< //	echo "Growth Rate: " . $update['incomegrowth'] . "\n";
+< 	if ($discountrate - $update['incomegrowth'] <> 0)
+---
+> //	echo "Growth Rate: " . $update['growthrate'] . "\n";
+> 	if ($discountrate - $update['growthrate'] <> 0)
+124c95
+< 		$update['value'] = $futurevalue + $discounted / ( $discountrate - $update['incomegrowth'] ) ;
+---
+> 		$update['value'] = $futurevalue + $discounted / ( $discountrate - $update['growthrate'] ) ;
+140,141c111,112
+< 	//var_dump( $update );
+< 	//sleep( 5 );
+---
+> 	var_dump( $update );
+> 	sleep( 5 );
+144,145d114
+< 	$investorplace->Insert( $update );
+< 	

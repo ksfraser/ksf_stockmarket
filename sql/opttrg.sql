@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `opttrg`;
+CREATE TABLE `opttrg` (, PRIMARY KEY ()) ENGINE=InnoDB;

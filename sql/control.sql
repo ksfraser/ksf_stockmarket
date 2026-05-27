@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `control`;
+CREATE TABLE `control` (, PRIMARY KEY ()) ENGINE=InnoDB;

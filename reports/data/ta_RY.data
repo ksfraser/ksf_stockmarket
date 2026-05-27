@@ -1,0 +1,7 @@
+#Header line 	date 	day_close 	typicalprice 	movingaverage50 	movingaverage200 	candlestick 	expmovingaverage9 	expmovingaverage12 	expmovingaverage26 	macd 	momentumoscillator 	mamomentum 	macrossover 	macenterlinecrossover 	priceoscillator 	macd_histogram 	linearregression 	linearregressionangle 	linearregressionslope 	linearregressionintercept 	stochastic 	relativestrenghtindex 	rsioscillator 	commoditychannelindex 	pricechangepercent 	volume12 	volume26 	volume90 	support12 	support26 	resistance12 	resistance26 	bollingerbandmiddle 	bollingerbandupper 	bollingerbandlower 	bollingerpercentb 	bollingerbandwidth 	coefficientofvariation 	movingaverage260 	standarddeviation260 	annualreturn 	annualrisk 	truerange 	expmovingaverage90 	voltrendind90 	voltrendind26 	volume260 	voltrendind260
+RY	2010-08-13	0	0	0	0	Doji_Near	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		1
+RY	2010-08-13	0	0	0	0	Black_Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		2
+RY	2010-08-11	0	0	0	0	Bearish_Kic	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		3
+RY	2010-07-30	0	0	0	0	Doji_Near	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		4
+RY	2010-07-30	0	0	0	0	Black_Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		5
+RY	2010-07-26	0	0	0	0	Bullish_Kic	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		6

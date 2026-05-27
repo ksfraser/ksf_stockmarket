@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `actor`;
+CREATE TABLE `actor` (, PRIMARY KEY ()) ENGINE=InnoDB;

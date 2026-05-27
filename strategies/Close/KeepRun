@@ -1,0 +1,4 @@
+
+
+Once the price has hit a high (low) and has reversed, send the Close signal once the price crosses a threshold
+(i.e. 10%) change from that high.  Ie the price hits 10 and starts falling.  Sell at 9 dollars.

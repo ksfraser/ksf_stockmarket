@@ -1,0 +1,49 @@
+#The following are for eventum
+#0,15,30,45 * * * * /usr/bin/php /var/www/html/eventum/misc/process_mail_queue.php
+#0 3 * * * /usr/bin/php /var/www/html/eventum/misc/process_mail_queue.php --fix-lock
+#0 * * * * /usr/bin/php -f /var/www/html/eventum/misc/download_emails.php ticket localhost INBOX
+#0,15,30,45 * * * * /usr/bin/php -f /var/www/html/eventum/misc/download_emails.php ticket localhost
+#*/20 16 * * * /usr/bin/php -f /var/www/html/eventum/misc/check_reminders.php 
+#*/15 * * * * /mnt/2/var/www/html/cd2008/cd2008.sh
+#1 1 * * * /usr/bin/cobbler reposync --tries=3 --no-fail
+
+#15 */4 * * * nmap --append_output -sU -sT -oG /var/log/nmap-out.log 192.168.1.1-255
+1 1 * * * /sbin/service ntpd restart
+1 1 * * * /sbin/service noip2 restart
+
+#Asterisk
+#0 0 * * * root /var/lib/asterisk/agi-bin/run_recurring >/dev/null 2>&1
+#3 0 * * * root /var/lib/asterisk/agi-bin/run_reminders >/dev/null 2>&1
+
+#Finance
+1 16 * * 5 cd /mnt/2/development/var/www/html/finance/scripts/currencies/; ./currencies.sh
+1 17 * * 5 cd /mnt/2/development/var/www/html/finance/scripts/prices/; ./prices.sh
+31 17 * * 5 cd /mnt/2/development/var/www/html/finance/scripts/turtle-data/; php goall.php
+4 8-17 * * 1-5 cd /mnt/2/development/var/www/html/finance/scripts; php alerts.php
+1 8-17 * * 1-5 cd /mnt/2/development/var/www/html/finance/scripts; php currentprice.php
+5 17 * * 5 cd /mnt/2/development/var/www/html/finance/scripts/bond; ./bond.sh
+1 1 * * * cd /mnt/2/development/var/www/html/finance/scripts/; php recalculate_portfolio.php
+
+5 */8 * * * (cd /var/www/html/finance/model/ ; php addmissingportfolio.php)
+6 */8 * * * (cd /var/www/html/finance/model/ ; php fixportfolio.php)
+12 1 * * * (cd /var/www/html/finance/model/ ; php updateevalsummary.php)
+15 1 * * * (cd /var/www/html/finance/model/ ; php tenetsummary.php)
+12 5 10 * * (cd /var/www/html/finance/model/ ; php evalneeded.php)
+5 */8 * * * (cd /var/www/html/finance/model/ ; php queryyahoo.php)
+10 */8 * * * (cd /var/www/html/finance/model/ ; php calculateevalmarket.php)
+11 */8 * * * (cd /var/www/html/finance/model/ ; php sumevalbusiness.php)
+12 */8 * * * (cd /var/www/html/finance/model/ ; php sumevalmanagement.php)
+13 */8 * * * (cd /var/www/html/finance/model/ ; php sumevalfinancial.php)
+15 */8 * * * (cd /var/www/html/finance/model/ ; php processalerts.php)
+16 */8 * * * (cd /var/www/html/finance/model/ ; php addmissingtenets.php)
+17 */8 * * * (cd /var/www/html/finance/model/ ; php addmissingevalsummary.php)
+1 17 1,8,15,22 * * (cd /var/www/html/finance/model/ ; php alert_adminstocknotupdated.php 7 kevin
+
+#11 12,17 * * 1-5 cd /mnt/2/development/var/www/html/finance/scripts; php currentprice.php
+
+31 18 * * 5 cd /mnt/2/development/var/www/html/finance/scripts/candlestick/; ./candlestick.sh; cd ../technicalanalysis; ./technicalanalysis.sh; 
+31 20 * * 5 cd /mnt/2/development/var/www/html/finance/scripts/financialstatements/; ./financialstatements.sh; cd ../buffet; ./buffet.sh; 
+
+#Fitness
+1 5 * * *  cd /mnt/2/development/var/www/html/fitness/scripts/; php calcmealsummary.php; php calcmealcomponents_summary.php; php calcmealtrends.php
+

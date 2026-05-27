@@ -1,0 +1,96 @@
+<?php
+
+$menu = array(  array(	'area' => 'Your Portfolio', 
+			'testcrap' => 'TestCrap',
+			'submenu' => array( 	array( 'href' => 'portfolio.list.php', 'linktext' => 'Show Portfolio', 'action' => 'list'),
+						array( 'href' => 'portfolio.insert.php', 'linktext' => 'Add to Portfolio', 'action' => 'insert'),
+						array( 'href' => 'portfolio.update.php', 'linktext' => 'Update Portfolio', 'action' => 'update'),
+						array( 'href' => 'portfolio.replace.php', 'linktext' => 'Replace in Portfolio', 'action' => 'replace'),
+						array( 'href' => 'portfolio.delete.php', 'linktext' => 'Delete From Portfolio', 'action' => 'delete')
+					)
+		),
+		array(	'area' => 'Stocks', 
+			'submenu' => array( 	array( 'href' => 'stockinfo.list.php', 'linktext' => 'Show Stocks', 'action' => 'list'),
+						array( 'href' => 'stockinfo.insert.php', 'linktext' => 'Add to Stocks', 'action' => 'insert'),
+						array( 'href' => 'stockinfo.update.php', 'linktext' => 'Update Stocks', 'action' => 'update'),
+						array( 'href' => 'stockinfo.replace.php', 'linktext' => 'Replace in Stocks', 'action' => 'replace'),
+						array( 'href' => 'stockinfo.delete.php', 'linktext' => 'Delete From Stocks', 'action' => 'delete')
+					)
+		),
+		array(	'area' => 'Buffet Analysis', 
+			'submenu' => array( 	array( 'href' => 'tenets.list.php', 'linktext' => 'Show Tenets', 'action' => 'list'),
+						array( 'href' => 'tenets.insert.php', 'linktext' => 'Add to Tenets', 'action' => 'insert'),
+						array( 'href' => 'tenets.update.php', 'linktext' => 'Update Tenets', 'action' => 'update'),
+						array( 'href' => 'tenets.replace.php', 'linktext' => 'Replace in Tenets', 'action' => 'replace'),
+						array( 'href' => 'tenets.delete.php', 'linktext' => 'Delete From Tenets', 'action' => 'delete')
+					)
+		),
+		array(	'area' => 'Your Transactions', 
+			'submenu' => array( 	array( 'href' => 'transaction.list.php', 'linktext' => 'Show Transactions', 'action' => 'list'),
+						array( 'href' => 'transaction.insert.php', 'linktext' => 'Add to Transactions', 'action' => 'insert'),
+						array( 'href' => 'transaction.update.php', 'linktext' => 'Update Transactions', 'action' => 'update'),
+						array( 'href' => 'transaction.replace.php', 'linktext' => 'Replace in Transactions', 'action' => 'replace'),
+						array( 'href' => 'transaction.delete.php', 'linktext' => 'Delete From Transactions', 'action' => 'delete')
+					)
+		),
+		array(	'area' => 'Transaction Types', 
+			'submenu' => array( 	array( 'href' => 'transactiontype.list.php', 'linktext' => 'Show Transaction Types', 'action' => 'list'),
+						array( 'href' => 'transactiontype.insert.php', 'linktext' => 'Add to Transaction Types', 'action' => 'insert'),
+						array( 'href' => 'transactiontype.update.php', 'linktext' => 'Update Transaction Types', 'action' => 'update'),
+						array( 'href' => 'transactiontype.replace.php', 'linktext' => 'Replace in Transaction Types', 'action' => 'replace'),
+						array( 'href' => 'transactiontype.delete.php', 'linktext' => 'Delete From Transaction Types', 'action' => 'delete')
+					)
+		),
+		array(	'area' => 'Users', 
+			'submenu' => array( 	array( 'href' => 'users.list.php', 'linktext' => 'Show Users', 'action' => 'list'),
+						array( 'href' => 'users.insert.php', 'linktext' => 'Add to Users', 'action' => 'insert'),
+						array( 'href' => 'users.update.php', 'linktext' => 'Update Users', 'action' => 'update'),
+						array( 'href' => 'users.replace.php', 'linktext' => 'Replace in Users', 'action' => 'replace'),
+						array( 'href' => 'users.delete.php', 'linktext' => 'Delete From Users', 'action' => 'delete')
+					)
+		),
+		array(	'area' => 'Registration', 
+			'submenu' => array(	array( 'href' => 'register.php', 'linktext' => 'Register User', 'action' => 'register')
+					)
+						
+		)
+	);
+
+	function menu_assign($smarty, $menu)
+	{
+		//Should do some access checking
+		
+	$smarty->assign('menu', $menu);
+	return;
+	}
+//Using require vice include because we want to fail if the file isn't loaded.
+	require_once('genericsecurity.php');
+	//var_dump($Security->menu);
+	global $smarty;
+	//$smarty->assign('securemenu', $Security->menu);
+	menu_assign($smarty, $menu);
+	if (isset($_GET['menu']))
+	{
+		//Call the associated page
+		//Want to call the program listed in href above for the action
+		foreach ($menu as $areaarray)
+		{
+			if ($areaarray['area'] == $_GET['menu'])
+			{
+		//		echo "Found the area<br />";
+		//		echo $areaarray['area'] . "00 <br />";
+				foreach( $areaarray['submenu'] as $actionarray)
+				{
+					if ( $actionarray['action'] == $_GET['action'] )
+					{
+					//	echo "Found Action <br />";
+					//	echo "Page to call: " . $actionarray['href'] . " <br />";
+					$_SESSION['menu'] = $menu;
+					header("Location: " . $actionarray['href']); 
+					}
+				}
+			}
+		}
+	}
+	$smarty->display('index.tpl');
+?>

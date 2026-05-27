@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_chart`;
+CREATE TABLE `ck_chart` (, PRIMARY KEY ()) ENGINE=InnoDB;

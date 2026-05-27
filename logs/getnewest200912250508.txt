@@ -1,0 +1,1317 @@
+Started run
+
+STARTING download of newest data
+If Symbol AAPL, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading AAPL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AAPL&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AAPL.20091217-20091225.csv
+
+Wrote 316 characters
+If Symbol ABD, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ABD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ABD&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ABD.20091217-20091225.csv
+
+Wrote 255 characters
+If Symbol ABX, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ABX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ABX.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ABX.TO.20091217-20091225.csv
+
+Wrote 286 characters
+If Symbol ADRE, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ADRE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ADRE&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ADRE.20091217-20091225.csv
+
+Wrote 280 characters
+If Symbol AEM, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading AEM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AEM&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AEM.20091217-20091225.csv
+
+Wrote 285 characters
+If Symbol AGU, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading AGU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AGU.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AGU.TO.20091217-20091225.csv
+
+Wrote 282 characters
+If Symbol AMZN, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading AMZN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AMZN&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AMZN.20091217-20091225.csv
+
+Wrote 311 characters
+If Symbol APF-UN, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading APF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=APF-UN.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/APF-UN.TO.20091217-20091225.csv
+
+Wrote 255 characters
+If Symbol AU, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading AU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AU&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AU.20091217-20091225.csv
+
+Wrote 285 characters
+If Symbol AUY, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading AUY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AUY&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AUY.20091217-20091225.csv
+
+Wrote 290 characters
+If Symbol BBBY, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BBBY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BBBY&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BBBY.20091217-20091225.csv
+
+Wrote 285 characters
+If Symbol BCE, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BCE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BCE.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BCE.TO.20091217-20091225.csv
+
+Wrote 285 characters
+If Symbol BDX, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BDX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BDX&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BDX.20091217-20091225.csv
+
+Wrote 285 characters
+If Symbol BEAV, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BEAV
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BEAV&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BEAV.20091217-20091225.csv
+
+Wrote 282 characters
+If Symbol BEXP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BEXP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BEXP&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BEXP.20091217-20091225.csv
+
+Wrote 286 characters
+If Symbol BHP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BHP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BHP&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BHP.20091217-20091225.csv
+
+Wrote 285 characters
+If Symbol BLD, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BLD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BLD.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BLD.TO.20091217-20091225.csv
+
+Wrote 257 characters
+If Symbol BMO, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BMO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BMO.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BMO.TO.20091217-20091225.csv
+
+Wrote 285 characters
+If Symbol BMR, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BMR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BMR&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BMR.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol BNI, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BNI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BNI&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BNI.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol BNS, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BNS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BNS.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BNS.TO.20091217-20091225.csv
+
+Wrote 285 characters
+If Symbol BPF-UN, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BPF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BPF-UN.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BPF-UN.TO.20091217-20091225.csv
+
+Wrote 276 characters
+If Symbol BPO, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BPO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BPO.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BPO.TO.20091217-20091225.csv
+
+Wrote 282 characters
+If Symbol BQI, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BQI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BQI&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BQI.20091217-20091225.csv
+
+Wrote 260 characters
+If Symbol BR-UN, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BR-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BR-UN.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BR-UN.TO.20091217-20091225.csv
+
+Wrote 270 characters
+If Symbol BYDDF, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading BYDDF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BYDDF.PK&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BYDDF.PK.20091217-20091225.csv
+
+Wrote 254 characters
+If Symbol CAKE, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CAKE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CAKE&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CAKE.20091218-20091225.csv
+
+Wrote 234 characters
+If Symbol CAT, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CAT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CAT&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CAT.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol CCJ, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CCJ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CCJ&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CCJ.20091218-20091225.csv
+
+Wrote 235 characters
+If Symbol CCL, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CCL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CCL&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CCL.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol CDH, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CDH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CDH.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CDH.TO.20091217-20091225.csv
+
+Wrote 251 characters
+If Symbol CDZ, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CDZ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CDZ.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CDZ.TO.20091217-20091225.csv
+
+Wrote 276 characters
+If Symbol CEO, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CEO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CEO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CEO.20091217-20091225.csv
+
+Wrote 304 characters
+If Symbol CF, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CF&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CF.20091217-20091225.csv
+
+Wrote 285 characters
+If Symbol CGCA, Year 2009 Month 11 less than or equal to 2009 12.  Download!
+Downloading CGCA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CGCA&a=10&b=6&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CGCA.2009115-20091225.csv
+
+Wrote 0 characters
+If Symbol CHK, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CHK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CHK&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CHK.20091218-20091225.csv
+
+Wrote 239 characters
+If Symbol CKI, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CKI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CKI.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CKI.TO.20091217-20091225.csv
+
+Wrote 249 characters
+If Symbol CLS, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CLS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLS.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CLS.TO.20091218-20091225.csv
+
+Wrote 217 characters
+If Symbol CM, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CM.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CM.TO.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol CNQ, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CNQ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CNQ.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CNQ.TO.20091218-20091225.csv
+
+Wrote 235 characters
+If Symbol CNR, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CNR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CNR.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CNR.TO.20091217-20091225.csv
+
+Wrote 282 characters
+If Symbol COF, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading COF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COF&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/COF.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol COH, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading COH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COH&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/COH.20091217-20091225.csv
+
+Wrote 285 characters
+If Symbol COMP, Year 2009 Month 5 less than or equal to 2009 12.  Download!
+Downloading COMP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COMP&a=4&b=20&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/COMP.2009519-20091225.csv
+
+Wrote 0 characters
+If Symbol COP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading COP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COP&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/COP.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol CP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CP.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CP.TO.20091217-20091225.csv
+
+Wrote 281 characters
+If Symbol CPG, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CPG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CPG.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CPG.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol CSCO, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CSCO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CSCO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CSCO.20091218-20091225.csv
+
+Wrote 240 characters
+If Symbol CSS-UN, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CSS-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CSS-UN.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CSS-UN.TO.20091217-20091225.csv
+
+Wrote 251 characters
+If Symbol CTRP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CTRP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CTRP&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CTRP.20091218-20091225.csv
+
+Wrote 234 characters
+If Symbol CU, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading CU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CU.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CU.TO.20091217-20091225.csv
+
+Wrote 279 characters
+If Symbol DGW, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading DGW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DGW&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/DGW.20091217-20091225.csv
+
+Wrote 281 characters
+If Symbol DIS, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading DIS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DIS&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/DIS.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol DMF, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading DMF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DMF&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/DMF.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol DUK, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading DUK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DUK&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/DUK.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol EBAY, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading EBAY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EBAY&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EBAY.20091218-20091225.csv
+
+Wrote 239 characters
+If Symbol ECA, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ECA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ECA.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ECA.TO.20091217-20091225.csv
+
+Wrote 286 characters
+If Symbol EDU, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading EDU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EDU&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EDU.20091218-20091225.csv
+
+Wrote 232 characters
+If Symbol ELON, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ELON
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ELON&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ELON.20091218-20091225.csv
+
+Wrote 232 characters
+If Symbol ENB, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ENB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ENB.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ENB.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol ESI, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ESI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ESI.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ESI.TO.20091218-20091225.csv
+
+Wrote 231 characters
+If Symbol EVEP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading EVEP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EVEP&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EVEP.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol EWX, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading EWX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EWX&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EWX.20091217-20091225.csv
+
+Wrote 276 characters
+If Symbol EWZ, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading EWZ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EWZ&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EWZ.20091218-20091225.csv
+
+Wrote 240 characters
+If Symbol F, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading F
+URL:  http://ichart.finance.yahoo.com/table.csv?s=F&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/F.20091218-20091225.csv
+
+Wrote 230 characters
+If Symbol FCR, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading FCR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FCR.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FCR.TO.20091217-20091225.csv
+
+Wrote 279 characters
+If Symbol FDI, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading FDI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FDI&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FDI.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol FES, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading FES
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FES.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FES.TO.20091218-20091225.csv
+
+Wrote 211 characters
+If Symbol FFDF, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading FFDF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FFDF&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FFDF.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol FNV, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading FNV
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FNV.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FNV.TO.20091217-20091225.csv
+
+Wrote 281 characters
+If Symbol FRZNF, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading FRZNF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FRZNF.PK&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FRZNF.PK.20091218-20091225.csv
+
+Wrote 221 characters
+If Symbol FTS, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading FTS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FTS.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FTS.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol FWLT, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading FWLT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FWLT&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FWLT.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol GE, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading GE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GE&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GE.20091218-20091225.csv
+
+Wrote 241 characters
+If Symbol GLD, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading GLD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GLD&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GLD.20091218-20091225.csv
+
+Wrote 260 characters
+If Symbol GLS, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading GLS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GLS&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GLS.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol GLW, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading GLW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GLW&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GLW.20091218-20091225.csv
+
+Wrote 240 characters
+If Symbol GOOG, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading GOOG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GOOG&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GOOG.20091218-20091225.csv
+
+Wrote 256 characters
+If Symbol GPS, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading GPS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GPS&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GPS.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol GPW, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading GPW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GPW&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GPW.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol GRMN, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading GRMN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GRMN&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GRMN.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol GSH, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading GSH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GSH&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GSH.20091218-20091225.csv
+
+Wrote 229 characters
+If Symbol GWO, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading GWO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GWO.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GWO.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol HBNC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading HBNC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HBNC&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HBNC.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol HCBK, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading HCBK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HCBK&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HCBK.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol HCG, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading HCG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HCG.TO&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HCG.TO.20091217-20091225.csv
+
+Wrote 276 characters
+If Symbol HD, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading HD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HD&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HD.20091218-20091225.csv
+
+Wrote 239 characters
+If Symbol HL, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading HL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HL&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HL.20091218-20091225.csv
+
+Wrote 218 characters
+If Symbol HMIN, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading HMIN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HMIN&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HMIN.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol HOU, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading HOU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HOU.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HOU.TO.20091218-20091225.csv
+
+Wrote 217 characters
+If Symbol HSE, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading HSE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HSE.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HSE.TO.20091218-20091225.csv
+
+Wrote 234 characters
+If Symbol HTLD, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading HTLD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HTLD&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HTLD.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol IAG, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading IAG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IAG.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IAG.TO.20091218-20091225.csv
+
+Wrote 231 characters
+If Symbol IBM, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading IBM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IBM&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IBM.20091218-20091225.csv
+
+Wrote 257 characters
+If Symbol ICB, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ICB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ICB&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ICB.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol IGM, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading IGM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IGM.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IGM.TO.20091218-20091225.csv
+
+Wrote 232 characters
+If Symbol ILF, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ILF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ILF&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ILF.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol IMMR, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading IMMR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IMMR&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IMMR.20091218-20091225.csv
+
+Wrote 211 characters
+If Symbol IMO, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading IMO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IMO.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IMO.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol INN-UN, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading INN-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INN-UN.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/INN-UN.TO.20091218-20091225.csv
+
+Wrote 213 characters
+If Symbol INPH, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading INPH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INPH&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/INPH.20091218-20091225.csv
+
+Wrote 206 characters
+If Symbol INSM, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading INSM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INSM&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/INSM.20091218-20091225.csv
+
+Wrote 212 characters
+If Symbol INTC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading INTC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INTC&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/INTC.20091218-20091225.csv
+
+Wrote 241 characters
+If Symbol IRC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading IRC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IRC.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IRC.TO.20091218-20091225.csv
+
+Wrote 213 characters
+If Symbol ISH, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ISH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ISH&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ISH.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol ISIS, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ISIS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ISIS&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ISIS.20091218-20091225.csv
+
+Wrote 235 characters
+If Symbol IWM, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading IWM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IWM&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IWM.20091218-20091225.csv
+
+Wrote 241 characters
+If Symbol IXC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading IXC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IXC&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IXC.20091218-20091225.csv
+
+Wrote 232 characters
+If Symbol IYF, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading IYF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IYF&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IYF.20091218-20091225.csv
+
+Wrote 235 characters
+If Symbol JCP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading JCP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=JCP&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/JCP.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol JNJ, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading JNJ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=JNJ&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/JNJ.20091218-20091225.csv
+
+Wrote 238 characters
+If Symbol K, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading K
+URL:  http://ichart.finance.yahoo.com/table.csv?s=K.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/K.TO.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol KEG-UN, Year 2007 Month 9 less than or equal to 2009 12.  Download!
+Downloading KEG-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KEG-UN.TO&a=8&b=25&c=2007&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/KEG-UN.TO.2007924-20091225.csv
+
+Wrote 0 characters
+If Symbol L, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading L
+URL:  http://ichart.finance.yahoo.com/table.csv?s=L.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/L.TO.20091218-20091225.csv
+
+Wrote 232 characters
+If Symbol LEO, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading LEO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LEO&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/LEO.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol LINE, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading LINE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LINE&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/LINE.20091218-20091225.csv
+
+Wrote 235 characters
+If Symbol LNC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading LNC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LNC&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/LNC.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol LOW, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading LOW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LOW&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/LOW.20091218-20091225.csv
+
+Wrote 239 characters
+If Symbol MCD, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading MCD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MCD&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MCD.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol MFC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading MFC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MFC.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MFC.TO.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol MKP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading MKP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MKP.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MKP.TO.20091218-20091225.csv
+
+Wrote 226 characters
+If Symbol MOS, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading MOS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MOS&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MOS.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol MRD, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading MRD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MRD.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MRD.TO.20091218-20091225.csv
+
+Wrote 225 characters
+If Symbol MRK, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading MRK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MRK&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MRK.20091218-20091225.csv
+
+Wrote 240 characters
+If Symbol MS, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading MS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MS&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MS.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol MX, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading MX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MX.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MX.TO.20091218-20091225.csv
+
+Wrote 232 characters
+If Symbol NA, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading NA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NA.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NA.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol NCX, Year 2009 Month 7 less than or equal to 2009 12.  Download!
+Downloading NCX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NCX.TO&a=6&b=8&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NCX.TO.200977-20091225.csv
+
+Wrote 0 characters
+If Symbol NKE, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading NKE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NKE&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NKE.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol NOK, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading NOK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NOK&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NOK.20091218-20091225.csv
+
+Wrote 239 characters
+If Symbol NT, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading NT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NT.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NT.TO.20091218-20091225.csv
+
+Wrote 201 characters
+If Symbol NXY, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading NXY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NXY.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NXY.TO.20091218-20091225.csv
+
+Wrote 234 characters
+If Symbol OIH, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading OIH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=OIH&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/OIH.20091218-20091225.csv
+
+Wrote 256 characters
+If Symbol ONC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ONC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ONC.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ONC.TO.20091218-20091225.csv
+
+Wrote 209 characters
+If Symbol ORA, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ORA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ORA&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ORA.20091218-20091225.csv
+
+Wrote 232 characters
+If Symbol PALAF, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading PALAF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PALAF.PK&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PALAF.PK.20091218-20091225.csv
+
+Wrote 209 characters
+If Symbol PAR, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading PAR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PAR&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PAR.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol PBI, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading PBI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PBI&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PBI.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol PBR, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading PBR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PBR&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PBR.20091218-20091225.csv
+
+Wrote 240 characters
+If Symbol PCC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading PCC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PCC&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PCC.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol PDS, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading PDS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PDS&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PDS.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol PFE, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading PFE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PFE&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PFE.20091218-20091225.csv
+
+Wrote 241 characters
+If Symbol PGH, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading PGH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PGH&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PGH.20091218-20091225.csv
+
+Wrote 214 characters
+If Symbol POR, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading POR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POR&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/POR.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol POT, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading POT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POT&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/POT.20091218-20091225.csv
+
+Wrote 258 characters
+If Symbol POW, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading POW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POW.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/POW.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol PSJ, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading PSJ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PSJ&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PSJ.20091218-20091225.csv
+
+Wrote 229 characters
+If Symbol PTR, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading PTR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PTR&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PTR.20091218-20091225.csv
+
+Wrote 253 characters
+If Symbol PVX, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading PVX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PVX&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PVX.20091218-20091225.csv
+
+Wrote 213 characters
+If Symbol PWF, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading PWF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PWF.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PWF.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol REI-UN, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading REI-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=REI-UN.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/REI-UN.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol RGLD, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading RGLD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RGLD&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RGLD.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol RIG, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading RIG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RIG&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RIG.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol RIMM, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading RIMM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RIMM&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RIMM.20091218-20091225.csv
+
+Wrote 240 characters
+If Symbol RNK-UN, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading RNK-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RNK-UN.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RNK-UN.TO.20091218-20091225.csv
+
+Wrote 206 characters
+If Symbol ROY, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ROY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ROY&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ROY.20091218-20091225.csv
+
+Wrote 212 characters
+If Symbol RPT, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading RPT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RPT&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RPT.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol RTP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading RTP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RTP&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RTP.20091218-20091225.csv
+
+Wrote 253 characters
+If Symbol RUS, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading RUS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RUS.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RUS.TO.20091218-20091225.csv
+
+Wrote 231 characters
+If Symbol RY, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading RY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RY.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RY.TO.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol SAP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SAP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SAP.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SAP.TO.20091218-20091225.csv
+
+Wrote 232 characters
+If Symbol SBUX, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SBUX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SBUX&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SBUX.20091218-20091225.csv
+
+Wrote 238 characters
+If Symbol SC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SC.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SC.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol SDRLF, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SDRLF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SDRLF.PK&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SDRLF.PK.20091218-20091225.csv
+
+Wrote 224 characters
+If Symbol SGU, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SGU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SGU&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SGU.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol SGX, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SGX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SGX.AX&a=11&b=10&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SGX.AX.2009129-20091225.csv
+
+Wrote 0 characters
+If Symbol SH, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SH&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SH.20091218-20091225.csv
+
+Wrote 235 characters
+If Symbol SINA, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SINA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SINA&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SINA.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol SLF, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SLF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLF.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SLF.TO.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol SLV, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SLV
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLV&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SLV.20091218-20091225.csv
+
+Wrote 239 characters
+If Symbol SLW, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SLW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLW&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SLW.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol SPF-UN, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SPF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SPF-UN.TO&a=11&b=10&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SPF-UN.TO.2009129-20091225.csv
+
+Wrote 0 characters
+If Symbol SPXJ, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SPXJ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SPXJ.L&a=11&b=18&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SPXJ.L.20091217-20091225.csv
+
+Wrote 318 characters
+If Symbol SQP-UN, Year 2007 Month 9 less than or equal to 2009 12.  Download!
+Downloading SQP-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SQP-UN.TO&a=8&b=25&c=2007&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SQP-UN.TO.2007924-20091225.csv
+
+Wrote 0 characters
+If Symbol STEC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading STEC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=STEC&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/STEC.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol STP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading STP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=STP&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/STP.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol SU, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SU.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SU.TO.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol SWY, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SWY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SWY&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SWY.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol SYNA, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading SYNA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SYNA&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SYNA.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol T, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading T
+URL:  http://ichart.finance.yahoo.com/table.csv?s=T.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/T.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol TAC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading TAC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TAC&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TAC.20091218-20091225.csv
+
+Wrote 229 characters
+If Symbol TAXI, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading TAXI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TAXI&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TAXI.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol TD, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading TD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TD.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TD.TO.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol TEVA, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading TEVA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TEVA&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TEVA.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol TFI, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading TFI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TFI.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TFI.TO.20091218-20091225.csv
+
+Wrote 211 characters
+If Symbol TI, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading TI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TI&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TI.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol TIH, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading TIH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TIH.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TIH.TO.20091218-20091225.csv
+
+Wrote 232 characters
+If Symbol TLM, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading TLM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TLM.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TLM.TO.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol TRA, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading TRA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TRA&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TRA.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol TRP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading TRP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TRP.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TRP.TO.20091218-20091225.csv
+
+Wrote 235 characters
+If Symbol UDN, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading UDN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UDN&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UDN.20091218-20091225.csv
+
+Wrote 232 characters
+If Symbol UG, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading UG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UG&a=11&b=25&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UG.20091224-20091225.csv
+
+Wrote 0 characters
+If Symbol UNG, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading UNG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UNG&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UNG.20091218-20091225.csv
+
+Wrote 241 characters
+If Symbol UNH, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading UNH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UNH&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UNH.20091218-20091225.csv
+
+Wrote 239 characters
+If Symbol UNP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading UNP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UNP&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UNP.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol UPL, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading UPL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UPL&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UPL.20091218-20091225.csv
+
+Wrote 235 characters
+If Symbol UTX, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading UTX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UTX&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UTX.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol UUP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading UUP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UUP&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UUP.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol var, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading var
+URL:  http://ichart.finance.yahoo.com/table.csv?s=var&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/var.20091218-20091225.csv
+
+Wrote 234 characters
+If Symbol VMW, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading VMW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=VMW&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/VMW.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol WDC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading WDC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WDC&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/WDC.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol WFC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading WFC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WFC&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/WFC.20091218-20091225.csv
+
+Wrote 241 characters
+If Symbol WFT, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading WFT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WFT&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/WFT.20091218-20091225.csv
+
+Wrote 239 characters
+If Symbol WMT, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading WMT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WMT&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/WMT.20091218-20091225.csv
+
+Wrote 239 characters
+If Symbol WYE, Year 2009 Month 10 less than or equal to 2009 12.  Download!
+Downloading WYE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WYE&a=9&b=16&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/WYE.20091015-20091225.csv
+
+Wrote 0 characters
+If Symbol XBB, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading XBB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XBB.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XBB.TO.20091218-20091225.csv
+
+Wrote 232 characters
+If Symbol XEG, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading XEG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XEG.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XEG.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol XIC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading XIC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XIC.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XIC.TO.20091218-20091225.csv
+
+Wrote 232 characters
+If Symbol XIU, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading XIU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XIU.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XIU.TO.20091218-20091225.csv
+
+Wrote 240 characters
+If Symbol XLB, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading XLB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XLB&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XLB.20091218-20091225.csv
+
+Wrote 237 characters
+If Symbol XLE, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading XLE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XLE&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XLE.20091218-20091225.csv
+
+Wrote 240 characters
+If Symbol XOM, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading XOM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XOM&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XOM.20091218-20091225.csv
+
+Wrote 240 characters
+If Symbol XRE, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading XRE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XRE.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XRE.TO.20091218-20091225.csv
+
+Wrote 230 characters
+If Symbol XSP, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading XSP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XSP.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XSP.TO.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol XTO, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading XTO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XTO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XTO.20091218-20091225.csv
+
+Wrote 240 characters
+If Symbol XTR, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading XTR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XTR.TO&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XTR.TO.20091218-20091225.csv
+
+Wrote 230 characters
+If Symbol YGE, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading YGE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=YGE&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/YGE.20091218-20091225.csv
+
+Wrote 236 characters
+If Symbol YZC, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading YZC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=YZC&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/YZC.20091218-20091225.csv
+
+Wrote 233 characters
+If Symbol ^VIX, Year 2009 Month 12 less than or equal to 2009 12.  Download!
+Downloading ^VIX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=^VIX&a=11&b=19&c=2009&d=12&e=25&f=2009&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/^VIX.20091218-20091225.csv
+
+Wrote 221 characters

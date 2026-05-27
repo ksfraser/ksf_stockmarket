@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_quote`;
+CREATE TABLE `ck_quote` (, PRIMARY KEY ()) ENGINE=InnoDB;

@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `fd_group`;
+CREATE TABLE `fd_group` (, PRIMARY KEY ()) ENGINE=InnoDB;

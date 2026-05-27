@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_oitem`;
+CREATE TABLE `ck_oitem` (, PRIMARY KEY ()) ENGINE=InnoDB;

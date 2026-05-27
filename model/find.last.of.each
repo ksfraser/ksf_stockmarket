@@ -1,0 +1,10 @@
+SELECT a.*
+FROM evalmarket a, evalmarket b
+where a.idstockinfo = b.idstockinfo
+  and a.idevalmarket >= b.idevalmarket
+  and b.idevalmarket =
+  (select max(c.idevalmarket)
+  from evalmarket c
+  where c.idstockinfo = a.idstockinfo)
+order by a.idstockinfo;
+

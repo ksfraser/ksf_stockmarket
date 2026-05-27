@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `dress_t`;
+CREATE TABLE `dress_t` (, PRIMARY KEY ()) ENGINE=InnoDB;

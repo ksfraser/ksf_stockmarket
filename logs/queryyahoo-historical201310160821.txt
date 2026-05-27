@@ -1,0 +1,3360 @@
+Started run
+
+STARTING download of newest data
+If Symbol AAPL, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading AAPL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AAPL&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/AAPL.2011119-20131016.csv
+
+Wrote 368403 characters
+If Symbol ABD, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ABD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ABD&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ABD.2011119-20131016.csv
+
+Wrote 0 characters
+If Symbol ABT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ABT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ABT&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ABT.2011119-20131016.csv
+
+Wrote 375900 characters
+If Symbol ABX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ABX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ABX.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ABX.TO.2011119-20131016.csv
+
+Wrote 230047 characters
+If Symbol ADM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ADM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ADM&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ADM.2011119-20131016.csv
+
+Wrote 371556 characters
+If Symbol ADRE, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ADRE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ADRE&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ADRE.2011119-20131016.csv
+
+Wrote 130710 characters
+If Symbol AEM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading AEM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AEM&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/AEM.2011119-20131016.csv
+
+Wrote 338297 characters
+If Symbol AGU, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading AGU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AGU.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/AGU.TO.2011119-20131016.csv
+
+Wrote 213313 characters
+If Symbol AMZN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading AMZN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AMZN&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/AMZN.2011119-20131016.csv
+
+Wrote 208515 characters
+If Symbol APA, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading APA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=APA&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/APA.2011119-20131016.csv
+
+Wrote 384735 characters
+If Symbol APF-UN, Year 2011 Month 5 less than or equal to 2013 10.  Download!
+Downloading APF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=APF-UN.TO&a=4&b=27&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/APF-UN.TO.2011427-20131016.csv
+
+Wrote 109822 characters
+If Symbol AQN, Year 2011 Month 4 less than or equal to 2013 10.  Download!
+Downloading AQN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AQN.TO&a=3&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/AQN.TO.201139-20131016.csv
+
+Wrote 109822 characters
+If Symbol ARCC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ARCC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ARCC&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ARCC.2011119-20131016.csv
+
+Wrote 107653 characters
+If Symbol ARGT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ARGT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ARGT&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ARGT.2011119-20131016.csv
+
+Wrote 29015 characters
+If Symbol ARKR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ARKR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ARKR&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ARKR.2011119-20131016.csv
+
+Wrote 277447 characters
+If Symbol AU, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading AU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AU&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/AU.2011119-20131016.csv
+
+Wrote 185496 characters
+If Symbol AUY, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading AUY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AUY&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/AUY.2011119-20131016.csv
+
+Wrote 115710 characters
+If Symbol AW-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading AW-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AW-UN.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/AW-UN.TO.2011119-20131016.csv
+
+Wrote 96319 characters
+If Symbol AZZ, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading AZZ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AZZ&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/AZZ.2011119-20131016.csv
+
+Wrote 326386 characters
+If Symbol BBBY, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BBBY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BBBY&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BBBY.2011119-20131016.csv
+
+Wrote 261205 characters
+If Symbol BCE, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BCE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BCE.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BCE.TO.2011119-20131016.csv
+
+Wrote 214063 characters
+If Symbol BDX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BDX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BDX&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BDX.2011119-20131016.csv
+
+Wrote 369883 characters
+If Symbol BEAV, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BEAV
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BEAV&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BEAV.2011119-20131016.csv
+
+Wrote 274866 characters
+If Symbol BEXP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BEXP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BEXP&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BEXP.2011119-20131016.csv
+
+Wrote 160132 characters
+If Symbol BF-B, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BF-B
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BF-B&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BF-B.2011119-20131016.csv
+
+Wrote 348191 characters
+If Symbol BHP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BHP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BHP&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BHP.2011119-20131016.csv
+
+Wrote 313070 characters
+If Symbol BLD, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BLD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BLD.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BLD.TO.2011119-20131016.csv
+
+Wrote 200239 characters
+If Symbol BMO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BMO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BMO.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BMO.TO.2011119-20131016.csv
+
+Wrote 228697 characters
+If Symbol BMR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BMR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BMR&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BMR.2011119-20131016.csv
+
+Wrote 111596 characters
+If Symbol BMS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BMS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BMS&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BMS.2011119-20131016.csv
+
+Wrote 346731 characters
+If Symbol BNE-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BNE-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BNE-UN.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BNE-UN.TO.2011119-20131016.csv
+
+Wrote 127987 characters
+If Symbol BNI, Year 2010 Month 2 less than or equal to 2013 10.  Download!
+Downloading BNI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BNI&a=1&b=13&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BNI.2010113-20131016.csv
+
+Wrote 0 characters
+If Symbol BNS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BNS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BNS.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BNS.TO.2011119-20131016.csv
+
+Wrote 230148 characters
+If Symbol BPF-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BPF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BPF-UN.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BPF-UN.TO.2011119-20131016.csv
+
+Wrote 93317 characters
+If Symbol BPO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BPO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BPO.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BPO.TO.2011119-20131016.csv
+
+Wrote 28392 characters
+If Symbol BR, Year 2011 Month 4 less than or equal to 2013 10.  Download!
+Downloading BR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BR.TO&a=3&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BR.TO.201139-20131016.csv
+
+Wrote 181012 characters
+If Symbol BR-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BR-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BR-UN.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BR-UN.TO.2011119-20131016.csv
+
+Wrote 181012 characters
+If Symbol BRK, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BRK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BRK.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BRK.TO.2011119-20131016.csv
+
+Wrote 96147 characters
+If Symbol BYDDF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading BYDDF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BYDDF.PK&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BYDDF.PK.2011119-20131016.csv
+
+Wrote 50371 characters
+If Symbol CAH, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CAH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CAH&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CAH.2011119-20131016.csv
+
+Wrote 313648 characters
+If Symbol CAKE, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CAKE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CAKE&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CAKE.2011119-20131016.csv
+
+Wrote 253480 characters
+If Symbol CAT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CAT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CAT&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CAT.2011119-20131016.csv
+
+Wrote 626695 characters
+If Symbol CB, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CB&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CB.2011119-20131016.csv
+
+Wrote 354631 characters
+If Symbol CCJ, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CCJ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CCJ&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CCJ.2011119-20131016.csv
+
+Wrote 207042 characters
+If Symbol CCL, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CCL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CCL&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CCL.2011119-20131016.csv
+
+Wrote 302222 characters
+If Symbol CDE, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CDE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CDE&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CDE.2011119-20131016.csv
+
+Wrote 271188 characters
+If Symbol CDH, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CDH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CDH.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CDH.TO.2011119-20131016.csv
+
+Wrote 167517 characters
+If Symbol CDZ, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CDZ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CDZ.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CDZ.TO.2011119-20131016.csv
+
+Wrote 83405 characters
+If Symbol CEF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CEF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CEF&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CEF.2011119-20131016.csv
+
+Wrote 239302 characters
+If Symbol CEO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CEO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CEO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CEO.2011119-20131016.csv
+
+Wrote 158131 characters
+If Symbol CF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CF&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CF.2011119-20131016.csv
+
+Wrote 105181 characters
+If Symbol CGCA, Year 2009 Month 11 less than or equal to 2013 10.  Download!
+Downloading CGCA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CGCA&a=10&b=6&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CGCA.2009106-20131016.csv
+
+Wrote 0 characters
+If Symbol CH, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CH&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CH.2011119-20131016.csv
+
+Wrote 272388 characters
+If Symbol CHK, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CHK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CHK&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CHK.2011119-20131016.csv
+
+Wrote 244336 characters
+If Symbol CHY, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CHY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CHY&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CHY.2011119-20131016.csv
+
+Wrote 122652 characters
+If Symbol CINF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CINF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CINF&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CINF.2011119-20131016.csv
+
+Wrote 283882 characters
+If Symbol CKI, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CKI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CKI.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CKI.TO.2011119-20131016.csv
+
+Wrote 150993 characters
+If Symbol CL, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CL&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CL.2011119-20131016.csv
+
+Wrote 445798 characters
+If Symbol CLC-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CLC-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLC-UN.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CLC-UN.TO.2011119-20131016.csv
+
+Wrote 89120 characters
+If Symbol CLCT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CLCT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLCT&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CLCT.2011119-20131016.csv
+
+Wrote 155186 characters
+If Symbol CLL, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CLL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLL.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CLL.TO.2011119-20131016.csv
+
+Wrote 156886 characters
+If Symbol CLS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CLS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLS.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CLS.TO.2011119-20131016.csv
+
+Wrote 178345 characters
+If Symbol CLX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CLX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLX&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CLX.2011119-20131016.csv
+
+Wrote 371083 characters
+If Symbol CM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CM.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CM.TO.2011119-20131016.csv
+
+Wrote 229409 characters
+If Symbol CMO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CMO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CMO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CMO.2011119-20131016.csv
+
+Wrote 298461 characters
+If Symbol CNQ, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CNQ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CNQ.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CNQ.TO.2011119-20131016.csv
+
+Wrote 228560 characters
+If Symbol CNR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CNR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CNR.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CNR.TO.2011119-20131016.csv
+
+Wrote 206787 characters
+If Symbol COF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading COF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COF&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/COF.2011119-20131016.csv
+
+Wrote 232873 characters
+If Symbol COH, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading COH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COH&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/COH.2011119-20131016.csv
+
+Wrote 159960 characters
+If Symbol COMP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading COMP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COMP&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/COMP.2011119-20131016.csv
+
+Wrote 603734 characters
+If Symbol COP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading COP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COP&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/COP.2011119-20131016.csv
+
+Wrote 389712 characters
+If Symbol CP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CP.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CP.TO.2011119-20131016.csv
+
+Wrote 147801 characters
+If Symbol CPG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CPG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CPG.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CPG.TO.2011119-20131016.csv
+
+Wrote 131654 characters
+If Symbol CSCO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CSCO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CSCO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CSCO.2011119-20131016.csv
+
+Wrote 296338 characters
+If Symbol CSS, Year 2011 Month 4 less than or equal to 2013 10.  Download!
+Downloading CSS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CSS.TO&a=3&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CSS.TO.201139-20131016.csv
+
+Wrote 110111 characters
+If Symbol CSS-UN, Year 2010 Month 11 less than or equal to 2013 10.  Download!
+Downloading CSS-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CSS-UN.TO&a=10&b=20&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CSS-UN.TO.20101020-20131016.csv
+
+Wrote 110111 characters
+If Symbol CTAS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CTAS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CTAS&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CTAS.2011119-20131016.csv
+
+Wrote 284866 characters
+If Symbol CTRP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CTRP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CTRP&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CTRP.2011119-20131016.csv
+
+Wrote 120519 characters
+If Symbol CU, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CU.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CU.TO.2011119-20131016.csv
+
+Wrote 157261 characters
+If Symbol CWI-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading CWI-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CWI-UN.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CWI-UN.TO.2011119-20131016.csv
+
+Wrote 111847 characters
+If Symbol DBA, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading DBA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DBA&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/DBA.2011119-20131016.csv
+
+Wrote 82995 characters
+If Symbol DBB, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading DBB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DBB&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/DBB.2011119-20131016.csv
+
+Wrote 81302 characters
+If Symbol DGW, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading DGW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DGW&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/DGW.2011119-20131016.csv
+
+Wrote 85035 characters
+If Symbol DIS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading DIS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DIS&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/DIS.2011119-20131016.csv
+
+Wrote 638998 characters
+If Symbol DMF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading DMF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DMF&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/DMF.2011119-20131016.csv
+
+Wrote 236933 characters
+If Symbol DOV, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading DOV
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DOV&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/DOV.2011119-20131016.csv
+
+Wrote 342233 characters
+If Symbol DUK, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading DUK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DUK&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/DUK.2011119-20131016.csv
+
+Wrote 371158 characters
+If Symbol DVN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading DVN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DVN&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/DVN.2011119-20131016.csv
+
+Wrote 262986 characters
+If Symbol DWX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading DWX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DWX&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/DWX.2011119-20131016.csv
+
+Wrote 67407 characters
+If Symbol EBAY, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading EBAY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EBAY&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/EBAY.2011119-20131016.csv
+
+Wrote 190812 characters
+If Symbol ECA, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ECA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ECA.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ECA.TO.2011119-20131016.csv
+
+Wrote 148882 characters
+If Symbol ED, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ED
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ED&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ED.2011119-20131016.csv
+
+Wrote 524833 characters
+If Symbol EDU, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading EDU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EDU&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/EDU.2011119-20131016.csv
+
+Wrote 87595 characters
+If Symbol EIT-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading EIT-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EIT-UN.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/EIT-UN.TO.2011119-20131016.csv
+
+Wrote 113282 characters
+If Symbol ELON, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ELON
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ELON&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ELON.2011119-20131016.csv
+
+Wrote 172240 characters
+If Symbol EMR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading EMR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EMR&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/EMR.2011119-20131016.csv
+
+Wrote 387831 characters
+If Symbol ENB, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ENB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ENB.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ENB.TO.2011119-20131016.csv
+
+Wrote 226470 characters
+If Symbol EOG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading EOG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EOG&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/EOG.2011119-20131016.csv
+
+Wrote 295757 characters
+If Symbol ERF-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ERF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ERF-UN.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ERF-UN.TO.2011119-20131016.csv
+
+Wrote 141247 characters
+If Symbol ESI, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ESI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ESI.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ESI.TO.2011119-20131016.csv
+
+Wrote 207979 characters
+If Symbol ETR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ETR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ETR&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ETR.2011119-20131016.csv
+
+Wrote 377537 characters
+If Symbol EUO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading EUO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EUO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/EUO.2011119-20131016.csv
+
+Wrote 59591 characters
+If Symbol EVEP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading EVEP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EVEP&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/EVEP.2011119-20131016.csv
+
+Wrote 84666 characters
+If Symbol EWX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading EWX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EWX&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/EWX.2011119-20131016.csv
+
+Wrote 64188 characters
+If Symbol EWZ, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading EWZ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EWZ&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/EWZ.2011119-20131016.csv
+
+Wrote 161296 characters
+If Symbol F, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading F
+URL:  http://ichart.finance.yahoo.com/table.csv?s=F&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/F.2011119-20131016.csv
+
+Wrote 446871 characters
+If Symbol FCR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading FCR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FCR.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/FCR.TO.2011119-20131016.csv
+
+Wrote 131624 characters
+If Symbol FDI, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading FDI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FDI&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/FDI.2011119-20131016.csv
+
+Wrote 288318 characters
+If Symbol FES, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading FES
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FES.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/FES.TO.2011119-20131016.csv
+
+Wrote 0 characters
+If Symbol FFDF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading FFDF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FFDF&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/FFDF.2011119-20131016.csv
+
+Wrote 196950 characters
+If Symbol FNV, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading FNV
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FNV.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/FNV.TO.2011119-20131016.csv
+
+Wrote 70803 characters
+If Symbol FRZNF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading FRZNF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FRZNF.PK&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/FRZNF.PK.2011119-20131016.csv
+
+Wrote 0 characters
+If Symbol FTS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading FTS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FTS.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/FTS.TO.2011119-20131016.csv
+
+Wrote 221628 characters
+If Symbol FWLT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading FWLT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FWLT&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/FWLT.2011119-20131016.csv
+
+Wrote 358146 characters
+If Symbol FXY, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading FXY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FXY&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/FXY.2011119-20131016.csv
+
+Wrote 86351 characters
+If Symbol GDI, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading GDI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GDI.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GDI.TO.2011119-20131016.csv
+
+Wrote 28830 characters
+If Symbol GE, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading GE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GE&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GE.2011119-20131016.csv
+
+Wrote 642089 characters
+If Symbol GIM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading GIM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GIM&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GIM.2011119-20131016.csv
+
+Wrote 278338 characters
+If Symbol GIS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading GIS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GIS&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GIS.2011119-20131016.csv
+
+Wrote 370044 characters
+If Symbol GLD, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading GLD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GLD&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GLD.2011119-20131016.csv
+
+Wrote 115995 characters
+If Symbol GLS, Year 2010 Month 7 less than or equal to 2013 10.  Download!
+Downloading GLS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GLS&a=6&b=30&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GLS.2010630-20131016.csv
+
+Wrote 0 characters
+If Symbol GLW, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading GLW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GLW&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GLW.2011119-20131016.csv
+
+Wrote 387617 characters
+If Symbol GOOG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading GOOG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GOOG&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GOOG.2011119-20131016.csv
+
+Wrote 124854 characters
+If Symbol GPS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading GPS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GPS&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GPS.2011119-20131016.csv
+
+Wrote 322152 characters
+If Symbol GPW, Year 2011 Month 4 less than or equal to 2013 10.  Download!
+Downloading GPW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GPW&a=3&b=22&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GPW.2011322-20131016.csv
+
+Wrote 83890 characters
+If Symbol GRMN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading GRMN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GRMN&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GRMN.2011119-20131016.csv
+
+Wrote 156685 characters
+If Symbol GRZ, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading GRZ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GRZ&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GRZ.20111110-20131016.csv
+
+Wrote 0 characters
+If Symbol GSH, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading GSH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GSH&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GSH.2011119-20131016.csv
+
+Wrote 197834 characters
+If Symbol GWO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading GWO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GWO.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GWO.TO.2011119-20131016.csv
+
+Wrote 136466 characters
+If Symbol HBNC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading HBNC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HBNC&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/HBNC.2011119-20131016.csv
+
+Wrote 134032 characters
+If Symbol HCBK, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading HCBK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HCBK&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/HCBK.2011119-20131016.csv
+
+Wrote 170078 characters
+If Symbol HCG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading HCG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HCG.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/HCG.TO.2011119-20131016.csv
+
+Wrote 111869 characters
+If Symbol HD, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading HD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HD&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/HD.2011119-20131016.csv
+
+Wrote 359219 characters
+If Symbol HGIC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading HGIC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HGIC&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/HGIC.2011119-20131016.csv
+
+Wrote 0 characters
+If Symbol HL, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading HL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HL&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/HL.2011119-20131016.csv
+
+Wrote 323413 characters
+If Symbol HMIN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading HMIN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HMIN&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/HMIN.2011119-20131016.csv
+
+Wrote 83743 characters
+If Symbol HOU, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading HOU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HOU.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/HOU.TO.2011119-20131016.csv
+
+Wrote 64511 characters
+If Symbol HR-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading HR-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HR-UN.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/HR-UN.TO.2011119-20131016.csv
+
+Wrote 158388 characters
+If Symbol HSE, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading HSE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HSE.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/HSE.TO.2011119-20131016.csv
+
+Wrote 226644 characters
+If Symbol HTLD, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading HTLD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HTLD&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/HTLD.2011119-20131016.csv
+
+Wrote 274149 characters
+If Symbol IAG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading IAG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IAG.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/IAG.TO.2011119-20131016.csv
+
+Wrote 163679 characters
+If Symbol IBM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading IBM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IBM&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/IBM.20111110-20131016.csv
+
+Wrote 670580 characters
+If Symbol ICB, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ICB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ICB&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ICB.20111110-20131016.csv
+
+Wrote 319581 characters
+If Symbol IEX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading IEX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IEX&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/IEX.20111110-20131016.csv
+
+Wrote 287762 characters
+If Symbol IGM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading IGM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IGM.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/IGM.TO.2011119-20131016.csv
+
+Wrote 224234 characters
+If Symbol ILF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ILF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ILF&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ILF.2011119-20131016.csv
+
+Wrote 130182 characters
+If Symbol IMMR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading IMMR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IMMR&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/IMMR.2011119-20131016.csv
+
+Wrote 151632 characters
+If Symbol IMO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading IMO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IMO.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/IMO.TO.2011119-20131016.csv
+
+Wrote 227651 characters
+If Symbol INN-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading INN-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INN-UN.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/INN-UN.TO.2011119-20131016.csv
+
+Wrote 111312 characters
+If Symbol INPH, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading INPH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INPH&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/INPH.20111110-20131016.csv
+
+Wrote 249302 characters
+If Symbol INSM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading INSM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INSM&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/INSM.2011119-20131016.csv
+
+Wrote 144088 characters
+If Symbol INTC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading INTC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INTC&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/INTC.20111110-20131016.csv
+
+Wrote 344250 characters
+If Symbol IRC, Year 2010 Month 2 less than or equal to 2013 10.  Download!
+Downloading IRC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IRC.TO&a=1&b=26&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/IRC.TO.2010126-20131016.csv
+
+Wrote 0 characters
+If Symbol IRG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading IRG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IRG.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/IRG.TO.2011119-20131016.csv
+
+Wrote 40626 characters
+If Symbol ISH, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ISH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ISH&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ISH.20111110-20131016.csv
+
+Wrote 250705 characters
+If Symbol ISIS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ISIS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ISIS&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ISIS.20111110-20131016.csv
+
+Wrote 257136 characters
+If Symbol IWM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading IWM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IWM&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/IWM.20111110-20131016.csv
+
+Wrote 169964 characters
+If Symbol IXC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading IXC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IXC&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/IXC.20111110-20131016.csv
+
+Wrote 144310 characters
+If Symbol IYF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading IYF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IYF&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/IYF.20111110-20131016.csv
+
+Wrote 162449 characters
+If Symbol JCP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading JCP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=JCP&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/JCP.20111110-20131016.csv
+
+Wrote 386313 characters
+If Symbol JNJ, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading JNJ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=JNJ&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/JNJ.20111110-20131016.csv
+
+Wrote 539838 characters
+If Symbol K, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading K
+URL:  http://ichart.finance.yahoo.com/table.csv?s=K.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/K.TO.20111110-20131016.csv
+
+Wrote 216972 characters
+If Symbol KEG-UN, Year 2007 Month 9 less than or equal to 2013 10.  Download!
+Downloading KEG-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KEG-UN.TO&a=8&b=25&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/KEG-UN.TO.2007825-20131016.csv
+
+Wrote 58484 characters
+If Symbol KEY, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading KEY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KEY&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/KEY.20111110-20131016.csv
+
+Wrote 309957 characters
+If Symbol KEY-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading KEY-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KEY-UN.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/KEY-UN.TO.2011119-20131016.csv
+
+Wrote 119556 characters
+If Symbol KFT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading KFT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KFT&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/KFT.2011119-20131016.csv
+
+Wrote 0 characters
+If Symbol KMB, Year 2011 Month 10 less than or equal to 2013 10.  Download!
+Downloading KMB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KMB&a=9&b=15&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/KMB.2011915-20131016.csv
+
+Wrote 351765 characters
+If Symbol KO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading KO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/KO.20111110-20131016.csv
+
+Wrote 638576 characters
+If Symbol KOL, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading KOL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KOL&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/KOL.2011119-20131016.csv
+
+Wrote 69535 characters
+If Symbol KWK, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading KWK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KWK&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/KWK.20111110-20131016.csv
+
+Wrote 243701 characters
+If Symbol L, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading L
+URL:  http://ichart.finance.yahoo.com/table.csv?s=L.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/L.TO.20111110-20131016.csv
+
+Wrote 224990 characters
+If Symbol LEO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading LEO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LEO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/LEO.20111110-20131016.csv
+
+Wrote 287031 characters
+If Symbol LIF-UN, Year 2007 Month 9 less than or equal to 2013 10.  Download!
+Downloading LIF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LIF-UN.TO&a=8&b=25&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/LIF-UN.TO.2007825-20131016.csv
+
+Wrote 0 characters
+If Symbol LINE, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading LINE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LINE&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/LINE.2011119-20131016.csv
+
+Wrote 94068 characters
+If Symbol LLY, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading LLY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LLY&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/LLY.20111110-20131016.csv
+
+Wrote 390573 characters
+If Symbol LNC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading LNC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LNC&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/LNC.20111110-20131016.csv
+
+Wrote 350684 characters
+If Symbol LOW, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading LOW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LOW&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/LOW.20111110-20131016.csv
+
+Wrote 347772 characters
+If Symbol MCD, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MCD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MCD&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MCD.20111110-20131016.csv
+
+Wrote 536299 characters
+If Symbol MET, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MET
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MET&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MET.20111110-20131016.csv
+
+Wrote 164273 characters
+If Symbol MFA, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MFA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MFA&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MFA.20111110-20131016.csv
+
+Wrote 168511 characters
+If Symbol MFC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MFC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MFC.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MFC.TO.2011119-20131016.csv
+
+Wrote 172609 characters
+If Symbol MG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MG.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MG.TO.2011119-20131016.csv
+
+Wrote 107297 characters
+If Symbol MGN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MGN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MGN&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MGN.2011119-20131016.csv
+
+Wrote 175958 characters
+If Symbol MKP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MKP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MKP.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MKP.TO.20111110-20131016.csv
+
+Wrote 184491 characters
+If Symbol MMM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MMM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MMM&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MMM.20111110-20131016.csv
+
+Wrote 541146 characters
+If Symbol MOS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MOS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MOS&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MOS.20111110-20131016.csv
+
+Wrote 111307 characters
+If Symbol MRD, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MRD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MRD.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MRD.TO.20111110-20131016.csv
+
+Wrote 198589 characters
+If Symbol MRK, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MRK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MRK&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MRK.20111110-20131016.csv
+
+Wrote 544210 characters
+If Symbol MS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MS&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MS.20111110-20131016.csv
+
+Wrote 255872 characters
+If Symbol MUR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MUR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MUR&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MUR.20111110-20131016.csv
+
+Wrote 365709 characters
+If Symbol MX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading MX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MX.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MX.TO.20111110-20131016.csv
+
+Wrote 220789 characters
+If Symbol NA, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading NA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NA.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/NA.TO.20111110-20131016.csv
+
+Wrote 226027 characters
+If Symbol NCX, Year 2009 Month 7 less than or equal to 2013 10.  Download!
+Downloading NCX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NCX.TO&a=6&b=8&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/NCX.TO.200968-20131016.csv
+
+Wrote 0 characters
+If Symbol NG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading NG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NG&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/NG.2011119-20131016.csv
+
+Wrote 111821 characters
+If Symbol NKE, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading NKE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NKE&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/NKE.20111110-20131016.csv
+
+Wrote 321854 characters
+If Symbol NLY, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading NLY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NLY&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/NLY.20111110-20131016.csv
+
+Wrote 189296 characters
+If Symbol NOK, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading NOK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NOK&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/NOK.20111110-20131016.csv
+
+Wrote 230892 characters
+If Symbol NT, Year 2011 Month 5 less than or equal to 2013 10.  Download!
+Downloading NT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NT.TO&a=4&b=27&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/NT.TO.2011427-20131016.csv
+
+Wrote 0 characters
+If Symbol NVS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading NVS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NVS&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/NVS.20111110-20131016.csv
+
+Wrote 206426 characters
+If Symbol NXY, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading NXY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NXY.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/NXY.TO.20111110-20131016.csv
+
+Wrote 219952 characters
+If Symbol OIH, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading OIH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=OIH&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/OIH.20111110-20131016.csv
+
+Wrote 22477 characters
+If Symbol ONC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ONC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ONC.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ONC.TO.2011119-20131016.csv
+
+Wrote 142580 characters
+If Symbol ORA, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ORA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ORA&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ORA.2011119-20131016.csv
+
+Wrote 107106 characters
+If Symbol OZRK, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading OZRK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=OZRK&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/OZRK.2011119-20131016.csv
+
+Wrote 191487 characters
+If Symbol PAAS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PAAS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PAAS&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PAAS.20111110-20131016.csv
+
+Wrote 211768 characters
+If Symbol PALAF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PALAF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PALAF.PK&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PALAF.PK.2011119-20131016.csv
+
+Wrote 84744 characters
+If Symbol PAR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PAR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PAR&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PAR.20111110-20131016.csv
+
+Wrote 257890 characters
+If Symbol PBI, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PBI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PBI&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PBI.20111110-20131016.csv
+
+Wrote 383962 characters
+If Symbol PBR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PBR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PBR&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PBR.20111110-20131016.csv
+
+Wrote 163480 characters
+If Symbol PCC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PCC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PCC&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PCC.20111110-20131016.csv
+
+Wrote 201278 characters
+If Symbol PDS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PDS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PDS&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PDS.20111110-20131016.csv
+
+Wrote 198896 characters
+If Symbol PEP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PEP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PEP&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PEP.20111110-20131016.csv
+
+Wrote 451075 characters
+If Symbol PEY-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PEY-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PEY-UN.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PEY-UN.TO.20111110-20131016.csv
+
+Wrote 169662 characters
+If Symbol PFE, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PFE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PFE&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PFE.20111110-20131016.csv
+
+Wrote 395758 characters
+If Symbol PG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PG&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PG.20111110-20131016.csv
+
+Wrote 538958 characters
+If Symbol PGH, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PGH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PGH&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PGH.20111110-20131016.csv
+
+Wrote 107718 characters
+If Symbol PKPL, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PKPL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PKPL.OB&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PKPL.OB.2011119-20131016.csv
+
+Wrote 35349 characters
+If Symbol PMT-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PMT-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PMT-UN.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PMT-UN.TO.2011119-20131016.csv
+
+Wrote 111969 characters
+If Symbol POR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading POR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POR&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/POR.2011119-20131016.csv
+
+Wrote 89582 characters
+If Symbol POT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading POT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POT&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/POT.20111110-20131016.csv
+
+Wrote 288570 characters
+If Symbol POW, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading POW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POW.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/POW.TO.20111110-20131016.csv
+
+Wrote 225643 characters
+If Symbol PPG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PPG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PPG&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PPG.20111110-20131016.csv
+
+Wrote 370589 characters
+If Symbol PSJ, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PSJ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PSJ&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PSJ.2011119-20131016.csv
+
+Wrote 97557 characters
+If Symbol PTR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PTR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PTR&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PTR.20111110-20131016.csv
+
+Wrote 168255 characters
+If Symbol PVD, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PVD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PVD&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PVD.20111110-20131016.csv
+
+Wrote 216363 characters
+If Symbol PVX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PVX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PVX&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PVX.20111110-20131016.csv
+
+Wrote 0 characters
+If Symbol PWF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading PWF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PWF.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PWF.TO.20111110-20131016.csv
+
+Wrote 224996 characters
+If Symbol REI-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading REI-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=REI-UN.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/REI-UN.TO.20111110-20131016.csv
+
+Wrote 201201 characters
+If Symbol RGLD, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading RGLD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RGLD&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RGLD.20111110-20131016.csv
+
+Wrote 257733 characters
+If Symbol RIG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading RIG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RIG&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RIG.20111110-20131016.csv
+
+Wrote 251769 characters
+If Symbol RIMM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading RIMM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RIMM&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RIMM.20111110-20131016.csv
+
+Wrote 175267 characters
+If Symbol RIO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading RIO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RIO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RIO.20111110-20131016.csv
+
+Wrote 279810 characters
+If Symbol RNK, Year 2010 Month 11 less than or equal to 2013 10.  Download!
+Downloading RNK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RNK.TO&a=10&b=13&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RNK.TO.20101013-20131016.csv
+
+Wrote 2712 characters
+If Symbol RNK-UN, Year 2010 Month 11 less than or equal to 2013 10.  Download!
+Downloading RNK-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RNK-UN.TO&a=10&b=20&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RNK-UN.TO.20101020-20131016.csv
+
+Wrote 4370 characters
+If Symbol ROC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ROC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ROC&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ROC.2011119-20131016.csv
+
+Wrote 98450 characters
+If Symbol ROY, Year 2010 Month 3 less than or equal to 2013 10.  Download!
+Downloading ROY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ROY&a=2&b=5&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ROY.201025-20131016.csv
+
+Wrote 0 characters
+If Symbol RPM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading RPM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RPM&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RPM.20111110-20131016.csv
+
+Wrote 279908 characters
+If Symbol RPT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading RPT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RPT&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RPT.20111110-20131016.csv
+
+Wrote 203716 characters
+If Symbol RSO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading RSO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RSO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RSO.2011119-20131016.csv
+
+Wrote 85109 characters
+If Symbol RTM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading RTM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RTM&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RTM.2011119-20131016.csv
+
+Wrote 80282 characters
+If Symbol RTP, Year 2010 Month 10 less than or equal to 2013 10.  Download!
+Downloading RTP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RTP&a=9&b=12&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RTP.2010912-20131016.csv
+
+Wrote 0 characters
+If Symbol RUS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading RUS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RUS.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RUS.TO.20111110-20131016.csv
+
+Wrote 194539 characters
+If Symbol RY, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading RY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RY.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RY.TO.20111110-20131016.csv
+
+Wrote 230478 characters
+If Symbol SAP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SAP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SAP.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SAP.TO.20111110-20131016.csv
+
+Wrote 190400 characters
+If Symbol SBUX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SBUX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SBUX&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SBUX.20111110-20131016.csv
+
+Wrote 261746 characters
+If Symbol SC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SC.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SC.TO.20111110-20131016.csv
+
+Wrote 124128 characters
+If Symbol SDRLF, Year 2010 Month 4 less than or equal to 2013 10.  Download!
+Downloading SDRLF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SDRLF.PK&a=3&b=15&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SDRLF.PK.2010315-20131016.csv
+
+Wrote 0 characters
+If Symbol SDY, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SDY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SDY&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SDY.2011119-20131016.csv
+
+Wrote 95219 characters
+If Symbol SGGDD, Year 2011 Month 8 less than or equal to 2013 10.  Download!
+Downloading SGGDD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SGGDD.PK&a=7&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SGGDD.PK.2011710-20131016.csv
+
+Wrote 32145 characters
+If Symbol SGU, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SGU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SGU&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SGU.20111110-20131016.csv
+
+Wrote 199473 characters
+If Symbol SH, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SH&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SH.2011119-20131016.csv
+
+Wrote 89592 characters
+If Symbol SIF-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SIF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SIF-UN.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SIF-UN.TO.20111110-20131016.csv
+
+Wrote 117158 characters
+If Symbol SINA, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SINA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SINA&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SINA.2011119-20131016.csv
+
+Wrote 162047 characters
+If Symbol SKT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SKT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SKT&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SKT.20111110-20131016.csv
+
+Wrote 242137 characters
+If Symbol SLF, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SLF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLF.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SLF.TO.20111110-20131016.csv
+
+Wrote 165690 characters
+If Symbol SLV, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SLV
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLV&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SLV.2011119-20131016.csv
+
+Wrote 95144 characters
+If Symbol SLW, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SLW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLW&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SLW.2011119-20131016.csv
+
+Wrote 99570 characters
+If Symbol SOR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SOR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SOR&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SOR.20111110-20131016.csv
+
+Wrote 298397 characters
+If Symbol SPB, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SPB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SPB.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SPB.TO.20111110-20131016.csv
+
+Wrote 146529 characters
+If Symbol SPF-UN, Year 2011 Month 4 less than or equal to 2013 10.  Download!
+Downloading SPF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SPF-UN.TO&a=3&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SPF-UN.TO.201139-20131016.csv
+
+Wrote 0 characters
+If Symbol SPXJ, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SPXJ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SPXJ.L&a=11&b=8&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SPXJ.L.2011118-20131016.csv
+
+Wrote 52407 characters
+If Symbol SQP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SQP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SQP.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SQP.TO.20111110-20131016.csv
+
+Wrote 182099 characters
+If Symbol STEC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading STEC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=STEC&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/STEC.20111110-20131016.csv
+
+Wrote 143706 characters
+If Symbol STP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading STP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=STP&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/STP.2011119-20131016.csv
+
+Wrote 92194 characters
+If Symbol STX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading STX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=STX&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/STX.20111110-20131016.csv
+
+Wrote 133194 characters
+If Symbol SU, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SU.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SU.TO.20111110-20131016.csv
+
+Wrote 229416 characters
+If Symbol SWK, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SWK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SWK&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SWK.20111110-20131016.csv
+
+Wrote 339675 characters
+If Symbol SWY, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SWY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SWY&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SWY.20111110-20131016.csv
+
+Wrote 287141 characters
+If Symbol SYNA, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading SYNA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SYNA&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SYNA.20111110-20131016.csv
+
+Wrote 141223 characters
+If Symbol T, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading T
+URL:  http://ichart.finance.yahoo.com/table.csv?s=T.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/T.TO.20111110-20131016.csv
+
+Wrote 226682 characters
+If Symbol TAC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TAC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TAC&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TAC.20111110-20131016.csv
+
+Wrote 142815 characters
+If Symbol TAXI, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TAXI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TAXI&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TAXI.20111110-20131016.csv
+
+Wrote 194645 characters
+If Symbol TBL, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TBL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TBL.TO&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TBL.TO.2011119-20131016.csv
+
+Wrote 77172 characters
+If Symbol TBT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TBT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TBT&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TBT.2011119-20131016.csv
+
+Wrote 67219 characters
+If Symbol TD, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TD.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TD.TO.20111110-20131016.csv
+
+Wrote 230017 characters
+If Symbol TEI, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TEI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TEI&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TEI.20111110-20131016.csv
+
+Wrote 208428 characters
+If Symbol TEO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TEO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TEO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TEO.20111110-20131016.csv
+
+Wrote 222331 characters
+If Symbol TEVA, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TEVA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TEVA&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TEVA.20111110-20131016.csv
+
+Wrote 286916 characters
+If Symbol TFI, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TFI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TFI.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TFI.TO.20111110-20131016.csv
+
+Wrote 115643 characters
+If Symbol TGT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TGT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TGT&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TGT.20111110-20131016.csv
+
+Wrote 374367 characters
+If Symbol TI, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TI&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TI.2011119-20131016.csv
+
+Wrote 118485 characters
+If Symbol TICC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TICC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TICC&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TICC.2011119-20131016.csv
+
+Wrote 111573 characters
+If Symbol TIH, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TIH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TIH.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TIH.TO.20111110-20131016.csv
+
+Wrote 201617 characters
+If Symbol TJX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TJX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TJX&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TJX.20111110-20131016.csv
+
+Wrote 312451 characters
+If Symbol TLM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TLM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TLM.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TLM.TO.20111110-20131016.csv
+
+Wrote 228417 characters
+If Symbol TRA, Year 2010 Month 4 less than or equal to 2013 10.  Download!
+Downloading TRA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TRA&a=3&b=16&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TRA.2010316-20131016.csv
+
+Wrote 0 characters
+If Symbol TRP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading TRP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TRP.TO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TRP.TO.20111110-20131016.csv
+
+Wrote 23956 characters
+If Symbol UDN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading UDN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UDN&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/UDN.2011119-20131016.csv
+
+Wrote 79418 characters
+If Symbol UG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading UG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UG&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/UG.20111110-20131016.csv
+
+Wrote 215407 characters
+If Symbol UGI, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading UGI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UGI&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/UGI.20111110-20131016.csv
+
+Wrote 307133 characters
+If Symbol UNG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading UNG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UNG&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/UNG.2011119-20131016.csv
+
+Wrote 78656 characters
+If Symbol UNH, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading UNH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UNH&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/UNH.20111110-20131016.csv
+
+Wrote 289332 characters
+If Symbol UNP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading UNP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UNP&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/UNP.20111110-20131016.csv
+
+Wrote 416464 characters
+If Symbol UPL, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading UPL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UPL&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/UPL.20111110-20131016.csv
+
+Wrote 153110 characters
+If Symbol UTX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading UTX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UTX&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/UTX.20111110-20131016.csv
+
+Wrote 534919 characters
+If Symbol UUP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading UUP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UUP&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/UUP.2011119-20131016.csv
+
+Wrote 80956 characters
+If Symbol var, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading var
+URL:  http://ichart.finance.yahoo.com/table.csv?s=var&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/var.20111110-20131016.csv
+
+Wrote 310533 characters
+If Symbol VIVO, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading VIVO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=VIVO&a=11&b=10&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/VIVO.20111110-20131016.csv
+
+Wrote 247483 characters
+If Symbol VMW, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading VMW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=VMW&a=11&b=9&d=10&e=16&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/VMW.2011119-20131016.csv
+
+Wrote 76657 characters
+If Symbol WDC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading WDC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WDC&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/WDC.20111110-20131017.csv
+
+Wrote 315617 characters
+If Symbol WFC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading WFC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WFC&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/WFC.20111110-20131017.csv
+
+Wrote 356103 characters
+If Symbol WFT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading WFT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WFT&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/WFT.20111110-20131017.csv
+
+Wrote 281923 characters
+If Symbol WJX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading WJX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WJX.TO&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/WJX.TO.20111110-20131017.csv
+
+Wrote 192377 characters
+If Symbol WMT, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading WMT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WMT&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/WMT.20111110-20131017.csv
+
+Wrote 504559 characters
+If Symbol WRLS, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading WRLS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WRLS&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/WRLS.20111110-20131017.csv
+
+Wrote 209385 characters
+If Symbol WYE, Year 2009 Month 10 less than or equal to 2013 10.  Download!
+Downloading WYE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WYE&a=9&b=16&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/WYE.2009916-20131017.csv
+
+Wrote 0 characters
+If Symbol XBB, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading XBB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XBB.TO&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/XBB.TO.20111110-20131017.csv
+
+Wrote 152325 characters
+If Symbol XEG, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading XEG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XEG.TO&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/XEG.TO.20111110-20131017.csv
+
+Wrote 150801 characters
+If Symbol XIC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading XIC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XIC.TO&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/XIC.TO.20111110-20131017.csv
+
+Wrote 149667 characters
+If Symbol XIU, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading XIU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XIU.TO&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/XIU.TO.20111110-20131017.csv
+
+Wrote 172721 characters
+If Symbol XLB, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading XLB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XLB&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/XLB.20111110-20131017.csv
+
+Wrote 181248 characters
+If Symbol XLE, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading XLE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XLE&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/XLE.20111110-20131017.csv
+
+Wrote 183022 characters
+If Symbol XOM, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading XOM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XOM&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/XOM.20111110-20131017.csv
+
+Wrote 538963 characters
+If Symbol XRE, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading XRE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XRE.TO&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/XRE.TO.20111110-20131017.csv
+
+Wrote 127628 characters
+If Symbol XSP, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading XSP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XSP.TO&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/XSP.TO.20111110-20131017.csv
+
+Wrote 125270 characters
+If Symbol XTO, Year 2010 Month 6 less than or equal to 2013 10.  Download!
+Downloading XTO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XTO&a=5&b=26&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/XTO.2010526-20131017.csv
+
+Wrote 0 characters
+If Symbol XTR, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading XTR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XTR.TO&a=11&b=9&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/XTR.TO.2011119-20131017.csv
+
+Wrote 90921 characters
+If Symbol YGE, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading YGE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=YGE&a=11&b=9&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/YGE.2011119-20131017.csv
+
+Wrote 74543 characters
+If Symbol YLO-UN, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading YLO-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=YLO-UN.TO&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/YLO-UN.TO.20111110-20131017.csv
+
+Wrote 105857 characters
+If Symbol YZC, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading YZC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=YZC&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/YZC.20111110-20131017.csv
+
+Wrote 179231 characters
+If Symbol ^VIX, Year 2011 Month 12 less than or equal to 2013 10.  Download!
+Downloading ^VIX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=^VIX&a=11&b=10&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/^VIX.20111110-20131017.csv
+
+Wrote 270233 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BAM-A.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BAM-A.TO.1970001-20131017.csv
+
+Wrote 221471 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BRK-UN.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BRK-UN.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CEANF.PK&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CEANF.PK.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PDM-UN.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PDM-UN.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WJX-UN.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/WJX-UN.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PC.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PC.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ACO-X.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ACO-X.TO.1970001-20131017.csv
+
+Wrote 218323 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GDI-UN.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GDI-UN.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EMP-A.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/EMP-A.TO.1970001-20131017.csv
+
+Wrote 221729 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=OBQI.OB&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/OBQI.OB.1970001-20131017.csv
+
+Wrote 136350 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TBL-UN.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TBL-UN.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HTE.DB.E.TSE:B&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/HTE.DB.E.TSE:B.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TDT.BK&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TDT.BK.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NGP.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/NGP.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=0813-HK.HK&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/0813-HK.HK.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AGF-B.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/AGF-B.TO.1970001-20131017.csv
+
+Wrote 210601 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ACO.X.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ACO.X.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CIX-UN.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CIX-UN.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EMP.A.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/EMP.A.TO.1970001-20131017.csv
+
+Wrote 2486 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MRU-A.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MRU-A.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=REI.UN.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/REI.UN.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TOC.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TOC.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=JE-UN.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/JE-UN.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ZCSTGF.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ZCSTGF.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ZCMDF.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ZCMDF.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ZRCGF.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ZRCGF.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ZRCSCGF.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ZRCSCGF.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ZRIGF.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ZRIGF.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ZRUSRSP.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ZRUSRSP.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ZSMMF.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ZSMMF.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ZACCLAI.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ZACCLAI.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ZGCF.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ZGCF.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XON&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/XON.1970001-20131017.csv
+
+Wrote 2398 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TMA&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TMA.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GTU.UN.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/GTU.UN.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WDX&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/WDX.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TEST.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/TEST.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PVG.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PVG.TO.1970001-20131017.csv
+
+Wrote 32318 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EXK.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/EXK.TO.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IPT.V&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/IPT.V.1970001-20131017.csv
+
+Wrote 178902 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ARMH&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/ARMH.1970001-20131017.csv
+
+Wrote 177846 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CTXS&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/CTXS.1970001-20131017.csv
+
+Wrote 219127 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RAX&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/RAX.1970001-20131017.csv
+
+Wrote 62830 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SORRY&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/SORRY.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MISSING SY&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/MISSING SY.1970001-20131017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PALL&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/PALL.1970001-20131017.csv
+
+Wrote 45028 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BB.TO&a=0&b=01&d=10&e=17&f=2013&g=d&ignore=.csv
+Data file:  ../currentdata/BB.TO.1970001-20131017.csv
+
+Wrote 194654 characters
+
+
+STARTING download of older data
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AAPL&a=0&b=01&d=8&e=6&f=1984&g=d&ignore=.csv
+Data file:  ../currentdata/AAPL.1970001-198486.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ABD&a=0&b=01&d=7&e=16&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/ABD.1970001-2005716.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ABT&a=0&b=01&d=3&e=5&f=1983&g=d&ignore=.csv
+Data file:  ../currentdata/ABT.1970001-198335.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ABX.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/ABX.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ADM&a=0&b=01&d=3&e=5&f=1983&g=d&ignore=.csv
+Data file:  ../currentdata/ADM.1970001-198335.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ADRE&a=0&b=01&d=10&e=14&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/ADRE.1970001-20021014.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AEM&a=0&b=01&d=8&e=6&f=1984&g=d&ignore=.csv
+Data file:  ../currentdata/AEM.1970001-198486.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AGU.TO&a=0&b=01&d=2&e=10&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/AGU.TO.1970001-1996210.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AMZN&a=0&b=01&d=4&e=15&f=1997&g=d&ignore=.csv
+Data file:  ../currentdata/AMZN.1970001-1997415.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=APA&a=0&b=01&d=11&e=30&f=1981&g=d&ignore=.csv
+Data file:  ../currentdata/APA.1970001-19811130.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=APF-UN.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/APF-UN.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AQN.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/AQN.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ARCC&a=0&b=01&d=9&e=6&f=2004&g=d&ignore=.csv
+Data file:  ../currentdata/ARCC.1970001-200496.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ARGT&a=0&b=01&d=2&e=3&f=2011&g=d&ignore=.csv
+Data file:  ../currentdata/ARGT.1970001-201123.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ARKR&a=0&b=01&d=11&e=12&f=1985&g=d&ignore=.csv
+Data file:  ../currentdata/ARKR.1970001-19851112.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AU&a=0&b=01&d=7&e=4&f=1998&g=d&ignore=.csv
+Data file:  ../currentdata/AU.1970001-199874.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AUY&a=0&b=01&d=0&e=11&f=2004&g=d&ignore=.csv
+Data file:  ../currentdata/AUY.1970001-2004011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AW-UN.TO&a=0&b=01&d=5&e=21&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/AW-UN.TO.1970001-2005521.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AZZ&a=0&b=01&d=8&e=6&f=1984&g=d&ignore=.csv
+Data file:  ../currentdata/AZZ.1970001-198486.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BBBY&a=0&b=01&d=5&e=4&f=1992&g=d&ignore=.csv
+Data file:  ../currentdata/BBBY.1970001-199254.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BCE.TO&a=0&b=01&d=4&e=5&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/BCE.TO.1970001-199645.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BDX&a=0&b=01&d=3&e=5&f=1983&g=d&ignore=.csv
+Data file:  ../currentdata/BDX.1970001-198335.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BEAV&a=0&b=01&d=3&e=24&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/BEAV.1970001-1990324.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BEXP&a=0&b=01&d=4&e=8&f=1997&g=d&ignore=.csv
+Data file:  ../currentdata/BEXP.1970001-199748.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BF-B&a=0&b=01&d=8&e=6&f=1984&g=d&ignore=.csv
+Data file:  ../currentdata/BF-B.1970001-198486.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BHP&a=0&b=01&d=4&e=28&f=1987&g=d&ignore=.csv
+Data file:  ../currentdata/BHP.1970001-1987428.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BLD.TO&a=0&b=01&d=2&e=20&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/BLD.TO.1970001-1996220.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BMO.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/BMO.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BMR&a=0&b=01&d=7&e=8&f=2004&g=d&ignore=.csv
+Data file:  ../currentdata/BMR.1970001-200478.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BMS&a=0&b=01&d=8&e=6&f=1984&g=d&ignore=.csv
+Data file:  ../currentdata/BMS.1970001-198486.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BNE-UN.TO&a=0&b=01&d=6&e=2&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/BNE-UN.TO.1970001-200162.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BNI&a=0&b=01&d=0&e=1&f=1980&g=d&ignore=.csv
+Data file:  ../currentdata/BNI.1970001-198001.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BNS.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/BNS.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BPF-UN.TO&a=0&b=01&d=8&e=7&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/BPF-UN.TO.1970001-200587.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BPO.TO&a=0&b=01&d=5&e=2&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/BPO.TO.1970001-199652.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BR.TO&a=0&b=01&d=1&e=25&f=1997&g=d&ignore=.csv
+Data file:  ../currentdata/BR.TO.1970001-1997125.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BR-UN.TO&a=0&b=01&d=1&e=25&f=1997&g=d&ignore=.csv
+Data file:  ../currentdata/BR-UN.TO.1970001-1997125.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BRK.TO&a=0&b=01&d=6&e=22&f=2008&g=d&ignore=.csv
+Data file:  ../currentdata/BRK.TO.1970001-2008622.csv
+
+Wrote 45430 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BYDDF.PK&a=0&b=01&d=1&e=12&f=2009&g=d&ignore=.csv
+Data file:  ../currentdata/BYDDF.PK.1970001-2009112.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CAH&a=0&b=01&d=0&e=3&f=1988&g=d&ignore=.csv
+Data file:  ../currentdata/CAH.1970001-198803.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CAKE&a=0&b=01&d=8&e=17&f=1992&g=d&ignore=.csv
+Data file:  ../currentdata/CAKE.1970001-1992817.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CB&a=0&b=01&d=8&e=6&f=1984&g=d&ignore=.csv
+Data file:  ../currentdata/CB.1970001-198486.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CCJ&a=0&b=01&d=4&e=29&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/CCJ.1970001-1996429.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CCL&a=0&b=01&d=0&e=4&f=1989&g=d&ignore=.csv
+Data file:  ../currentdata/CCL.1970001-198904.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CDE&a=0&b=01&d=3&e=11&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/CDE.1970001-1990311.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CDH.TO&a=0&b=01&d=11&e=10&f=1997&g=d&ignore=.csv
+Data file:  ../currentdata/CDH.TO.1970001-19971110.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CDZ.TO&a=0&b=01&d=8&e=7&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/CDZ.TO.1970001-200687.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CEF&a=0&b=01&d=2&e=16&f=1992&g=d&ignore=.csv
+Data file:  ../currentdata/CEF.1970001-1992216.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CEO&a=0&b=01&d=2&e=19&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/CEO.1970001-2001219.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CF&a=0&b=01&d=7&e=10&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/CF.1970001-2005710.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CGCA&a=0&b=01&d=6&e=5&f=2009&g=d&ignore=.csv
+Data file:  ../currentdata/CGCA.1970001-200965.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CH&a=0&b=01&d=0&e=10&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/CH.1970001-1990010.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CHK&a=0&b=01&d=1&e=15&f=1993&g=d&ignore=.csv
+Data file:  ../currentdata/CHK.1970001-1993115.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CHY&a=0&b=01&d=4&e=29&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/CHY.1970001-2003429.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CINF&a=0&b=01&d=2&e=25&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/CINF.1970001-1990225.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CKI.TO&a=0&b=01&d=7&e=22&f=1999&g=d&ignore=.csv
+Data file:  ../currentdata/CKI.TO.1970001-1999722.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CL&a=0&b=01&d=0&e=2&f=1977&g=d&ignore=.csv
+Data file:  ../currentdata/CL.1970001-197702.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLC-UN.TO&a=0&b=01&d=0&e=17&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/CLC-UN.TO.1970001-2006017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLCT&a=0&b=01&d=10&e=4&f=1999&g=d&ignore=.csv
+Data file:  ../currentdata/CLCT.1970001-1999104.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLL.TO&a=0&b=01&d=7&e=6&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/CLL.TO.1970001-199676.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLS.TO&a=0&b=01&d=6&e=8&f=1998&g=d&ignore=.csv
+Data file:  ../currentdata/CLS.TO.1970001-199868.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLX&a=0&b=01&d=2&e=20&f=1983&g=d&ignore=.csv
+Data file:  ../currentdata/CLX.1970001-1983220.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CM.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/CM.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CMO&a=0&b=01&d=10&e=4&f=1987&g=d&ignore=.csv
+Data file:  ../currentdata/CMO.1970001-1987104.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CNQ.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/CNQ.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CNR.TO&a=0&b=01&d=10&e=21&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/CNR.TO.1970001-19961021.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COF&a=0&b=01&d=10&e=15&f=1994&g=d&ignore=.csv
+Data file:  ../currentdata/COF.1970001-19941015.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COH&a=0&b=01&d=9&e=5&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/COH.1970001-200095.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COMP&a=0&b=01&d=1&e=4&f=1971&g=d&ignore=.csv
+Data file:  ../currentdata/COMP.1970001-197114.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COP&a=0&b=01&d=0&e=3&f=1982&g=d&ignore=.csv
+Data file:  ../currentdata/COP.1970001-198203.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CP.TO&a=0&b=01&d=7&e=23&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/CP.TO.1970001-2001723.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CPG.TO&a=0&b=01&d=9&e=1&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/CPG.TO.1970001-200291.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CSCO&a=0&b=01&d=2&e=25&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/CSCO.1970001-1990225.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CSS.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/CSS.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CSS-UN.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/CSS-UN.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CTAS&a=0&b=01&d=2&e=25&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/CTAS.1970001-1990225.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CTRP&a=0&b=01&d=11&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/CTRP.1970001-2003118.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CU.TO&a=0&b=01&d=7&e=14&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/CU.TO.1970001-2000714.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CWI-UN.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/CWI-UN.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DBA&a=0&b=01&d=0&e=4&f=2007&g=d&ignore=.csv
+Data file:  ../currentdata/DBA.1970001-200704.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DBB&a=0&b=01&d=0&e=4&f=2007&g=d&ignore=.csv
+Data file:  ../currentdata/DBB.1970001-200704.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DGW&a=0&b=01&d=5&e=23&f=2009&g=d&ignore=.csv
+Data file:  ../currentdata/DGW.1970001-2009523.csv
+
+Wrote 49835 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DMF&a=0&b=01&d=10&e=24&f=1991&g=d&ignore=.csv
+Data file:  ../currentdata/DMF.1970001-19911024.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DOV&a=0&b=01&d=6&e=0&f=1985&g=d&ignore=.csv
+Data file:  ../currentdata/DOV.1970001-198560.csv
+
+Wrote 342233 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DUK&a=0&b=01&d=3&e=5&f=1983&g=d&ignore=.csv
+Data file:  ../currentdata/DUK.1970001-198335.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DVN&a=0&b=01&d=2&e=16&f=1992&g=d&ignore=.csv
+Data file:  ../currentdata/DVN.1970001-1992216.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DWX&a=0&b=01&d=1&e=19&f=2008&g=d&ignore=.csv
+Data file:  ../currentdata/DWX.1970001-2008119.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EBAY&a=0&b=01&d=8&e=23&f=1998&g=d&ignore=.csv
+Data file:  ../currentdata/EBAY.1970001-1998823.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ECA.TO&a=0&b=01&d=7&e=22&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/ECA.TO.1970001-2001722.csv
+
+Wrote 0 characters
+Stock ED has reached the end of the date limits
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EDU&a=0&b=01&d=8&e=14&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/EDU.1970001-2006814.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EIT-UN.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/EIT-UN.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ELON&a=0&b=01&d=6&e=27&f=1998&g=d&ignore=.csv
+Data file:  ../currentdata/ELON.1970001-1998627.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EMR&a=0&b=01&d=0&e=3&f=1982&g=d&ignore=.csv
+Data file:  ../currentdata/EMR.1970001-198203.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ENB.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/ENB.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EOG&a=0&b=01&d=9&e=3&f=1989&g=d&ignore=.csv
+Data file:  ../currentdata/EOG.1970001-198993.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ERF-UN.TO&a=0&b=01&d=0&e=14&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/ERF-UN.TO.1970001-2002014.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ESI.TO&a=0&b=01&d=3&e=24&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/ESI.TO.1970001-1996324.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ETR&a=0&b=01&d=11&e=30&f=1981&g=d&ignore=.csv
+Data file:  ../currentdata/ETR.1970001-19811130.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EUO&a=0&b=01&d=10&e=24&f=2008&g=d&ignore=.csv
+Data file:  ../currentdata/EUO.1970001-20081024.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EVEP&a=0&b=01&d=8&e=26&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/EVEP.1970001-2006826.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EWX&a=0&b=01&d=4&e=21&f=2008&g=d&ignore=.csv
+Data file:  ../currentdata/EWX.1970001-2008421.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EWZ&a=0&b=01&d=6&e=13&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/EWZ.1970001-2000613.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=F&a=0&b=01&d=0&e=2&f=1977&g=d&ignore=.csv
+Data file:  ../currentdata/F.1970001-197702.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FCR.TO&a=0&b=01&d=6&e=30&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/FCR.TO.1970001-2002630.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FDI&a=0&b=01&d=10&e=4&f=1987&g=d&ignore=.csv
+Data file:  ../currentdata/FDI.1970001-1987104.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FES.TO&a=0&b=01&d=6&e=16&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/FES.TO.1970001-2003616.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FFDF&a=0&b=01&d=3&e=2&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/FFDF.1970001-199632.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FNV.TO&a=0&b=01&d=11&e=2&f=2007&g=d&ignore=.csv
+Data file:  ../currentdata/FNV.TO.1970001-2007112.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FRZNF.PK&a=0&b=01&d=10&e=19&f=2009&g=d&ignore=.csv
+Data file:  ../currentdata/FRZNF.PK.1970001-20091019.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FTS.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/FTS.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FWLT&a=0&b=01&d=3&e=5&f=1983&g=d&ignore=.csv
+Data file:  ../currentdata/FWLT.1970001-198335.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FXY&a=0&b=01&d=1&e=12&f=2007&g=d&ignore=.csv
+Data file:  ../currentdata/FXY.1970001-2007112.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GDI.TO&a=0&b=01&d=0&e=3&f=2011&g=d&ignore=.csv
+Data file:  ../currentdata/GDI.TO.1970001-201103.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GIM&a=0&b=01&d=2&e=16&f=1988&g=d&ignore=.csv
+Data file:  ../currentdata/GIM.1970001-1988216.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GIS&a=0&b=01&d=5&e=9&f=1983&g=d&ignore=.csv
+Data file:  ../currentdata/GIS.1970001-198359.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GLD&a=0&b=01&d=10&e=17&f=2004&g=d&ignore=.csv
+Data file:  ../currentdata/GLD.1970001-20041017.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GLS&a=0&b=01&d=0&e=10&f=2007&g=d&ignore=.csv
+Data file:  ../currentdata/GLS.1970001-2007010.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GLW&a=0&b=01&d=11&e=30&f=1981&g=d&ignore=.csv
+Data file:  ../currentdata/GLW.1970001-19811130.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GOOG&a=0&b=01&d=7&e=18&f=2004&g=d&ignore=.csv
+Data file:  ../currentdata/GOOG.1970001-2004718.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GPS&a=0&b=01&d=6&e=22&f=1987&g=d&ignore=.csv
+Data file:  ../currentdata/GPS.1970001-1987622.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GPW&a=0&b=01&d=1&e=1&f=2004&g=d&ignore=.csv
+Data file:  ../currentdata/GPW.1970001-200411.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GRMN&a=0&b=01&d=11&e=13&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/GRMN.1970001-20001113.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GRZ&a=0&b=01&d=2&e=10&f=1993&g=d&ignore=.csv
+Data file:  ../currentdata/GRZ.1970001-1993210.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GSH&a=0&b=01&d=4&e=12&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/GSH.1970001-1996412.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GWO.TO&a=0&b=01&d=3&e=8&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/GWO.TO.1970001-200238.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HBNC&a=0&b=01&d=0&e=9&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/HBNC.1970001-200209.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HCBK&a=0&b=01&d=6&e=12&f=1999&g=d&ignore=.csv
+Data file:  ../currentdata/HCBK.1970001-1999612.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HCG.TO&a=0&b=01&d=4&e=17&f=2004&g=d&ignore=.csv
+Data file:  ../currentdata/HCG.TO.1970001-2004417.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HD&a=0&b=01&d=7&e=19&f=1984&g=d&ignore=.csv
+Data file:  ../currentdata/HD.1970001-1984719.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HGIC&a=0&b=01&d=2&e=25&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/HGIC.1970001-1990225.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HL&a=0&b=01&d=1&e=13&f=1985&g=d&ignore=.csv
+Data file:  ../currentdata/HL.1970001-1985113.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HMIN&a=0&b=01&d=9&e=26&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/HMIN.1970001-2006926.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HOU.TO&a=0&b=01&d=0&e=15&f=2008&g=d&ignore=.csv
+Data file:  ../currentdata/HOU.TO.1970001-2008015.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HR-UN.TO&a=0&b=01&d=5&e=22&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/HR-UN.TO.1970001-2000522.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HSE.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/HSE.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HTLD&a=0&b=01&d=2&e=25&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/HTLD.1970001-1990225.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IAG.TO&a=0&b=01&d=1&e=9&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/IAG.TO.1970001-200019.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ICB&a=0&b=01&d=6&e=0&f=1985&g=d&ignore=.csv
+Data file:  ../currentdata/ICB.1970001-198560.csv
+
+Wrote 319581 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IEX&a=0&b=01&d=5&e=29&f=1989&g=d&ignore=.csv
+Data file:  ../currentdata/IEX.1970001-1989529.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IGM.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/IGM.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ILF&a=0&b=01&d=4&e=5&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/ILF.1970001-200345.csv
+
+Wrote 17046 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IMMR&a=0&b=01&d=10&e=18&f=1999&g=d&ignore=.csv
+Data file:  ../currentdata/IMMR.1970001-19991018.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IMO.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/IMO.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INN-UN.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/INN-UN.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INPH&a=0&b=01&d=2&e=26&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/INPH.1970001-1990226.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INSM&a=0&b=01&d=5&e=0&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/INSM.1970001-200050.csv
+
+Wrote 144088 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INTC&a=0&b=01&d=6&e=8&f=1986&g=d&ignore=.csv
+Data file:  ../currentdata/INTC.1970001-198668.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IRC.TO&a=0&b=01&d=4&e=9&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/IRC.TO.1970001-200649.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IRG.TO&a=0&b=01&d=5&e=7&f=2004&g=d&ignore=.csv
+Data file:  ../currentdata/IRG.TO.1970001-200457.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ISH&a=0&b=01&d=9&e=23&f=1991&g=d&ignore=.csv
+Data file:  ../currentdata/ISH.1970001-1991923.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ISIS&a=0&b=01&d=4&e=16&f=1991&g=d&ignore=.csv
+Data file:  ../currentdata/ISIS.1970001-1991416.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IWM&a=0&b=01&d=4&e=25&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/IWM.1970001-2000425.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IXC&a=0&b=01&d=10&e=25&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/IXC.1970001-20011025.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IYF&a=0&b=01&d=4&e=25&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/IYF.1970001-2000425.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=JCP&a=0&b=01&d=0&e=3&f=1982&g=d&ignore=.csv
+Data file:  ../currentdata/JCP.1970001-198203.csv
+
+Wrote 0 characters
+Stock JNJ has reached the end of the date limits
+URL:  http://ichart.finance.yahoo.com/table.csv?s=K.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/K.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KEG-UN.TO&a=0&b=01&d=7&e=12&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/KEG-UN.TO.1970001-2002712.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KEY&a=0&b=01&d=10&e=4&f=1987&g=d&ignore=.csv
+Data file:  ../currentdata/KEY.1970001-1987104.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KEY-UN.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/KEY-UN.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KFT&a=0&b=01&d=5&e=13&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/KFT.1970001-2001513.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KMB&a=0&b=01&d=11&e=16&f=1984&g=d&ignore=.csv
+Data file:  ../currentdata/KMB.1970001-19841116.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KOL&a=0&b=01&d=0&e=14&f=2008&g=d&ignore=.csv
+Data file:  ../currentdata/KOL.1970001-2008014.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KWK&a=0&b=01&d=2&e=16&f=1992&g=d&ignore=.csv
+Data file:  ../currentdata/KWK.1970001-1992216.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=L.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/L.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LEO&a=0&b=01&d=8&e=23&f=1987&g=d&ignore=.csv
+Data file:  ../currentdata/LEO.1970001-1987823.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LIF-UN.TO&a=0&b=01&d=7&e=12&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/LIF-UN.TO.1970001-2002712.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LINE&a=0&b=01&d=0&e=16&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/LINE.1970001-2006016.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LLY&a=0&b=01&d=0&e=3&f=1982&g=d&ignore=.csv
+Data file:  ../currentdata/LLY.1970001-198203.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LNC&a=0&b=01&d=9&e=4&f=1984&g=d&ignore=.csv
+Data file:  ../currentdata/LNC.1970001-198494.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LOW&a=0&b=01&d=6&e=0&f=1985&g=d&ignore=.csv
+Data file:  ../currentdata/LOW.1970001-198560.csv
+
+Wrote 347772 characters
+Stock MCD has reached the end of the date limits
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MET&a=0&b=01&d=5&e=22&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/MET.1970001-2000522.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MFA&a=0&b=01&d=3&e=12&f=1998&g=d&ignore=.csv
+Data file:  ../currentdata/MFA.1970001-1998312.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MFC.TO&a=0&b=01&d=8&e=29&f=1999&g=d&ignore=.csv
+Data file:  ../currentdata/MFC.TO.1970001-1999829.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MG.TO&a=0&b=01&d=11&e=0&f=2004&g=d&ignore=.csv
+Data file:  ../currentdata/MG.TO.1970001-2004110.csv
+
+Wrote 107297 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MGN&a=0&b=01&d=0&e=5&f=1997&g=d&ignore=.csv
+Data file:  ../currentdata/MGN.1970001-199705.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MKP.TO&a=0&b=01&d=7&e=12&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/MKP.TO.1970001-1996712.csv
+
+Wrote 0 characters
+Stock MMM has reached the end of the date limits
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MOS&a=0&b=01&d=3&e=8&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/MOS.1970001-200238.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MRD.TO&a=0&b=01&d=3&e=24&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/MRD.TO.1970001-1996324.csv
+
+Wrote 0 characters
+Stock MRK has reached the end of the date limits
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MS&a=0&b=01&d=1&e=22&f=1993&g=d&ignore=.csv
+Data file:  ../currentdata/MS.1970001-1993122.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MUR&a=0&b=01&d=3&e=5&f=1983&g=d&ignore=.csv
+Data file:  ../currentdata/MUR.1970001-198335.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MX.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/MX.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NA.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/NA.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NCX.TO&a=0&b=01&d=6&e=2&f=1998&g=d&ignore=.csv
+Data file:  ../currentdata/NCX.TO.1970001-199862.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NG&a=0&b=01&d=11&e=3&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/NG.1970001-2003113.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NKE&a=0&b=01&d=7&e=18&f=1987&g=d&ignore=.csv
+Data file:  ../currentdata/NKE.1970001-1987718.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NLY&a=0&b=01&d=9&e=7&f=1997&g=d&ignore=.csv
+Data file:  ../currentdata/NLY.1970001-199797.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NOK&a=0&b=01&d=3&e=24&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/NOK.1970001-1995324.csv
+
+Wrote 3712 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NT.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/NT.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NVS&a=0&b=01&d=10&e=6&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/NVS.1970001-1996106.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NXY.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/NXY.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=OIH&a=0&b=01&d=1&e=25&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/OIH.1970001-2001125.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ONC.TO&a=0&b=01&d=5&e=0&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/ONC.TO.1970001-200050.csv
+
+Wrote 142580 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ORA&a=0&b=01&d=10&e=15&f=2004&g=d&ignore=.csv
+Data file:  ../currentdata/ORA.1970001-20041015.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=OZRK&a=0&b=01&d=6&e=16&f=1997&g=d&ignore=.csv
+Data file:  ../currentdata/OZRK.1970001-1997616.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PAAS&a=0&b=01&d=5&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/PAAS.1970001-1995511.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PALAF.PK&a=0&b=01&d=9&e=30&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/PALAF.PK.1970001-2005930.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PAR&a=0&b=01&d=11&e=15&f=1988&g=d&ignore=.csv
+Data file:  ../currentdata/PAR.1970001-19881115.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PBI&a=0&b=01&d=0&e=3&f=1982&g=d&ignore=.csv
+Data file:  ../currentdata/PBI.1970001-198203.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PBR&a=0&b=01&d=7&e=9&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/PBR.1970001-200079.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PCC&a=0&b=01&d=7&e=17&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/PCC.1970001-1995717.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PDS&a=0&b=01&d=10&e=14&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/PDS.1970001-19961014.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PEP&a=0&b=01&d=0&e=2&f=1977&g=d&ignore=.csv
+Data file:  ../currentdata/PEP.1970001-197702.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PEY-UN.TO&a=0&b=01&d=11&e=11&f=1997&g=d&ignore=.csv
+Data file:  ../currentdata/PEY-UN.TO.1970001-19971111.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PFE&a=0&b=01&d=0&e=3&f=1982&g=d&ignore=.csv
+Data file:  ../currentdata/PFE.1970001-198203.csv
+
+Wrote 0 characters
+Stock PG has reached the end of the date limits
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PGH&a=0&b=01&d=6&e=27&f=2004&g=d&ignore=.csv
+Data file:  ../currentdata/PGH.1970001-2004627.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PKPL.OB&a=0&b=01&d=4&e=2&f=2010&g=d&ignore=.csv
+Data file:  ../currentdata/PKPL.OB.1970001-201042.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PMT-UN.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/PMT-UN.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POR&a=0&b=01&d=4&e=23&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/POR.1970001-2006423.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POT&a=0&b=01&d=0&e=11&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/POT.1970001-1990011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POW.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/POW.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PPG&a=0&b=01&d=3&e=5&f=1983&g=d&ignore=.csv
+Data file:  ../currentdata/PPG.1970001-198335.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PSJ&a=0&b=01&d=5&e=22&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/PSJ.1970001-2005522.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PTR&a=0&b=01&d=5&e=22&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/PTR.1970001-2000522.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PVD&a=0&b=01&d=10&e=15&f=1994&g=d&ignore=.csv
+Data file:  ../currentdata/PVD.1970001-19941015.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PVX&a=0&b=01&d=1&e=26&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/PVX.1970001-2002126.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PWF.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/PWF.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=REI-UN.TO&a=0&b=01&d=3&e=24&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/REI-UN.TO.1970001-1996324.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RGLD&a=0&b=01&d=2&e=25&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/RGLD.1970001-1990225.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RIG&a=0&b=01&d=4&e=27&f=1993&g=d&ignore=.csv
+Data file:  ../currentdata/RIG.1970001-1993427.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RIMM&a=0&b=01&d=1&e=3&f=1999&g=d&ignore=.csv
+Data file:  ../currentdata/RIMM.1970001-199913.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RIO&a=0&b=01&d=5&e=27&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/RIO.1970001-1990527.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RNK.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/RNK.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RNK-UN.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/RNK-UN.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ROC&a=0&b=01&d=7&e=16&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/ROC.1970001-2005716.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ROY&a=0&b=01&d=10&e=15&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/ROY.1970001-20051015.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RPM&a=0&b=01&d=2&e=25&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/RPM.1970001-1990225.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RPT&a=0&b=01&d=3&e=21&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/RPT.1970001-1996321.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RSO&a=0&b=01&d=1&e=6&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/RSO.1970001-200616.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RTM&a=0&b=01&d=10&e=6&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/RTM.1970001-2006106.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RTP&a=0&b=01&d=5&e=27&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/RTP.1970001-1990527.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RUS.TO&a=0&b=01&d=7&e=12&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/RUS.TO.1970001-1996712.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RY.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/RY.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SAP.TO&a=0&b=01&d=9&e=23&f=1997&g=d&ignore=.csv
+Data file:  ../currentdata/SAP.TO.1970001-1997923.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SBUX&a=0&b=01&d=5&e=25&f=1992&g=d&ignore=.csv
+Data file:  ../currentdata/SBUX.1970001-1992525.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SC.TO&a=0&b=01&d=6&e=16&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/SC.TO.1970001-2003616.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SDRLF.PK&a=0&b=01&d=11&e=27&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/SDRLF.PK.1970001-20051127.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SDY&a=0&b=01&d=10&e=14&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/SDY.1970001-20051014.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SGGDD.PK&a=0&b=01&d=5&e=23&f=2008&g=d&ignore=.csv
+Data file:  ../currentdata/SGGDD.PK.1970001-2008523.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SGU&a=0&b=01&d=11&e=14&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/SGU.1970001-19951114.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SH&a=0&b=01&d=5&e=20&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/SH.1970001-2006520.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SIF-UN.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/SIF-UN.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SINA&a=0&b=01&d=3&e=12&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/SINA.1970001-2000312.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SKT&a=0&b=01&d=4&e=27&f=1993&g=d&ignore=.csv
+Data file:  ../currentdata/SKT.1970001-1993427.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLF.TO&a=0&b=01&d=2&e=22&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/SLF.TO.1970001-2000222.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLV&a=0&b=01&d=3&e=27&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/SLV.1970001-2006327.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLW&a=0&b=01&d=6&e=5&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/SLW.1970001-200565.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SOR&a=0&b=01&d=11&e=29&f=1987&g=d&ignore=.csv
+Data file:  ../currentdata/SOR.1970001-19871129.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SPB.TO&a=0&b=01&d=2&e=18&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/SPB.TO.1970001-2001218.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SPF-UN.TO&a=0&b=01&d=2&e=18&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/SPF-UN.TO.1970001-2001218.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SPXJ.L&a=0&b=01&d=3&e=19&f=2009&g=d&ignore=.csv
+Data file:  ../currentdata/SPXJ.L.1970001-2009319.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SQP.TO&a=0&b=01&d=7&e=12&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/SQP.TO.1970001-1996712.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=STEC&a=0&b=01&d=9&e=2&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/STEC.1970001-200092.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=STP&a=0&b=01&d=11&e=13&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/STP.1970001-20051113.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=STX&a=0&b=01&d=11&e=11&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/STX.1970001-20021111.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SU.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/SU.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SWK&a=0&b=01&d=6&e=0&f=1985&g=d&ignore=.csv
+Data file:  ../currentdata/SWK.1970001-198560.csv
+
+Wrote 339695 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SWY&a=0&b=01&d=3&e=25&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/SWY.1970001-1990325.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SYNA&a=0&b=01&d=0&e=28&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/SYNA.1970001-2002028.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=T.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/T.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TAC&a=0&b=01&d=7&e=0&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/TAC.1970001-200170.csv
+
+Wrote 142815 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TAXI&a=0&b=01&d=4&e=22&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/TAXI.1970001-1996422.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TBL.TO&a=0&b=01&d=4&e=8&f=2006&g=d&ignore=.csv
+Data file:  ../currentdata/TBL.TO.1970001-200648.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TBT&a=0&b=01&d=4&e=21&f=2008&g=d&ignore=.csv
+Data file:  ../currentdata/TBT.1970001-2008421.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TD.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/TD.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TEI&a=0&b=01&d=7&e=17&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/TEI.1970001-1995717.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TEO&a=0&b=01&d=11&e=8&f=1994&g=d&ignore=.csv
+Data file:  ../currentdata/TEO.1970001-1994118.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TEVA&a=0&b=01&d=2&e=25&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/TEVA.1970001-1990225.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TFI.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/TFI.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TGT&a=0&b=01&d=3&e=5&f=1983&g=d&ignore=.csv
+Data file:  ../currentdata/TGT.1970001-198335.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TI&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/TI.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TICC&a=0&b=01&d=10&e=23&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/TICC.1970001-20031023.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TIH.TO&a=0&b=01&d=7&e=12&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/TIH.TO.1970001-1996712.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TJX&a=0&b=01&d=0&e=4&f=1988&g=d&ignore=.csv
+Data file:  ../currentdata/TJX.1970001-198804.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TLM.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/TLM.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TRA&a=0&b=01&d=10&e=4&f=1987&g=d&ignore=.csv
+Data file:  ../currentdata/TRA.1970001-1987104.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TRP.TO&a=0&b=01&d=0&e=11&f=1995&g=d&ignore=.csv
+Data file:  ../currentdata/TRP.TO.1970001-1995011.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UDN&a=0&b=01&d=2&e=0&f=2007&g=d&ignore=.csv
+Data file:  ../currentdata/UDN.1970001-200720.csv
+
+Wrote 79418 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UG&a=0&b=01&d=2&e=16&f=1992&g=d&ignore=.csv
+Data file:  ../currentdata/UG.1970001-1992216.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UGI&a=0&b=01&d=0&e=4&f=1988&g=d&ignore=.csv
+Data file:  ../currentdata/UGI.1970001-198804.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UNG&a=0&b=01&d=3&e=17&f=2007&g=d&ignore=.csv
+Data file:  ../currentdata/UNG.1970001-2007317.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UNH&a=0&b=01&d=2&e=25&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/UNH.1970001-1990225.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UNP&a=0&b=01&d=0&e=1&f=1980&g=d&ignore=.csv
+Data file:  ../currentdata/UNP.1970001-198001.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UPL&a=0&b=01&d=0&e=17&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/UPL.1970001-2001017.csv
+
+Wrote 0 characters
+Stock UTX has reached the end of the date limits
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UUP&a=0&b=01&d=2&e=0&f=2007&g=d&ignore=.csv
+Data file:  ../currentdata/UUP.1970001-200720.csv
+
+Wrote 80956 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=var&a=0&b=01&d=0&e=4&f=1988&g=d&ignore=.csv
+Data file:  ../currentdata/var.1970001-198804.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=VIVO&a=0&b=01&d=1&e=25&f=1992&g=d&ignore=.csv
+Data file:  ../currentdata/VIVO.1970001-1992125.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=VMW&a=0&b=01&d=7&e=14&f=2007&g=d&ignore=.csv
+Data file:  ../currentdata/VMW.1970001-2007714.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WDC&a=0&b=01&d=0&e=1&f=1987&g=d&ignore=.csv
+Data file:  ../currentdata/WDC.1970001-198701.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WFC&a=0&b=01&d=10&e=0&f=1984&g=d&ignore=.csv
+Data file:  ../currentdata/WFC.1970001-1984100.csv
+
+Wrote 356103 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WFT&a=0&b=01&d=2&e=25&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/WFT.1970001-1990225.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WJX.TO&a=0&b=01&d=7&e=12&f=1996&g=d&ignore=.csv
+Data file:  ../currentdata/WJX.TO.1970001-1996712.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WMT&a=0&b=01&d=7&e=24&f=1972&g=d&ignore=.csv
+Data file:  ../currentdata/WMT.1970001-1972724.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WRLS&a=0&b=01&d=0&e=26&f=1994&g=d&ignore=.csv
+Data file:  ../currentdata/WRLS.1970001-1994026.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WYE&a=0&b=01&d=0&e=3&f=1982&g=d&ignore=.csv
+Data file:  ../currentdata/WYE.1970001-198203.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XBB.TO&a=0&b=01&d=10&e=23&f=2000&g=d&ignore=.csv
+Data file:  ../currentdata/XBB.TO.1970001-20001023.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XEG.TO&a=0&b=01&d=2&e=25&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/XEG.TO.1970001-2001225.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XIC.TO&a=0&b=01&d=1&e=22&f=2001&g=d&ignore=.csv
+Data file:  ../currentdata/XIC.TO.1970001-2001122.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XIU.TO&a=0&b=01&d=9&e=3&f=1999&g=d&ignore=.csv
+Data file:  ../currentdata/XIU.TO.1970001-199993.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XLB&a=0&b=01&d=11&e=21&f=1998&g=d&ignore=.csv
+Data file:  ../currentdata/XLB.1970001-19981121.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XLE&a=0&b=01&d=11&e=21&f=1998&g=d&ignore=.csv
+Data file:  ../currentdata/XLE.1970001-19981121.csv
+
+Wrote 0 characters
+Stock XOM has reached the end of the date limits
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XRE.TO&a=0&b=01&d=9&e=22&f=2002&g=d&ignore=.csv
+Data file:  ../currentdata/XRE.TO.1970001-2002922.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XSP.TO&a=0&b=01&d=3&e=20&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/XSP.TO.1970001-2003320.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XTO&a=0&b=01&d=4&e=11&f=1993&g=d&ignore=.csv
+Data file:  ../currentdata/XTO.1970001-1993411.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XTR.TO&a=0&b=01&d=11&e=27&f=2005&g=d&ignore=.csv
+Data file:  ../currentdata/XTR.TO.1970001-20051127.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=YGE&a=0&b=01&d=5&e=7&f=2007&g=d&ignore=.csv
+Data file:  ../currentdata/YGE.1970001-200757.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=YLO-UN.TO&a=0&b=01&d=9&e=8&f=2003&g=d&ignore=.csv
+Data file:  ../currentdata/YLO-UN.TO.1970001-200398.csv
+
+Wrote 0 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=YZC&a=0&b=01&d=3&e=0&f=1998&g=d&ignore=.csv
+Data file:  ../currentdata/YZC.1970001-199830.csv
+
+Wrote 179231 characters
+URL:  http://ichart.finance.yahoo.com/table.csv?s=^VIX&a=0&b=01&d=0&e=1&f=1990&g=d&ignore=.csv
+Data file:  ../currentdata/^VIX.1970001-199001.csv
+
+Wrote 0 characters

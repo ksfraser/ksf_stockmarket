@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `consist`;
+CREATE TABLE `consist` (, PRIMARY KEY ()) ENGINE=InnoDB;

@@ -1,0 +1,703 @@
+<html>
+<head>
+<!-- Shamelessly stolen from http://www.itoolpro.com/calculators/code/isolator.html -->
+<script language="javascript">
+<!--
+//-------------------------------------
+
+pd = 'paydata'; /* SAVING CALCULATOR DATA */
+numDays       = 60;  /* DAYS UNTIL COOKIE EXPIRES (EG. 183 DAYS = 6 MONTHS) */
+
+/** This function checks to see if the value */
+/** inputed is a true number 				*/
+function doSum(a)
+{
+a.value=check(a.value);
+}
+
+function check(a)
+{
+   var pest = 0;
+   var b = "";
+   for(i=0;i<=a.length;i++)
+   {
+   var u = a.charAt(i);
+      if((u>="0"&&u<="9")||u==".")
+      {
+      	if(u=="."){
+      	var pest = pest+1;
+      	if(pest==2){break;}}
+var b = b + u;
+}
+}
+return b;
+}
+
+
+/* CALLS UPON THE FUNCTIONS TO DETERMINE IF THE NUMBERS ENTERED ARE VALID AND TO CALCULATE THE RESULTS OF THE ENTERED DATA FOR EXAMPLE - MORTGAGE PAYMENT, GDS AND TDS RATIOS, AND LOAN TO VALUE. THIS FUNCTION IS EXECUTED EVERYTIME A VALUE IS CHANGED IN A FIELD */
+function computeField(quest,input,min,max,msage)
+{
+doSum(input);
+return (checkNumber(quest,input,min,max,msage));
+}
+
+function checkNumber(quest,input,min,max,msg)
+{
+    var str = input.value;
+    for (var i = 0; i < str.length; i++) {
+        var ch = str.substring(i, i + 1)
+        if ((ch < "0" || "9" < ch) && ch != '.') {
+            return false;
+        }
+    }
+    if(input.value!="")
+    {
+    var num = 0 + str
+    if (num < min) {
+    var sendn = "Question " + quest + ": ("+ msg + ")";
+    var sendq = "You have entered " + input.value + ". Please enter a number greater than " + min +".";
+  fixpro(sendn,sendq);
+
+        return false;
+    }
+    input.value = str;
+    return true;
+    }
+}
+
+
+//---------------------------
+
+/* TESTS VERSIONS FOR WHICH WILL SUPPORT POP UP WINDOWS */
+function versTest()
+{
+var one = '';
+var two = '';
+
+if (
+(navigator.appName.substring(0,8)=="Netscape" && (navigator.appVersion.substring(0,3) == "3.0" ||  navigator.appVersion.substring(0,3) =="4.0")))
+{var one='true';}
+if(
+ (navigator.appName.substring(0,9) == "Microsoft" && navigator.appVersion.substring(0,3) == "3.0" && navigator.appVersion.indexOf("Macintosh")>=0))
+{var two='true';}
+
+if(one=='true' || two=='true' ||
+(navigator.appName.substring(0,9) == "Microsoft" && navigator.appVersion.indexOf("MSIE 3.0")>=0 &&
+navigator.appVersion.indexOf("Windows 3.1")>=0)
+)
+{return true;}
+else
+{return false;}
+}
+
+/* TESTS IF VERSION IS MSIE 3.0 FOR MAC */
+function msTest()
+{
+if(navigator.appName.substring(0,9) == "Microsoft" && 		(navigator.appVersion.substring(0,3) == "3.0" && navigator.appVersion.indexOf("Macintosh")>=0))
+{return true;}
+else
+{return false;}
+
+}
+
+function nineTest()
+{
+if(navigator.appName.substring(0,9) == "Microsoft" && (navigator.appVersion.substring(0,3)=="3.0" || navigator.appVersion.indexOf("MSIE 3.0")>=0) && (navigator.appVersion.indexOf("Macintosh")==-1 || navigator.appVersion.indexOf("Windows 3.1")== -1)
+)
+{return true;}
+else
+{return false;}
+}
+
+//-----------------------------
+
+/* OPENS POP UP WINDOW TO DISPLAY VALIDATION MESSAGES IN NETSCAPE 3.0 AND 4.0 */
+
+function fixpro(n,q)
+
+{
+if(versTest() == true){
+		if(msTest()==true){
+			var winNam='';
+		}
+		else{
+			var slash = location.href.lastIndexOf("/")+1;
+			var filNam = location.href.substring(0,slash);
+			var winNam = filNam+'empty.html';
+		}
+fix = window.open(winNam,'FIX','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=300,height=100');
+if(navigator.appName.substring(0,8) == "Netscape"){
+			fix.focus();
+		}
+fix.document.write('<html><head><title>Calculators</title>');
+fix.document.write('</head><body bgcolor=ffffff><form name=fixer>');
+fix.document.write('<FONT SIZE=2 FACE="Arial, Helvetica" color=306798>'+n+'<p>'+q+'<p>');
+fix.document.write('<center><input type=button value=OK onClick=self.close()>');
+fix.document.write('</center></form></body></html>');
+fix.document.close();
+}
+else{alert(n+'\n'+q)}
+}
+
+//----------------------------
+
+function roundPen(n,num)
+{
+if(n > 0){
+var nums = num*1.0;
+if(num==1){
+pennies = n*10;}
+if(num==2){
+pennies = n*100;}
+if(num==3){
+pennies = n*1000;}
+
+pennies = Math.round(pennies);
+strPennies = "" + pennies;
+len = strPennies.length;
+return strPennies.substring(0, len - nums) + "." + strPennies.substring(len - nums, len);
+
+}
+else return 0;
+}
+
+
+//---------------------------------
+
+function controlVarst(n)
+{
+if(controlVars(n)==true){}
+//compRevAmort();
+}
+
+function controlVars(n)
+{
+if(compute(n)==true){
+
+if(n!=2){var AMORT = (document.paycalc.NAMORTYEARS.value * 1.0) + ((document.paycalc.NAMORTMONTHS.value * 1)/12);}
+if(n!=3){var MORTGAGE = document.paycalc.AMOUNT.value * 1.0;}
+if(n!=4){var INRATE = (document.paycalc.INTEREST.value * 1.0)/100;}
+if(n!=5){var PAYMENT = document.paycalc.PAYMENT.value * 1.0;}
+var FREQ = (document.paycalc.PFREQ.selectedIndex)*1.0;
+
+if(n==2){if(compAmort(MORTGAGE,INRATE,PAYMENT,FREQ)==false){return false;}else{return true;}}
+if(n==3){if(compAmnt(AMORT,INRATE,PAYMENT,FREQ)==false){return false;}else{return true;}}
+if(n==4){if(compInt(AMORT,MORTGAGE,PAYMENT,FREQ)==false){return false;}else{return true;}}
+if(n==5){if(compPay(AMORT,MORTGAGE,INRATE,FREQ)==false){return false;}else{return true;}}
+else{return true;}
+}
+else{return false;}
+}
+
+
+function compPay(AMORT,MORTGAGE,INRATE,FREQ){
+
+var compound = 2/12;
+var monTime = AMORT * 12;
+
+var yrRate = INRATE/2;
+var rdefine = Math.pow((1.0 + yrRate),compound)-1.0;
+var comfact = Math.pow((1.0 + rdefine),monTime);
+var PAYMNT = (MORTGAGE*rdefine * comfact)/  (comfact - 1.0);
+
+if(FREQ==0){
+var rPAYMENT = PAYMNT;}
+if(FREQ==2){
+var rPAYMENT = PAYMNT/2.0;}
+if(FREQ==3){
+var rPAYMENT = PAYMNT/4.0;}
+if(FREQ==1){
+
+var compound2 = 2/24;
+var monTime2 = AMORT * 24;
+var rdefine2 = Math.pow((1.0 + yrRate),compound2)-1.0;
+var comfact2 = Math.pow((1.0 + rdefine2),monTime2);
+var rPAYMENT = (MORTGAGE*rdefine2 * comfact2)/  (comfact2 - 1.0);
+
+
+}
+document.paycalc.PAYMENT.value=roundPen(rPAYMENT,2);
+
+return true;
+}
+
+//--------------------------------------------------
+function compAmnt(AMORT,INRATE,PAYMENT,FREQ){
+
+
+	if(FREQ==0){
+	var rPAYMENT = PAYMENT;}
+	if(FREQ==2){
+	var rPAYMENT = PAYMENT*2.0;}
+	if(FREQ==3){
+	var rPAYMENT = PAYMENT*4.0;}
+
+var compound = 2/12;
+var monTime = AMORT * 12;
+var yrRate = INRATE/2;
+var rdefine    = Math.pow((1.0 + yrRate),compound)-1.0;
+var comfact = Math.pow((1.0 + rdefine),monTime);
+var bal = rPAYMENT*(comfact-1)/(rdefine*comfact);
+
+if(FREQ==1){
+
+var compound2 = 2/24;
+var monTime2 = AMORT * 24;
+
+var rdefine2    = Math.pow((1.0 + yrRate),compound2)-1.0;
+var comfact2 = Math.pow((1.0 + rdefine2),monTime2);
+var bal = PAYMENT*(comfact2-1)/(rdefine2*comfact2);
+
+}
+document.paycalc.AMOUNT.value=roundPen(bal,2);
+return true;
+
+}
+
+//----------------------------
+function findRate(q,n,MORTGAGE,AMORT,COMPOUND,PAYMENT){
+
+var compound = COMPOUND/12;
+var monTime = AMORT * 12;
+var newpay = 0;
+for(i=q;newpay<=PAYMENT;i=i+n){
+
+var RATE = i/100;
+var yrRate = RATE/COMPOUND;
+var rdefine    = Math.pow((1.0 + yrRate),compound)-1.0;
+var comfact = Math.pow((1.0 + rdefine),monTime);
+var newpay = (MORTGAGE*rdefine * comfact)/  (comfact - 1.0);
+}
+return i-n-n;
+}
+//----------------------------
+
+//----------------------------
+function findRate2(q,n,MORTGAGE,AMORT,COMPOUND,PAYMENT){
+
+var compound = COMPOUND/24;
+var monTime = AMORT * 24;
+var newpay = 0;
+for(i=q;newpay<=PAYMENT;i=i+n){
+
+var RATE = i/100;
+var yrRate = RATE/COMPOUND;
+var rdefine    = Math.pow((1.0 + yrRate),compound)-1.0;
+var comfact = Math.pow((1.0 + rdefine),monTime);
+var newpay = (MORTGAGE*rdefine * comfact)/  (comfact - 1.0);
+}
+return i-n-n;
+}
+//----------------------------
+
+function compInt(AMORT,MORTGAGE,PAYMENTx,FREQ){
+
+var COMPOUND = 2;
+var intpayment = PAYMENTx;
+if(FREQ==2){
+var intpayment = PAYMENTx*2.0;}
+if(FREQ==3){
+var intpayment = PAYMENTx*4.0;}
+
+if(FREQ!=1){
+var wholerate = findRate(1,1,MORTGAGE,AMORT,COMPOUND,intpayment);
+var solverate = findRate(wholerate,.001,MORTGAGE,AMORT,COMPOUND,intpayment);
+}
+if(FREQ==1){
+var wholerate = findRate2(1,1,MORTGAGE,AMORT,COMPOUND,PAYMENTx);
+var solverate = findRate2(wholerate,.001,MORTGAGE,AMORT,COMPOUND,PAYMENTx);
+}
+
+document.paycalc.INTEREST.value = roundPen(solverate,3);
+return true;
+
+}
+
+//-------------------------
+
+function findAmort(q,n,MORTGAGE,RATE,COMPOUND,PAYMENTAG){
+var compound = COMPOUND/12;
+var yrRate = RATE/COMPOUND;
+var rdefine    = Math.pow((1.0 + yrRate),compound)-1.0;
+var newpay = 1000000000;
+
+for(i=q;newpay>=PAYMENTAG;i=i+n){
+var monTime = i * 12;
+var comfact = Math.pow((1.0 + rdefine),monTime);
+var newpay = (MORTGAGE*rdefine * comfact)/  (comfact - 1.0);
+}
+return i-n-n;
+}
+//--------------------------
+
+//-------------------------
+
+function findAmort2(q,n,MORTGAGE,RATE,COMPOUND,PAYMENTAG){
+var compound = COMPOUND/24;
+var yrRate = RATE/COMPOUND;
+var rdefine    = Math.pow((1.0 + yrRate),compound)-1.0;
+var newpay = 1000000000;
+
+for(i=q;newpay>=PAYMENTAG;i=i+n){
+var monTime = i * 24;
+var comfact = Math.pow((1.0 + rdefine),monTime);
+var newpay = (MORTGAGE*rdefine * comfact)/  (comfact - 1.0);
+}
+return i-n-n;
+}
+//--------------------------
+function compAmort(MORTGAGE,INRATE,PAYMENTt,FREQ){
+
+var returnpay = PAYMENTt*1.0;
+var COMPOUND = 2;
+
+if(FREQ==2){
+var returnpay = PAYMENTt*2.0;}
+if(FREQ==3){
+var returnpay = PAYMENTt*4.0;}
+
+if(FREQ!=1){
+var wholecom = findAmort(1,1,MORTGAGE,INRATE,COMPOUND,returnpay);
+var solvecom = findAmort(wholecom,.001,MORTGAGE,INRATE,COMPOUND,returnpay);
+}
+
+if(FREQ==1){
+var wholecom = findAmort2(1,1,MORTGAGE,INRATE,COMPOUND,returnpay);
+var solvecom = findAmort2(wholecom,.001,MORTGAGE,INRATE,COMPOUND,returnpay);
+
+}
+if (roundPen(((solvecom % 1)*12),1) == 12){
+	document.paycalc.NAMORTYEARS.value = Math.floor(solvecom + 1);
+	document.paycalc.NAMORTMONTHS.value = 0;
+}else{
+	document.paycalc.NAMORTYEARS.value = Math.floor(solvecom);
+	document.paycalc.NAMORTMONTHS.value = roundPen(((solvecom % 1)*12),1);
+}
+return true;
+}
+
+
+//--------------------------
+function compRevAmort(){
+freq = retFreq(document.paycalc.PFREQ.selectedIndex);
+amortyears = document.paycalc.NAMORTYEARS.value;
+amortmonths = document.paycalc.NAMORTMONTHS.value;
+mortgage = document.paycalc.AMOUNT.value;
+intrate = document.paycalc.INTEREST.value;
+var payment = calcPay(mortgage, amortyears, amortmonths, intrate, 2, freq);
+var intFact = Math.pow((1+(intrate/100)/2),(2/freq))-1;
+
+if (freq == 12 || freq == 24){
+	document.paycalc.newamortyears.value = document.paycalc.NAMORTYEARS.value;
+	document.paycalc.newamortmonths.value = document.paycalc.NAMORTMONTHS.value;
+}else{
+	// need to determin the number of payments so we can correctly determin the Amortization period
+	var principalBal = mortgage;
+	var aYear = 0;
+	var annualCount = 1;
+
+	 for(payAdd = 1; principalBal>0; payAdd++){
+	 var checkLump = 0;
+
+	 	//SET FLAG IF THIS PAYMENT IS AN ANNIVERSARY
+		if((payAdd-1)/Math.floor(freq)==annualCount){
+			var aYear = 1;}
+
+		//INTEREST AND PRINCIPAL PAYMENT
+		var interestPayment = roundPen((principalBal * intFact),2)*1.0;
+  		var principalPayment =  roundPen((payment - interestPayment),2)*1.0;
+  		var checkBal = (principalPayment > principalBal) ? principalBal : principalPayment;
+  		var principalBal =  roundPen((principalBal-checkBal),2)*1.0;
+
+  		//LUMPSUM PAYMENT IF REQUESTED
+		if(aYear==1&&0>=annualCount){
+			var checkLump = (lumpAmt > principalBal) ? principalBal : lumpAmt;
+			var principalBal = roundPen((principalBal - checkLump),2)*1.0;}
+
+  		//ELIMINATES BALANCE (ADDS IT TO PRINCIPAL PAID) IF LESS THAN HALF
+  		if(principalBal<((interestPayment+principalPayment)/2)){
+  			var checkBal = checkBal+principalBal;
+  			var principalBal = 0;}
+
+		//RESETS THE ANNIVERSARY
+		if(aYear==1){
+			var annualCount = annualCount+1;
+			var aYear = 0;}
+	}
+	var totalYears = (payAdd-1)/freq;
+
+	document.paycalc.newamortyears.value = Math.floor(totalYears);;
+	document.paycalc.newamortmonths.value = (Math.round((totalYears % 1)*120)/10);
+}
+}
+
+/* THIS FUNCTION CALCULATES THE MONTHLY MORTGAGE PAYMENT BASED ON THE USER'S INPUT */
+function calcPay(MORTGAGE, AMORTYEARS, AMORTMONTHS, INRATE, COMPOUND, FREQ){
+var compound = COMPOUND/12;
+var monTime = (AMORTYEARS * 12) + (1 * AMORTMONTHS);
+var RATE = (INRATE*1.0)/100;
+var yrRate = RATE/COMPOUND;
+var rdefine    = Math.pow((1.0 + yrRate),compound)-1.0;
+var PAYMENT = (MORTGAGE*rdefine * (Math.pow((1.0 + rdefine),monTime)))/  ((Math.pow((1.0 + rdefine),monTime)) - 1.0);
+if(FREQ==12){
+	return PAYMENT;}
+if(FREQ==26){
+	return PAYMENT/2.0;}
+if(FREQ==52){
+	return PAYMENT/4.0;}
+if(FREQ==24){
+	var compound2 = COMPOUND/FREQ;
+	var monTime2 = (AMORTYEARS * FREQ) + (AMORTMONTHS * 2);
+	var rdefine2 = Math.pow((1.0 + yrRate),compound2)-1.0;
+	var PAYMENT2 = (MORTGAGE*rdefine2 * (Math.pow((1.0 + rdefine2),monTime2)))/  ((Math.pow((1.0 + rdefine2),monTime2)) - 1.0);
+	return PAYMENT2;
+}
+}
+
+
+/* VALIDATES ALL THE FIELDS AND CALCULATES VALUES TO BE ENTERED INTO THE TEXT BOXES AT THE BOTTOM OF THE PAGE WHEN THE USER CLICKS ON COMPUTE OR COMPUTE AMORTIZATION */
+function compute(n){
+
+if (n!=2) {
+
+if((document.paycalc.NAMORTYEARS.value == null || document.paycalc.NAMORTYEARS.value.length == 0)|| (document.paycalc.NAMORTYEARS.value < 0 || document.paycalc.NAMORTYEARS.value > 40)){
+fixpro('Question 2: (Amortization Period - Years)','Please enter a number between 0 and 40.');return false;}
+
+if((document.paycalc.NAMORTMONTHS.value == null || document.paycalc.NAMORTMONTHS.value.length == 0)|| (document.paycalc.NAMORTMONTHS.value < 0 || document.paycalc.NAMORTMONTHS.value > 11)){
+fixpro('Question 2: (Amortization Period - Months)','Please enter a number between 0 and 11.');return false;}
+
+if(document.paycalc.NAMORTMONTHS.value < 6 && document.paycalc.NAMORTYEARS.value == 0){
+fixpro('Question 2: (Amortization Period)','Please enter an Amortization Period of at least 6 months long.');return false;}
+
+}
+
+if (n!=3) {
+if((document.paycalc.AMOUNT.value == null|| document.paycalc.AMOUNT.value.length == 0)|| (document.paycalc.AMOUNT.value <10000) ){
+fixpro('Question 3: (Mortgage Amount)','Please enter a number greater than 10000.');
+return false;
+}
+}
+
+if (n!=4) {
+if((document.paycalc.INTEREST.value == null|| document.paycalc.INTEREST.value.length == 0)|| (document.paycalc.INTEREST.value <2))
+{fixpro('Question 4: (Interest Rate)','Please enter a number greater than 2.0.');
+return false;}
+}
+
+if (n!=5) {
+if((document.paycalc.PAYMENT.value == null || document.paycalc.PAYMENT.value.length == 0)||(document.paycalc.PAYMENT.value < 1))
+{fixpro('Question 5: (Mortgage Payment)','Please enter a number greater than 1.0.');return false;}
+}
+
+return true;
+}
+
+/* OPENS WINDOW USED TO DISPLAY HELP MESSAGES WHEN THE USER CLICKS ON A HELP BUTTON. THE HELP MESSAGE DISPLAYED IS DETERMINED IN THE ARRAY WHICH IS REFERENCED ACCORDING TO THE HELP BUTTON WHICH WAS CLICKED */
+function winopen(name)
+{
+var linkit = "../help/"+name;
+if(versTest() == true||nineTest()==true){
+qc=window.open(linkit,'helpscreen','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=250,height=180');
+if(navigator.appName.substring(0,8) == "Netscape")
+{qc.focus();}
+}
+else{location.href=linkit;}
+}
+
+function retFreq(n){
+if(n==0){return 12;}
+if(n==1){return 24;}
+if(n==2){return 26;}
+if(n==3){return 52;}
+}
+
+/* SAVES COOKIE CONTAINING DATA TO BE USED IN AMORTIZATION SCHEDULE */
+function quickCook(MTGAMT,AMORTYEARS,AMORTMONTHS,RATE,TERM,FREQ,WHATYEAR)
+{
+if (WHATYEAR == -1 ){
+	var timeKindA = 0;
+}else{
+	WHATYEAR = 0;
+	var timeKindA = 1;
+}
+var AMORTPMT = document.forms[0].PAYMENT.value;
+var intrate = RATE/100;
+var INTFACTOR = Math.pow((1+intrate/2),(2/FREQ))-1;
+
+var expire = new Date ();
+expire.setTime (expire.getTime() + (numDays * 24 * 3600000));/* 2 MONTHS */
+var pdData = " " ;
+pdData = pdData + '`' + MTGAMT + '`' + AMORTPMT + '`' + INTFACTOR + '`' + FREQ + '`' + ((AMORTYEARS*FREQ)+(AMORTMONTHS * FREQ/12)) + '`' + 0 + '`' + 0 +'`' + 3 + '`' + timeKindA + '`' + RATE*1.0/100 + '`' + 0 + '`' + WHATYEAR + '`' + 0 + '`' + 0 + '`' + 0 + '`' + 0 + '`' + 0;
+document.cookie = pd +"=" + escape(pdData) +"; expires=" + expire.toGMTString()+"; path=/" ;
+}
+
+function computeAm(form,whatyear)
+{
+
+var count=0;
+var which="";
+var freq = retFreq(form.PFREQ.selectedIndex)*1.0;
+var amort = form.NAMORTYEARS.value;
+var amount = form.AMOUNT.value;
+var rate = form.INTEREST.value;
+var payment = form.PAYMENT.value;
+
+if(amort==null||amort.length==0){count=count+1;which="am";}
+if(amount==null||amount.length==0){count=count+1;which="amt";}
+if(rate==null||rate.length==0){count=count+1;which="rate";}
+if(payment==null||payment.length==0){count=count+1;which="pay";}
+
+
+if(count>1){fixpro('','You must complete three out of the four questions');return false;}
+
+if(count<=1){
+	if(which=="pay"||which==""){if(controlVars(5)==false){return false;}}
+	if(which=="am"){if(controlVars(2)==false){return false;}}
+	if(which=="amt"){if(controlVars(3)==false){return false;}}
+	if(which=="rate"){if(controlVars(4)==false){return false;}}
+
+var amount=form.AMOUNT.value;
+var amortyears = form.NAMORTYEARS.value;
+var amortmonths = form.NAMORTMONTHS.value;
+var rate = form.INTEREST.value;
+setTimeout("quickCook("+amount+","+amortyears+","+amortmonths+","+rate+",12,"+freq+","+whatyear+")",100);
+return true;
+}
+return false;
+}
+
+function amortLink(whatyear)
+{
+var timere = computeAm(document.forms[0],whatyear);
+if(timere==true){setTimeout("document.form2.submit()",100);}
+}
+
+function amortonLink()
+{
+if(computeAm(document.forms[0],whatyear)==true){
+setTimeout("document.form2.submit()",100);return false;
+}
+else{return false;}
+}
+//-->
+
+</script>
+<title>Repayment Changes Calculator</title>
+<link rel="stylesheet" href="../css/global.css" type="text/css">
+</head>
+<BODY bgcolor="#ffffff">
+<center>
+    <table border=0>
+
+      <td align=left valign=top> <img src="../graphics/ti_mortgage_isolator.gif" width="191" height="33">
+      </td>
+
+      </tr>
+      <tr>
+        <td align=left valign=top>&nbsp;</td>
+      </tr>
+      <tr>
+        <td align=left valign=top>
+          <p>To use the Mortgage Isolator, fill in the first blank and any three
+            of the remaining four. Click the &quot;CALCULATE&quot; button next
+            to the incomplete question and the Isolator will calculate the answer.
+          </p>
+
+          <p>If you require assistance, select the &quot;? help&quot; button.</p>
+        </td>
+      </tr>
+    </table>
+
+
+
+<form name="paycalc" onSubmit="return amortonLink()">
+
+<center>
+
+      <table border=0 cellpadding=0 cellspacing=4>
+        <tr>
+          <td colspan="4" bgcolor="BFCBE3">
+            <div align="center"><b>MORTGAGE ISOLATOR</b></div>
+          </td>
+        </tr>
+        <tr valign="bottom">
+
+          <td><b>1. Payment Frequency:</b></td>
+          <td>
+            <select name=PFREQ>
+              <option value=12>Monthly
+              <option value=24>Semi-Monthly
+              <option value=26>Bi-Weekly
+              <option value=52>Weekly
+            </select>
+          </td>
+          <td>&nbsp;</td>
+
+          <td><a href="javascript:winopen('help-payfreq.html')" onMouseOver="self.status='Help on Payment Frequency'; return true"><img src="../graphics/btn_help.gif" border=0 alt="Help" width=30 height=30></a></td>
+        </tr>
+        <tr valign="bottom">
+          <td><b>2. Amortization Period:</b></td>
+          <td>
+            <input type=text name=NAMORTYEARS SIZE=4 value="25" onChange="computeField('2',this,0,40,'Amortization Period - Years')" onFocus = this.select()>
+            Year(s)
+            <input type=text name=NAMORTMONTHS SIZE=4 value="0" onChange="computeField('2',this,0,11,'Amortization Period - Months')" onFocus = this.select()>
+            Month(s) </td>
+
+          <td width="84">
+            <div align="center"><a href="javascript:controlVarst(2) " onMouseOver="self.status='Compute Amortization Period';return true"><img src="../graphics/btn_calculate.gif" border=0 alt="Compute Amortization Period" width=76 height=18></a></div>
+          </td>
+          <td><a href="javascript:winopen('help-amort.html')"
+ onMouseOver="self.status='Help on Amortization Period'; return true"><img src="../graphics/btn_help.gif" border=0 alt="Help" width=30 height=30></a></td>
+        </tr>
+        <tr valign="bottom">
+          <td><b>3. Mortgage Amount:</b></td>
+          <td>
+
+            <input type=text name=AMOUNT size=9 onChange="computeField('3',this,10000,1000000,'Mortgage Amount')" onFocus = this.select() value="">
+          </td>
+          <td>
+            <div align="center"><a href="javascript:controlVarst(3)" onMouseOver="self.status='Compute Mortgage Amount';return true"><img src="../graphics/btn_calculate.gif" border=0 alt="Calculate Amortization Period" width=76 height=18></a></div>
+          </td>
+          <td><a href="javascript:winopen('help-mtgamount.html')" onMouseOver="self.status='Help on Mortgage Amount'; return true"><img src="../graphics/btn_help.gif" border=0 alt="Help" width=30 height=30></a></td>
+        </tr>
+        <tr valign="bottom">
+          <td nowrap><b>4. Interest Rate: </b></td>
+
+          <td>
+            <input type=text name=INTEREST size=9 value="" onChange="if(computeField('4',this,2,25,'Interest Rate')){this.value=(Math.round(this.value*1000)/1000)};">
+            <span class="desc">(e.g. 5.75)</span></td>
+          <td>
+            <div align="center"><a href="javascript:controlVarst(4)" onMouseOver="self.status='Compute Interest Rate';return true"><img src="../graphics/btn_calculate.gif" border=0 alt="Calculate Interest Rate" width=76 height=18></a></div>
+          </td>
+          <td><a href="javascript:winopen('help-rate.html')" onMouseOver="self.status='Help on Interest Rate'; return true"><img src="../graphics/btn_help.gif" border=0 alt="Help" width=30 height=30></a></td>
+        </tr>
+
+        <tr valign="bottom">
+          <td><b>5. Mortgage Payment:</b></td>
+          <td>
+            <INPUT TYPE=TEXT NAME=PAYMENT SIZE=9 value="" onChange="computeField('5',this,1,1000000,'Payment')">
+          </td>
+          <td>
+            <div align="center"><a href="javascript:controlVarst(5)" onMouseOver="self.status='Compute Mortgage Payment';return true"><img src="../graphics/btn_calculate.gif" border=0 alt="Calculatee Mortgage Payment" width=76 height=18></a></div>
+          </td>
+
+          <td><a href="javascript:winopen('help-payment.html')"
+ onMouseOver="self.status='Help on Mortgage Payment'; return true"><img src="../graphics/btn_help.gif" border=0 alt="Help" width=30 height=30></a></td>
+        </tr>
+      </table>
+<br>
+</center></form>
+
+  <p>&nbsp;</p><table border=0 >
+<tr>
+      <td align=center class="desc">&nbsp;</td></tr>
+
+    <td align=center class="desc"> Information is provided for sample purposes only.
+        We do not guarantee its accuracy. Information should be verified
+        and should not be relied upon as legal, financial, or other advice.</td></tr>
+<!-- Shamelessly stolen from http://www.itoolpro.com/calculators/code/isolator.html -->
+
+  </table>
+</center></body>
+</html>
+

@@ -1,0 +1,12 @@
+CREATE TABLE `candlesticksoccured` (
+  `idcandlesticksoccured` int(11) NOT NULL auto_increment COMMENT 'Index',
+  `createddate` datetime NOT NULL default '2009-01-01 00:00:00' COMMENT 'Record Created Date',
+  `createduser` int(11) NOT NULL default '0' COMMENT 'Record Created by User',
+  `updateddate` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'Record updated date',
+  `updateduser` int(11) NOT NULL default '0' COMMENT 'Record Updated by user',
+  `symbol` varchar(11) NOT NULL default '' COMMENT 'Stock Symbol',
+  `date` date NOT NULL default '0000-00-00' COMMENT 'Date in stockprices',
+  `candlestick` varchar(255) NOT NULL default '' COMMENT 'Candlestick Identified for this date',
+  PRIMARY KEY  (`idcandlesticksoccured`),
+  UNIQUE KEY `date_symbol` (`date`,`symbol`,`candlestick`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC COMMENT='What candlesticks occurred for what stocks on what date';

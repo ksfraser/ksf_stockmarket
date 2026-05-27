@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_ritem`;
+CREATE TABLE `ck_ritem` (, PRIMARY KEY ()) ENGINE=InnoDB;

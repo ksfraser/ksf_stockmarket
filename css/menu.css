@@ -1,0 +1,37 @@
+eceipt is a stylesheet for my menu class*/
+
+a:link {color:white} 
+a:visited {color:yellow} 
+a:active {color:red} 
+a:hover{color:black} 
+body { padding-top: 5em; }
+/*div.table { width: 95%; background-color: beige; } */
+table{font-size:80%;background-color:grey; }
+table.menu{font-size:80%;position:absolute;visibility:hidden; margin-top: 1em;} 
+table.menuline{font-size:100%; position:absolute; background-color: lightgreen; top: 1em; } 
+tr.menuline{font-size:100%;position:absolute; background-color: lightgreen;} 
+tr.menu{background: lightgreen}
+td.menu{background: lightgreen}
+div.workflow{font-size:80%;background-color:grey; float: left text-align: center }
+div.mtable { float: left; font-weight: bold; }
+th { font-weight: bold; }
+/*div.menu { float: right; font-weight: bold; } */
+div.center span.right { float: right text-align: left; }
+div.center span.left { float: left; text-align: right; }
+div.form { width: 95%; background-color: beige; } 
+div.form span.label { float: right; text-align: right; }
+div.form span.input { float: right; text-align: right; }
+/*div.table { width: 95%; background-color: beige; } */
+div.table span.label { float: right; text-align: right; }
+div.table span.input { float: right; text-align: right; }
+			
+table.workflow{font-size:80%; margin-top: 2em; background-color: lightblue } 
+table.workflowline{font-size:100%;  background-color: blue; top: 1em; visibility:hidden; position:absolute; } 
+tr.workflowline{font-size:100%; background-color: blue; position:absolute;} 
+td.workflow{background:red}
+/*
+table.workflowline{font-size:100%;  background-color: green; visibility:hidden; } 
+tr.workflow{font-size:100%; background-color: lightblue;  } 
+td.workflow{background: lightblue}
+table.workflow{font-size:100%; background-color: lightblue;  } 
+*/

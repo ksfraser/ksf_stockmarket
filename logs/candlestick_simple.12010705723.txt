@@ -1,0 +1,1886 @@
+Adding user candlestick_simple
+Adding $10000.00 to the portfolio
+Created transaction variable.  Adding transaction
+Created userCandlestick Simple
+Buying 6 of stock IBM for $885.87
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 6 of stock IBM for $885.3
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $945.36
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $801.7
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 11 of stock IBM for $1794.155
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $981.03
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 6 of stock IBM for $984.96
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $978.27
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $815.875
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 11 of stock IBM for $1793.22
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $967.92
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 6 of stock IBM for $926.07
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $921.6
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $794.025
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 11 of stock IBM for $1780.35
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $972.72
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 6 of stock IBM for $981.03
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $982.38
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 6 of stock IBM for $982.62
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $985.77
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $821.3
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 11 of stock IBM for $1848
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $862.575
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $845.975
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 4 of stock IBM for $676.32
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 14 of stock IBM for $2368.38
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $844.85
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $839.775
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $833.5
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 15 of stock IBM for $2473.875
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $984.66
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 6 of stock IBM for $974.79
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $858
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 5 of stock IBM for $876.9
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $874.85
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $875.025
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 10 of stock IBM for $1837.1
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $921
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 5 of stock IBM for $920.6
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $916.75
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 5 of stock IBM for $872.75
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $851.85
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 5 of stock IBM for $846.525
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $995.13
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 6 of stock IBM for $1005.63
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $860.975
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 5 of stock IBM for $852.975
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $857.2
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $831.525
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 10 of stock IBM for $1722.15
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $994.95
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 6 of stock IBM for $1050.87
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $1009.41
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $891.1
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 4 of stock IBM for $687.9
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 15 of stock IBM for $2740.2
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $901.05
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $903.275
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 4 of stock IBM for $728
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 4 of stock IBM for $736.56
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 3 of stock IBM for $557.7
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 21 of stock IBM for $3904.74
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $916.6
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $932.425
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 4 of stock IBM for $751.22
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 4 of stock IBM for $745.12
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 18 of stock IBM for $3485.43
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+n to None
+Jan 07 05:40:27 BACKTEST [info] Finding next trade date from 2011-01-28 for symbol IBM
+Jan 07 05:40:27 BACKTEST [info] Setting transactiondate to 2011-01-31
+Jan 07 05:40:27 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 07 05:40:27 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:27 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:27 BACKTEST [info] Dollars available 9054.0700073242
+Jan 07 05:40:27 BACKTEST [info] Setting float to 905.40700073242
+Jan 07 05:40:27 BACKTEST [info] Setting dollars2invest to 905
+Jan 07 05:40:27 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:27 BACKTEST [info] Setting dollars2risk to 9
+Jan 07 05:40:27 BACKTEST [info] MoneyManagement Dollars avail: 905 with risk size: 9
+Jan 07 05:40:27 BACKTEST [info] Setting cash to 905
+Jan 07 05:40:27 BACKTEST [info] Have $905 with which to buy shares
+Jan 07 05:40:27 BACKTEST [info] Shares for IBM on 2011-01-31 cost 160.34 H/L: 162:158.68
+Jan 07 05:40:27 BACKTEST [info] Setting share cost to 160.34
+Jan 07 05:40:27 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:27 BACKTEST [notice] Buy stocks - Shares: 5 for $801.7
+Jan 07 05:40:27 BACKTEST [info] Setting action to None
+Jan 07 05:40:27 BACKTEST [info] Finding next trade date from 2011-01-31 for symbol IBM
+Jan 07 05:40:27 BACKTEST [info] Setting transactiondate to 2011-02-01
+Jan 07 05:40:27 BACKTEST [info] Setting action to None
+Jan 07 05:40:27 BACKTEST [info] Finding next trade date from 2011-02-01 for symbol IBM
+Jan 07 05:40:27 BACKTEST [info] Setting transactiondate to 2011-02-02
+Jan 07 05:40:28 BACKTEST [info] Candlestick Hanging_Man has action sellstock and VALUE  1
+Jan 07 05:40:28 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 07 05:40:28 BACKTEST [info] 2 candlesticks with a total of 2 for average 1
+Jan 07 05:40:28 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:28 BACKTEST [info] Shares for IBM on 2011-02-02 cost 163.105 H/L: 163.6:162.61
+Jan 07 05:40:28 BACKTEST [info] Setting share cost to 163.105
+Jan 07 05:40:28 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:28 BACKTEST [info] ActionSellStock calculated shares # 11 for stock IBM
+Jan 07 05:40:28 BACKTEST [info] Setting number of shares to 11
+Jan 07 05:40:28 BACKTEST [notice] Sell stocks - Shares: 11 for $1794.155
+Jan 07 05:40:28 BACKTEST [info] Setting action to None
+Jan 07 05:40:28 BACKTEST [info] Finding next trade date from 2011-02-02 for symbol IBM
+Jan 07 05:40:28 BACKTEST [info] Setting transactiondate to 2011-02-03
+Jan 07 05:40:28 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 07 05:40:28 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:28 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:28 BACKTEST [info] Dollars available 10046.525024414
+Jan 07 05:40:28 BACKTEST [info] Setting float to 1004.6525024414
+Jan 07 05:40:28 BACKTEST [info] Setting dollars2invest to 1004
+Jan 07 05:40:28 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:28 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:28 BACKTEST [info] MoneyManagement Dollars avail: 1004 with risk size: 10
+Jan 07 05:40:28 BACKTEST [info] Setting cash to 1004
+Jan 07 05:40:28 BACKTEST [info] Have $1004 with which to buy shares
+Jan 07 05:40:28 BACKTEST [info] Shares for IBM on 2011-02-03 cost 163.505 H/L: 164.2:162.81
+Jan 07 05:40:28 BACKTEST [info] Setting share cost to 163.505
+Jan 07 05:40:28 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:28 BACKTEST [notice] Buy stocks - Shares: 6 for $981.03
+Jan 07 05:40:28 BACKTEST [info] Setting action to None
+Jan 07 05:40:28 BACKTEST [info] Finding next trade date from 2011-02-03 for symbol IBM
+Jan 07 05:40:28 BACKTEST [info] Setting transactiondate to 2011-02-04
+Jan 07 05:40:28 BACKTEST [info] Setting action to None
+Jan 07 05:40:28 BACKTEST [info] Finding next trade date from 2011-02-04 for symbol IBM
+Jan 07 05:40:28 BACKTEST [info] Setting transactiondate to 2011-02-07
+Jan 07 05:40:28 BACKTEST [info] Setting action to None
+Jan 07 05:40:28 BACKTEST [info] Finding next trade date from 2011-02-07 for symbol IBM
+Jan 07 05:40:28 BACKTEST [info] Setting transactiondate to 2011-02-08
+Jan 07 05:40:28 BACKTEST [info] Setting action to None
+Jan 07 05:40:28 BACKTEST [info] Finding next trade date from 2011-02-08 for symbol IBM
+Jan 07 05:40:28 BACKTEST [info] Setting transactiondate to 2011-02-09
+Jan 07 05:40:28 BACKTEST [info] Setting action to None
+Jan 07 05:40:28 BACKTEST [info] Finding next trade date from 2011-02-09 for symbol IBM
+Jan 07 05:40:29 BACKTEST [info] Setting transactiondate to 2011-02-10
+Jan 07 05:40:29 BACKTEST [info] Setting action to None
+Jan 07 05:40:29 BACKTEST [info] Finding next trade date from 2011-02-10 for symbol IBM
+Jan 07 05:40:29 BACKTEST [info] Setting transactiondate to 2011-02-11
+Jan 07 05:40:29 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:40:29 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:40:29 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:29 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 07 05:40:29 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:29 BACKTEST [info] Shares for IBM on 2011-02-11 cost 164.16 H/L: 165.01:163.31
+Jan 07 05:40:29 BACKTEST [info] Setting share cost to 164.16
+Jan 07 05:40:29 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:29 BACKTEST [info] ActionSellStock calculated shares # 6 for stock IBM
+Jan 07 05:40:29 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:29 BACKTEST [notice] Sell stocks - Shares: 6 for $984.96
+Jan 07 05:40:29 BACKTEST [info] Setting action to None
+Jan 07 05:40:29 BACKTEST [info] Finding next trade date from 2011-02-11 for symbol IBM
+Jan 07 05:40:29 BACKTEST [info] Setting transactiondate to 2011-02-14
+Jan 07 05:40:29 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:29 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:29 BACKTEST [info] Setting action to None
+Jan 07 05:40:29 BACKTEST [info] Setting action to None
+Jan 07 05:40:29 BACKTEST [info] Finding next trade date from 2011-02-14 for symbol IBM
+Jan 07 05:40:29 BACKTEST [info] Setting transactiondate to 2011-02-15
+Jan 07 05:40:29 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:29 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:29 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:29 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:29 BACKTEST [info] Dollars available 10050.455017089
+Jan 07 05:40:29 BACKTEST [info] Setting float to 1005.0455017089
+Jan 07 05:40:29 BACKTEST [info] Setting dollars2invest to 1005
+Jan 07 05:40:29 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:29 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:29 BACKTEST [info] MoneyManagement Dollars avail: 1005 with risk size: 10
+Jan 07 05:40:29 BACKTEST [info] Setting cash to 1005
+Jan 07 05:40:29 BACKTEST [info] Have $1005 with which to buy shares
+Jan 07 05:40:29 BACKTEST [info] Shares for IBM on 2011-02-15 cost 163.045 H/L: 163.57:162.52
+Jan 07 05:40:29 BACKTEST [info] Setting share cost to 163.045
+Jan 07 05:40:29 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:29 BACKTEST [notice] Buy stocks - Shares: 6 for $978.27
+Jan 07 05:40:29 BACKTEST [info] Setting action to None
+Jan 07 05:40:29 BACKTEST [info] Finding next trade date from 2011-02-15 for symbol IBM
+Jan 07 05:40:29 BACKTEST [info] Setting transactiondate to 2011-02-16
+Jan 07 05:40:29 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:29 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:29 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:29 BACKTEST [info] Candlestick Hammer has action buystock and VALUE  99
+Jan 07 05:40:29 BACKTEST [info] Candlestick Morning_Star has action buystock and VALUE  99
+Jan 07 05:40:29 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 07 05:40:29 BACKTEST [info] 6 candlesticks with a total of 496 for average 82.666666666667
+Jan 07 05:40:29 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:30 BACKTEST [info] Dollars available 9072.1849975581
+Jan 07 05:40:30 BACKTEST [info] Setting float to 907.21849975581
+Jan 07 05:40:30 BACKTEST [info] Setting dollars2invest to 907
+Jan 07 05:40:30 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:30 BACKTEST [info] Setting dollars2risk to 9
+Jan 07 05:40:30 BACKTEST [info] MoneyManagement Dollars avail: 907 with risk size: 9
+Jan 07 05:40:30 BACKTEST [info] Setting cash to 907
+Jan 07 05:40:30 BACKTEST [info] Have $907 with which to buy shares
+Jan 07 05:40:30 BACKTEST [info] Shares for IBM on 2011-02-16 cost 163.175 H/L: 163.6:162.75
+Jan 07 05:40:30 BACKTEST [info] Setting share cost to 163.175
+Jan 07 05:40:30 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:30 BACKTEST [notice] Buy stocks - Shares: 5 for $815.875
+Jan 07 05:40:30 BACKTEST [info] Setting action to None
+Jan 07 05:40:30 BACKTEST [info] Finding next trade date from 2011-02-16 for symbol IBM
+Jan 07 05:40:30 BACKTEST [info] Setting transactiondate to 2011-02-17
+Jan 07 05:40:30 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:30 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:30 BACKTEST [info] Setting action to None
+Jan 07 05:40:30 BACKTEST [info] Setting action to None
+Jan 07 05:40:30 BACKTEST [info] Finding next trade date from 2011-02-17 for symbol IBM
+Jan 07 05:40:30 BACKTEST [info] Setting transactiondate to 2011-02-18
+Jan 07 05:40:30 BACKTEST [info] Setting action to None
+Jan 07 05:40:30 BACKTEST [info] Finding next trade date from 2011-02-18 for symbol IBM
+Jan 07 05:40:30 BACKTEST [info] Setting transactiondate to 2011-02-22
+Jan 07 05:40:30 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 07 05:40:30 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:30 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:30 BACKTEST [info] Shares for IBM on 2011-02-22 cost 163.02 H/L: 164.26:161.78
+Jan 07 05:40:30 BACKTEST [info] Setting share cost to 163.02
+Jan 07 05:40:30 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:30 BACKTEST [info] ActionSellStock calculated shares # 11 for stock IBM
+Jan 07 05:40:30 BACKTEST [info] Setting number of shares to 11
+Jan 07 05:40:30 BACKTEST [notice] Sell stocks - Shares: 11 for $1793.22
+Jan 07 05:40:30 BACKTEST [info] Setting action to None
+Jan 07 05:40:30 BACKTEST [info] Finding next trade date from 2011-02-22 for symbol IBM
+Jan 07 05:40:30 BACKTEST [info] Setting transactiondate to 2011-02-23
+Jan 07 05:40:30 BACKTEST [info] Setting action to None
+Jan 07 05:40:30 BACKTEST [info] Finding next trade date from 2011-02-23 for symbol IBM
+Jan 07 05:40:30 BACKTEST [info] Setting transactiondate to 2011-02-24
+Jan 07 05:40:30 BACKTEST [info] Setting action to None
+Jan 07 05:40:30 BACKTEST [info] Finding next trade date from 2011-02-24 for symbol IBM
+Jan 07 05:40:30 BACKTEST [info] Setting transactiondate to 2011-02-25
+Jan 07 05:40:30 BACKTEST [info] Setting action to None
+Jan 07 05:40:30 BACKTEST [info] Finding next trade date from 2011-02-25 for symbol IBM
+Jan 07 05:40:31 BACKTEST [info] Setting transactiondate to 2011-02-28
+Jan 07 05:40:31 BACKTEST [info] Setting action to None
+Jan 07 05:40:31 BACKTEST [info] Finding next trade date from 2011-02-28 for symbol IBM
+Jan 07 05:40:31 BACKTEST [info] Setting transactiondate to 2011-03-01
+Jan 07 05:40:31 BACKTEST [info] Setting action to None
+Jan 07 05:40:31 BACKTEST [info] Finding next trade date from 2011-03-01 for symbol IBM
+Jan 07 05:40:31 BACKTEST [info] Setting transactiondate to 2011-03-02
+Jan 07 05:40:31 BACKTEST [info] Setting action to None
+Jan 07 05:40:31 BACKTEST [info] Finding next trade date from 2011-03-02 for symbol IBM
+Jan 07 05:40:31 BACKTEST [info] Setting transactiondate to 2011-03-03
+Jan 07 05:40:31 BACKTEST [info] Setting action to None
+Jan 07 05:40:31 BACKTEST [info] Finding next trade date from 2011-03-03 for symbol IBM
+Jan 07 05:40:31 BACKTEST [info] Setting transactiondate to 2011-03-04
+Jan 07 05:40:31 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 07 05:40:31 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:31 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:31 BACKTEST [info] Shares for IBM on 2011-03-04 cost 162.48 H/L: 164.31:160.65
+Jan 07 05:40:31 BACKTEST [info] Setting share cost to 162.48
+Jan 07 05:40:31 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:31 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 07 05:40:31 BACKTEST [info] Setting number of shares to 0
+Jan 07 05:40:31 BACKTEST [info] Setting action to None
+Jan 07 05:40:31 BACKTEST [info] Finding next trade date from 2011-03-04 for symbol IBM
+Jan 07 05:40:31 BACKTEST [info] Setting transactiondate to 2011-03-07
+Jan 07 05:40:31 BACKTEST [info] Setting action to None
+Jan 07 05:40:31 BACKTEST [info] Finding next trade date from 2011-03-07 for symbol IBM
+Jan 07 05:40:31 BACKTEST [info] Setting transactiondate to 2011-03-08
+Jan 07 05:40:31 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 07 05:40:31 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:31 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:31 BACKTEST [info] Dollars available 10049.529968262
+Jan 07 05:40:31 BACKTEST [info] Setting float to 1004.9529968262
+Jan 07 05:40:31 BACKTEST [info] Setting dollars2invest to 1004
+Jan 07 05:40:31 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:31 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:31 BACKTEST [info] MoneyManagement Dollars avail: 1004 with risk size: 10
+Jan 07 05:40:31 BACKTEST [info] Setting cash to 1004
+Jan 07 05:40:31 BACKTEST [info] Have $1004 with which to buy shares
+Jan 07 05:40:31 BACKTEST [info] Shares for IBM on 2011-03-08 cost 161.32 H/L: 163.43:159.21
+Jan 07 05:40:31 BACKTEST [info] Setting share cost to 161.32
+Jan 07 05:40:31 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:31 BACKTEST [notice] Buy stocks - Shares: 6 for $967.92
+Jan 07 05:40:31 BACKTEST [info] Setting action to None
+Jan 07 05:40:31 BACKTEST [info] Finding next trade date from 2011-03-08 for symbol IBM
+Jan 07 05:40:31 BACKTEST [info] Setting transactiondate to 2011-03-09
+Jan 07 05:40:31 BACKTEST [info] Setting action to None
+Jan 07 05:40:31 BACKTEST [info] Finding next trade date from 2011-03-09 for symbol IBM
+Jan 07 05:40:32 BACKTEST [info] Setting transactiondate to 2011-03-10
+Jan 07 05:40:32 BACKTEST [info] Setting action to None
+Jan 07 05:40:32 BACKTEST [info] Finding next trade date from 2011-03-10 for symbol IBM
+Jan 07 05:40:32 BACKTEST [info] Setting transactiondate to 2011-03-11
+Jan 07 05:40:32 BACKTEST [info] Setting action to None
+Jan 07 05:40:32 BACKTEST [info] Finding next trade date from 2011-03-11 for symbol IBM
+Jan 07 05:40:32 BACKTEST [info] Setting transactiondate to 2011-03-14
+Jan 07 05:40:32 BACKTEST [info] Setting action to None
+Jan 07 05:40:32 BACKTEST [info] Finding next trade date from 2011-03-14 for symbol IBM
+Jan 07 05:40:32 BACKTEST [info] Setting transactiondate to 2011-03-15
+Jan 07 05:40:32 BACKTEST [info] Setting action to None
+Jan 07 05:40:32 BACKTEST [info] Finding next trade date from 2011-03-15 for symbol IBM
+Jan 07 05:40:32 BACKTEST [info] Setting transactiondate to 2011-03-16
+Jan 07 05:40:32 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 07 05:40:32 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:32 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:32 BACKTEST [info] Shares for IBM on 2011-03-16 cost 154.345 H/L: 156.98:151.71
+Jan 07 05:40:32 BACKTEST [info] Setting share cost to 154.345
+Jan 07 05:40:32 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:32 BACKTEST [info] ActionSellStock calculated shares # 6 for stock IBM
+Jan 07 05:40:32 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:32 BACKTEST [notice] Sell stocks - Shares: 6 for $926.07
+Jan 07 05:40:32 BACKTEST [info] Setting action to None
+Jan 07 05:40:32 BACKTEST [info] Finding next trade date from 2011-03-16 for symbol IBM
+Jan 07 05:40:32 BACKTEST [info] Setting transactiondate to 2011-03-17
+Jan 07 05:40:32 BACKTEST [info] Candlestick Hammer has action buystock and VALUE  99
+Jan 07 05:40:32 BACKTEST [info] Candlestick Bullish_Harami has action buystock and VALUE  99
+Jan 07 05:40:32 BACKTEST [info] 2 candlesticks with a total of 198 for average 99
+Jan 07 05:40:32 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:32 BACKTEST [info] Dollars available 10007.679992676
+Jan 07 05:40:32 BACKTEST [info] Setting float to 1000.7679992676
+Jan 07 05:40:32 BACKTEST [info] Setting dollars2invest to 1000
+Jan 07 05:40:32 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:32 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:32 BACKTEST [info] MoneyManagement Dollars avail: 1000 with risk size: 10
+Jan 07 05:40:32 BACKTEST [info] Setting cash to 1000
+Jan 07 05:40:32 BACKTEST [info] Have $1000 with which to buy shares
+Jan 07 05:40:32 BACKTEST [info] Shares for IBM on 2011-03-17 cost 153.6 H/L: 154.5:152.7
+Jan 07 05:40:32 BACKTEST [info] Setting share cost to 153.6
+Jan 07 05:40:32 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:32 BACKTEST [notice] Buy stocks - Shares: 6 for $921.6
+Jan 07 05:40:32 BACKTEST [info] Setting action to None
+Jan 07 05:40:32 BACKTEST [info] Finding next trade date from 2011-03-17 for symbol IBM
+Jan 07 05:40:33 BACKTEST [info] Setting transactiondate to 2011-03-18
+Jan 07 05:40:33 BACKTEST [info] Setting action to None
+Jan 07 05:40:33 BACKTEST [info] Finding next trade date from 2011-03-18 for symbol IBM
+Jan 07 05:40:33 BACKTEST [info] Setting transactiondate to 2011-03-21
+Jan 07 05:40:33 BACKTEST [info] Setting action to None
+Jan 07 05:40:33 BACKTEST [info] Finding next trade date from 2011-03-21 for symbol IBM
+Jan 07 05:40:33 BACKTEST [info] Setting transactiondate to 2011-03-22
+Jan 07 05:40:33 BACKTEST [info] Setting action to None
+Jan 07 05:40:33 BACKTEST [info] Finding next trade date from 2011-03-22 for symbol IBM
+Jan 07 05:40:33 BACKTEST [info] Setting transactiondate to 2011-03-23
+Jan 07 05:40:33 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 07 05:40:33 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:33 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:33 BACKTEST [info] Dollars available 9086.08001709
+Jan 07 05:40:33 BACKTEST [info] Setting float to 908.608001709
+Jan 07 05:40:33 BACKTEST [info] Setting dollars2invest to 908
+Jan 07 05:40:33 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:33 BACKTEST [info] Setting dollars2risk to 9
+Jan 07 05:40:33 BACKTEST [info] MoneyManagement Dollars avail: 908 with risk size: 9
+Jan 07 05:40:33 BACKTEST [info] Setting cash to 908
+Jan 07 05:40:33 BACKTEST [info] Have $908 with which to buy shares
+Jan 07 05:40:33 BACKTEST [info] Shares for IBM on 2011-03-23 cost 158.805 H/L: 160.08:157.53
+Jan 07 05:40:33 BACKTEST [info] Setting share cost to 158.805
+Jan 07 05:40:33 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:33 BACKTEST [notice] Buy stocks - Shares: 5 for $794.025
+Jan 07 05:40:33 BACKTEST [info] Setting action to None
+Jan 07 05:40:33 BACKTEST [info] Finding next trade date from 2011-03-23 for symbol IBM
+Jan 07 05:40:33 BACKTEST [info] Setting transactiondate to 2011-03-24
+Jan 07 05:40:33 BACKTEST [info] Setting action to None
+Jan 07 05:40:33 BACKTEST [info] Finding next trade date from 2011-03-24 for symbol IBM
+Jan 07 05:40:33 BACKTEST [info] Setting transactiondate to 2011-03-25
+Jan 07 05:40:33 BACKTEST [info] Setting action to None
+Jan 07 05:40:33 BACKTEST [info] Finding next trade date from 2011-03-25 for symbol IBM
+Jan 07 05:40:33 BACKTEST [info] Setting transactiondate to 2011-03-28
+Jan 07 05:40:33 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 07 05:40:33 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:33 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:33 BACKTEST [info] Shares for IBM on 2011-03-28 cost 161.85 H/L: 162.58:161.12
+Jan 07 05:40:33 BACKTEST [info] Setting share cost to 161.85
+Jan 07 05:40:33 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:33 BACKTEST [info] ActionSellStock calculated shares # 11 for stock IBM
+Jan 07 05:40:33 BACKTEST [info] Setting number of shares to 11
+Jan 07 05:40:34 BACKTEST [notice] Sell stocks - Shares: 11 for $1780.35
+Jan 07 05:40:34 BACKTEST [info] Setting action to None
+Jan 07 05:40:34 BACKTEST [info] Finding next trade date from 2011-03-28 for symbol IBM
+Jan 07 05:40:34 BACKTEST [info] Setting transactiondate to 2011-03-29
+Jan 07 05:40:34 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 07 05:40:34 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:34 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:34 BACKTEST [info] Dollars available 10072.404968262
+Jan 07 05:40:34 BACKTEST [info] Setting float to 1007.2404968262
+Jan 07 05:40:34 BACKTEST [info] Setting dollars2invest to 1007
+Jan 07 05:40:34 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:34 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:34 BACKTEST [info] MoneyManagement Dollars avail: 1007 with risk size: 10
+Jan 07 05:40:34 BACKTEST [info] Setting cash to 1007
+Jan 07 05:40:34 BACKTEST [info] Have $1007 with which to buy shares
+Jan 07 05:40:34 BACKTEST [info] Shares for IBM on 2011-03-29 cost 162.12 H/L: 163.09:161.15
+Jan 07 05:40:34 BACKTEST [info] Setting share cost to 162.12
+Jan 07 05:40:34 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:34 BACKTEST [notice] Buy stocks - Shares: 6 for $972.72
+Jan 07 05:40:34 BACKTEST [info] Setting action to None
+Jan 07 05:40:34 BACKTEST [info] Finding next trade date from 2011-03-29 for symbol IBM
+Jan 07 05:40:34 BACKTEST [info] Setting transactiondate to 2011-03-30
+Jan 07 05:40:35 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:40:35 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:40:35 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:35 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 07 05:40:35 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:35 BACKTEST [info] Shares for IBM on 2011-03-30 cost 163.505 H/L: 163.99:163.02
+Jan 07 05:40:35 BACKTEST [info] Setting share cost to 163.505
+Jan 07 05:40:35 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:35 BACKTEST [info] ActionSellStock calculated shares # 6 for stock IBM
+Jan 07 05:40:35 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:35 BACKTEST [notice] Sell stocks - Shares: 6 for $981.03
+Jan 07 05:40:35 BACKTEST [info] Setting action to None
+Jan 07 05:40:35 BACKTEST [info] Finding next trade date from 2011-03-30 for symbol IBM
+Jan 07 05:40:35 BACKTEST [info] Setting transactiondate to 2011-03-31
+Jan 07 05:40:35 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:35 BACKTEST [info] Candlestick Evening_Star has action sellstock and VALUE  1
+Jan 07 05:40:35 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 07 05:40:35 BACKTEST [info] 3 candlesticks with a total of 52 for average 17.333333333333
+Jan 07 05:40:35 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:35 BACKTEST [info] Shares for IBM on 2011-03-31 cost 163.565 H/L: 164.06:163.07
+Jan 07 05:40:35 BACKTEST [info] Setting share cost to 163.565
+Jan 07 05:40:35 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:35 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 07 05:40:35 BACKTEST [info] Setting number of shares to 0
+Jan 07 05:40:35 BACKTEST [info] Setting action to None
+Jan 07 05:40:35 BACKTEST [info] Finding next trade date from 2011-03-31 for symbol IBM
+Jan 07 05:40:35 BACKTEST [info] Setting transactiondate to 2011-04-01
+Jan 07 05:40:35 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 07 05:40:35 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:35 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:35 BACKTEST [info] Dollars available 10080.715026856
+Jan 07 05:40:35 BACKTEST [info] Setting float to 1008.0715026856
+Jan 07 05:40:35 BACKTEST [info] Setting dollars2invest to 1008
+Jan 07 05:40:35 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:35 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:35 BACKTEST [info] MoneyManagement Dollars avail: 1008 with risk size: 10
+Jan 07 05:40:35 BACKTEST [info] Setting cash to 1008
+Jan 07 05:40:35 BACKTEST [info] Have $1008 with which to buy shares
+Jan 07 05:40:35 BACKTEST [info] Shares for IBM on 2011-04-01 cost 163.73 H/L: 164.42:163.04
+Jan 07 05:40:35 BACKTEST [info] Setting share cost to 163.73
+Jan 07 05:40:35 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:35 BACKTEST [notice] Buy stocks - Shares: 6 for $982.38
+Jan 07 05:40:35 BACKTEST [info] Setting action to None
+Jan 07 05:40:35 BACKTEST [info] Finding next trade date from 2011-04-01 for symbol IBM
+Jan 07 05:40:35 BACKTEST [info] Setting transactiondate to 2011-04-04
+Jan 07 05:40:35 BACKTEST [info] Setting action to None
+Jan 07 05:40:35 BACKTEST [info] Finding next trade date from 2011-04-04 for symbol IBM
+Jan 07 05:40:35 BACKTEST [info] Setting transactiondate to 2011-04-05
+Jan 07 05:40:36 BACKTEST [info] Setting action to None
+Jan 07 05:40:36 BACKTEST [info] Finding next trade date from 2011-04-05 for symbol IBM
+Jan 07 05:40:36 BACKTEST [info] Setting transactiondate to 2011-04-06
+Jan 07 05:40:36 BACKTEST [info] Setting action to None
+Jan 07 05:40:36 BACKTEST [info] Finding next trade date from 2011-04-06 for symbol IBM
+Jan 07 05:40:36 BACKTEST [info] Setting transactiondate to 2011-04-07
+Jan 07 05:40:36 BACKTEST [info] Setting action to None
+Jan 07 05:40:36 BACKTEST [info] Finding next trade date from 2011-04-07 for symbol IBM
+Jan 07 05:40:36 BACKTEST [info] Setting transactiondate to 2011-04-08
+Jan 07 05:40:36 BACKTEST [info] Candlestick Hanging_Man has action sellstock and VALUE  1
+Jan 07 05:40:36 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:36 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:36 BACKTEST [info] Shares for IBM on 2011-04-08 cost 163.77 H/L: 164.38:163.16
+Jan 07 05:40:36 BACKTEST [info] Setting share cost to 163.77
+Jan 07 05:40:36 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:36 BACKTEST [info] ActionSellStock calculated shares # 6 for stock IBM
+Jan 07 05:40:36 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:36 BACKTEST [notice] Sell stocks - Shares: 6 for $982.62
+Jan 07 05:40:36 BACKTEST [info] Setting action to None
+Jan 07 05:40:36 BACKTEST [info] Finding next trade date from 2011-04-08 for symbol IBM
+Jan 07 05:40:36 BACKTEST [info] Setting transactiondate to 2011-04-11
+Jan 07 05:40:36 BACKTEST [info] Setting action to None
+Jan 07 05:40:36 BACKTEST [info] Finding next trade date from 2011-04-11 for symbol IBM
+Jan 07 05:40:36 BACKTEST [info] Setting transactiondate to 2011-04-12
+Jan 07 05:40:36 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:40:36 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:40:36 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:36 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 07 05:40:36 BACKTEST [info] 4 candlesticks with a total of 102 for average 25.5
+Jan 07 05:40:36 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:36 BACKTEST [info] Shares for IBM on 2011-04-12 cost 163.035 H/L: 163.77:162.3
+Jan 07 05:40:36 BACKTEST [info] Setting share cost to 163.035
+Jan 07 05:40:36 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:36 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 07 05:40:36 BACKTEST [info] Setting number of shares to 0
+Jan 07 05:40:36 BACKTEST [info] Setting action to None
+Jan 07 05:40:36 BACKTEST [info] Finding next trade date from 2011-04-12 for symbol IBM
+Jan 07 05:40:36 BACKTEST [info] Setting transactiondate to 2011-04-13
+Jan 07 05:40:36 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:36 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:36 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:36 BACKTEST [info] Candlestick Inverted_Hammer has action buystock and VALUE  99
+Jan 07 05:40:36 BACKTEST [info] 4 candlesticks with a total of 298 for average 74.5
+Jan 07 05:40:36 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:36 BACKTEST [info] Dollars available 10080.95501709
+Jan 07 05:40:36 BACKTEST [info] Setting float to 1008.095501709
+Jan 07 05:40:36 BACKTEST [info] Setting dollars2invest to 1008
+Jan 07 05:40:36 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:36 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:36 BACKTEST [info] MoneyManagement Dollars avail: 1008 with risk size: 10
+Jan 07 05:40:36 BACKTEST [info] Setting cash to 1008
+Jan 07 05:40:36 BACKTEST [info] Have $1008 with which to buy shares
+Jan 07 05:40:36 BACKTEST [info] Shares for IBM on 2011-04-13 cost 164.295 H/L: 164.93:163.66
+Jan 07 05:40:36 BACKTEST [info] Setting share cost to 164.295
+Jan 07 05:40:36 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:36 BACKTEST [notice] Buy stocks - Shares: 6 for $985.77
+Jan 07 05:40:37 BACKTEST [info] Setting action to None
+Jan 07 05:40:37 BACKTEST [info] Finding next trade date from 2011-04-13 for symbol IBM
+Jan 07 05:40:37 BACKTEST [info] Setting transactiondate to 2011-04-14
+Jan 07 05:40:37 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:37 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 07 05:40:37 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:37 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:37 BACKTEST [info] Dollars available 9095.184997559
+Jan 07 05:40:37 BACKTEST [info] Setting float to 909.5184997559
+Jan 07 05:40:37 BACKTEST [info] Setting dollars2invest to 909
+Jan 07 05:40:37 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:37 BACKTEST [info] Setting dollars2risk to 9
+Jan 07 05:40:37 BACKTEST [info] MoneyManagement Dollars avail: 909 with risk size: 9
+Jan 07 05:40:37 BACKTEST [info] Setting cash to 909
+Jan 07 05:40:37 BACKTEST [info] Have $909 with which to buy shares
+Jan 07 05:40:37 BACKTEST [info] Shares for IBM on 2011-04-14 cost 164.26 H/L: 165.36:163.16
+Jan 07 05:40:37 BACKTEST [info] Setting share cost to 164.26
+Jan 07 05:40:37 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:37 BACKTEST [notice] Buy stocks - Shares: 5 for $821.3
+Jan 07 05:40:37 BACKTEST [info] Setting action to None
+Jan 07 05:40:37 BACKTEST [info] Finding next trade date from 2011-04-14 for symbol IBM
+Jan 07 05:40:37 BACKTEST [info] Setting transactiondate to 2011-04-15
+Jan 07 05:40:37 BACKTEST [info] Setting action to None
+Jan 07 05:40:37 BACKTEST [info] Finding next trade date from 2011-04-15 for symbol IBM
+Jan 07 05:40:37 BACKTEST [info] Setting transactiondate to 2011-04-18
+Jan 07 05:40:37 BACKTEST [info] Setting action to None
+Jan 07 05:40:37 BACKTEST [info] Finding next trade date from 2011-04-18 for symbol IBM
+Jan 07 05:40:37 BACKTEST [info] Setting transactiondate to 2011-04-19
+Jan 07 05:40:37 BACKTEST [info] Setting action to None
+Jan 07 05:40:37 BACKTEST [info] Finding next trade date from 2011-04-19 for symbol IBM
+Jan 07 05:40:37 BACKTEST [info] Setting transactiondate to 2011-04-20
+Jan 07 05:40:37 BACKTEST [info] Setting action to None
+Jan 07 05:40:37 BACKTEST [info] Finding next trade date from 2011-04-20 for symbol IBM
+Jan 07 05:40:37 BACKTEST [info] Setting transactiondate to 2011-04-21
+Jan 07 05:40:37 BACKTEST [info] Setting action to None
+Jan 07 05:40:37 BACKTEST [info] Finding next trade date from 2011-04-21 for symbol IBM
+Jan 07 05:40:37 BACKTEST [info] Setting transactiondate to 2011-04-25
+Jan 07 05:40:37 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:40:37 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:40:37 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:37 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 07 05:40:37 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:37 BACKTEST [info] Shares for IBM on 2011-04-25 cost 168 H/L: 168.77:167.23
+Jan 07 05:40:37 BACKTEST [info] Setting share cost to 168
+Jan 07 05:40:37 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:38 BACKTEST [info] ActionSellStock calculated shares # 11 for stock IBM
+Jan 07 05:40:38 BACKTEST [info] Setting number of shares to 11
+Jan 07 05:40:38 BACKTEST [notice] Sell stocks - Shares: 11 for $1848
+Jan 07 05:40:38 BACKTEST [info] Setting action to None
+Jan 07 05:40:38 BACKTEST [info] Finding next trade date from 2011-04-25 for symbol IBM
+Jan 07 05:40:38 BACKTEST [info] Setting transactiondate to 2011-04-26
+Jan 07 05:40:38 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:38 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:38 BACKTEST [info] Setting action to None
+Jan 07 05:40:38 BACKTEST [info] Setting action to None
+Jan 07 05:40:38 BACKTEST [info] Finding next trade date from 2011-04-26 for symbol IBM
+Jan 07 05:40:38 BACKTEST [info] Setting transactiondate to 2011-04-27
+Jan 07 05:40:38 BACKTEST [info] Setting action to None
+Jan 07 05:40:38 BACKTEST [info] Finding next trade date from 2011-04-27 for symbol IBM
+Jan 07 05:40:38 BACKTEST [info] Setting transactiondate to 2011-04-28
+Jan 07 05:40:38 BACKTEST [info] Setting action to None
+Jan 07 05:40:38 BACKTEST [info] Finding next trade date from 2011-04-28 for symbol IBM
+Jan 07 05:40:38 BACKTEST [info] Setting transactiondate to 2011-04-29
+Jan 07 05:40:38 BACKTEST [info] Setting action to None
+Jan 07 05:40:38 BACKTEST [info] Finding next trade date from 2011-04-29 for symbol IBM
+Jan 07 05:40:38 BACKTEST [info] Setting transactiondate to 2011-05-02
+Jan 07 05:40:38 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:38 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:38 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 07 05:40:38 BACKTEST [info] 3 candlesticks with a total of 248 for average 82.666666666667
+Jan 07 05:40:38 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:38 BACKTEST [info] Dollars available 10121.885009766
+Jan 07 05:40:38 BACKTEST [info] Setting float to 1012.1885009766
+Jan 07 05:40:38 BACKTEST [info] Setting dollars2invest to 1012
+Jan 07 05:40:38 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:38 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:38 BACKTEST [info] MoneyManagement Dollars avail: 1012 with risk size: 10
+Jan 07 05:40:38 BACKTEST [info] Setting cash to 1012
+Jan 07 05:40:38 BACKTEST [info] Have $1012 with which to buy shares
+Jan 07 05:40:38 BACKTEST [info] Shares for IBM on 2011-05-02 cost 172.515 H/L: 173.54:171.49
+Jan 07 05:40:38 BACKTEST [info] Setting share cost to 172.515
+Jan 07 05:40:38 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:38 BACKTEST [notice] Buy stocks - Shares: 5 for $862.575
+Jan 07 05:40:38 BACKTEST [info] Setting action to None
+Jan 07 05:40:38 BACKTEST [info] Finding next trade date from 2011-05-02 for symbol IBM
+Jan 07 05:40:38 BACKTEST [info] Setting transactiondate to 2011-05-03
+Jan 07 05:40:38 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:38 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:38 BACKTEST [info] Setting action to None
+Jan 07 05:40:39 BACKTEST [info] Setting action to None
+Jan 07 05:40:39 BACKTEST [info] Finding next trade date from 2011-05-03 for symbol IBM
+Jan 07 05:40:39 BACKTEST [info] Setting transactiondate to 2011-05-04
+Jan 07 05:40:39 BACKTEST [info] Setting action to None
+Jan 07 05:40:39 BACKTEST [info] Finding next trade date from 2011-05-04 for symbol IBM
+Jan 07 05:40:39 BACKTEST [info] Setting transactiondate to 2011-05-05
+Jan 07 05:40:39 BACKTEST [info] Setting action to None
+Jan 07 05:40:39 BACKTEST [info] Finding next trade date from 2011-05-05 for symbol IBM
+Jan 07 05:40:39 BACKTEST [info] Setting transactiondate to 2011-05-06
+Jan 07 05:40:39 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:39 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:39 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:39 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:39 BACKTEST [info] Dollars available 9259.309997559
+Jan 07 05:40:39 BACKTEST [info] Setting float to 925.9309997559
+Jan 07 05:40:39 BACKTEST [info] Setting dollars2invest to 925
+Jan 07 05:40:39 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:39 BACKTEST [info] Setting dollars2risk to 9
+Jan 07 05:40:39 BACKTEST [info] MoneyManagement Dollars avail: 925 with risk size: 9
+Jan 07 05:40:39 BACKTEST [info] Setting cash to 925
+Jan 07 05:40:39 BACKTEST [info] Have $925 with which to buy shares
+Jan 07 05:40:39 BACKTEST [info] Shares for IBM on 2011-05-06 cost 169.195 H/L: 170.15:168.24
+Jan 07 05:40:39 BACKTEST [info] Setting share cost to 169.195
+Jan 07 05:40:39 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:39 BACKTEST [notice] Buy stocks - Shares: 5 for $845.975
+Jan 07 05:40:39 BACKTEST [info] Setting action to None
+Jan 07 05:40:39 BACKTEST [info] Finding next trade date from 2011-05-06 for symbol IBM
+Jan 07 05:40:39 BACKTEST [info] Setting transactiondate to 2011-05-09
+Jan 07 05:40:39 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:39 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 07 05:40:39 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:39 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:39 BACKTEST [info] Dollars available 8413.335021973
+Jan 07 05:40:39 BACKTEST [info] Setting float to 841.3335021973
+Jan 07 05:40:39 BACKTEST [info] Setting dollars2invest to 841
+Jan 07 05:40:39 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:39 BACKTEST [info] Setting dollars2risk to 8
+Jan 07 05:40:39 BACKTEST [info] MoneyManagement Dollars avail: 841 with risk size: 8
+Jan 07 05:40:39 BACKTEST [info] Setting cash to 841
+Jan 07 05:40:39 BACKTEST [info] Have $841 with which to buy shares
+Jan 07 05:40:39 BACKTEST [info] Shares for IBM on 2011-05-09 cost 169.08 H/L: 169.85:168.31
+Jan 07 05:40:39 BACKTEST [info] Setting share cost to 169.08
+Jan 07 05:40:39 BACKTEST [info] Setting number of shares to 4
+Jan 07 05:40:39 BACKTEST [notice] Buy stocks - Shares: 4 for $676.32
+Jan 07 05:40:39 BACKTEST [info] Setting action to None
+Jan 07 05:40:39 BACKTEST [info] Finding next trade date from 2011-05-09 for symbol IBM
+Jan 07 05:40:39 BACKTEST [info] Setting transactiondate to 2011-05-10
+Jan 07 05:40:40 BACKTEST [info] Setting action to None
+Jan 07 05:40:40 BACKTEST [info] Finding next trade date from 2011-05-10 for symbol IBM
+Jan 07 05:40:40 BACKTEST [info] Setting transactiondate to 2011-05-11
+Jan 07 05:40:40 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 07 05:40:40 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:40 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:40 BACKTEST [info] Shares for IBM on 2011-05-11 cost 169.17 H/L: 170.52:167.82
+Jan 07 05:40:40 BACKTEST [info] Setting share cost to 169.17
+Jan 07 05:40:40 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:40 BACKTEST [info] ActionSellStock calculated shares # 14 for stock IBM
+Jan 07 05:40:40 BACKTEST [info] Setting number of shares to 14
+Jan 07 05:40:40 BACKTEST [notice] Sell stocks - Shares: 14 for $2368.38
+Jan 07 05:40:40 BACKTEST [info] Setting action to None
+Jan 07 05:40:40 BACKTEST [info] Finding next trade date from 2011-05-11 for symbol IBM
+Jan 07 05:40:40 BACKTEST [info] Setting transactiondate to 2011-05-12
+Jan 07 05:40:40 BACKTEST [info] Setting action to None
+Jan 07 05:40:40 BACKTEST [info] Finding next trade date from 2011-05-12 for symbol IBM
+Jan 07 05:40:40 BACKTEST [info] Setting transactiondate to 2011-05-13
+Jan 07 05:40:40 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 07 05:40:40 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:40 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:40 BACKTEST [info] Shares for IBM on 2011-05-13 cost 170.795 H/L: 172.15:169.44
+Jan 07 05:40:40 BACKTEST [info] Setting share cost to 170.795
+Jan 07 05:40:40 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:40 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 07 05:40:40 BACKTEST [info] Setting number of shares to 0
+Jan 07 05:40:40 BACKTEST [info] Setting action to None
+Jan 07 05:40:40 BACKTEST [info] Finding next trade date from 2011-05-13 for symbol IBM
+Jan 07 05:40:40 BACKTEST [info] Setting transactiondate to 2011-05-16
+Jan 07 05:40:40 BACKTEST [info] Setting action to None
+Jan 07 05:40:40 BACKTEST [info] Finding next trade date from 2011-05-16 for symbol IBM
+Jan 07 05:40:40 BACKTEST [info] Setting transactiondate to 2011-05-17
+Jan 07 05:40:40 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 07 05:40:40 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:40 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:40 BACKTEST [info] Dollars available 10105.394897461
+Jan 07 05:40:40 BACKTEST [info] Setting float to 1010.5394897461
+Jan 07 05:40:40 BACKTEST [info] Setting dollars2invest to 1010
+Jan 07 05:40:40 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:40 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:40 BACKTEST [info] MoneyManagement Dollars avail: 1010 with risk size: 10
+Jan 07 05:40:40 BACKTEST [info] Setting cash to 1010
+Jan 07 05:40:40 BACKTEST [info] Have $1010 with which to buy shares
+Jan 07 05:40:40 BACKTEST [info] Shares for IBM on 2011-05-17 cost 168.97 H/L: 171.41:166.53
+Jan 07 05:40:40 BACKTEST [info] Setting share cost to 168.97
+Jan 07 05:40:40 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:40 BACKTEST [notice] Buy stocks - Shares: 5 for $844.85
+Jan 07 05:40:41 BACKTEST [info] Setting action to None
+Jan 07 05:40:41 BACKTEST [info] Finding next trade date from 2011-05-17 for symbol IBM
+Jan 07 05:40:41 BACKTEST [info] Setting transactiondate to 2011-05-18
+Jan 07 05:40:41 BACKTEST [info] Setting action to None
+Jan 07 05:40:41 BACKTEST [info] Finding next trade date from 2011-05-18 for symbol IBM
+Jan 07 05:40:41 BACKTEST [info] Setting transactiondate to 2011-05-19
+Jan 07 05:40:41 BACKTEST [info] Setting action to None
+Jan 07 05:40:41 BACKTEST [info] Finding next trade date from 2011-05-19 for symbol IBM
+Jan 07 05:40:41 BACKTEST [info] Setting transactiondate to 2011-05-20
+Jan 07 05:40:41 BACKTEST [info] Setting action to None
+Jan 07 05:40:41 BACKTEST [info] Finding next trade date from 2011-05-20 for symbol IBM
+Jan 07 05:40:41 BACKTEST [info] Setting transactiondate to 2011-05-23
+Jan 07 05:40:41 BACKTEST [info] Setting action to None
+Jan 07 05:40:41 BACKTEST [info] Finding next trade date from 2011-05-23 for symbol IBM
+Jan 07 05:40:41 BACKTEST [info] Setting transactiondate to 2011-05-24
+Jan 07 05:40:41 BACKTEST [info] Setting action to None
+Jan 07 05:40:41 BACKTEST [info] Finding next trade date from 2011-05-24 for symbol IBM
+Jan 07 05:40:41 BACKTEST [info] Setting transactiondate to 2011-05-25
+Jan 07 05:40:41 BACKTEST [info] Candlestick Perfect_Doji has action Alert and VALUE  50
+Jan 07 05:40:41 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:41 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:41 BACKTEST [info] Candlestick Inverted_Hammer has action buystock and VALUE  99
+Jan 07 05:40:41 BACKTEST [info] 4 candlesticks with a total of 298 for average 74.5
+Jan 07 05:40:41 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:41 BACKTEST [info] Dollars available 9260.544921875
+Jan 07 05:40:41 BACKTEST [info] Setting float to 926.0544921875
+Jan 07 05:40:41 BACKTEST [info] Setting dollars2invest to 926
+Jan 07 05:40:41 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:41 BACKTEST [info] Setting dollars2risk to 9
+Jan 07 05:40:41 BACKTEST [info] MoneyManagement Dollars avail: 926 with risk size: 9
+Jan 07 05:40:41 BACKTEST [info] Setting cash to 926
+Jan 07 05:40:41 BACKTEST [info] Have $926 with which to buy shares
+Jan 07 05:40:41 BACKTEST [info] Shares for IBM on 2011-05-25 cost 167.955 H/L: 168.4:167.51
+Jan 07 05:40:41 BACKTEST [info] Setting share cost to 167.955
+Jan 07 05:40:41 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:41 BACKTEST [notice] Buy stocks - Shares: 5 for $839.775
+Jan 07 05:40:41 BACKTEST [info] Setting action to None
+Jan 07 05:40:41 BACKTEST [info] Finding next trade date from 2011-05-25 for symbol IBM
+Jan 07 05:40:41 BACKTEST [info] Setting transactiondate to 2011-05-26
+Jan 07 05:40:41 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:41 BACKTEST [info] Candlestick Hammer has action buystock and VALUE  99
+Jan 07 05:40:41 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:41 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:41 BACKTEST [info] Dollars available 8420.769897461
+Jan 07 05:40:41 BACKTEST [info] Setting float to 842.0769897461
+Jan 07 05:40:41 BACKTEST [info] Setting dollars2invest to 842
+Jan 07 05:40:42 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:42 BACKTEST [info] Setting dollars2risk to 8
+Jan 07 05:40:42 BACKTEST [info] MoneyManagement Dollars avail: 842 with risk size: 8
+Jan 07 05:40:42 BACKTEST [info] Setting cash to 842
+Jan 07 05:40:42 BACKTEST [info] Have $842 with which to buy shares
+Jan 07 05:40:42 BACKTEST [info] Shares for IBM on 2011-05-26 cost 166.7 H/L: 167.5:165.9
+Jan 07 05:40:42 BACKTEST [info] Setting share cost to 166.7
+Jan 07 05:40:42 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:42 BACKTEST [notice] Buy stocks - Shares: 5 for $833.5
+Jan 07 05:40:42 BACKTEST [info] Setting action to None
+Jan 07 05:40:42 BACKTEST [info] Finding next trade date from 2011-05-26 for symbol IBM
+Jan 07 05:40:42 BACKTEST [info] Setting transactiondate to 2011-05-27
+Jan 07 05:40:42 BACKTEST [info] Setting action to None
+Jan 07 05:40:42 BACKTEST [info] Finding next trade date from 2011-05-27 for symbol IBM
+Jan 07 05:40:42 BACKTEST [info] Setting transactiondate to 2011-05-31
+Jan 07 05:40:42 BACKTEST [info] Setting action to None
+Jan 07 05:40:42 BACKTEST [info] Finding next trade date from 2011-05-31 for symbol IBM
+Jan 07 05:40:42 BACKTEST [info] Setting transactiondate to 2011-06-01
+Jan 07 05:40:42 BACKTEST [info] Setting action to None
+Jan 07 05:40:42 BACKTEST [info] Finding next trade date from 2011-06-01 for symbol IBM
+Jan 07 05:40:42 BACKTEST [info] Setting transactiondate to 2011-06-02
+Jan 07 05:40:42 BACKTEST [info] Setting action to None
+Jan 07 05:40:42 BACKTEST [info] Finding next trade date from 2011-06-02 for symbol IBM
+Jan 07 05:40:42 BACKTEST [info] Setting transactiondate to 2011-06-03
+Jan 07 05:40:42 BACKTEST [info] Setting action to None
+Jan 07 05:40:42 BACKTEST [info] Finding next trade date from 2011-06-03 for symbol IBM
+Jan 07 05:40:42 BACKTEST [info] Setting transactiondate to 2011-06-06
+Jan 07 05:40:42 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:40:42 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:40:42 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:42 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 07 05:40:42 BACKTEST [info] 4 candlesticks with a total of 102 for average 25.5
+Jan 07 05:40:42 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:42 BACKTEST [info] Shares for IBM on 2011-06-06 cost 164.925 H/L: 165.58:164.27
+Jan 07 05:40:42 BACKTEST [info] Setting share cost to 164.925
+Jan 07 05:40:42 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:42 BACKTEST [info] ActionSellStock calculated shares # 15 for stock IBM
+Jan 07 05:40:42 BACKTEST [info] Setting number of shares to 15
+Jan 07 05:40:42 BACKTEST [notice] Sell stocks - Shares: 15 for $2473.875
+Jan 07 05:40:42 BACKTEST [info] Setting action to None
+Jan 07 05:40:42 BACKTEST [info] Finding next trade date from 2011-06-06 for symbol IBM
+Jan 07 05:40:42 BACKTEST [info] Setting transactiondate to 2011-06-07
+Jan 07 05:40:42 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:42 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:42 BACKTEST [info] Setting action to None
+Jan 07 05:40:42 BACKTEST [info] Setting action to None
+Jan 07 05:40:42 BACKTEST [info] Finding next trade date from 2011-06-07 for symbol IBM
+Jan 07 05:40:43 BACKTEST [info] Setting transactiondate to 2011-06-08
+Jan 07 05:40:43 BACKTEST [info] Setting action to None
+Jan 07 05:40:43 BACKTEST [info] Finding next trade date from 2011-06-08 for symbol IBM
+Jan 07 05:40:43 BACKTEST [info] Setting transactiondate to 2011-06-09
+Jan 07 05:40:43 BACKTEST [info] Setting action to None
+Jan 07 05:40:43 BACKTEST [info] Finding next trade date from 2011-06-09 for symbol IBM
+Jan 07 05:40:43 BACKTEST [info] Setting transactiondate to 2011-06-10
+Jan 07 05:40:43 BACKTEST [info] Setting action to None
+Jan 07 05:40:43 BACKTEST [info] Finding next trade date from 2011-06-10 for symbol IBM
+Jan 07 05:40:43 BACKTEST [info] Setting transactiondate to 2011-06-13
+Jan 07 05:40:43 BACKTEST [info] Setting action to None
+Jan 07 05:40:43 BACKTEST [info] Finding next trade date from 2011-06-13 for symbol IBM
+Jan 07 05:40:43 BACKTEST [info] Setting transactiondate to 2011-06-14
+Jan 07 05:40:43 BACKTEST [info] Candlestick Bullish_Harami has action buystock and VALUE  99
+Jan 07 05:40:43 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:43 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:43 BACKTEST [info] Dollars available 10061.144897461
+Jan 07 05:40:43 BACKTEST [info] Setting float to 1006.1144897461
+Jan 07 05:40:43 BACKTEST [info] Setting dollars2invest to 1006
+Jan 07 05:40:43 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:43 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:43 BACKTEST [info] MoneyManagement Dollars avail: 1006 with risk size: 10
+Jan 07 05:40:43 BACKTEST [info] Setting cash to 1006
+Jan 07 05:40:43 BACKTEST [info] Have $1006 with which to buy shares
+Jan 07 05:40:43 BACKTEST [info] Shares for IBM on 2011-06-14 cost 164.11 H/L: 164.57:163.65
+Jan 07 05:40:43 BACKTEST [info] Setting share cost to 164.11
+Jan 07 05:40:43 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:43 BACKTEST [notice] Buy stocks - Shares: 6 for $984.66
+Jan 07 05:40:43 BACKTEST [info] Setting action to None
+Jan 07 05:40:43 BACKTEST [info] Finding next trade date from 2011-06-14 for symbol IBM
+Jan 07 05:40:43 BACKTEST [info] Setting transactiondate to 2011-06-15
+Jan 07 05:40:43 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 07 05:40:43 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:43 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:43 BACKTEST [info] Shares for IBM on 2011-06-15 cost 162.465 H/L: 163.41:161.52
+Jan 07 05:40:43 BACKTEST [info] Setting share cost to 162.465
+Jan 07 05:40:43 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:43 BACKTEST [info] ActionSellStock calculated shares # 6 for stock IBM
+Jan 07 05:40:43 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:43 BACKTEST [notice] Sell stocks - Shares: 6 for $974.79
+Jan 07 05:40:43 BACKTEST [info] Setting action to None
+Jan 07 05:40:43 BACKTEST [info] Finding next trade date from 2011-06-15 for symbol IBM
+Jan 07 05:40:43 BACKTEST [info] Setting transactiondate to 2011-06-16
+Jan 07 05:40:44 BACKTEST [info] Setting action to None
+Jan 07 05:40:44 BACKTEST [info] Finding next trade date from 2011-06-16 for symbol IBM
+Jan 07 05:40:44 BACKTEST [info] Setting transactiondate to 2011-06-17
+Jan 07 05:40:44 BACKTEST [info] Setting action to None
+Jan 07 05:40:44 BACKTEST [info] Finding next trade date from 2011-06-17 for symbol IBM
+Jan 07 05:40:44 BACKTEST [info] Setting transactiondate to 2011-06-20
+Jan 07 05:40:44 BACKTEST [info] Setting action to None
+Jan 07 05:40:44 BACKTEST [info] Finding next trade date from 2011-06-20 for symbol IBM
+Jan 07 05:40:44 BACKTEST [info] Setting transactiondate to 2011-06-21
+Jan 07 05:40:44 BACKTEST [info] Setting action to None
+Jan 07 05:40:44 BACKTEST [info] Finding next trade date from 2011-06-21 for symbol IBM
+Jan 07 05:40:44 BACKTEST [info] Setting transactiondate to 2011-06-22
+Jan 07 05:40:44 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:40:44 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:40:44 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:44 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 07 05:40:44 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:44 BACKTEST [info] Shares for IBM on 2011-06-22 cost 165.955 H/L: 166.81:165.1
+Jan 07 05:40:44 BACKTEST [info] Setting share cost to 165.955
+Jan 07 05:40:44 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:44 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 07 05:40:44 BACKTEST [info] Setting number of shares to 0
+Jan 07 05:40:44 BACKTEST [info] Setting action to None
+Jan 07 05:40:44 BACKTEST [info] Finding next trade date from 2011-06-22 for symbol IBM
+Jan 07 05:40:44 BACKTEST [info] Setting transactiondate to 2011-06-23
+Jan 07 05:40:44 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:44 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:44 BACKTEST [info] Setting action to None
+Jan 07 05:40:44 BACKTEST [info] Setting action to None
+Jan 07 05:40:44 BACKTEST [info] Finding next trade date from 2011-06-23 for symbol IBM
+Jan 07 05:40:44 BACKTEST [info] Setting transactiondate to 2011-06-24
+Jan 07 05:40:44 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 07 05:40:44 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:44 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:44 BACKTEST [info] Shares for IBM on 2011-06-24 cost 165.255 H/L: 165.94:164.57
+Jan 07 05:40:44 BACKTEST [info] Setting share cost to 165.255
+Jan 07 05:40:44 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 07 05:40:44 BACKTEST [info] Setting number of shares to 0
+Jan 07 05:40:44 BACKTEST [info] Setting action to None
+Jan 07 05:40:44 BACKTEST [info] Finding next trade date from 2011-06-24 for symbol IBM
+Jan 07 05:40:44 BACKTEST [info] Setting transactiondate to 2011-06-27
+Jan 07 05:40:44 BACKTEST [info] Setting action to None
+Jan 07 05:40:44 BACKTEST [info] Finding next trade date from 2011-06-27 for symbol IBM
+Jan 07 05:40:44 BACKTEST [info] Setting transactiondate to 2011-06-28
+Jan 07 05:40:44 BACKTEST [info] Setting action to None
+Jan 07 05:40:44 BACKTEST [info] Finding next trade date from 2011-06-28 for symbol IBM
+Jan 07 05:40:44 BACKTEST [info] Setting transactiondate to 2011-06-29
+Jan 07 05:40:44 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:40:44 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:40:44 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:44 BACKTEST [info] Candlestick Hanging_Man has action sellstock and VALUE  1
+Jan 07 05:40:44 BACKTEST [info] 4 candlesticks with a total of 102 for average 25.5
+Jan 07 05:40:44 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:44 BACKTEST [info] Shares for IBM on 2011-06-29 cost 170.34 H/L: 170.86:169.82
+Jan 07 05:40:44 BACKTEST [info] Setting share cost to 170.34
+Jan 07 05:40:45 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 07 05:40:45 BACKTEST [info] Setting number of shares to 0
+Jan 07 05:40:45 BACKTEST [info] Setting action to None
+Jan 07 05:40:45 BACKTEST [info] Finding next trade date from 2011-06-29 for symbol IBM
+Jan 07 05:40:45 BACKTEST [info] Setting transactiondate to 2011-06-30
+Jan 07 05:40:45 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:45 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 07 05:40:45 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:45 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:45 BACKTEST [info] Dollars available 10051.274902344
+Jan 07 05:40:45 BACKTEST [info] Setting float to 1005.1274902344
+Jan 07 05:40:45 BACKTEST [info] Setting dollars2invest to 1005
+Jan 07 05:40:45 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:45 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:45 BACKTEST [info] MoneyManagement Dollars avail: 1005 with risk size: 10
+Jan 07 05:40:45 BACKTEST [info] Setting cash to 1005
+Jan 07 05:40:45 BACKTEST [info] Have $1005 with which to buy shares
+Jan 07 05:40:45 BACKTEST [info] Shares for IBM on 2011-06-30 cost 171.6 H/L: 172.45:170.75
+Jan 07 05:40:45 BACKTEST [info] Setting share cost to 171.6
+Jan 07 05:40:45 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:45 BACKTEST [notice] Buy stocks - Shares: 5 for $858
+Jan 07 05:40:45 BACKTEST [info] Setting action to None
+Jan 07 05:40:45 BACKTEST [info] Finding next trade date from 2011-06-30 for symbol IBM
+Jan 07 05:40:45 BACKTEST [info] Setting transactiondate to 2011-07-01
+Jan 07 05:40:45 BACKTEST [info] Setting action to None
+Jan 07 05:40:45 BACKTEST [info] Finding next trade date from 2011-07-01 for symbol IBM
+Jan 07 05:40:45 BACKTEST [info] Setting transactiondate to 2011-07-05
+Jan 07 05:40:45 BACKTEST [info] Setting action to None
+Jan 07 05:40:45 BACKTEST [info] Finding next trade date from 2011-07-05 for symbol IBM
+Jan 07 05:40:45 BACKTEST [info] Setting transactiondate to 2011-07-06
+Jan 07 05:40:45 BACKTEST [info] Setting action to None
+Jan 07 05:40:45 BACKTEST [info] Finding next trade date from 2011-07-06 for symbol IBM
+Jan 07 05:40:45 BACKTEST [info] Setting transactiondate to 2011-07-07
+Jan 07 05:40:45 BACKTEST [info] Setting action to None
+Jan 07 05:40:45 BACKTEST [info] Finding next trade date from 2011-07-07 for symbol IBM
+Jan 07 05:40:45 BACKTEST [info] Setting transactiondate to 2011-07-08
+Jan 07 05:40:45 BACKTEST [info] Setting action to None
+Jan 07 05:40:45 BACKTEST [info] Finding next trade date from 2011-07-08 for symbol IBM
+Jan 07 05:40:45 BACKTEST [info] Setting transactiondate to 2011-07-11
+Jan 07 05:40:45 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:40:45 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:40:45 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:45 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 07 05:40:45 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:45 BACKTEST [info] Shares for IBM on 2011-07-11 cost 175.38 H/L: 176.15:174.61
+Jan 07 05:40:45 BACKTEST [info] Setting share cost to 175.38
+Jan 07 05:40:45 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:46 BACKTEST [info] ActionSellStock calculated shares # 5 for stock IBM
+Jan 07 05:40:46 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:46 BACKTEST [notice] Sell stocks - Shares: 5 for $876.9
+Jan 07 05:40:46 BACKTEST [info] Setting action to None
+Jan 07 05:40:46 BACKTEST [info] Finding next trade date from 2011-07-11 for symbol IBM
+Jan 07 05:40:46 BACKTEST [info] Setting transactiondate to 2011-07-12
+Jan 07 05:40:46 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:46 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:46 BACKTEST [info] Setting action to None
+Jan 07 05:40:46 BACKTEST [info] Setting action to None
+Jan 07 05:40:46 BACKTEST [info] Finding next trade date from 2011-07-12 for symbol IBM
+Jan 07 05:40:46 BACKTEST [info] Setting transactiondate to 2011-07-13
+Jan 07 05:40:46 BACKTEST [info] Setting action to None
+Jan 07 05:40:46 BACKTEST [info] Finding next trade date from 2011-07-13 for symbol IBM
+Jan 07 05:40:46 BACKTEST [info] Setting transactiondate to 2011-07-14
+Jan 07 05:40:46 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:46 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:46 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:46 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:46 BACKTEST [info] Dollars available 10070.174926758
+Jan 07 05:40:46 BACKTEST [info] Setting float to 1007.0174926758
+Jan 07 05:40:46 BACKTEST [info] Setting dollars2invest to 1007
+Jan 07 05:40:46 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:46 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:46 BACKTEST [info] MoneyManagement Dollars avail: 1007 with risk size: 10
+Jan 07 05:40:46 BACKTEST [info] Setting cash to 1007
+Jan 07 05:40:46 BACKTEST [info] Have $1007 with which to buy shares
+Jan 07 05:40:46 BACKTEST [info] Shares for IBM on 2011-07-14 cost 174.97 H/L: 176.1:173.84
+Jan 07 05:40:46 BACKTEST [info] Setting share cost to 174.97
+Jan 07 05:40:46 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:46 BACKTEST [notice] Buy stocks - Shares: 5 for $874.85
+Jan 07 05:40:46 BACKTEST [info] Setting action to None
+Jan 07 05:40:46 BACKTEST [info] Finding next trade date from 2011-07-14 for symbol IBM
+Jan 07 05:40:46 BACKTEST [info] Setting transactiondate to 2011-07-15
+Jan 07 05:40:46 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:46 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 07 05:40:46 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:46 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:46 BACKTEST [info] Dollars available 9195.324951172
+Jan 07 05:40:46 BACKTEST [info] Setting float to 919.5324951172
+Jan 07 05:40:46 BACKTEST [info] Setting dollars2invest to 919
+Jan 07 05:40:46 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:46 BACKTEST [info] Setting dollars2risk to 9
+Jan 07 05:40:46 BACKTEST [info] MoneyManagement Dollars avail: 919 with risk size: 9
+Jan 07 05:40:46 BACKTEST [info] Setting cash to 919
+Jan 07 05:40:46 BACKTEST [info] Have $919 with which to buy shares
+Jan 07 05:40:46 BACKTEST [info] Shares for IBM on 2011-07-15 cost 175.005 H/L: 175.94:174.07
+Jan 07 05:40:46 BACKTEST [info] Setting share cost to 175.005
+Jan 07 05:40:46 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:46 BACKTEST [notice] Buy stocks - Shares: 5 for $875.025
+Jan 07 05:40:47 BACKTEST [info] Setting action to None
+Jan 07 05:40:47 BACKTEST [info] Finding next trade date from 2011-07-15 for symbol IBM
+Jan 07 05:40:47 BACKTEST [info] Setting transactiondate to 2011-07-18
+Jan 07 05:40:47 BACKTEST [info] Setting action to None
+Jan 07 05:40:47 BACKTEST [info] Finding next trade date from 2011-07-18 for symbol IBM
+Jan 07 05:40:47 BACKTEST [info] Setting transactiondate to 2011-07-19
+Jan 07 05:40:47 BACKTEST [info] Setting action to None
+Jan 07 05:40:47 BACKTEST [info] Finding next trade date from 2011-07-19 for symbol IBM
+Jan 07 05:40:47 BACKTEST [info] Setting transactiondate to 2011-07-20
+Jan 07 05:40:47 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 07 05:40:47 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:47 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:47 BACKTEST [info] Shares for IBM on 2011-07-20 cost 183.71 H/L: 184.42:183
+Jan 07 05:40:47 BACKTEST [info] Setting share cost to 183.71
+Jan 07 05:40:47 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:47 BACKTEST [info] ActionSellStock calculated shares # 10 for stock IBM
+Jan 07 05:40:47 BACKTEST [info] Setting number of shares to 10
+Jan 07 05:40:47 BACKTEST [notice] Sell stocks - Shares: 10 for $1837.1
+Jan 07 05:40:47 BACKTEST [info] Setting action to None
+Jan 07 05:40:47 BACKTEST [info] Finding next trade date from 2011-07-20 for symbol IBM
+Jan 07 05:40:47 BACKTEST [info] Setting transactiondate to 2011-07-21
+Jan 07 05:40:47 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 07 05:40:47 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:47 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:47 BACKTEST [info] Dollars available 10157.399902344
+Jan 07 05:40:47 BACKTEST [info] Setting float to 1015.7399902344
+Jan 07 05:40:47 BACKTEST [info] Setting dollars2invest to 1015
+Jan 07 05:40:47 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:47 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:47 BACKTEST [info] MoneyManagement Dollars avail: 1015 with risk size: 10
+Jan 07 05:40:47 BACKTEST [info] Setting cash to 1015
+Jan 07 05:40:47 BACKTEST [info] Have $1015 with which to buy shares
+Jan 07 05:40:47 BACKTEST [info] Shares for IBM on 2011-07-21 cost 184.2 H/L: 185.5:182.9
+Jan 07 05:40:47 BACKTEST [info] Setting share cost to 184.2
+Jan 07 05:40:47 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:47 BACKTEST [notice] Buy stocks - Shares: 5 for $921
+Jan 07 05:40:47 BACKTEST [info] Setting action to None
+Jan 07 05:40:47 BACKTEST [info] Finding next trade date from 2011-07-21 for symbol IBM
+Jan 07 05:40:47 BACKTEST [info] Setting transactiondate to 2011-07-22
+Jan 07 05:40:48 BACKTEST [info] Setting action to None
+Jan 07 05:40:48 BACKTEST [info] Finding next trade date from 2011-07-22 for symbol IBM
+Jan 07 05:40:48 BACKTEST [info] Setting transactiondate to 2011-07-25
+Jan 07 05:40:48 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 07 05:40:48 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:48 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:48 BACKTEST [info] Shares for IBM on 2011-07-25 cost 184.12 H/L: 184.96:183.28
+Jan 07 05:40:48 BACKTEST [info] Setting share cost to 184.12
+Jan 07 05:40:48 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:48 BACKTEST [info] ActionSellStock calculated shares # 5 for stock IBM
+Jan 07 05:40:48 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:48 BACKTEST [notice] Sell stocks - Shares: 5 for $920.6
+Jan 07 05:40:48 BACKTEST [info] Setting action to None
+Jan 07 05:40:48 BACKTEST [info] Finding next trade date from 2011-07-25 for symbol IBM
+Jan 07 05:40:48 BACKTEST [info] Setting transactiondate to 2011-07-26
+Jan 07 05:40:48 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:48 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:48 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:48 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:48 BACKTEST [info] Dollars available 10156.99987793
+Jan 07 05:40:48 BACKTEST [info] Setting float to 1015.699987793
+Jan 07 05:40:48 BACKTEST [info] Setting dollars2invest to 1015
+Jan 07 05:40:48 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:48 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:48 BACKTEST [info] MoneyManagement Dollars avail: 1015 with risk size: 10
+Jan 07 05:40:48 BACKTEST [info] Setting cash to 1015
+Jan 07 05:40:48 BACKTEST [info] Have $1015 with which to buy shares
+Jan 07 05:40:48 BACKTEST [info] Shares for IBM on 2011-07-26 cost 183.35 H/L: 184.05:182.65
+Jan 07 05:40:48 BACKTEST [info] Setting share cost to 183.35
+Jan 07 05:40:48 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:48 BACKTEST [notice] Buy stocks - Shares: 5 for $916.75
+Jan 07 05:40:48 BACKTEST [info] Setting action to None
+Jan 07 05:40:48 BACKTEST [info] Finding next trade date from 2011-07-26 for symbol IBM
+Jan 07 05:40:48 BACKTEST [info] Setting transactiondate to 2011-07-27
+Jan 07 05:40:48 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:48 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:48 BACKTEST [info] Setting action to None
+Jan 07 05:40:48 BACKTEST [info] Setting action to None
+Jan 07 05:40:48 BACKTEST [info] Finding next trade date from 2011-07-27 for symbol IBM
+Jan 07 05:40:48 BACKTEST [info] Setting transactiondate to 2011-07-28
+Jan 07 05:40:48 BACKTEST [info] Setting action to None
+Jan 07 05:40:48 BACKTEST [info] Finding next trade date from 2011-07-28 for symbol IBM
+Jan 07 05:40:48 BACKTEST [info] Setting transactiondate to 2011-07-29
+Jan 07 05:40:48 BACKTEST [info] Setting action to None
+Jan 07 05:40:48 BACKTEST [info] Finding next trade date from 2011-07-29 for symbol IBM
+Jan 07 05:40:48 BACKTEST [info] Setting transactiondate to 2011-08-01
+Jan 07 05:40:48 BACKTEST [info] Setting action to None
+Jan 07 05:40:48 BACKTEST [info] Finding next trade date from 2011-08-01 for symbol IBM
+Jan 07 05:40:49 BACKTEST [info] Setting transactiondate to 2011-08-02
+Jan 07 05:40:49 BACKTEST [info] Setting action to None
+Jan 07 05:40:49 BACKTEST [info] Finding next trade date from 2011-08-02 for symbol IBM
+Jan 07 05:40:49 BACKTEST [info] Setting transactiondate to 2011-08-03
+Jan 07 05:40:49 BACKTEST [info] Setting action to None
+Jan 07 05:40:49 BACKTEST [info] Finding next trade date from 2011-08-03 for symbol IBM
+Jan 07 05:40:49 BACKTEST [info] Setting transactiondate to 2011-08-04
+Jan 07 05:40:49 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 07 05:40:49 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:49 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:49 BACKTEST [info] Shares for IBM on 2011-08-04 cost 174.55 H/L: 177.92:171.18
+Jan 07 05:40:49 BACKTEST [info] Setting share cost to 174.55
+Jan 07 05:40:49 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:49 BACKTEST [info] ActionSellStock calculated shares # 5 for stock IBM
+Jan 07 05:40:49 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:49 BACKTEST [notice] Sell stocks - Shares: 5 for $872.75
+Jan 07 05:40:49 BACKTEST [info] Setting action to None
+Jan 07 05:40:49 BACKTEST [info] Finding next trade date from 2011-08-04 for symbol IBM
+Jan 07 05:40:49 BACKTEST [info] Setting transactiondate to 2011-08-05
+Jan 07 05:40:49 BACKTEST [info] Candlestick Bullish_Harami has action buystock and VALUE  99
+Jan 07 05:40:49 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:49 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:49 BACKTEST [info] Dollars available 10112.99987793
+Jan 07 05:40:49 BACKTEST [info] Setting float to 1011.299987793
+Jan 07 05:40:49 BACKTEST [info] Setting dollars2invest to 1011
+Jan 07 05:40:49 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:49 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:49 BACKTEST [info] MoneyManagement Dollars avail: 1011 with risk size: 10
+Jan 07 05:40:49 BACKTEST [info] Setting cash to 1011
+Jan 07 05:40:49 BACKTEST [info] Have $1011 with which to buy shares
+Jan 07 05:40:49 BACKTEST [info] Shares for IBM on 2011-08-05 cost 170.37 H/L: 174.22:166.52
+Jan 07 05:40:49 BACKTEST [info] Setting share cost to 170.37
+Jan 07 05:40:49 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:49 BACKTEST [notice] Buy stocks - Shares: 5 for $851.85
+Jan 07 05:40:49 BACKTEST [info] Setting action to None
+Jan 07 05:40:49 BACKTEST [info] Finding next trade date from 2011-08-05 for symbol IBM
+Jan 07 05:40:49 BACKTEST [info] Setting transactiondate to 2011-08-08
+Jan 07 05:40:49 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 07 05:40:49 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:49 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:49 BACKTEST [info] Shares for IBM on 2011-08-08 cost 169.305 H/L: 172.61:166
+Jan 07 05:40:49 BACKTEST [info] Setting share cost to 169.305
+Jan 07 05:40:49 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:50 BACKTEST [info] ActionSellStock calculated shares # 5 for stock IBM
+Jan 07 05:40:50 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:50 BACKTEST [notice] Sell stocks - Shares: 5 for $846.525
+Jan 07 05:40:50 BACKTEST [info] Setting action to None
+Jan 07 05:40:50 BACKTEST [info] Finding next trade date from 2011-08-08 for symbol IBM
+Jan 07 05:40:50 BACKTEST [info] Setting transactiondate to 2011-08-09
+Jan 07 05:40:50 BACKTEST [info] Setting action to None
+Jan 07 05:40:50 BACKTEST [info] Finding next trade date from 2011-08-09 for symbol IBM
+Jan 07 05:40:50 BACKTEST [info] Setting transactiondate to 2011-08-10
+Jan 07 05:40:50 BACKTEST [info] Setting action to None
+Jan 07 05:40:50 BACKTEST [info] Finding next trade date from 2011-08-10 for symbol IBM
+Jan 07 05:40:50 BACKTEST [info] Setting transactiondate to 2011-08-11
+Jan 07 05:40:50 BACKTEST [info] Candlestick Bullish_Harami has action buystock and VALUE  99
+Jan 07 05:40:50 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:50 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:50 BACKTEST [info] Dollars available 10107.674926758
+Jan 07 05:40:50 BACKTEST [info] Setting float to 1010.7674926758
+Jan 07 05:40:50 BACKTEST [info] Setting dollars2invest to 1010
+Jan 07 05:40:50 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:50 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:50 BACKTEST [info] MoneyManagement Dollars avail: 1010 with risk size: 10
+Jan 07 05:40:50 BACKTEST [info] Setting cash to 1010
+Jan 07 05:40:50 BACKTEST [info] Have $1010 with which to buy shares
+Jan 07 05:40:50 BACKTEST [info] Shares for IBM on 2011-08-11 cost 165.855 H/L: 168.77:162.94
+Jan 07 05:40:50 BACKTEST [info] Setting share cost to 165.855
+Jan 07 05:40:50 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:50 BACKTEST [notice] Buy stocks - Shares: 6 for $995.13
+Jan 07 05:40:50 BACKTEST [info] Setting action to None
+Jan 07 05:40:50 BACKTEST [info] Finding next trade date from 2011-08-11 for symbol IBM
+Jan 07 05:40:50 BACKTEST [info] Setting transactiondate to 2011-08-12
+Jan 07 05:40:50 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:40:50 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:40:50 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:50 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 07 05:40:50 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:50 BACKTEST [info] Shares for IBM on 2011-08-12 cost 167.605 H/L: 169.38:165.83
+Jan 07 05:40:50 BACKTEST [info] Setting share cost to 167.605
+Jan 07 05:40:50 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:50 BACKTEST [info] ActionSellStock calculated shares # 6 for stock IBM
+Jan 07 05:40:50 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:51 BACKTEST [notice] Sell stocks - Shares: 6 for $1005.63
+Jan 07 05:40:51 BACKTEST [info] Setting action to None
+Jan 07 05:40:51 BACKTEST [info] Finding next trade date from 2011-08-12 for symbol IBM
+Jan 07 05:40:51 BACKTEST [info] Setting transactiondate to 2011-08-15
+Jan 07 05:40:51 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:51 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 07 05:40:51 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:51 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:51 BACKTEST [info] Dollars available 10118.174926757
+Jan 07 05:40:51 BACKTEST [info] Setting float to 1011.8174926757
+Jan 07 05:40:51 BACKTEST [info] Setting dollars2invest to 1011
+Jan 07 05:40:51 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:51 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:51 BACKTEST [info] MoneyManagement Dollars avail: 1011 with risk size: 10
+Jan 07 05:40:51 BACKTEST [info] Setting cash to 1011
+Jan 07 05:40:51 BACKTEST [info] Have $1011 with which to buy shares
+Jan 07 05:40:51 BACKTEST [info] Shares for IBM on 2011-08-15 cost 172.195 H/L: 174:170.39
+Jan 07 05:40:51 BACKTEST [info] Setting share cost to 172.195
+Jan 07 05:40:51 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:51 BACKTEST [notice] Buy stocks - Shares: 5 for $860.975
+Jan 07 05:40:51 BACKTEST [info] Setting action to None
+Jan 07 05:40:51 BACKTEST [info] Finding next trade date from 2011-08-15 for symbol IBM
+Jan 07 05:40:51 BACKTEST [info] Setting transactiondate to 2011-08-16
+Jan 07 05:40:51 BACKTEST [info] Candlestick Hanging_Man has action sellstock and VALUE  1
+Jan 07 05:40:51 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:51 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:51 BACKTEST [info] Shares for IBM on 2011-08-16 cost 170.595 H/L: 172.19:169
+Jan 07 05:40:51 BACKTEST [info] Setting share cost to 170.595
+Jan 07 05:40:51 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:51 BACKTEST [info] ActionSellStock calculated shares # 5 for stock IBM
+Jan 07 05:40:51 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:51 BACKTEST [notice] Sell stocks - Shares: 5 for $852.975
+Jan 07 05:40:51 BACKTEST [info] Setting action to None
+Jan 07 05:40:51 BACKTEST [info] Finding next trade date from 2011-08-16 for symbol IBM
+Jan 07 05:40:51 BACKTEST [info] Setting transactiondate to 2011-08-17
+Jan 07 05:40:51 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:51 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:51 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:51 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:51 BACKTEST [info] Dollars available 10110.174926757
+Jan 07 05:40:51 BACKTEST [info] Setting float to 1011.0174926757
+Jan 07 05:40:51 BACKTEST [info] Setting dollars2invest to 1011
+Jan 07 05:40:51 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:51 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:51 BACKTEST [info] MoneyManagement Dollars avail: 1011 with risk size: 10
+Jan 07 05:40:51 BACKTEST [info] Setting cash to 1011
+Jan 07 05:40:51 BACKTEST [info] Have $1011 with which to buy shares
+Jan 07 05:40:51 BACKTEST [info] Shares for IBM on 2011-08-17 cost 171.44 H/L: 172.99:169.89
+Jan 07 05:40:51 BACKTEST [info] Setting share cost to 171.44
+Jan 07 05:40:51 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:51 BACKTEST [notice] Buy stocks - Shares: 5 for $857.2
+Jan 07 05:40:52 BACKTEST [info] Setting action to None
+Jan 07 05:40:52 BACKTEST [info] Finding next trade date from 2011-08-17 for symbol IBM
+Jan 07 05:40:52 BACKTEST [info] Setting transactiondate to 2011-08-18
+Jan 07 05:40:52 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:52 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:52 BACKTEST [info] Setting action to None
+Jan 07 05:40:52 BACKTEST [info] Setting action to None
+Jan 07 05:40:52 BACKTEST [info] Finding next trade date from 2011-08-18 for symbol IBM
+Jan 07 05:40:52 BACKTEST [info] Setting transactiondate to 2011-08-19
+Jan 07 05:40:52 BACKTEST [info] Setting action to None
+Jan 07 05:40:52 BACKTEST [info] Finding next trade date from 2011-08-19 for symbol IBM
+Jan 07 05:40:52 BACKTEST [info] Setting transactiondate to 2011-08-22
+Jan 07 05:40:52 BACKTEST [info] Setting action to None
+Jan 07 05:40:52 BACKTEST [info] Finding next trade date from 2011-08-22 for symbol IBM
+Jan 07 05:40:52 BACKTEST [info] Setting transactiondate to 2011-08-23
+Jan 07 05:40:52 BACKTEST [info] Setting action to None
+Jan 07 05:40:52 BACKTEST [info] Finding next trade date from 2011-08-23 for symbol IBM
+Jan 07 05:40:52 BACKTEST [info] Setting transactiondate to 2011-08-24
+Jan 07 05:40:52 BACKTEST [info] Setting action to None
+Jan 07 05:40:52 BACKTEST [info] Finding next trade date from 2011-08-24 for symbol IBM
+Jan 07 05:40:52 BACKTEST [info] Setting transactiondate to 2011-08-25
+Jan 07 05:40:52 BACKTEST [info] Setting action to None
+Jan 07 05:40:52 BACKTEST [info] Finding next trade date from 2011-08-25 for symbol IBM
+Jan 07 05:40:52 BACKTEST [info] Setting transactiondate to 2011-08-26
+Jan 07 05:40:52 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 07 05:40:52 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:52 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:52 BACKTEST [info] Dollars available 9252.97491455
+Jan 07 05:40:52 BACKTEST [info] Setting float to 925.297491455
+Jan 07 05:40:52 BACKTEST [info] Setting dollars2invest to 925
+Jan 07 05:40:52 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:52 BACKTEST [info] Setting dollars2risk to 9
+Jan 07 05:40:52 BACKTEST [info] MoneyManagement Dollars avail: 925 with risk size: 9
+Jan 07 05:40:52 BACKTEST [info] Setting cash to 925
+Jan 07 05:40:52 BACKTEST [info] Have $925 with which to buy shares
+Jan 07 05:40:52 BACKTEST [info] Shares for IBM on 2011-08-26 cost 166.305 H/L: 169.33:163.28
+Jan 07 05:40:52 BACKTEST [info] Setting share cost to 166.305
+Jan 07 05:40:52 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:52 BACKTEST [notice] Buy stocks - Shares: 5 for $831.525
+Jan 07 05:40:52 BACKTEST [info] Setting action to None
+Jan 07 05:40:52 BACKTEST [info] Finding next trade date from 2011-08-26 for symbol IBM
+Jan 07 05:40:52 BACKTEST [info] Setting transactiondate to 2011-08-29
+Jan 07 05:40:52 BACKTEST [info] Setting action to None
+Jan 07 05:40:53 BACKTEST [info] Finding next trade date from 2011-08-29 for symbol IBM
+Jan 07 05:40:53 BACKTEST [info] Setting transactiondate to 2011-08-30
+Jan 07 05:40:53 BACKTEST [info] Setting action to None
+Jan 07 05:40:53 BACKTEST [info] Finding next trade date from 2011-08-30 for symbol IBM
+Jan 07 05:40:53 BACKTEST [info] Setting transactiondate to 2011-08-31
+Jan 07 05:40:53 BACKTEST [info] Candlestick Bearish_Engulfing has action sellstock and VALUE  1
+Jan 07 05:40:53 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:53 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:53 BACKTEST [info] Shares for IBM on 2011-08-31 cost 172.215 H/L: 173.72:170.71
+Jan 07 05:40:53 BACKTEST [info] Setting share cost to 172.215
+Jan 07 05:40:53 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:53 BACKTEST [info] ActionSellStock calculated shares # 10 for stock IBM
+Jan 07 05:40:53 BACKTEST [info] Setting number of shares to 10
+Jan 07 05:40:53 BACKTEST [notice] Sell stocks - Shares: 10 for $1722.15
+Jan 07 05:40:53 BACKTEST [info] Setting action to None
+Jan 07 05:40:53 BACKTEST [info] Finding next trade date from 2011-08-31 for symbol IBM
+Jan 07 05:40:53 BACKTEST [info] Setting transactiondate to 2011-09-01
+Jan 07 05:40:53 BACKTEST [info] Setting action to None
+Jan 07 05:40:53 BACKTEST [info] Finding next trade date from 2011-09-01 for symbol IBM
+Jan 07 05:40:53 BACKTEST [info] Setting transactiondate to 2011-09-02
+Jan 07 05:40:53 BACKTEST [info] Setting action to None
+Jan 07 05:40:53 BACKTEST [info] Finding next trade date from 2011-09-02 for symbol IBM
+Jan 07 05:40:53 BACKTEST [info] Setting transactiondate to 2011-09-06
+Jan 07 05:40:53 BACKTEST [info] Setting action to None
+Jan 07 05:40:53 BACKTEST [info] Finding next trade date from 2011-09-06 for symbol IBM
+Jan 07 05:40:53 BACKTEST [info] Setting transactiondate to 2011-09-07
+Jan 07 05:40:53 BACKTEST [info] Setting action to None
+Jan 07 05:40:53 BACKTEST [info] Finding next trade date from 2011-09-07 for symbol IBM
+Jan 07 05:40:53 BACKTEST [info] Setting transactiondate to 2011-09-08
+Jan 07 05:40:53 BACKTEST [info] Setting action to None
+Jan 07 05:40:53 BACKTEST [info] Finding next trade date from 2011-09-08 for symbol IBM
+Jan 07 05:40:53 BACKTEST [info] Setting transactiondate to 2011-09-09
+Jan 07 05:40:53 BACKTEST [info] Setting action to None
+Jan 07 05:40:53 BACKTEST [info] Finding next trade date from 2011-09-09 for symbol IBM
+Jan 07 05:40:53 BACKTEST [info] Setting transactiondate to 2011-09-12
+Jan 07 05:40:53 BACKTEST [info] Setting action to None
+Jan 07 05:40:53 BACKTEST [info] Finding next trade date from 2011-09-12 for symbol IBM
+Jan 07 05:40:53 BACKTEST [info] Setting transactiondate to 2011-09-13
+Jan 07 05:40:53 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:40:53 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:40:53 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:53 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 07 05:40:53 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:53 BACKTEST [info] Shares for IBM on 2011-09-13 cost 162.73 H/L: 163.92:161.54
+Jan 07 05:40:53 BACKTEST [info] Setting share cost to 162.73
+Jan 07 05:40:53 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:54 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 07 05:40:54 BACKTEST [info] Setting number of shares to 0
+Jan 07 05:40:54 BACKTEST [info] Setting action to None
+Jan 07 05:40:54 BACKTEST [info] Finding next trade date from 2011-09-13 for symbol IBM
+Jan 07 05:40:54 BACKTEST [info] Setting transactiondate to 2011-09-14
+Jan 07 05:40:54 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:54 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 07 05:40:54 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:54 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:54 BACKTEST [info] Dollars available 10143.59991455
+Jan 07 05:40:54 BACKTEST [info] Setting float to 1014.359991455
+Jan 07 05:40:54 BACKTEST [info] Setting dollars2invest to 1014
+Jan 07 05:40:54 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:54 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:54 BACKTEST [info] MoneyManagement Dollars avail: 1014 with risk size: 10
+Jan 07 05:40:54 BACKTEST [info] Setting cash to 1014
+Jan 07 05:40:54 BACKTEST [info] Have $1014 with which to buy shares
+Jan 07 05:40:54 BACKTEST [info] Shares for IBM on 2011-09-14 cost 165.825 H/L: 169.66:161.99
+Jan 07 05:40:54 BACKTEST [info] Setting share cost to 165.825
+Jan 07 05:40:54 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:54 BACKTEST [notice] Buy stocks - Shares: 6 for $994.95
+Jan 07 05:40:54 BACKTEST [info] Setting action to None
+Jan 07 05:40:54 BACKTEST [info] Finding next trade date from 2011-09-14 for symbol IBM
+Jan 07 05:40:54 BACKTEST [info] Setting transactiondate to 2011-09-15
+Jan 07 05:40:54 BACKTEST [info] Setting action to None
+Jan 07 05:40:54 BACKTEST [info] Finding next trade date from 2011-09-15 for symbol IBM
+Jan 07 05:40:54 BACKTEST [info] Setting transactiondate to 2011-09-16
+Jan 07 05:40:54 BACKTEST [info] Setting action to None
+Jan 07 05:40:54 BACKTEST [info] Finding next trade date from 2011-09-16 for symbol IBM
+Jan 07 05:40:54 BACKTEST [info] Setting transactiondate to 2011-09-19
+Jan 07 05:40:54 BACKTEST [info] Setting action to None
+Jan 07 05:40:54 BACKTEST [info] Finding next trade date from 2011-09-19 for symbol IBM
+Jan 07 05:40:54 BACKTEST [info] Setting transactiondate to 2011-09-20
+Jan 07 05:40:54 BACKTEST [info] Setting action to None
+Jan 07 05:40:54 BACKTEST [info] Finding next trade date from 2011-09-20 for symbol IBM
+Jan 07 05:40:54 BACKTEST [info] Setting transactiondate to 2011-09-21
+Jan 07 05:40:54 BACKTEST [info] Candlestick Bearish_Engulfing has action sellstock and VALUE  1
+Jan 07 05:40:54 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:54 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:54 BACKTEST [info] Shares for IBM on 2011-09-21 cost 175.145 H/L: 177.67:172.62
+Jan 07 05:40:54 BACKTEST [info] Setting share cost to 175.145
+Jan 07 05:40:54 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:55 BACKTEST [info] ActionSellStock calculated shares # 6 for stock IBM
+Jan 07 05:40:55 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:55 BACKTEST [notice] Sell stocks - Shares: 6 for $1050.87
+Jan 07 05:40:55 BACKTEST [info] Setting action to None
+Jan 07 05:40:55 BACKTEST [info] Finding next trade date from 2011-09-21 for symbol IBM
+Jan 07 05:40:55 BACKTEST [info] Setting transactiondate to 2011-09-22
+Jan 07 05:40:55 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:55 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:55 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:55 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:55 BACKTEST [info] Dollars available 10199.519897461
+Jan 07 05:40:55 BACKTEST [info] Setting float to 1019.9519897461
+Jan 07 05:40:55 BACKTEST [info] Setting dollars2invest to 1019
+Jan 07 05:40:55 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:55 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:55 BACKTEST [info] MoneyManagement Dollars avail: 1019 with risk size: 10
+Jan 07 05:40:55 BACKTEST [info] Setting cash to 1019
+Jan 07 05:40:55 BACKTEST [info] Have $1019 with which to buy shares
+Jan 07 05:40:55 BACKTEST [info] Shares for IBM on 2011-09-22 cost 168.235 H/L: 169.97:166.5
+Jan 07 05:40:55 BACKTEST [info] Setting share cost to 168.235
+Jan 07 05:40:55 BACKTEST [info] Setting number of shares to 6
+Jan 07 05:40:55 BACKTEST [notice] Buy stocks - Shares: 6 for $1009.41
+Jan 07 05:40:55 BACKTEST [info] Setting action to None
+Jan 07 05:40:55 BACKTEST [info] Finding next trade date from 2011-09-22 for symbol IBM
+Jan 07 05:40:55 BACKTEST [info] Setting transactiondate to 2011-09-23
+Jan 07 05:40:55 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:55 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:55 BACKTEST [info] Setting action to None
+Jan 07 05:40:55 BACKTEST [info] Setting action to None
+Jan 07 05:40:55 BACKTEST [info] Finding next trade date from 2011-09-23 for symbol IBM
+Jan 07 05:40:55 BACKTEST [info] Setting transactiondate to 2011-09-26
+Jan 07 05:40:55 BACKTEST [info] Setting action to None
+Jan 07 05:40:55 BACKTEST [info] Finding next trade date from 2011-09-26 for symbol IBM
+Jan 07 05:40:55 BACKTEST [info] Setting transactiondate to 2011-09-27
+Jan 07 05:40:55 BACKTEST [info] Setting action to None
+Jan 07 05:40:55 BACKTEST [info] Finding next trade date from 2011-09-27 for symbol IBM
+Jan 07 05:40:55 BACKTEST [info] Setting transactiondate to 2011-09-28
+Jan 07 05:40:55 BACKTEST [info] Setting action to None
+Jan 07 05:40:55 BACKTEST [info] Finding next trade date from 2011-09-28 for symbol IBM
+Jan 07 05:40:55 BACKTEST [info] Setting transactiondate to 2011-09-29
+Jan 07 05:40:55 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:55 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:55 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:55 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:55 BACKTEST [info] Dollars available 9190.109924317
+Jan 07 05:40:55 BACKTEST [info] Setting float to 919.0109924317
+Jan 07 05:40:55 BACKTEST [info] Setting dollars2invest to 919
+Jan 07 05:40:56 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:56 BACKTEST [info] Setting dollars2risk to 9
+Jan 07 05:40:56 BACKTEST [info] MoneyManagement Dollars avail: 919 with risk size: 9
+Jan 07 05:40:56 BACKTEST [info] Setting cash to 919
+Jan 07 05:40:56 BACKTEST [info] Have $919 with which to buy shares
+Jan 07 05:40:56 BACKTEST [info] Shares for IBM on 2011-09-29 cost 178.22 H/L: 180.91:175.53
+Jan 07 05:40:56 BACKTEST [info] Setting share cost to 178.22
+Jan 07 05:40:56 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:56 BACKTEST [notice] Buy stocks - Shares: 5 for $891.1
+Jan 07 05:40:56 BACKTEST [info] Setting action to None
+Jan 07 05:40:56 BACKTEST [info] Finding next trade date from 2011-09-29 for symbol IBM
+Jan 07 05:40:56 BACKTEST [info] Setting transactiondate to 2011-09-30
+Jan 07 05:40:56 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:56 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:56 BACKTEST [info] Setting action to None
+Jan 07 05:40:56 BACKTEST [info] Setting action to None
+Jan 07 05:40:56 BACKTEST [info] Finding next trade date from 2011-09-30 for symbol IBM
+Jan 07 05:40:56 BACKTEST [info] Setting transactiondate to 2011-10-03
+Jan 07 05:40:56 BACKTEST [info] Setting action to None
+Jan 07 05:40:56 BACKTEST [info] Finding next trade date from 2011-10-03 for symbol IBM
+Jan 07 05:40:56 BACKTEST [info] Setting transactiondate to 2011-10-04
+Jan 07 05:40:56 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 07 05:40:56 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:56 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:56 BACKTEST [info] Dollars available 8299.009948731
+Jan 07 05:40:56 BACKTEST [info] Setting float to 829.9009948731
+Jan 07 05:40:56 BACKTEST [info] Setting dollars2invest to 829
+Jan 07 05:40:56 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:56 BACKTEST [info] Setting dollars2risk to 8
+Jan 07 05:40:56 BACKTEST [info] MoneyManagement Dollars avail: 829 with risk size: 8
+Jan 07 05:40:56 BACKTEST [info] Setting cash to 829
+Jan 07 05:40:56 BACKTEST [info] Have $829 with which to buy shares
+Jan 07 05:40:56 BACKTEST [info] Shares for IBM on 2011-10-04 cost 171.975 H/L: 175.07:168.88
+Jan 07 05:40:56 BACKTEST [info] Setting share cost to 171.975
+Jan 07 05:40:56 BACKTEST [info] Setting number of shares to 4
+Jan 07 05:40:56 BACKTEST [notice] Buy stocks - Shares: 4 for $687.9
+Jan 07 05:40:56 BACKTEST [info] Setting action to None
+Jan 07 05:40:56 BACKTEST [info] Finding next trade date from 2011-10-04 for symbol IBM
+Jan 07 05:40:56 BACKTEST [info] Setting transactiondate to 2011-10-05
+Jan 07 05:40:56 BACKTEST [info] Setting action to None
+Jan 07 05:40:56 BACKTEST [info] Finding next trade date from 2011-10-05 for symbol IBM
+Jan 07 05:40:56 BACKTEST [info] Setting transactiondate to 2011-10-06
+Jan 07 05:40:56 BACKTEST [info] Setting action to None
+Jan 07 05:40:56 BACKTEST [info] Finding next trade date from 2011-10-06 for symbol IBM
+Jan 07 05:40:56 BACKTEST [info] Setting transactiondate to 2011-10-07
+Jan 07 05:40:56 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:40:56 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:40:56 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:56 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 07 05:40:56 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:56 BACKTEST [info] Shares for IBM on 2011-10-07 cost 182.68 H/L: 183.72:181.64
+Jan 07 05:40:56 BACKTEST [info] Setting share cost to 182.68
+Jan 07 05:40:56 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:57 BACKTEST [info] ActionSellStock calculated shares # 15 for stock IBM
+Jan 07 05:40:57 BACKTEST [info] Setting number of shares to 15
+Jan 07 05:40:57 BACKTEST [notice] Sell stocks - Shares: 15 for $2740.2
+Jan 07 05:40:57 BACKTEST [info] Setting action to None
+Jan 07 05:40:57 BACKTEST [info] Finding next trade date from 2011-10-07 for symbol IBM
+Jan 07 05:40:57 BACKTEST [info] Setting transactiondate to 2011-10-10
+Jan 07 05:40:57 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:57 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:57 BACKTEST [info] Setting action to None
+Jan 07 05:40:57 BACKTEST [info] Setting action to None
+Jan 07 05:40:57 BACKTEST [info] Finding next trade date from 2011-10-10 for symbol IBM
+Jan 07 05:40:57 BACKTEST [info] Setting transactiondate to 2011-10-11
+Jan 07 05:40:57 BACKTEST [info] Setting action to None
+Jan 07 05:40:57 BACKTEST [info] Finding next trade date from 2011-10-11 for symbol IBM
+Jan 07 05:40:57 BACKTEST [info] Setting transactiondate to 2011-10-12
+Jan 07 05:40:57 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:40:57 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:40:57 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:57 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 07 05:40:57 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:57 BACKTEST [info] Shares for IBM on 2011-10-12 cost 186.825 H/L: 188:185.65
+Jan 07 05:40:57 BACKTEST [info] Setting share cost to 186.825
+Jan 07 05:40:57 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:40:57 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 07 05:40:57 BACKTEST [info] Setting number of shares to 0
+Jan 07 05:40:57 BACKTEST [info] Setting action to None
+Jan 07 05:40:57 BACKTEST [info] Finding next trade date from 2011-10-12 for symbol IBM
+Jan 07 05:40:57 BACKTEST [info] Setting transactiondate to 2011-10-13
+Jan 07 05:40:57 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:57 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:57 BACKTEST [info] Setting action to None
+Jan 07 05:40:57 BACKTEST [info] Setting action to None
+Jan 07 05:40:57 BACKTEST [info] Finding next trade date from 2011-10-13 for symbol IBM
+Jan 07 05:40:57 BACKTEST [info] Setting transactiondate to 2011-10-14
+Jan 07 05:40:57 BACKTEST [info] Setting action to None
+Jan 07 05:40:57 BACKTEST [info] Finding next trade date from 2011-10-14 for symbol IBM
+Jan 07 05:40:57 BACKTEST [info] Setting transactiondate to 2011-10-17
+Jan 07 05:40:57 BACKTEST [info] Setting action to None
+Jan 07 05:40:57 BACKTEST [info] Finding next trade date from 2011-10-17 for symbol IBM
+Jan 07 05:40:57 BACKTEST [info] Setting transactiondate to 2011-10-18
+Jan 07 05:40:57 BACKTEST [info] Setting action to None
+Jan 07 05:40:57 BACKTEST [info] Finding next trade date from 2011-10-18 for symbol IBM
+Jan 07 05:40:57 BACKTEST [info] Setting transactiondate to 2011-10-19
+Jan 07 05:40:57 BACKTEST [info] Candlestick Bearish_Engulfing has action sellstock and VALUE  1
+Jan 07 05:40:57 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 07 05:40:57 BACKTEST [info] Setting action to sellstock
+Jan 07 05:40:57 BACKTEST [info] Shares for IBM on 2011-10-19 cost 178.41 H/L: 179.81:177.01
+Jan 07 05:40:57 BACKTEST [info] Setting share cost to 178.41
+Jan 07 05:40:57 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 07 05:40:57 BACKTEST [info] Setting number of shares to 0
+Jan 07 05:40:57 BACKTEST [info] Setting action to None
+Jan 07 05:40:57 BACKTEST [info] Finding next trade date from 2011-10-19 for symbol IBM
+Jan 07 05:40:58 BACKTEST [info] Setting transactiondate to 2011-10-20
+Jan 07 05:40:58 BACKTEST [info] Setting action to None
+Jan 07 05:40:58 BACKTEST [info] Finding next trade date from 2011-10-20 for symbol IBM
+Jan 07 05:40:58 BACKTEST [info] Setting transactiondate to 2011-10-21
+Jan 07 05:40:58 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 07 05:40:58 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:40:58 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:58 BACKTEST [info] Dollars available 10351.309875489
+Jan 07 05:40:58 BACKTEST [info] Setting float to 1035.1309875489
+Jan 07 05:40:58 BACKTEST [info] Setting dollars2invest to 1035
+Jan 07 05:40:58 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:58 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:40:58 BACKTEST [info] MoneyManagement Dollars avail: 1035 with risk size: 10
+Jan 07 05:40:58 BACKTEST [info] Setting cash to 1035
+Jan 07 05:40:58 BACKTEST [info] Have $1035 with which to buy shares
+Jan 07 05:40:58 BACKTEST [info] Shares for IBM on 2011-10-21 cost 180.21 H/L: 181.67:178.75
+Jan 07 05:40:58 BACKTEST [info] Setting share cost to 180.21
+Jan 07 05:40:58 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:58 BACKTEST [notice] Buy stocks - Shares: 5 for $901.05
+Jan 07 05:40:58 BACKTEST [info] Setting action to None
+Jan 07 05:40:58 BACKTEST [info] Finding next trade date from 2011-10-21 for symbol IBM
+Jan 07 05:40:58 BACKTEST [info] Setting transactiondate to 2011-10-24
+Jan 07 05:40:58 BACKTEST [info] Setting action to None
+Jan 07 05:40:58 BACKTEST [info] Finding next trade date from 2011-10-24 for symbol IBM
+Jan 07 05:40:58 BACKTEST [info] Setting transactiondate to 2011-10-25
+Jan 07 05:40:58 BACKTEST [info] Setting action to None
+Jan 07 05:40:58 BACKTEST [info] Finding next trade date from 2011-10-25 for symbol IBM
+Jan 07 05:40:58 BACKTEST [info] Setting transactiondate to 2011-10-26
+Jan 07 05:40:58 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:58 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:58 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 07 05:40:58 BACKTEST [info] 3 candlesticks with a total of 248 for average 82.666666666667
+Jan 07 05:40:58 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:58 BACKTEST [info] Dollars available 9450.259887696
+Jan 07 05:40:58 BACKTEST [info] Setting float to 945.0259887696
+Jan 07 05:40:58 BACKTEST [info] Setting dollars2invest to 945
+Jan 07 05:40:58 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:58 BACKTEST [info] Setting dollars2risk to 9
+Jan 07 05:40:58 BACKTEST [info] MoneyManagement Dollars avail: 945 with risk size: 9
+Jan 07 05:40:58 BACKTEST [info] Setting cash to 945
+Jan 07 05:40:58 BACKTEST [info] Have $945 with which to buy shares
+Jan 07 05:40:58 BACKTEST [info] Shares for IBM on 2011-10-26 cost 180.655 H/L: 182.28:179.03
+Jan 07 05:40:58 BACKTEST [info] Setting share cost to 180.655
+Jan 07 05:40:58 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:40:58 BACKTEST [notice] Buy stocks - Shares: 5 for $903.275
+Jan 07 05:40:59 BACKTEST [info] Setting action to None
+Jan 07 05:40:59 BACKTEST [info] Finding next trade date from 2011-10-26 for symbol IBM
+Jan 07 05:40:59 BACKTEST [info] Setting transactiondate to 2011-10-27
+Jan 07 05:40:59 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:59 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:40:59 BACKTEST [info] Setting action to None
+Jan 07 05:40:59 BACKTEST [info] Setting action to None
+Jan 07 05:40:59 BACKTEST [info] Finding next trade date from 2011-10-27 for symbol IBM
+Jan 07 05:40:59 BACKTEST [info] Setting transactiondate to 2011-10-28
+Jan 07 05:40:59 BACKTEST [info] Setting action to None
+Jan 07 05:40:59 BACKTEST [info] Finding next trade date from 2011-10-28 for symbol IBM
+Jan 07 05:40:59 BACKTEST [info] Setting transactiondate to 2011-10-31
+Jan 07 05:40:59 BACKTEST [info] Setting action to None
+Jan 07 05:40:59 BACKTEST [info] Finding next trade date from 2011-10-31 for symbol IBM
+Jan 07 05:40:59 BACKTEST [info] Setting transactiondate to 2011-11-01
+Jan 07 05:40:59 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:59 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:59 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:40:59 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:59 BACKTEST [info] Dollars available 8546.984863282
+Jan 07 05:40:59 BACKTEST [info] Setting float to 854.6984863282
+Jan 07 05:40:59 BACKTEST [info] Setting dollars2invest to 854
+Jan 07 05:40:59 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:59 BACKTEST [info] Setting dollars2risk to 8
+Jan 07 05:40:59 BACKTEST [info] MoneyManagement Dollars avail: 854 with risk size: 8
+Jan 07 05:40:59 BACKTEST [info] Setting cash to 854
+Jan 07 05:40:59 BACKTEST [info] Have $854 with which to buy shares
+Jan 07 05:40:59 BACKTEST [info] Shares for IBM on 2011-11-01 cost 182 H/L: 183.26:180.74
+Jan 07 05:40:59 BACKTEST [info] Setting share cost to 182
+Jan 07 05:40:59 BACKTEST [info] Setting number of shares to 4
+Jan 07 05:40:59 BACKTEST [notice] Buy stocks - Shares: 4 for $728
+Jan 07 05:40:59 BACKTEST [info] Setting action to None
+Jan 07 05:40:59 BACKTEST [info] Finding next trade date from 2011-11-01 for symbol IBM
+Jan 07 05:40:59 BACKTEST [info] Setting transactiondate to 2011-11-02
+Jan 07 05:40:59 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:40:59 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:40:59 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:40:59 BACKTEST [info] 3 candlesticks with a total of 199 for average 66.333333333333
+Jan 07 05:40:59 BACKTEST [info] Setting action to buystock
+Jan 07 05:40:59 BACKTEST [info] Dollars available 7818.984863282
+Jan 07 05:40:59 BACKTEST [info] Setting float to 781.8984863282
+Jan 07 05:40:59 BACKTEST [info] Setting dollars2invest to 781
+Jan 07 05:40:59 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:40:59 BACKTEST [info] Setting dollars2risk to 7
+Jan 07 05:40:59 BACKTEST [info] MoneyManagement Dollars avail: 781 with risk size: 7
+Jan 07 05:40:59 BACKTEST [info] Setting cash to 781
+Jan 07 05:40:59 BACKTEST [info] Have $781 with which to buy shares
+Jan 07 05:40:59 BACKTEST [info] Shares for IBM on 2011-11-02 cost 184.14 H/L: 185.25:183.03
+Jan 07 05:40:59 BACKTEST [info] Setting share cost to 184.14
+Jan 07 05:40:59 BACKTEST [info] Setting number of shares to 4
+Jan 07 05:40:59 BACKTEST [notice] Buy stocks - Shares: 4 for $736.56
+Jan 07 05:41:00 BACKTEST [info] Setting action to None
+Jan 07 05:41:00 BACKTEST [info] Finding next trade date from 2011-11-02 for symbol IBM
+Jan 07 05:41:00 BACKTEST [info] Setting transactiondate to 2011-11-03
+Jan 07 05:41:00 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:41:00 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 07 05:41:00 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:41:00 BACKTEST [info] Setting action to buystock
+Jan 07 05:41:00 BACKTEST [info] Dollars available 7082.424865723
+Jan 07 05:41:00 BACKTEST [info] Setting float to 708.2424865723
+Jan 07 05:41:00 BACKTEST [info] Setting dollars2invest to 708
+Jan 07 05:41:00 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:41:00 BACKTEST [info] Setting dollars2risk to 7
+Jan 07 05:41:00 BACKTEST [info] MoneyManagement Dollars avail: 708 with risk size: 7
+Jan 07 05:41:00 BACKTEST [info] Setting cash to 708
+Jan 07 05:41:00 BACKTEST [info] Have $708 with which to buy shares
+Jan 07 05:41:00 BACKTEST [info] Shares for IBM on 2011-11-03 cost 185.9 H/L: 187.78:184.02
+Jan 07 05:41:00 BACKTEST [info] Setting share cost to 185.9
+Jan 07 05:41:00 BACKTEST [info] Setting number of shares to 3
+Jan 07 05:41:00 BACKTEST [notice] Buy stocks - Shares: 3 for $557.7
+Jan 07 05:41:00 BACKTEST [info] Setting action to None
+Jan 07 05:41:00 BACKTEST [info] Finding next trade date from 2011-11-03 for symbol IBM
+Jan 07 05:41:00 BACKTEST [info] Setting transactiondate to 2011-11-04
+Jan 07 05:41:00 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:41:00 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:41:00 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:41:00 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 07 05:41:00 BACKTEST [info] Setting action to sellstock
+Jan 07 05:41:00 BACKTEST [info] Shares for IBM on 2011-11-04 cost 185.94 H/L: 187.14:184.74
+Jan 07 05:41:00 BACKTEST [info] Setting share cost to 185.94
+Jan 07 05:41:00 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:41:00 BACKTEST [info] ActionSellStock calculated shares # 21 for stock IBM
+Jan 07 05:41:00 BACKTEST [info] Setting number of shares to 21
+Jan 07 05:41:00 BACKTEST [notice] Sell stocks - Shares: 21 for $3904.74
+Jan 07 05:41:00 BACKTEST [info] Setting action to None
+Jan 07 05:41:00 BACKTEST [info] Finding next trade date from 2011-11-04 for symbol IBM
+Jan 07 05:41:00 BACKTEST [info] Setting transactiondate to 2011-11-07
+Jan 07 05:41:00 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:41:00 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:41:00 BACKTEST [info] Setting action to None
+Jan 07 05:41:00 BACKTEST [info] Setting action to None
+Jan 07 05:41:00 BACKTEST [info] Finding next trade date from 2011-11-07 for symbol IBM
+Jan 07 05:41:00 BACKTEST [info] Setting transactiondate to 2011-11-08
+Jan 07 05:41:00 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 07 05:41:00 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 07 05:41:00 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:41:00 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 07 05:41:00 BACKTEST [info] Setting action to sellstock
+Jan 07 05:41:00 BACKTEST [info] Shares for IBM on 2011-11-08 cost 186.695 H/L: 187.88:185.51
+Jan 07 05:41:00 BACKTEST [info] Setting share cost to 186.695
+Jan 07 05:41:00 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:41:01 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 07 05:41:01 BACKTEST [info] Setting number of shares to 0
+Jan 07 05:41:01 BACKTEST [info] Setting action to None
+Jan 07 05:41:01 BACKTEST [info] Finding next trade date from 2011-11-08 for symbol IBM
+Jan 07 05:41:01 BACKTEST [info] Setting transactiondate to 2011-11-09
+Jan 07 05:41:01 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:41:01 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 07 05:41:01 BACKTEST [info] Setting action to None
+Jan 07 05:41:01 BACKTEST [info] Setting action to None
+Jan 07 05:41:01 BACKTEST [info] Finding next trade date from 2011-11-09 for symbol IBM
+Jan 07 05:41:01 BACKTEST [info] Setting transactiondate to 2011-11-10
+Jan 07 05:41:01 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 07 05:41:01 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 07 05:41:01 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:41:01 BACKTEST [info] Setting action to buystock
+Jan 07 05:41:01 BACKTEST [info] Dollars available 10429.46484375
+Jan 07 05:41:01 BACKTEST [info] Setting float to 1042.946484375
+Jan 07 05:41:01 BACKTEST [info] Setting dollars2invest to 1042
+Jan 07 05:41:01 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:41:01 BACKTEST [info] Setting dollars2risk to 10
+Jan 07 05:41:01 BACKTEST [info] MoneyManagement Dollars avail: 1042 with risk size: 10
+Jan 07 05:41:01 BACKTEST [info] Setting cash to 1042
+Jan 07 05:41:01 BACKTEST [info] Have $1042 with which to buy shares
+Jan 07 05:41:01 BACKTEST [info] Shares for IBM on 2011-11-10 cost 183.32 H/L: 184.77:181.87
+Jan 07 05:41:01 BACKTEST [info] Setting share cost to 183.32
+Jan 07 05:41:01 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:41:01 BACKTEST [notice] Buy stocks - Shares: 5 for $916.6
+Jan 07 05:41:01 BACKTEST [info] Setting action to None
+Jan 07 05:41:01 BACKTEST [info] Finding next trade date from 2011-11-10 for symbol IBM
+Jan 07 05:41:01 BACKTEST [info] Setting transactiondate to 2011-11-11
+Jan 07 05:41:01 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 07 05:41:01 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 07 05:41:01 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 07 05:41:01 BACKTEST [info] Setting action to buystock
+Jan 07 05:41:01 BACKTEST [info] Dollars available 9512.864868164
+Jan 07 05:41:01 BACKTEST [info] Setting float to 951.2864868164
+Jan 07 05:41:01 BACKTEST [info] Setting dollars2invest to 951
+Jan 07 05:41:01 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:41:01 BACKTEST [info] Setting dollars2risk to 9
+Jan 07 05:41:01 BACKTEST [info] MoneyManagement Dollars avail: 951 with risk size: 9
+Jan 07 05:41:01 BACKTEST [info] Setting cash to 951
+Jan 07 05:41:01 BACKTEST [info] Have $951 with which to buy shares
+Jan 07 05:41:01 BACKTEST [info] Shares for IBM on 2011-11-11 cost 186.485 H/L: 187.83:185.14
+Jan 07 05:41:01 BACKTEST [info] Setting share cost to 186.485
+Jan 07 05:41:01 BACKTEST [info] Setting number of shares to 5
+Jan 07 05:41:01 BACKTEST [notice] Buy stocks - Shares: 5 for $932.425
+Jan 07 05:41:01 BACKTEST [info] Setting action to None
+Jan 07 05:41:01 BACKTEST [info] Finding next trade date from 2011-11-11 for symbol IBM
+Jan 07 05:41:01 BACKTEST [info] Setting transactiondate to 2011-11-14
+Jan 07 05:41:01 BACKTEST [info] Setting action to None
+Jan 07 05:41:01 BACKTEST [info] Finding next trade date from 2011-11-14 for symbol IBM
+Jan 07 05:41:01 BACKTEST [info] Setting transactiondate to 2011-11-15
+Jan 07 05:41:02 BACKTEST [info] Candlestick Bullish_Harami has action buystock and VALUE  99
+Jan 07 05:41:02 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:41:02 BACKTEST [info] Setting action to buystock
+Jan 07 05:41:02 BACKTEST [info] Dollars available 8580.439880371
+Jan 07 05:41:02 BACKTEST [info] Setting float to 858.0439880371
+Jan 07 05:41:02 BACKTEST [info] Setting dollars2invest to 858
+Jan 07 05:41:02 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:41:02 BACKTEST [info] Setting dollars2risk to 8
+Jan 07 05:41:02 BACKTEST [info] MoneyManagement Dollars avail: 858 with risk size: 8
+Jan 07 05:41:02 BACKTEST [info] Setting cash to 858
+Jan 07 05:41:02 BACKTEST [info] Have $858 with which to buy shares
+Jan 07 05:41:02 BACKTEST [info] Shares for IBM on 2011-11-15 cost 187.805 H/L: 189.97:185.64
+Jan 07 05:41:02 BACKTEST [info] Setting share cost to 187.805
+Jan 07 05:41:02 BACKTEST [info] Setting number of shares to 4
+Jan 07 05:41:02 BACKTEST [notice] Buy stocks - Shares: 4 for $751.22
+Jan 07 05:41:02 BACKTEST [info] Setting action to None
+Jan 07 05:41:02 BACKTEST [info] Finding next trade date from 2011-11-15 for symbol IBM
+Jan 07 05:41:02 BACKTEST [info] Setting transactiondate to 2011-11-16
+Jan 07 05:41:02 BACKTEST [info] Setting action to None
+Jan 07 05:41:02 BACKTEST [info] Finding next trade date from 2011-11-16 for symbol IBM
+Jan 07 05:41:02 BACKTEST [info] Setting transactiondate to 2011-11-17
+Jan 07 05:41:02 BACKTEST [info] Setting action to None
+Jan 07 05:41:02 BACKTEST [info] Finding next trade date from 2011-11-17 for symbol IBM
+Jan 07 05:41:02 BACKTEST [info] Setting transactiondate to 2011-11-18
+Jan 07 05:41:02 BACKTEST [info] Setting action to None
+Jan 07 05:41:02 BACKTEST [info] Finding next trade date from 2011-11-18 for symbol IBM
+Jan 07 05:41:02 BACKTEST [info] Setting transactiondate to 2011-11-21
+Jan 07 05:41:02 BACKTEST [info] Setting action to None
+Jan 07 05:41:02 BACKTEST [info] Finding next trade date from 2011-11-21 for symbol IBM
+Jan 07 05:41:02 BACKTEST [info] Setting transactiondate to 2011-11-22
+Jan 07 05:41:02 BACKTEST [info] Setting action to None
+Jan 07 05:41:02 BACKTEST [info] Finding next trade date from 2011-11-22 for symbol IBM
+Jan 07 05:41:02 BACKTEST [info] Setting transactiondate to 2011-11-23
+Jan 07 05:41:02 BACKTEST [info] Setting action to None
+Jan 07 05:41:02 BACKTEST [info] Finding next trade date from 2011-11-23 for symbol IBM
+Jan 07 05:41:02 BACKTEST [info] Setting transactiondate to 2011-11-25
+Jan 07 05:41:02 BACKTEST [info] Setting action to None
+Jan 07 05:41:02 BACKTEST [info] Finding next trade date from 2011-11-25 for symbol IBM
+Jan 07 05:41:02 BACKTEST [info] Setting transactiondate to 2011-11-28
+Jan 07 05:41:02 BACKTEST [info] Setting action to None
+Jan 07 05:41:02 BACKTEST [info] Finding next trade date from 2011-11-28 for symbol IBM
+Jan 07 05:41:02 BACKTEST [info] Setting transactiondate to 2011-11-29
+Jan 07 05:41:02 BACKTEST [info] Setting action to None
+Jan 07 05:41:02 BACKTEST [info] Finding next trade date from 2011-11-29 for symbol IBM
+Jan 07 05:41:02 BACKTEST [info] Setting transactiondate to 2011-11-30
+Jan 07 05:41:02 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 07 05:41:02 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 07 05:41:02 BACKTEST [info] Setting action to buystock
+Jan 07 05:41:03 BACKTEST [info] Dollars available 7829.219909668
+Jan 07 05:41:03 BACKTEST [info] Setting float to 782.9219909668
+Jan 07 05:41:03 BACKTEST [info] Setting dollars2invest to 782
+Jan 07 05:41:03 BACKTEST [info] Setting maxrisk to 0.01
+Jan 07 05:41:03 BACKTEST [info] Setting dollars2risk to 7
+Jan 07 05:41:03 BACKTEST [info] MoneyManagement Dollars avail: 782 with risk size: 7
+Jan 07 05:41:03 BACKTEST [info] Setting cash to 782
+Jan 07 05:41:03 BACKTEST [info] Have $782 with which to buy shares
+Jan 07 05:41:03 BACKTEST [info] Shares for IBM on 2011-11-30 cost 186.28 H/L: 188.35:184.21
+Jan 07 05:41:03 BACKTEST [info] Setting share cost to 186.28
+Jan 07 05:41:03 BACKTEST [info] Setting number of shares to 4
+Jan 07 05:41:03 BACKTEST [notice] Buy stocks - Shares: 4 for $745.12
+Jan 07 05:41:03 BACKTEST [info] Setting action to None
+Jan 07 05:41:03 BACKTEST [info] Finding next trade date from 2011-11-30 for symbol IBM
+Jan 07 05:41:03 BACKTEST [info] Setting transactiondate to 2011-12-01
+Jan 07 05:41:03 BACKTEST [info] Setting action to None
+Jan 07 05:41:03 BACKTEST [info] Finding next trade date from 2011-12-01 for symbol IBM
+Jan 07 05:41:03 BACKTEST [info] Setting transactiondate to 2011-12-02
+Jan 07 05:41:03 BACKTEST [info] Setting action to None
+Jan 07 05:41:03 BACKTEST [info] Finding next trade date from 2011-12-02 for symbol IBM
+Jan 07 05:41:03 BACKTEST [info] Setting transactiondate to 2011-12-05
+Jan 07 05:41:03 BACKTEST [info] Setting action to None
+Jan 07 05:41:03 BACKTEST [info] Finding next trade date from 2011-12-05 for symbol IBM
+Jan 07 05:41:03 BACKTEST [info] Setting transactiondate to 2011-12-06
+Jan 07 05:41:03 BACKTEST [info] Setting action to None
+Jan 07 05:41:03 BACKTEST [info] Finding next trade date from 2011-12-06 for symbol IBM
+Jan 07 05:41:03 BACKTEST [info] Setting transactiondate to 2011-12-07
+Jan 07 05:41:03 BACKTEST [info] Setting action to None
+Jan 07 05:41:03 BACKTEST [info] Finding next trade date from 2011-12-07 for symbol IBM
+Jan 07 05:41:03 BACKTEST [info] Setting transactiondate to 2011-12-08
+Jan 07 05:41:03 BACKTEST [info] Setting action to None
+Jan 07 05:41:03 BACKTEST [info] Finding next trade date from 2011-12-08 for symbol IBM
+Jan 07 05:41:03 BACKTEST [info] Setting transactiondate to 2011-12-09
+Jan 07 05:41:03 BACKTEST [info] Shares for IBM on 2011-12-09 cost 193.635 H/L: 194.87:192.4
+Jan 07 05:41:03 BACKTEST [info] Setting share cost to 193.635
+Jan 07 05:41:03 BACKTEST [info] Resetting transaction stock symbol
+Jan 07 05:41:03 BACKTEST [info] ActionSellStock calculated shares # 18 for stock IBM
+Jan 07 05:41:03 BACKTEST [info] Setting number of shares to 18
+Jan 07 05:41:04 BACKTEST [notice] Sell stocks - Shares: 18 for $3485.43
+Jan 07 05:41:04 BACKTEST [info] Setting endcash to 10569.529846192
+Jan 07 05:41:04 BACKTEST [notice] Ending cash available after selling stocks: $10569.529846192 for a yield of 0.94611587700874

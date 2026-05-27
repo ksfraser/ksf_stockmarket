@@ -1,0 +1,256 @@
+Started run
+
+STARTING download of missing data
+Symbol BAM-A Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BAM-A.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BAM-A.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol BOO Not in the database.  Asking Yahoo for data.
+Symbol BRK-UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BRK-UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BRK-UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol CASH Not in the database.  Asking Yahoo for data.
+Symbol CEANF Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CEANF.PK&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CEANF.PK.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol PDM-UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PDM-UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PDM-UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol WJX-UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WJX-UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/WJX-UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol ROC Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ROC.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ROC.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol PC Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PC.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PC.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol ACO-X Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ACO-X.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ACO-X.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol GDI-UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GDI-UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GDI-UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol ZZZ Not in the database.  Asking Yahoo for data.
+Symbol EMP-A Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EMP-A.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EMP-A.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol TBL.UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TBL.UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TBL.UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol HTE.UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HTE.UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HTE.UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol YLO Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=YLO.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/YLO.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol CWI.UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CWI.UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CWI.UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol PMT.UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PMT.UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PMT.UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol EIT.UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EIT.UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EIT.UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol LIF.UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LIF.UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/LIF.UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol FRZNF Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FRZNF.PK&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FRZNF.PK.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol MG.A Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MG.A.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MG.A.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol PEY.UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PEY.UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PEY.UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol TDT Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TDT.BK&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TDT.BK.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol NGP Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NGP.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NGP.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol 0813.HK Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=0813.HK.HK&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/0813.HK.HK.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol CDZ Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CDZ.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CDZ.TO.1970101-20091121.csv
+
+Wrote 37323 characters
+Symbol AGF.B Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AGF.B.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AGF.B.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol ACO.X Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ACO.X.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ACO.X.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol BNS Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BNS.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BNS.TO.1970101-20091121.csv
+
+Wrote 182412 characters
+Symbol BNE.UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BNE.UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BNE.UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol CIX.UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CIX.UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CIX.UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol EMP.A Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EMP.A.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EMP.A.TO.1970101-20091121.csv
+
+Wrote 37183 characters
+Symbol ENB Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ENB.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ENB.TO.1970101-20091121.csv
+
+Wrote 179259 characters
+Symbol SIF.UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SIF.UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SIF.UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol ESI Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ESI.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ESI.TO.1970101-20091121.csv
+
+Wrote 161970 characters
+Symbol FCR Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FCR.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FCR.TO.1970101-20091121.csv
+
+Wrote 85758 characters
+Symbol GWO Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GWO.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GWO.TO.1970101-20091121.csv
+
+Wrote 89465 characters
+Symbol HR.UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HR.UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HR.UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol HCG Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HCG.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HCG.TO.1970101-20091121.csv
+
+Wrote 65595 characters
+Symbol IAG Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IAG.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IAG.TO.1970101-20091121.csv
+
+Wrote 116981 characters
+Symbol IGM Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IGM.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IGM.TO.1970101-20091121.csv
+
+Wrote 177508 characters
+Symbol L Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=L.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/L.TO.1970101-20091121.csv
+
+Wrote 178139 characters
+Symbol MFC Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MFC.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MFC.TO.1970101-20091121.csv
+
+Wrote 124703 characters
+Symbol MRD Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MRD.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MRD.TO.1970101-20091121.csv
+
+Wrote 153471 characters
+Symbol MRU.A Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MRU.A.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MRU.A.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol POW Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POW.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/POW.TO.1970101-20091121.csv
+
+Wrote 178851 characters
+Symbol PWF Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PWF.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PWF.TO.1970101-20091121.csv
+
+Wrote 178418 characters
+Symbol REI.UN Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=REI.UN.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/REI.UN.TO.1970101-20091121.csv
+
+Wrote 0 characters
+Symbol SAP Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SAP.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SAP.TO.1970101-20091121.csv
+
+Wrote 143595 characters
+Symbol SLF Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLF.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SLF.TO.1970101-20091121.csv
+
+Wrote 118039 characters
+Symbol TIH Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TIH.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TIH.TO.1970101-20091121.csv
+
+Wrote 155675 characters
+Symbol TOC Not in the database.  Asking Yahoo for data.
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TOC.TO&amp;a=0&amp;b=2&amp;d=11&amp;e=21&amp;f=2009
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TOC.TO.1970101-20091121.csv
+
+Wrote 0 characters

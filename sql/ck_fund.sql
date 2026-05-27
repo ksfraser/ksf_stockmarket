@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_fund`;
+CREATE TABLE `ck_fund` (, PRIMARY KEY ()) ENGINE=InnoDB;

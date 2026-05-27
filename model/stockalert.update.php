@@ -1,0 +1,5 @@
+<?php
+$thisclass = 'stockalert' ;
+$mode = "update";
+require_once( '../controller/controller.php' );
+?>

@@ -1,0 +1,6 @@
+
+
+Prevent a winning trade from becoming a losing trade.
+
+Once a target price has been reached, set a stop loss order.
+Calculate the stop loss price based upon trade fees, etc

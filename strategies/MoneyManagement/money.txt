@@ -1,0 +1,11 @@
+
+
+Define your trading float
+	The amount of money you hav set aside to trade
+Define your maximum loss amount
+	The max amount yyou are willing to lose in 1 trade.  Many pro traders are in the .25% to 1% range.
+Set your initial stop level
+	Set where you admit choosing a bad entry point, and this is where you will exit.  Short term traders have tighter stops where as long term traders will let it drop a bit more in case it swings back up.  As well, the tighter the stops the more frequent you will get stopped out.
+Calculate your trade size.
+	Maximum loss / initial stop size = number of units to purchase
+		$1000/$5 between purchase and stop = 200 units.

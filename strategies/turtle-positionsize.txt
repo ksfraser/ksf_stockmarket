@@ -1,0 +1,30 @@
+Position Sizing is determining how much to trade on a given purchase/sell
+Most beginers trade TOO MUCH on a position so greatly increase their risk of going broke
+
+volatilty based constant percentage risk position sizing algorythm
+Normalized the dollar volatility of a position by adjusting the position size based upon the volatilty of the market.
+Higher volatility means lower number of contracts/shares.  Lower volatility means more shares.
+This equalizes the chance of a given dollar loss/win.  This increases the effectiveness of a diverse portfolio.
+
+N = 20 day EMA of the True Range.
+True Range = MAX( High0-Low0, High0-Close1, Close1 - Low0 )
+
+N = ( 19 X PreviousN + TrueRange0 ) / 20
+
+Trading Unit (rounded down):
+Unit = floor(  (1% of account) / N * dollars per point  )
+
+Adjusting for Risk
+Level		Type					Max Units
+1		Single Market				4
+2		Closely Correlated Markets		6 
+3		Loosely Correlated Markets		10
+4		Single Direction - Long or Short	12
+
+Adjusting the size of the trade account
+For every 10% you are down, you reduce the size of your account used to calculate the UNIT by 20%.  The Turtles recalc the account size on a yearly basis, and then using that value adjusted their Unit size/contracts size.
+
+i.e. start with 100$.  Account becomes 90$, trade as if 80$.  Continue to do so until account returns to 100$.  If the account lost another 10% (hits 81$) subtract another 20% from unit sizing for a unit account size of 64$.
+
+
+

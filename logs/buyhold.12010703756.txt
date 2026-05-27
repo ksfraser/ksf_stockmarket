@@ -1,0 +1,24 @@
+Adding user buyhold
+Adding $10000.00 to the portfolio
+Created transaction variable.  Adding transaction
+Created userBuy Hold
+ 15:43:57 BACKTEST [info] Setting symbol to IBM
+Jan 07 15:43:57 BACKTEST [info] Setting transactiondate to 2011-01-02
+Jan 07 15:43:57 BACKTEST [info] Setting enddate to 2011-12-25
+Jan 07 15:43:57 BACKTEST [info] Setting number of shares to 0
+Jan 07 15:43:57 BACKTEST [info] Setting share cost to 0
+Jan 07 15:43:57 BACKTEST [info] Setting buybookvalue to 0
+Jan 07 15:43:57 BACKTEST [info] Setting winratio to 0
+Jan 07 15:43:57 BACKTEST [info] Setting loseratio to 0
+Jan 07 15:43:57 BACKTEST [info] Setting winsize to 0
+Jan 07 15:43:57 BACKTEST [info] Setting losesize to 0
+Jan 07 15:43:57 BACKTEST [info] Setting expectancy to 0
+Jan 07 15:43:57 BACKTEST [info] Setting successratio to 0
+Jan 07 15:43:57 BACKTEST [info] Setting transactionsets to 0
+Jan 07 15:43:57 BACKTEST [info] Setting lastaction to 
+Jan 07 15:43:57 BACKTEST [notice] RunStrategy Looping
+Jan 07 15:43:57 BACKTEST [notice] RunStrategy Start and End dates: 2011-01-02:2011-12-25
+Jan 07 15:43:57 BACKTEST [info] Setting action to None
+Jan 07 15:43:57 BACKTEST [info] Finding next trade date from 2011-01-02 for symbol IBM
+Jan 07 15:43:57 BACKTEST [info] Setting transactiondate to 2011-01-03
+Jan 07 15:43:57 BACKTEST [info] Setting action to None

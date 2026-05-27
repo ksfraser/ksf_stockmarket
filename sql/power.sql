@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `power`;
+CREATE TABLE `power` (, PRIMARY KEY (``)) ENGINE=InnoDB;

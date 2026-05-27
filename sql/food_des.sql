@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `food_des`;
+CREATE TABLE `food_des` (, PRIMARY KEY ()) ENGINE=InnoDB;

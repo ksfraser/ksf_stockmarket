@@ -1,0 +1,93 @@
+<?php
+
+//calc turtle data
+
+require_once( '../../model/include_all.php' );
+require_once( '../../model/turtledata.class.php' );
+require_once( '../../model/stockprices.class.php' );
+
+function calcturtle( $symbol )
+{
+	$stockprices = new stockprices();
+	$stockprices1 = new stockprices();
+	$stockprices2 = new stockprices();
+	$stockprices3 = new stockprices();
+	$stockprices4 = new stockprices();
+	$turtle = new turtledata();
+
+	$stockprices->querystring = "select day_low, day_high, day_close, symbol, date from stockprices where symbol = '" . $symbol . "' order by date asc";
+	$stockprices->GenericQuery();
+	$count = 0;
+	foreach( $stockprices->resultarray as $row )
+	{
+		if( $count == 0 )
+		{
+			$close1 = $row['day_close'];
+			$prevdate = $row['date'];
+		}
+		$count++;
+		$high = $row['day_high'];
+		$low = $row['day_low'];
+		$close = $close1;
+		$close1 = $row['day_close'];
+	//Calc true range
+		$tr1 = $high - $low;
+		$tr2 = $high - $close;
+		$tr3 = $close - $low;
+		$tr = max( $tr1, $tr2, $tr3 );
+		if( $count <= 1 )
+		{
+			$prevvol = $tr ;
+		}
+		$volatility = ( ( 19 * $prevvol ) + $tr ) / 20;
+		$prevtr = $tr;
+		$prevvol = $volatility;
+		$prevdate = $row['date'];
+		$stoploss = $close1 - 2 * $volatility;
+		$unit = 1000 / $volatility;
+		$shares = floor( $unit / $row['day_close'] ); 
+
+		$insert['shares'] = $shares;
+		$insert['unit'] = $unit;
+		$insert['stoploss'] = $stoploss;
+		$insert['symbol'] = $symbol;
+		$insert['date'] = $row['date'];
+		$insert['volatility'] = $volatility;
+		$insert['truerange'] = $tr;
+		var_dump( $row );
+		var_dump( $insert );
+		$turtle->Insert( $insert );
+		$turtle->Update( $insert );
+		
+	}
+/*
+		$stockprices1->querystring = " select max( day_close ) as breakouthigh1, min( day_close ) as breakoutlow1 from stockprices where symbol = '" . $row['symbol'] . "' and date >= DATE_SUB( '" . $prevdate . "', INTERVAL 30 DAY  )";
+		$stockprices1->GenericQuery();
+		$breakouthigh20 = $stockprices1->resultarray[0]['breakouthigh1'];
+		$breakoutlow20 = $stockprices1->resultarray[0]['breakoutlow1'];
+		$stockprices2->querystring = " select max( day_close ) as breakouthigh2, min( day_close ) as breakoutlow2 from stockprices where symbol = '" . $row['symbol'] . "' and date >= DATE_SUB( '" . $prevdate . "', INTERVAL 60 DAY  )";
+		$stockprices2->GenericQuery();
+		$breakouthigh55 = $stockprices2->resultarray[0]['breakouthigh2'];
+		$breakoutlow55 = $stockprices2->resultarray[0]['breakoutlow2'];
+		$stockprices3->querystring = " select max( day_close ) as breakouthigh3, min( day_close ) as breakoutlow3 from stockprices where symbol = '" . $row['symbol'] . "' and date >= DATE_SUB( '" . $prevdate . "', INTERVAL 14 DAY  )";
+		$stockprices3->GenericQuery();
+		$high10 = $stockprices3->resultarray[0]['breakouthigh3'];
+		$low10 = $stockprices3->resultarray[0]['breakoutlow3'];
+		$insert['breakouthigh20'] = $breakouthigh20;
+		$insert['breakoutlow20'] = $breakoutlow20;
+		$insert['breakouthigh55'] = $breakouthigh55;
+		$insert['breakoutlow55'] = $breakoutlow55;
+		$insert['high20'] = $breakouthigh20;
+		$insert['low20'] = $breakoutlow20;
+		$insert['high10'] = $high10;
+		$insert['low10'] = $low10;
+		$insert['sellallprice'] = min( $low10, $breakoutlow20 );
+		$insert['positionadd'] = $breakouthigh20 + $volatility / 2;
+*/
+}
+		
+//TESTING
+calcturtle( "GLD" );		
+
+
+?>

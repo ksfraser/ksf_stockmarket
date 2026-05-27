@@ -1,0 +1,1272 @@
+Adding $10000.00 to the portfolio
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $979.05
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 6 of stock IBM for $981.39
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 6 of stock IBM for $985.56
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $845.4
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $833.5
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $875.025
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $920.7
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Buying 5 of stock IBM for $932.425
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+Selling 31 of stock IBM for $6002.685
+Created transaction variable.  Adding transaction
+Created transaction variable.  Adding transaction
+22:28:49 BACKTEST [info] Updating user cs_2days
+Jan 23 22:28:49 BACKTEST [info] Created userSimple2days Candlestick
+Jan 23 22:28:49 BACKTEST [info] Setting Symbol Heat to 65
+Jan 23 22:28:49 BACKTEST [info] Setting Symbol Heat to 35
+Jan 23 22:28:49 BACKTEST [notice] RunStrategy Looping
+Jan 23 22:28:49 BACKTEST [notice] RunStrategy Start and End dates: 2011-01-02:2011-12-25
+Jan 23 22:28:49 BACKTEST [info] Setting lastaction to 
+Jan 23 22:28:49 BACKTEST [info] Setting action to None
+Jan 23 22:28:49 BACKTEST [info] Setting transactiondate to 2011-01-03
+Jan 23 22:28:49 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:28:49 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:28:49 BACKTEST [info] Setting action to None
+Jan 23 22:28:49 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:49 BACKTEST [info] Setting action to None
+Jan 23 22:28:49 BACKTEST [info] Setting transactiondate to 2011-01-04
+Jan 23 22:28:50 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:28:50 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:28:50 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:28:50 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 23 22:28:50 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:28:50 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:28:50 BACKTEST [info] Setting action to None
+Jan 23 22:28:50 BACKTEST [info] Setting transactiondate to 2011-01-05
+Jan 23 22:28:50 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:28:50 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 23 22:28:50 BACKTEST [info] 2 candlesticks with a total of 51 for average 25.5
+Jan 23 22:28:50 BACKTEST [info] Setting action to sellstock
+Jan 23 22:28:50 BACKTEST [info] Shares for IBM on 2011-01-05 cost 147.105 H/L: 147.48:146.73
+Jan 23 22:28:50 BACKTEST [info] Setting share cost to 147.105
+Jan 23 22:28:50 BACKTEST [info] Resetting transaction stock symbol
+Jan 23 22:28:50 BACKTEST [info] ActionSellStock calculated shares # 0 for stock IBM
+Jan 23 22:28:50 BACKTEST [info] Setting number of shares to 0
+Jan 23 22:28:50 BACKTEST [info] Setting lastaction to sellstock
+Jan 23 22:28:50 BACKTEST [info] Setting action to None
+Jan 23 22:28:50 BACKTEST [info] Setting transactiondate to 2011-01-06
+Jan 23 22:28:50 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:50 BACKTEST [info] Setting action to None
+Jan 23 22:28:50 BACKTEST [info] Setting transactiondate to 2011-01-07
+Jan 23 22:28:50 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:50 BACKTEST [info] Setting action to None
+Jan 23 22:28:50 BACKTEST [info] Setting transactiondate to 2011-01-10
+Jan 23 22:28:50 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:28:50 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:28:50 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:28:50 BACKTEST [info] Setting action to buystock1
+Jan 23 22:28:50 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:28:50 BACKTEST [info] Setting action to None
+Jan 23 22:28:50 BACKTEST [info] Setting transactiondate to 2011-01-11
+Jan 23 22:28:50 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:28:50 BACKTEST [info] Candlestick Bearish_Engulfing has action sellstock and VALUE  1
+Jan 23 22:28:50 BACKTEST [info] 2 candlesticks with a total of 51 for average 25.5
+Jan 23 22:28:50 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:28:50 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:28:50 BACKTEST [info] Setting action to None
+Jan 23 22:28:50 BACKTEST [info] Setting transactiondate to 2011-01-12
+Jan 23 22:28:50 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:50 BACKTEST [info] Setting action to None
+Jan 23 22:28:50 BACKTEST [info] Setting transactiondate to 2011-01-13
+Jan 23 22:28:50 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:50 BACKTEST [info] Setting action to None
+Jan 23 22:28:50 BACKTEST [info] Setting transactiondate to 2011-01-14
+Jan 23 22:28:50 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:50 BACKTEST [info] Setting action to None
+Jan 23 22:28:50 BACKTEST [info] Setting transactiondate to 2011-01-18
+Jan 23 22:28:50 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:50 BACKTEST [info] Setting action to None
+Jan 23 22:28:50 BACKTEST [info] Setting transactiondate to 2011-01-19
+Jan 23 22:28:50 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:50 BACKTEST [info] Setting action to None
+Jan 23 22:28:50 BACKTEST [info] Setting transactiondate to 2011-01-20
+Jan 23 22:28:50 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-01-21
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-01-24
+Jan 23 22:28:51 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 23 22:28:51 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:28:51 BACKTEST [info] Setting action to buystock1
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-01-25
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-01-26
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-01-27
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-01-28
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-01-31
+Jan 23 22:28:51 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 23 22:28:51 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:28:51 BACKTEST [info] Setting action to buystock1
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-02-01
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-02-02
+Jan 23 22:28:51 BACKTEST [info] Candlestick Hanging_Man has action sellstock and VALUE  1
+Jan 23 22:28:51 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 23 22:28:51 BACKTEST [info] 2 candlesticks with a total of 2 for average 1
+Jan 23 22:28:51 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-02-03
+Jan 23 22:28:51 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 23 22:28:51 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:28:51 BACKTEST [info] Setting action to buystock1
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-02-04
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-02-07
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-02-08
+Jan 23 22:28:51 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:51 BACKTEST [info] Setting action to None
+Jan 23 22:28:51 BACKTEST [info] Setting transactiondate to 2011-02-09
+Jan 23 22:28:52 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:52 BACKTEST [info] Setting action to None
+Jan 23 22:28:52 BACKTEST [info] Setting transactiondate to 2011-02-10
+Jan 23 22:28:52 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:52 BACKTEST [info] Setting action to None
+Jan 23 22:28:52 BACKTEST [info] Setting transactiondate to 2011-02-11
+Jan 23 22:28:52 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:28:52 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:28:52 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:28:52 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 23 22:28:52 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:28:52 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:28:52 BACKTEST [info] Setting action to None
+Jan 23 22:28:52 BACKTEST [info] Setting transactiondate to 2011-02-14
+Jan 23 22:28:52 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:28:52 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:28:52 BACKTEST [info] Setting action to None
+Jan 23 22:28:52 BACKTEST [info] Setting lastaction to None
+Jan 23 22:28:52 BACKTEST [info] Setting action to None
+Jan 23 22:28:52 BACKTEST [info] Setting transactiondate to 2011-02-15
+Jan 23 22:28:52 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:28:52 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:28:52 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:28:52 BACKTEST [info] Setting action to buystock1
+Jan 23 22:28:52 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:28:52 BACKTEST [info] Setting action to None
+Jan 23 22:28:52 BACKTEST [info] Setting transactiondate to 2011-02-16
+Jan 23 22:28:52 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:28:52 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:28:52 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:28:52 BACKTEST [info] Candlestick Hammer has action buystock and VALUE  99
+Jan 23 22:28:52 BACKTEST [info] Candlestick Morning_Star has action buystock and VALUE  99
+Jan 23 22:28:52 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 23 22:28:52 BACKTEST [info] 6 candlesticks with a total of 496 for average 82.666666666667
+Jan 23 22:28:52 BACKTEST [info] Setting action to buystock
+Jan 23 22:28:52 BACKTEST [info] Setting cash to 10000
+Jan 23 22:28:52 BACKTEST [info] Dollars available 10000
+Jan 23 22:28:52 BACKTEST [info] Dollars-cash, Book, Market, MaxPortfolioPct: 10000:::0.1
+Jan 23 22:28:52 BACKTEST [info] Setting float to 1000
+Jan 23 22:28:52 BACKTEST [info] Setting dollars2invest to 1000
+Jan 23 22:28:52 BACKTEST [info] Setting maxrisk to 0.01
+Jan 23 22:28:52 BACKTEST [info] Dollars, Book, Market, MaxRisk: 1000:1000:1000:0.01
+Jan 23 22:28:52 BACKTEST [info] Setting dollars2risk to 10
+Jan 23 22:28:52 BACKTEST [info] MoneyManagement Dollars avail: 1000 with risk size: 10
+Jan 23 22:28:52 BACKTEST [info] Setting initialstopsize to 1.47105
+Jan 23 22:28:52 BACKTEST [info] Have $10000 with which to buy shares
+Jan 23 22:28:52 BACKTEST [info] Shares for IBM on 2011-02-16 cost 163.175 H/L: 163.6:162.75
+Jan 23 22:28:52 BACKTEST [info] Setting share cost to 163.175
+Jan 23 22:28:52 BACKTEST [info] Purchase 6 units or risk on 6 shares
+Jan 23 22:28:52 BACKTEST [info] Setting number of shares to 6
+Jan 23 22:28:52 BACKTEST [notice] Buy stocks - Shares: 6 for $979.05
+Jan 23 22:29:57 BACKTEST [info] Setting buybookvalue to 979.05
+Jan 23 22:29:57 BACKTEST [info] Setting Symbol Heat to 1
+Jan 23 22:29:57 BACKTEST [info] Setting Symbol Heat to 0.097905
+Jan 23 22:29:57 BACKTEST [info] Setting lastaction to buystock
+Jan 23 22:29:57 BACKTEST [info] Setting action to None
+Jan 23 22:29:57 BACKTEST [info] Setting transactiondate to 2011-02-17
+Jan 23 22:29:57 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:29:57 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:29:57 BACKTEST [info] Setting action to None
+Jan 23 22:29:57 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:57 BACKTEST [info] Setting action to None
+Jan 23 22:29:57 BACKTEST [info] Setting transactiondate to 2011-02-18
+Jan 23 22:29:57 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:57 BACKTEST [info] Setting action to None
+Jan 23 22:29:57 BACKTEST [info] Setting transactiondate to 2011-02-22
+Jan 23 22:29:57 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 23 22:29:57 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:29:57 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:29:57 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:29:57 BACKTEST [info] Setting action to None
+Jan 23 22:29:57 BACKTEST [info] Setting transactiondate to 2011-02-23
+Jan 23 22:29:57 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:57 BACKTEST [info] Setting action to None
+Jan 23 22:29:57 BACKTEST [info] Setting transactiondate to 2011-02-24
+Jan 23 22:29:57 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:57 BACKTEST [info] Setting action to None
+Jan 23 22:29:57 BACKTEST [info] Setting transactiondate to 2011-02-25
+Jan 23 22:29:57 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:57 BACKTEST [info] Setting action to None
+Jan 23 22:29:57 BACKTEST [info] Setting transactiondate to 2011-02-28
+Jan 23 22:29:57 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:57 BACKTEST [info] Setting action to None
+Jan 23 22:29:57 BACKTEST [info] Setting transactiondate to 2011-03-01
+Jan 23 22:29:57 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:57 BACKTEST [info] Setting action to None
+Jan 23 22:29:57 BACKTEST [info] Setting transactiondate to 2011-03-02
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-03
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-04
+Jan 23 22:29:58 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 23 22:29:58 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:29:58 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-07
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-08
+Jan 23 22:29:58 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 23 22:29:58 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:29:58 BACKTEST [info] Setting action to buystock1
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-09
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-10
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-11
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-14
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-15
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-16
+Jan 23 22:29:58 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 23 22:29:58 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:29:58 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-17
+Jan 23 22:29:58 BACKTEST [info] Candlestick Hammer has action buystock and VALUE  99
+Jan 23 22:29:58 BACKTEST [info] Candlestick Bullish_Harami has action buystock and VALUE  99
+Jan 23 22:29:58 BACKTEST [info] 2 candlesticks with a total of 198 for average 99
+Jan 23 22:29:58 BACKTEST [info] Setting action to buystock1
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-18
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:58 BACKTEST [info] Setting transactiondate to 2011-03-21
+Jan 23 22:29:58 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:58 BACKTEST [info] Setting action to None
+Jan 23 22:29:59 BACKTEST [info] Setting transactiondate to 2011-03-22
+Jan 23 22:29:59 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:59 BACKTEST [info] Setting action to None
+Jan 23 22:29:59 BACKTEST [info] Setting transactiondate to 2011-03-23
+Jan 23 22:29:59 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 23 22:29:59 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:29:59 BACKTEST [info] Setting action to buystock1
+Jan 23 22:29:59 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:29:59 BACKTEST [info] Setting action to None
+Jan 23 22:29:59 BACKTEST [info] Setting transactiondate to 2011-03-24
+Jan 23 22:29:59 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:59 BACKTEST [info] Setting action to None
+Jan 23 22:29:59 BACKTEST [info] Setting transactiondate to 2011-03-25
+Jan 23 22:29:59 BACKTEST [info] Setting lastaction to None
+Jan 23 22:29:59 BACKTEST [info] Setting action to None
+Jan 23 22:29:59 BACKTEST [info] Setting transactiondate to 2011-03-28
+Jan 23 22:29:59 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 23 22:29:59 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:29:59 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:29:59 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:29:59 BACKTEST [info] Setting action to None
+Jan 23 22:29:59 BACKTEST [info] Setting transactiondate to 2011-03-29
+Jan 23 22:29:59 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 23 22:29:59 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:29:59 BACKTEST [info] Setting action to buystock1
+Jan 23 22:29:59 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:29:59 BACKTEST [info] Setting action to None
+Jan 23 22:29:59 BACKTEST [info] Setting transactiondate to 2011-03-30
+Jan 23 22:29:59 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:29:59 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:29:59 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:29:59 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 23 22:29:59 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:29:59 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:29:59 BACKTEST [info] Setting action to None
+Jan 23 22:29:59 BACKTEST [info] Setting transactiondate to 2011-03-31
+Jan 23 22:29:59 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:29:59 BACKTEST [info] Candlestick Evening_Star has action sellstock and VALUE  1
+Jan 23 22:29:59 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 23 22:29:59 BACKTEST [info] 3 candlesticks with a total of 52 for average 17.333333333333
+Jan 23 22:29:59 BACKTEST [info] Setting action to sellstock
+Jan 23 22:29:59 BACKTEST [info] Shares for IBM on 2011-03-31 cost 163.565 H/L: 164.06:163.07
+Jan 23 22:29:59 BACKTEST [info] Setting share cost to 163.565
+Jan 23 22:29:59 BACKTEST [info] Resetting transaction stock symbol
+Jan 23 22:29:59 BACKTEST [info] ActionSellStock calculated shares # 6 for stock IBM
+Jan 23 22:29:59 BACKTEST [info] Setting number of shares to 6
+Jan 23 22:31:06 BACKTEST [notice] Sell stocks - Shares: 6 for $981.39
+Jan 23 22:31:06 BACKTEST [info] Setting winratio to 1
+Jan 23 22:31:06 BACKTEST [info] Setting winsize to 2.3399999999999
+Jan 23 22:31:06 BACKTEST [info] Setting buybookvalue to 0
+Jan 23 22:31:06 BACKTEST [info] Setting lastaction to sellstock
+Jan 23 22:31:06 BACKTEST [info] Setting action to None
+Jan 23 22:31:06 BACKTEST [info] Setting transactiondate to 2011-04-01
+Jan 23 22:31:06 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 23 22:31:06 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:31:06 BACKTEST [info] Setting action to buystock1
+Jan 23 22:31:06 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:31:06 BACKTEST [info] Setting action to None
+Jan 23 22:31:06 BACKTEST [info] Setting transactiondate to 2011-04-04
+Jan 23 22:31:06 BACKTEST [info] Setting lastaction to None
+Jan 23 22:31:06 BACKTEST [info] Setting action to None
+Jan 23 22:31:06 BACKTEST [info] Setting transactiondate to 2011-04-05
+Jan 23 22:31:06 BACKTEST [info] Setting lastaction to None
+Jan 23 22:31:06 BACKTEST [info] Setting action to None
+Jan 23 22:31:06 BACKTEST [info] Setting transactiondate to 2011-04-06
+Jan 23 22:31:07 BACKTEST [info] Setting lastaction to None
+Jan 23 22:31:07 BACKTEST [info] Setting action to None
+Jan 23 22:31:07 BACKTEST [info] Setting transactiondate to 2011-04-07
+Jan 23 22:31:07 BACKTEST [info] Setting lastaction to None
+Jan 23 22:31:07 BACKTEST [info] Setting action to None
+Jan 23 22:31:07 BACKTEST [info] Setting transactiondate to 2011-04-08
+Jan 23 22:31:07 BACKTEST [info] Candlestick Hanging_Man has action sellstock and VALUE  1
+Jan 23 22:31:07 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:31:07 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:31:07 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:31:07 BACKTEST [info] Setting action to None
+Jan 23 22:31:07 BACKTEST [info] Setting transactiondate to 2011-04-11
+Jan 23 22:31:07 BACKTEST [info] Setting lastaction to None
+Jan 23 22:31:07 BACKTEST [info] Setting action to None
+Jan 23 22:31:07 BACKTEST [info] Setting transactiondate to 2011-04-12
+Jan 23 22:31:07 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:31:07 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:31:07 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:31:07 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 23 22:31:07 BACKTEST [info] 4 candlesticks with a total of 102 for average 25.5
+Jan 23 22:31:07 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:31:07 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:31:07 BACKTEST [info] Setting action to None
+Jan 23 22:31:07 BACKTEST [info] Setting transactiondate to 2011-04-13
+Jan 23 22:31:07 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:31:07 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:31:07 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:31:07 BACKTEST [info] Candlestick Inverted_Hammer has action buystock and VALUE  99
+Jan 23 22:31:07 BACKTEST [info] 4 candlesticks with a total of 298 for average 74.5
+Jan 23 22:31:07 BACKTEST [info] Setting action to buystock1
+Jan 23 22:31:07 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:31:07 BACKTEST [info] Setting action to None
+Jan 23 22:31:07 BACKTEST [info] Setting transactiondate to 2011-04-14
+Jan 23 22:31:07 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:31:07 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 23 22:31:07 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:31:07 BACKTEST [info] Setting action to buystock
+Jan 23 22:31:07 BACKTEST [info] Setting cash to 10002.340026855
+Jan 23 22:31:07 BACKTEST [info] Dollars available 10002.340026855
+Jan 23 22:31:07 BACKTEST [info] Dollars-cash, Book, Market, MaxPortfolioPct: 10002.340026855:-2.3400268554688:0:0.1
+Jan 23 22:31:07 BACKTEST [info] Setting float to 999.99999999996
+Jan 23 22:31:07 BACKTEST [info] Setting dollars2invest to 999
+Jan 23 22:31:07 BACKTEST [info] Setting maxrisk to 0.01
+Jan 23 22:31:07 BACKTEST [info] Dollars, Book, Market, MaxRisk: 999:10002.340026855:9999.9999999996:0.01
+Jan 23 22:31:07 BACKTEST [info] Setting dollars2risk to 99
+Jan 23 22:31:07 BACKTEST [info] MoneyManagement Dollars avail: 999 with risk size: 99
+Jan 23 22:31:07 BACKTEST [info] Setting initialstopsize to 1.63565
+Jan 23 22:31:07 BACKTEST [info] Have $10002.340026855 with which to buy shares
+Jan 23 22:31:07 BACKTEST [info] Shares for IBM on 2011-04-14 cost 164.26 H/L: 165.36:163.16
+Jan 23 22:31:07 BACKTEST [info] Setting share cost to 164.26
+Jan 23 22:31:07 BACKTEST [info] Purchase 6 units or risk on 60 shares
+Jan 23 22:31:07 BACKTEST [info] Setting number of shares to 6
+Jan 23 22:31:07 BACKTEST [notice] Buy stocks - Shares: 6 for $985.56
+Jan 23 22:32:20 BACKTEST [info] Setting buybookvalue to 985.56
+Jan 23 22:32:20 BACKTEST [info] Setting Symbol Heat to 2
+Jan 23 22:32:20 BACKTEST [info] Setting Symbol Heat to 0.098532943026721
+Jan 23 22:32:20 BACKTEST [info] Setting lastaction to buystock
+Jan 23 22:32:20 BACKTEST [info] Setting action to None
+Jan 23 22:32:20 BACKTEST [info] Setting transactiondate to 2011-04-15
+Jan 23 22:32:20 BACKTEST [info] Setting lastaction to None
+Jan 23 22:32:20 BACKTEST [info] Setting action to None
+Jan 23 22:32:20 BACKTEST [info] Setting transactiondate to 2011-04-18
+Jan 23 22:32:20 BACKTEST [info] Setting lastaction to None
+Jan 23 22:32:20 BACKTEST [info] Setting action to None
+Jan 23 22:32:20 BACKTEST [info] Setting transactiondate to 2011-04-19
+Jan 23 22:32:20 BACKTEST [info] Setting lastaction to None
+Jan 23 22:32:20 BACKTEST [info] Setting action to None
+Jan 23 22:32:20 BACKTEST [info] Setting transactiondate to 2011-04-20
+Jan 23 22:32:20 BACKTEST [info] Setting lastaction to None
+Jan 23 22:32:20 BACKTEST [info] Setting action to None
+Jan 23 22:32:20 BACKTEST [info] Setting transactiondate to 2011-04-21
+Jan 23 22:32:20 BACKTEST [info] Setting lastaction to None
+Jan 23 22:32:20 BACKTEST [info] Setting action to None
+Jan 23 22:32:20 BACKTEST [info] Setting transactiondate to 2011-04-25
+Jan 23 22:32:20 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:32:20 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:32:20 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:32:20 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 23 22:32:20 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:32:20 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:32:20 BACKTEST [info] Setting action to None
+Jan 23 22:32:20 BACKTEST [info] Setting transactiondate to 2011-04-26
+Jan 23 22:32:20 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:32:20 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:32:20 BACKTEST [info] Setting action to None
+Jan 23 22:32:20 BACKTEST [info] Setting lastaction to None
+Jan 23 22:32:20 BACKTEST [info] Setting action to None
+Jan 23 22:32:20 BACKTEST [info] Setting transactiondate to 2011-04-27
+Jan 23 22:32:20 BACKTEST [info] Setting lastaction to None
+Jan 23 22:32:20 BACKTEST [info] Setting action to None
+Jan 23 22:32:20 BACKTEST [info] Setting transactiondate to 2011-04-28
+Jan 23 22:32:20 BACKTEST [info] Setting lastaction to None
+Jan 23 22:32:20 BACKTEST [info] Setting action to None
+Jan 23 22:32:20 BACKTEST [info] Setting transactiondate to 2011-04-29
+Jan 23 22:32:20 BACKTEST [info] Setting lastaction to None
+Jan 23 22:32:20 BACKTEST [info] Setting action to None
+Jan 23 22:32:20 BACKTEST [info] Setting transactiondate to 2011-05-02
+Jan 23 22:32:21 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:32:21 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:32:21 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 23 22:32:21 BACKTEST [info] 3 candlesticks with a total of 248 for average 82.666666666667
+Jan 23 22:32:21 BACKTEST [info] Setting action to buystock1
+Jan 23 22:32:21 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:32:21 BACKTEST [info] Setting action to None
+Jan 23 22:32:21 BACKTEST [info] Setting transactiondate to 2011-05-03
+Jan 23 22:32:21 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:32:21 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:32:21 BACKTEST [info] Setting action to None
+Jan 23 22:32:21 BACKTEST [info] Setting lastaction to None
+Jan 23 22:32:21 BACKTEST [info] Setting action to None
+Jan 23 22:32:21 BACKTEST [info] Setting transactiondate to 2011-05-04
+Jan 23 22:32:21 BACKTEST [info] Setting lastaction to None
+Jan 23 22:32:21 BACKTEST [info] Setting action to None
+Jan 23 22:32:21 BACKTEST [info] Setting transactiondate to 2011-05-05
+Jan 23 22:32:21 BACKTEST [info] Setting lastaction to None
+Jan 23 22:32:21 BACKTEST [info] Setting action to None
+Jan 23 22:32:21 BACKTEST [info] Setting transactiondate to 2011-05-06
+Jan 23 22:32:21 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:32:21 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:32:21 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:32:21 BACKTEST [info] Setting action to buystock1
+Jan 23 22:32:21 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:32:21 BACKTEST [info] Setting action to None
+Jan 23 22:32:21 BACKTEST [info] Setting transactiondate to 2011-05-09
+Jan 23 22:32:21 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:32:21 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 23 22:32:21 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:32:21 BACKTEST [info] Setting action to buystock
+Jan 23 22:32:21 BACKTEST [info] Setting cash to 9016.7800292964
+Jan 23 22:32:21 BACKTEST [info] Dollars available 9016.7800292964
+Jan 23 22:32:21 BACKTEST [info] Dollars-cash, Book, Market, MaxPortfolioPct: 9016.7800292964:983.21997070312:1139.8800048828:0.1
+Jan 23 22:32:21 BACKTEST [info] Setting float to 999.99999999995
+Jan 23 22:32:21 BACKTEST [info] Setting dollars2invest to 999
+Jan 23 22:32:21 BACKTEST [info] Setting maxrisk to 0.01
+Jan 23 22:32:21 BACKTEST [info] Dollars, Book, Market, MaxRisk: 999:10156.660034179:9999.9999999995:0.01
+Jan 23 22:32:21 BACKTEST [info] Setting dollars2risk to 99
+Jan 23 22:32:21 BACKTEST [info] MoneyManagement Dollars avail: 999 with risk size: 99
+Jan 23 22:32:21 BACKTEST [info] Setting initialstopsize to 1.6426
+Jan 23 22:32:21 BACKTEST [info] Have $9016.7800292964 with which to buy shares
+Jan 23 22:32:21 BACKTEST [info] Shares for IBM on 2011-05-09 cost 169.08 H/L: 169.85:168.31
+Jan 23 22:32:21 BACKTEST [info] Setting share cost to 169.08
+Jan 23 22:32:21 BACKTEST [info] Purchase 5 units or risk on 60 shares
+Jan 23 22:32:21 BACKTEST [info] Setting number of shares to 5
+Jan 23 22:32:21 BACKTEST [notice] Buy stocks - Shares: 5 for $845.4
+Jan 23 22:33:26 BACKTEST [info] Setting buybookvalue to 1830.96
+Jan 23 22:33:26 BACKTEST [info] Setting Symbol Heat to 3
+Jan 23 22:33:26 BACKTEST [info] Setting Symbol Heat to 0.18027186041853
+Jan 23 22:33:26 BACKTEST [info] Setting lastaction to buystock
+Jan 23 22:33:26 BACKTEST [info] Setting action to None
+Jan 23 22:33:26 BACKTEST [info] Setting transactiondate to 2011-05-10
+Jan 23 22:33:26 BACKTEST [info] Setting lastaction to None
+Jan 23 22:33:26 BACKTEST [info] Setting action to None
+Jan 23 22:33:26 BACKTEST [info] Setting transactiondate to 2011-05-11
+Jan 23 22:33:26 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 23 22:33:26 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:33:26 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:33:26 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:33:26 BACKTEST [info] Setting action to None
+Jan 23 22:33:26 BACKTEST [info] Setting transactiondate to 2011-05-12
+Jan 23 22:33:26 BACKTEST [info] Setting lastaction to None
+Jan 23 22:33:26 BACKTEST [info] Setting action to None
+Jan 23 22:33:26 BACKTEST [info] Setting transactiondate to 2011-05-13
+Jan 23 22:33:26 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 23 22:33:26 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:33:26 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:33:26 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:33:26 BACKTEST [info] Setting action to None
+Jan 23 22:33:26 BACKTEST [info] Setting transactiondate to 2011-05-16
+Jan 23 22:33:26 BACKTEST [info] Setting lastaction to None
+Jan 23 22:33:26 BACKTEST [info] Setting action to None
+Jan 23 22:33:26 BACKTEST [info] Setting transactiondate to 2011-05-17
+Jan 23 22:33:26 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 23 22:33:26 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:33:26 BACKTEST [info] Setting action to buystock1
+Jan 23 22:33:26 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:33:26 BACKTEST [info] Setting action to None
+Jan 23 22:33:26 BACKTEST [info] Setting transactiondate to 2011-05-18
+Jan 23 22:33:26 BACKTEST [info] Setting lastaction to None
+Jan 23 22:33:26 BACKTEST [info] Setting action to None
+Jan 23 22:33:26 BACKTEST [info] Setting transactiondate to 2011-05-19
+Jan 23 22:33:26 BACKTEST [info] Setting lastaction to None
+Jan 23 22:33:26 BACKTEST [info] Setting action to None
+Jan 23 22:33:26 BACKTEST [info] Setting transactiondate to 2011-05-20
+Jan 23 22:33:26 BACKTEST [info] Setting lastaction to None
+Jan 23 22:33:26 BACKTEST [info] Setting action to None
+Jan 23 22:33:26 BACKTEST [info] Setting transactiondate to 2011-05-23
+Jan 23 22:33:27 BACKTEST [info] Setting lastaction to None
+Jan 23 22:33:27 BACKTEST [info] Setting action to None
+Jan 23 22:33:27 BACKTEST [info] Setting transactiondate to 2011-05-24
+Jan 23 22:33:27 BACKTEST [info] Setting lastaction to None
+Jan 23 22:33:27 BACKTEST [info] Setting action to None
+Jan 23 22:33:27 BACKTEST [info] Setting transactiondate to 2011-05-25
+Jan 23 22:33:27 BACKTEST [info] Candlestick Perfect_Doji has action Alert and VALUE  50
+Jan 23 22:33:27 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:33:27 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:33:27 BACKTEST [info] Candlestick Inverted_Hammer has action buystock and VALUE  99
+Jan 23 22:33:27 BACKTEST [info] 4 candlesticks with a total of 298 for average 74.5
+Jan 23 22:33:27 BACKTEST [info] Setting action to buystock1
+Jan 23 22:33:27 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:33:27 BACKTEST [info] Setting action to None
+Jan 23 22:33:27 BACKTEST [info] Setting transactiondate to 2011-05-26
+Jan 23 22:33:27 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:33:27 BACKTEST [info] Candlestick Hammer has action buystock and VALUE  99
+Jan 23 22:33:27 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:33:27 BACKTEST [info] Setting action to buystock
+Jan 23 22:33:27 BACKTEST [info] Setting cash to 8171.3800048824
+Jan 23 22:33:27 BACKTEST [info] Dollars available 8171.3800048824
+Jan 23 22:33:27 BACKTEST [info] Dollars-cash, Book, Market, MaxPortfolioPct: 8171.3800048824:1828.6199951172:2089.7800292969:0.1
+Jan 23 22:33:27 BACKTEST [info] Setting float to 999.99999999996
+Jan 23 22:33:27 BACKTEST [info] Setting dollars2invest to 999
+Jan 23 22:33:27 BACKTEST [info] Setting maxrisk to 0.01
+Jan 23 22:33:27 BACKTEST [info] Dollars, Book, Market, MaxRisk: 999:10261.160034179:9999.9999999996:0.01
+Jan 23 22:33:27 BACKTEST [info] Setting dollars2risk to 99
+Jan 23 22:33:27 BACKTEST [info] MoneyManagement Dollars avail: 999 with risk size: 99
+Jan 23 22:33:27 BACKTEST [info] Setting initialstopsize to 1.6908
+Jan 23 22:33:27 BACKTEST [info] Have $8171.3800048824 with which to buy shares
+Jan 23 22:33:27 BACKTEST [info] Shares for IBM on 2011-05-26 cost 166.7 H/L: 167.5:165.9
+Jan 23 22:33:27 BACKTEST [info] Setting share cost to 166.7
+Jan 23 22:33:27 BACKTEST [info] Purchase 5 units or risk on 58 shares
+Jan 23 22:33:27 BACKTEST [info] Setting number of shares to 5
+Jan 23 22:33:27 BACKTEST [notice] Buy stocks - Shares: 5 for $833.5
+Jan 23 22:34:31 BACKTEST [info] Setting buybookvalue to 2664.46
+Jan 23 22:34:31 BACKTEST [info] Setting Symbol Heat to 4
+Jan 23 22:34:31 BACKTEST [info] Setting Symbol Heat to 0.25966459845913
+Jan 23 22:34:31 BACKTEST [info] Setting lastaction to buystock
+Jan 23 22:34:31 BACKTEST [info] Setting action to None
+Jan 23 22:34:31 BACKTEST [info] Setting transactiondate to 2011-05-27
+Jan 23 22:34:31 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:31 BACKTEST [info] Setting action to None
+Jan 23 22:34:31 BACKTEST [info] Setting transactiondate to 2011-05-31
+Jan 23 22:34:31 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:31 BACKTEST [info] Setting action to None
+Jan 23 22:34:31 BACKTEST [info] Setting transactiondate to 2011-06-01
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-02
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-03
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-06
+Jan 23 22:34:32 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:34:32 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:34:32 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:34:32 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 23 22:34:32 BACKTEST [info] 4 candlesticks with a total of 102 for average 25.5
+Jan 23 22:34:32 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-07
+Jan 23 22:34:32 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:34:32 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-08
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-09
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-10
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-13
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-14
+Jan 23 22:34:32 BACKTEST [info] Candlestick Bullish_Harami has action buystock and VALUE  99
+Jan 23 22:34:32 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:34:32 BACKTEST [info] Setting action to buystock1
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-15
+Jan 23 22:34:32 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 23 22:34:32 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:34:32 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-16
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-17
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-20
+Jan 23 22:34:32 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:32 BACKTEST [info] Setting action to None
+Jan 23 22:34:32 BACKTEST [info] Setting transactiondate to 2011-06-21
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-06-22
+Jan 23 22:34:33 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:34:33 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:34:33 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:34:33 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 23 22:34:33 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-06-23
+Jan 23 22:34:33 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:34:33 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-06-24
+Jan 23 22:34:33 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 23 22:34:33 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:34:33 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-06-27
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-06-28
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-06-29
+Jan 23 22:34:33 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:34:33 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:34:33 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:34:33 BACKTEST [info] Candlestick Hanging_Man has action sellstock and VALUE  1
+Jan 23 22:34:33 BACKTEST [info] 4 candlesticks with a total of 102 for average 25.5
+Jan 23 22:34:33 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-06-30
+Jan 23 22:34:33 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:34:33 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 23 22:34:33 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:34:33 BACKTEST [info] Setting action to buystock1
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-07-01
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-07-05
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-07-06
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-07-07
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-07-08
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:33 BACKTEST [info] Setting transactiondate to 2011-07-11
+Jan 23 22:34:33 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:34:33 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:34:33 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:34:33 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 23 22:34:33 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:34:33 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:34:33 BACKTEST [info] Setting action to None
+Jan 23 22:34:34 BACKTEST [info] Setting transactiondate to 2011-07-12
+Jan 23 22:34:34 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:34:34 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:34:34 BACKTEST [info] Setting action to None
+Jan 23 22:34:34 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:34 BACKTEST [info] Setting action to None
+Jan 23 22:34:34 BACKTEST [info] Setting transactiondate to 2011-07-13
+Jan 23 22:34:34 BACKTEST [info] Setting lastaction to None
+Jan 23 22:34:34 BACKTEST [info] Setting action to None
+Jan 23 22:34:34 BACKTEST [info] Setting transactiondate to 2011-07-14
+Jan 23 22:34:34 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:34:34 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:34:34 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:34:34 BACKTEST [info] Setting action to buystock1
+Jan 23 22:34:34 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:34:34 BACKTEST [info] Setting action to None
+Jan 23 22:34:34 BACKTEST [info] Setting transactiondate to 2011-07-15
+Jan 23 22:34:34 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:34:34 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 23 22:34:34 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:34:34 BACKTEST [info] Setting action to buystock
+Jan 23 22:34:34 BACKTEST [info] Setting cash to 7337.8800048824
+Jan 23 22:34:34 BACKTEST [info] Dollars available 7337.8800048824
+Jan 23 22:34:34 BACKTEST [info] Dollars-cash, Book, Market, MaxPortfolioPct: 7337.8800048824:2662.1201171875:3039.6799316406:0.1
+Jan 23 22:34:34 BACKTEST [info] Setting float to 1000.000012207
+Jan 23 22:34:34 BACKTEST [info] Setting dollars2invest to 1000
+Jan 23 22:34:34 BACKTEST [info] Setting maxrisk to 0.01
+Jan 23 22:34:34 BACKTEST [info] Dollars, Book, Market, MaxRisk: 1000:10377.559936523:10000.00012207:0.01
+Jan 23 22:34:34 BACKTEST [info] Setting dollars2risk to 100
+Jan 23 22:34:34 BACKTEST [info] MoneyManagement Dollars avail: 1000 with risk size: 100
+Jan 23 22:34:34 BACKTEST [info] Setting initialstopsize to 1.667
+Jan 23 22:34:34 BACKTEST [info] Have $7337.8800048824 with which to buy shares
+Jan 23 22:34:34 BACKTEST [info] Shares for IBM on 2011-07-15 cost 175.005 H/L: 175.94:174.07
+Jan 23 22:34:34 BACKTEST [info] Setting share cost to 175.005
+Jan 23 22:34:34 BACKTEST [info] Purchase 5 units or risk on 59 shares
+Jan 23 22:34:34 BACKTEST [info] Setting number of shares to 5
+Jan 23 22:34:34 BACKTEST [notice] Buy stocks - Shares: 5 for $875.025
+Jan 23 22:35:38 BACKTEST [info] Setting buybookvalue to 3539.485
+Jan 23 22:35:38 BACKTEST [info] Setting Symbol Heat to 5
+Jan 23 22:35:38 BACKTEST [info] Setting Symbol Heat to 0.34107102456167
+Jan 23 22:35:38 BACKTEST [info] Setting lastaction to buystock
+Jan 23 22:35:38 BACKTEST [info] Setting action to None
+Jan 23 22:35:38 BACKTEST [info] Setting transactiondate to 2011-07-18
+Jan 23 22:35:38 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:38 BACKTEST [info] Setting action to None
+Jan 23 22:35:38 BACKTEST [info] Setting transactiondate to 2011-07-19
+Jan 23 22:35:38 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:38 BACKTEST [info] Setting action to None
+Jan 23 22:35:38 BACKTEST [info] Setting transactiondate to 2011-07-20
+Jan 23 22:35:38 BACKTEST [info] Candlestick Bearish_Harami has action sellstock and VALUE  1
+Jan 23 22:35:38 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:35:38 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:35:38 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:35:38 BACKTEST [info] Setting action to None
+Jan 23 22:35:38 BACKTEST [info] Setting transactiondate to 2011-07-21
+Jan 23 22:35:38 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 23 22:35:38 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:35:38 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:38 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:38 BACKTEST [info] Setting action to None
+Jan 23 22:35:38 BACKTEST [info] Setting transactiondate to 2011-07-22
+Jan 23 22:35:38 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:38 BACKTEST [info] Setting action to None
+Jan 23 22:35:38 BACKTEST [info] Setting transactiondate to 2011-07-25
+Jan 23 22:35:38 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 23 22:35:38 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:35:38 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:35:38 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:35:38 BACKTEST [info] Setting action to None
+Jan 23 22:35:38 BACKTEST [info] Setting transactiondate to 2011-07-26
+Jan 23 22:35:38 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:35:38 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:35:38 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:35:38 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:38 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:38 BACKTEST [info] Setting action to None
+Jan 23 22:35:38 BACKTEST [info] Setting transactiondate to 2011-07-27
+Jan 23 22:35:38 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:35:38 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:35:38 BACKTEST [info] Setting action to None
+Jan 23 22:35:38 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:38 BACKTEST [info] Setting action to None
+Jan 23 22:35:38 BACKTEST [info] Setting transactiondate to 2011-07-28
+Jan 23 22:35:38 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:38 BACKTEST [info] Setting action to None
+Jan 23 22:35:38 BACKTEST [info] Setting transactiondate to 2011-07-29
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-01
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-02
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-03
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-04
+Jan 23 22:35:39 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 23 22:35:39 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:35:39 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-05
+Jan 23 22:35:39 BACKTEST [info] Candlestick Bullish_Harami has action buystock and VALUE  99
+Jan 23 22:35:39 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:35:39 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-08
+Jan 23 22:35:39 BACKTEST [info] Candlestick Bearish_Kicker has action sellstock and VALUE  1
+Jan 23 22:35:39 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:35:39 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-09
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-10
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-11
+Jan 23 22:35:39 BACKTEST [info] Candlestick Bullish_Harami has action buystock and VALUE  99
+Jan 23 22:35:39 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:35:39 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-12
+Jan 23 22:35:39 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:35:39 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:35:39 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:35:39 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 23 22:35:39 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-15
+Jan 23 22:35:39 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:35:39 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 23 22:35:39 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:35:39 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-16
+Jan 23 22:35:39 BACKTEST [info] Candlestick Hanging_Man has action sellstock and VALUE  1
+Jan 23 22:35:39 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:35:39 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-17
+Jan 23 22:35:39 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:35:39 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:35:39 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:35:39 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:39 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:39 BACKTEST [info] Setting action to None
+Jan 23 22:35:39 BACKTEST [info] Setting transactiondate to 2011-08-18
+Jan 23 22:35:40 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:35:40 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-08-19
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-08-22
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-08-23
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-08-24
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-08-25
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-08-26
+Jan 23 22:35:40 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 23 22:35:40 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:35:40 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-08-29
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-08-30
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-08-31
+Jan 23 22:35:40 BACKTEST [info] Candlestick Bearish_Engulfing has action sellstock and VALUE  1
+Jan 23 22:35:40 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:35:40 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-09-01
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-09-02
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-09-06
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-09-07
+Jan 23 22:35:40 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:40 BACKTEST [info] Setting action to None
+Jan 23 22:35:40 BACKTEST [info] Setting transactiondate to 2011-09-08
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-09
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-12
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-13
+Jan 23 22:35:41 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:35:41 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:35:41 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:35:41 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 23 22:35:41 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-14
+Jan 23 22:35:41 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:35:41 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 23 22:35:41 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:35:41 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-15
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-16
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-19
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-20
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-21
+Jan 23 22:35:41 BACKTEST [info] Candlestick Bearish_Engulfing has action sellstock and VALUE  1
+Jan 23 22:35:41 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:35:41 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-22
+Jan 23 22:35:41 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:35:41 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:35:41 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:35:41 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-23
+Jan 23 22:35:41 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:35:41 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-26
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-27
+Jan 23 22:35:41 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:41 BACKTEST [info] Setting action to None
+Jan 23 22:35:41 BACKTEST [info] Setting transactiondate to 2011-09-28
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-09-29
+Jan 23 22:35:42 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:35:42 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:35:42 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:35:42 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-09-30
+Jan 23 22:35:42 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:35:42 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-10-03
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-10-04
+Jan 23 22:35:42 BACKTEST [info] Candlestick Bullish_Engulfing has action buystock and VALUE  99
+Jan 23 22:35:42 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:35:42 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-10-05
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-10-06
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-10-07
+Jan 23 22:35:42 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:35:42 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:35:42 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:35:42 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 23 22:35:42 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-10-10
+Jan 23 22:35:42 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:35:42 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-10-11
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-10-12
+Jan 23 22:35:42 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:35:42 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:35:42 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:35:42 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 23 22:35:42 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-10-13
+Jan 23 22:35:42 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:35:42 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-10-14
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-10-17
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:42 BACKTEST [info] Setting transactiondate to 2011-10-18
+Jan 23 22:35:42 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:42 BACKTEST [info] Setting action to None
+Jan 23 22:35:43 BACKTEST [info] Setting transactiondate to 2011-10-19
+Jan 23 22:35:43 BACKTEST [info] Candlestick Bearish_Engulfing has action sellstock and VALUE  1
+Jan 23 22:35:43 BACKTEST [info] 1 candlesticks with a total of 1 for average 1
+Jan 23 22:35:43 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:35:43 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:35:43 BACKTEST [info] Setting action to None
+Jan 23 22:35:43 BACKTEST [info] Setting transactiondate to 2011-10-20
+Jan 23 22:35:43 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:43 BACKTEST [info] Setting action to None
+Jan 23 22:35:43 BACKTEST [info] Setting transactiondate to 2011-10-21
+Jan 23 22:35:43 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 23 22:35:43 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:35:43 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:43 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:43 BACKTEST [info] Setting action to None
+Jan 23 22:35:43 BACKTEST [info] Setting transactiondate to 2011-10-24
+Jan 23 22:35:43 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:43 BACKTEST [info] Setting action to None
+Jan 23 22:35:43 BACKTEST [info] Setting transactiondate to 2011-10-25
+Jan 23 22:35:43 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:43 BACKTEST [info] Setting action to None
+Jan 23 22:35:43 BACKTEST [info] Setting transactiondate to 2011-10-26
+Jan 23 22:35:43 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:35:43 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:35:43 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 23 22:35:43 BACKTEST [info] 3 candlesticks with a total of 248 for average 82.666666666667
+Jan 23 22:35:43 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:43 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:43 BACKTEST [info] Setting action to None
+Jan 23 22:35:43 BACKTEST [info] Setting transactiondate to 2011-10-27
+Jan 23 22:35:43 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:35:43 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:35:43 BACKTEST [info] Setting action to None
+Jan 23 22:35:43 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:43 BACKTEST [info] Setting action to None
+Jan 23 22:35:43 BACKTEST [info] Setting transactiondate to 2011-10-28
+Jan 23 22:35:43 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:43 BACKTEST [info] Setting action to None
+Jan 23 22:35:43 BACKTEST [info] Setting transactiondate to 2011-10-31
+Jan 23 22:35:43 BACKTEST [info] Setting lastaction to None
+Jan 23 22:35:43 BACKTEST [info] Setting action to None
+Jan 23 22:35:43 BACKTEST [info] Setting transactiondate to 2011-11-01
+Jan 23 22:35:43 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:35:43 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:35:43 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:35:43 BACKTEST [info] Setting action to buystock1
+Jan 23 22:35:43 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:35:43 BACKTEST [info] Setting action to None
+Jan 23 22:35:43 BACKTEST [info] Setting transactiondate to 2011-11-02
+Jan 23 22:35:43 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:35:43 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:35:43 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:35:43 BACKTEST [info] 3 candlesticks with a total of 199 for average 66.333333333333
+Jan 23 22:35:43 BACKTEST [info] Setting action to buystock
+Jan 23 22:35:43 BACKTEST [info] Setting cash to 6462.8549804683
+Jan 23 22:35:43 BACKTEST [info] Dollars available 6462.8549804683
+Jan 23 22:35:43 BACKTEST [info] Dollars-cash, Book, Market, MaxPortfolioPct: 6462.8549804683:3537.1450195312:3989.5798339844:0.1
+Jan 23 22:35:43 BACKTEST [info] Setting float to 999.99999999995
+Jan 23 22:35:43 BACKTEST [info] Setting dollars2invest to 999
+Jan 23 22:35:43 BACKTEST [info] Setting maxrisk to 0.01
+Jan 23 22:35:43 BACKTEST [info] Dollars, Book, Market, MaxRisk: 999:10452.434814453:9999.9999999995:0.01
+Jan 23 22:35:43 BACKTEST [info] Setting dollars2risk to 99
+Jan 23 22:35:43 BACKTEST [info] MoneyManagement Dollars avail: 999 with risk size: 99
+Jan 23 22:35:43 BACKTEST [info] Setting initialstopsize to 1.75005
+Jan 23 22:35:43 BACKTEST [info] Have $6462.8549804683 with which to buy shares
+Jan 23 22:35:43 BACKTEST [info] Shares for IBM on 2011-11-02 cost 184.14 H/L: 185.25:183.03
+Jan 23 22:35:43 BACKTEST [info] Setting share cost to 184.14
+Jan 23 22:35:43 BACKTEST [info] Purchase 5 units or risk on 56 shares
+Jan 23 22:35:43 BACKTEST [info] Setting number of shares to 5
+Jan 23 22:35:43 BACKTEST [notice] Buy stocks - Shares: 5 for $920.7
+Jan 23 22:36:55 BACKTEST [info] Setting buybookvalue to 4460.185
+Jan 23 22:36:55 BACKTEST [info] Setting Symbol Heat to 6
+Jan 23 22:36:55 BACKTEST [info] Setting Symbol Heat to 0.42671253915239
+Jan 23 22:36:55 BACKTEST [info] Setting lastaction to buystock
+Jan 23 22:36:55 BACKTEST [info] Setting action to None
+Jan 23 22:36:55 BACKTEST [info] Setting transactiondate to 2011-11-03
+Jan 23 22:36:55 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:36:55 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 23 22:36:55 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:36:55 BACKTEST [info] Setting action to buystock1
+Jan 23 22:36:56 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:36:56 BACKTEST [info] Setting action to None
+Jan 23 22:36:56 BACKTEST [info] Setting transactiondate to 2011-11-04
+Jan 23 22:36:56 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:36:56 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:36:56 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:36:56 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 23 22:36:56 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:36:56 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:36:56 BACKTEST [info] Setting action to None
+Jan 23 22:36:56 BACKTEST [info] Setting transactiondate to 2011-11-07
+Jan 23 22:36:56 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:36:56 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:36:56 BACKTEST [info] Setting action to None
+Jan 23 22:36:56 BACKTEST [info] Setting lastaction to None
+Jan 23 22:36:56 BACKTEST [info] Setting action to None
+Jan 23 22:36:56 BACKTEST [info] Setting transactiondate to 2011-11-08
+Jan 23 22:36:56 BACKTEST [info] Candlestick Doji has action Alert and VALUE  50
+Jan 23 22:36:56 BACKTEST [info] Candlestick White_Doji has action sellstock and VALUE  1
+Jan 23 22:36:56 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:36:56 BACKTEST [info] 3 candlesticks with a total of 101 for average 33.666666666667
+Jan 23 22:36:56 BACKTEST [info] Setting action to sellstock1
+Jan 23 22:36:56 BACKTEST [info] Setting lastaction to sellstock1
+Jan 23 22:36:56 BACKTEST [info] Setting action to None
+Jan 23 22:36:56 BACKTEST [info] Setting transactiondate to 2011-11-09
+Jan 23 22:36:56 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:36:56 BACKTEST [info] 1 candlesticks with a total of 50 for average 50
+Jan 23 22:36:56 BACKTEST [info] Setting action to None
+Jan 23 22:36:56 BACKTEST [info] Setting lastaction to None
+Jan 23 22:36:56 BACKTEST [info] Setting action to None
+Jan 23 22:36:56 BACKTEST [info] Setting transactiondate to 2011-11-10
+Jan 23 22:36:56 BACKTEST [info] Candlestick Black_Doji has action buystock and VALUE  99
+Jan 23 22:36:56 BACKTEST [info] Candlestick Doji_Near has action Alert and VALUE  50
+Jan 23 22:36:56 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:36:56 BACKTEST [info] Setting action to buystock1
+Jan 23 22:36:56 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:36:56 BACKTEST [info] Setting action to None
+Jan 23 22:36:56 BACKTEST [info] Setting transactiondate to 2011-11-11
+Jan 23 22:36:56 BACKTEST [info] Candlestick Yesterday_Doji has action Alert and VALUE  50
+Jan 23 22:36:56 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 23 22:36:56 BACKTEST [info] 2 candlesticks with a total of 149 for average 74.5
+Jan 23 22:36:56 BACKTEST [info] Setting action to buystock
+Jan 23 22:36:56 BACKTEST [info] Setting cash to 5542.1549682613
+Jan 23 22:36:56 BACKTEST [info] Dollars available 5542.1549682613
+Jan 23 22:36:56 BACKTEST [info] Dollars-cash, Book, Market, MaxPortfolioPct: 5542.1549682613:4457.8452148438:4939.4799804688:0.1
+Jan 23 22:36:56 BACKTEST [info] Setting float to 1000.0000183105
+Jan 23 22:36:56 BACKTEST [info] Setting dollars2invest to 1000
+Jan 23 22:36:56 BACKTEST [info] Setting maxrisk to 0.01
+Jan 23 22:36:56 BACKTEST [info] Dollars, Book, Market, MaxRisk: 1000:10481.63494873:10000.000183105:0.01
+Jan 23 22:36:56 BACKTEST [info] Setting dollars2risk to 100
+Jan 23 22:36:56 BACKTEST [info] MoneyManagement Dollars avail: 1000 with risk size: 100
+Jan 23 22:36:56 BACKTEST [info] Setting initialstopsize to 1.8414
+Jan 23 22:36:56 BACKTEST [info] Have $5542.1549682613 with which to buy shares
+Jan 23 22:36:56 BACKTEST [info] Shares for IBM on 2011-11-11 cost 186.485 H/L: 187.83:185.14
+Jan 23 22:36:56 BACKTEST [info] Setting share cost to 186.485
+Jan 23 22:36:56 BACKTEST [info] Purchase 5 units or risk on 54 shares
+Jan 23 22:36:56 BACKTEST [info] Setting number of shares to 5
+Jan 23 22:36:56 BACKTEST [notice] Buy stocks - Shares: 5 for $932.425
+Jan 23 22:38:00 BACKTEST [info] Setting buybookvalue to 5392.61
+Jan 23 22:38:00 BACKTEST [info] Setting Symbol Heat to 7
+Jan 23 22:38:00 BACKTEST [info] Setting Symbol Heat to 0.51448176037206
+Jan 23 22:38:00 BACKTEST [info] Setting lastaction to buystock
+Jan 23 22:38:00 BACKTEST [info] Setting action to None
+Jan 23 22:38:00 BACKTEST [info] Setting transactiondate to 2011-11-14
+Jan 23 22:38:00 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:00 BACKTEST [info] Setting action to None
+Jan 23 22:38:00 BACKTEST [info] Setting transactiondate to 2011-11-15
+Jan 23 22:38:00 BACKTEST [info] Candlestick Bullish_Harami has action buystock and VALUE  99
+Jan 23 22:38:00 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:38:00 BACKTEST [info] Setting action to buystock1
+Jan 23 22:38:00 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:38:00 BACKTEST [info] Setting action to None
+Jan 23 22:38:00 BACKTEST [info] Setting transactiondate to 2011-11-16
+Jan 23 22:38:00 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:00 BACKTEST [info] Setting action to None
+Jan 23 22:38:00 BACKTEST [info] Setting transactiondate to 2011-11-17
+Jan 23 22:38:00 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:00 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-11-18
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-11-21
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-11-22
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-11-23
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-11-25
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-11-28
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-11-29
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-11-30
+Jan 23 22:38:01 BACKTEST [info] Candlestick Bullish_Kicker has action buystock and VALUE  99
+Jan 23 22:38:01 BACKTEST [info] 1 candlesticks with a total of 99 for average 99
+Jan 23 22:38:01 BACKTEST [info] Setting action to buystock1
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to buystock1
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-12-01
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-12-02
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-12-05
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-12-06
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-12-07
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-12-08
+Jan 23 22:38:01 BACKTEST [info] Setting lastaction to None
+Jan 23 22:38:01 BACKTEST [info] Setting action to None
+Jan 23 22:38:01 BACKTEST [info] Setting transactiondate to 2011-12-09
+Jan 23 22:38:01 BACKTEST [info] Shares for IBM on 2011-12-09 cost 193.635 H/L: 194.87:192.4
+Jan 23 22:38:01 BACKTEST [info] Setting share cost to 193.635
+Jan 23 22:38:01 BACKTEST [info] Resetting transaction stock symbol
+Jan 23 22:38:02 BACKTEST [info] ActionSellStock calculated shares # 31 for stock IBM
+Jan 23 22:38:02 BACKTEST [info] Setting number of shares to 31
+Jan 23 22:39:06 BACKTEST [notice] Sell stocks - Shares: 31 for $6002.685
+Jan 23 22:39:06 BACKTEST [info] Setting winratio to 2
+Jan 23 22:39:06 BACKTEST [info] Setting winsize to 612.415
+Jan 23 22:39:06 BACKTEST [info] Setting buybookvalue to 0
+Jan 23 22:39:06 BACKTEST [info] Setting endcash to 10612.415039062
+Jan 23 22:39:06 BACKTEST [info] Setting successratio to 1
+Jan 23 22:39:06 BACKTEST [info] Setting expectancy to 306.2075
+Jan 23 22:39:06 BACKTEST [notice] Ending cash available after selling stocks: $10612.415039062 for a yield of 1.0612415039062 with a success ratio of 1 and an expectancy of $306.2075 for each trade

@@ -1,0 +1,20 @@
+Mar 30 21:40:45 BACKTEST [info] Created logfile at 20160330214045
+Mar 30 21:40:45 BACKTEST [info] Setting cash to 10000.00
+Mar 30 21:40:45 BACKTEST [info] Setting startcash to 10000.00
+Mar 30 21:40:45 BACKTEST [info] Setting symbol to IBM
+Mar 30 21:40:45 BACKTEST [info] Setting transactiondate to 2011-01-02
+Mar 30 21:40:45 BACKTEST [info] Setting startdate to 2011-01-02
+Mar 30 21:40:45 BACKTEST [info] Setting enddate to 2011-12-25
+Mar 30 21:40:45 BACKTEST [info] Setting number of shares to 0
+Mar 30 21:40:45 BACKTEST [info] Setting share cost to 0
+Mar 30 21:40:45 BACKTEST [info] Setting buybookvalue to 0
+Mar 30 21:40:45 BACKTEST [info] Setting winratio to 0
+Mar 30 21:40:45 BACKTEST [info] Setting loseratio to 0
+Mar 30 21:40:45 BACKTEST [info] Setting winsize to 0
+Mar 30 21:40:45 BACKTEST [info] Setting losesize to 0
+Mar 30 21:40:45 BACKTEST [info] Setting Symbol Heat to 0
+Mar 30 21:40:45 BACKTEST [info] Setting expectancy to 0
+Mar 30 21:40:45 BACKTEST [info] Setting successratio to 0
+Mar 30 21:40:45 BACKTEST [info] Setting transactionsets to 0
+Mar 30 21:40:45 BACKTEST [info] Setting Symbol Heat to 1
+Mar 30 21:40:45 BACKTEST [info] Setting lastaction to 

@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `block`;
+CREATE TABLE `block` (, PRIMARY KEY ()) ENGINE=InnoDB;

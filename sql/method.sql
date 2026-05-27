@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `method`;
+CREATE TABLE `method` (, PRIMARY KEY ()) ENGINE=InnoDB;

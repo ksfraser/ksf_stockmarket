@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message` (, PRIMARY KEY ()) ENGINE=InnoDB;

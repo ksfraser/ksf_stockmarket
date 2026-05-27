@@ -1,0 +1,16 @@
+#Header line 	date 	day_close 	typicalprice 	movingaverage50 	movingaverage200 	candlestick 	expmovingaverage9 	expmovingaverage12 	expmovingaverage26 	macd 	momentumoscillator 	mamomentum 	macrossover 	macenterlinecrossover 	priceoscillator 	macd_histogram 	linearregression 	linearregressionangle 	linearregressionslope 	linearregressionintercept 	stochastic 	relativestrenghtindex 	rsioscillator 	commoditychannelindex 	pricechangepercent 	volume12 	volume26 	volume90 	support12 	support26 	resistance12 	resistance26 	bollingerbandmiddle 	bollingerbandupper 	bollingerbandlower 	bollingerpercentb 	bollingerbandwidth 	coefficientofvariation 	movingaverage260 	standarddeviation260 	annualreturn 	annualrisk 	truerange 	expmovingaverage90 	voltrendind90 	voltrendind26 	volume260 	voltrendind260
+POW	2010-08-09	0	0	0	0	Yesterday_D	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		1
+POW	2010-08-09	0	0	0	0	Hammer	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		2
+POW	2010-08-06	0	0	0	0	Yesterday_D	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		3
+POW	2010-08-06	0	0	0	0	Doji_Near	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		4
+POW	2010-08-06	0	0	0	0	Black_Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		5
+POW	2010-07-29	0	0	0	0	Yesterday_D	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		6
+POW	2010-07-28	0	0	0	0	Yesterday_D	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		7
+POW	2010-07-28	0	0	0	0	White_Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		8
+POW	2010-07-28	0	0	0	0	Hanging_Man	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		9
+POW	2010-07-28	0	0	0	0	Double_Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		10
+POW	2010-07-28	0	0	0	0	Doji_Near	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		11
+POW	2010-07-28	0	0	0	0	Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		12
+POW	2010-07-27	0	0	0	0	Doji_Near	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		13
+POW	2010-07-27	0	0	0	0	Bullish_Kic	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		14
+POW	2010-07-27	0	0	0	0	Black_Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		15

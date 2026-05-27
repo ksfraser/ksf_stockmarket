@@ -1,0 +1,71 @@
+http://www.prudenttradingsystems.com/sample.html
+
+
+Sample Trading System: The Four Week Rule
+
+Most market technicians will agree that the simplest technical market analysis rule is the Four Week Rule. The Four Week Rule (4WR) was originally developed for application to futures markets by Richard Donchian, and can be expressed as follows:
+
+Cover shorts and go long when the price exceeds the highs of the four preceding full calendar weeks and conversely liquidate longs and go short when the price falls below the lows of the four preceding full calendar weeks1.
+
+The rationality behind this rule is that the four week or 20-day trading cycle is a dominant cycle that influences all markets.
+
+Buy if the price exceeds the highs of the four preceding full calendar weeks and liquidate open positions when the price falls below the lows of the four preceding full calendar weeks.
+
+Let us formally define our modified mechanical system:
+
+ 1. Money management rule - Equal allocation rule
+Use $100,000 of capital into one hundred SP 100 stocks, allocating an equal amount of money into each stock ($1,000).
+ 2. Technical analysis rule - Buy
+Buy a stock if its closing price is higher than the high of last 20 trading days.
+ 3. Technical analysis rule - Sell
+Sell a stock if its close price is lower than the low of last 20 trading days
+ 4. Money management rule - Redistribute profits equally
+If the profit from the sale of a stock are greater than the initial allocation of capital to this stock, then that profit is equally distributed among all stocks which are in a potential Buy position.
+ 5. Money management rule - Earn interest on cash
+All cash on hand earns fix rate interest @ 5% per annum.
+ 6. Money management rule - Transaction costs
+A fixed transaction cost of $50 is applied to each transaction (this cost represents a fair average of commissions and slippage).
+
+The following performance statistics were measured for each case:
+ Average annual compounded return (R)
+ Sharpe Ratio (SR)
+ Return Retracement Ratio (RRR)
+ Maximum Loss (ML)
+
+
+Results:
+
+System 	Timeframe 	Money Allocation 	Days used for Buy/Sell Rules
+NS-20BS-EQ 	01/01/1984 - 01/01/1989 	Equal 	20
+ 
+  	System 	Index
+Average Annual Compounded Return 	7.58% 	9.00%
+Sharpe Ratio 	4.15% 	3.85%
+Return Retracement Ratio 	0.45 	0.34
+Maximum Loss 	0.36 	0.58
+
+After several cycles of testing and optimization the following modifications were made:
+
+ 1A. Money management rule - Proportional allocation rule
+Use $100,000 of capital into one hundred SP 100 stocks, allocating money into each stock ($1,000) according to its percentage participation in the index at the starting date of the testing period (01/01/1984).
+ 3B Money management Stop Loss Rule - Sell losing positions
+Sell a stock if it is losing more than y% of its buy price, where y is a system parameter
+
+
+Results:
+
+System 	Timeframe 	Money Allocation 	Days used for Buy/Sell Rules 	% Loss used in rule 3B
+NS-50B-P-S25 	01/01/1984 - 01/01/1989 	Proportional 	50 	25%
+ 
+  	System 	Index
+Average Annual Compounded Return 	14.78% 	9.00%
+Sharpe Ratio 	4.48% 	3.85%
+Return Retracement Ratio 	0.52 	0.34
+Maximum Loss 	0.64 	0.58
+
+The last system which is the result of several cycles of modifications to the initial 4WR outperforms 'SP100 Buy and Hold strategy' by a good margin. 
+
+
+Graphs:
+
+Below is a graph of the optimal Four Week Rule trading system: 

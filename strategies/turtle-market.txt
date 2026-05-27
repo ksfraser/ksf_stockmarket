@@ -1,0 +1,11 @@
+What market(s) to trade.
+Trading too few reduces your odds of getting ahead of a trend
+You also don't want to trade markets that have too low a volume.
+
+Trade only very liquid markets (stocks).  Trading in too small liquidity markets
+means that any large purchases by yourself drives the price a great deal but the price will 
+return to its norms, so you end up paying too much.  Same principle on the sell
+
+Also, trade markets consistently.  If you aren't going to trade oil company shares,
+then NEVER trade oil company shares.  Inconsistency hurts in the long run as you
+end up trading on emotion rather than on your system.

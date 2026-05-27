@@ -1,0 +1,15 @@
+#Header line 	date 	day_close 	typicalprice 	movingaverage50 	movingaverage200 	candlestick 	expmovingaverage9 	expmovingaverage12 	expmovingaverage26 	macd 	momentumoscillator 	mamomentum 	macrossover 	macenterlinecrossover 	priceoscillator 	macd_histogram 	linearregression 	linearregressionangle 	linearregressionslope 	linearregressionintercept 	stochastic 	relativestrenghtindex 	rsioscillator 	commoditychannelindex 	pricechangepercent 	volume12 	volume26 	volume90 	support12 	support26 	resistance12 	resistance26 	bollingerbandmiddle 	bollingerbandupper 	bollingerbandlower 	bollingerpercentb 	bollingerbandwidth 	coefficientofvariation 	movingaverage260 	standarddeviation260 	annualreturn 	annualrisk 	truerange 	expmovingaverage90 	voltrendind90 	voltrendind26 	volume260 	voltrendind260
+XOM	2010-08-13	0	0	0	0	White_Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		1
+XOM	2010-08-13	0	0	0	0	Inverted_Ha	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		2
+XOM	2010-08-13	0	0	0	0	Doji_Near	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		3
+XOM	2010-08-13	0	0	0	0	Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		4
+XOM	2010-08-13	0	0	0	0	Bearish_Har	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		5
+XOM	2010-08-11	0	0	0	0	Bearish_Kic	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		6
+XOM	2010-08-09	0	0	0	0	Yesterday_D	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		7
+XOM	2010-08-06	0	0	0	0	White_Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		8
+XOM	2010-08-06	0	0	0	0	Doji_Near	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		9
+XOM	2010-08-06	0	0	0	0	Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		10
+XOM	2010-08-04	0	0	0	0	Hanging_Man	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		11
+XOM	2010-08-02	0	0	0	0	Morning_Sta	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		12
+XOM	2010-08-02	0	0	0	0	Bullish_Kic	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		13
+XOM	2010-07-29	0	0	0	0	Bearish_Eng	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		14

@@ -1,0 +1,214 @@
+There is a common theme on different sites about strategies:
+
+Entry
+Money Management
+Exit
+
+
+Entry Considerations
+
+Your trade entry rules should address each of the following:
+
+    * trend
+
+    * liquidity
+
+    * volatility
+
+Let’s look at these in more detail.
+Trend
+
+The cornerstone of technical analysis is the trend. Remember ‘the trend is your friend’ and you always want to trade with it, not against it. I believe this to be the most critical component of any trade entry system. You need a way to measure the trend.
+
+There are many ways to identify trends, and as with most things in trading, there’s more than one way to skin a cat. The key is to have a method in place.One of my preferred methods for identifying trending securities is to find securities trading at their recent highs.That is to say, the highest high price must have been achieved in the past x number of days (where x is the variable depending on the timeframe you are trading). The longer the timeframe, typically the higher the variable.
+
+Example:
+
+If I were to trade a medium to longer term approach I might want the highest high price in the past 200 days to have occurred in the past 20 days.I use a charting package called MetaStock (covered in more detail in chapter 8).
+
+Using MetaStock, the formula would look like:
+HHVBars(H,200) < 20
+Liquidity
+
+Liquidity is an important determinant because you want to be trading securities that you can buy and sell quickly and without moving the market.You never want to be caught in a position where you want out but there’s no one to buy.
+
+With liquid instruments, such as the forex market that trades billions of dollars each day, trades are happening constantly, so your activity alone will not move the market. In short, avoid illiquid securities.
+
+Example:
+
+Depending on the size of your float, you might want the average daily trade volume to be greater than $400,000. This could be achieved by requiring that:
+
+The 21-day average of volume multiplied by the closing price be greater than $400,000.
+
+Using MetaStock the formula would look like:
+Mov(v,21,s)*C > 400000
+Volatility
+
+Volatility is simply a measurement of how much a security moves. Not whether it goes up or down, just how much it fluctuates.It is important to trade securities that move enough for you to make a profit. Of course you don’t want securities that are so volatile you can’t get to sleep at night.
+
+On the other hand, you don’t want something that moves at such a snail’s pace that it is not delivering the returns you are after.One of my favourite ways to identify volatility is using the ATR method,[1] which indicates how much a security will move, on average, over a certain period.
+
+Here’s how I might use this method. A $10 security might have moved fifty cents per day on average over the past 21 days. I can simply divide this value by the price of the security to calculate the average percentage movement of a security over the past 21 days. With this value, I can stipulate a minimum and maximum volatility value.
+
+Example:
+
+If I were a reasonably conservative trader I might want a security to trade between a band of 1.5–6%. That is to say, I want the ATR divided by the average closing price, over the past 21 days, to be greater than 1.5% and less than 6%.
+
+Using MetaStock, the formula would look like:
+ATR(21)/Mov(C,21,S)*100 > 1.5 and
+ATR(21)/Mov(C,21,S)*100 < 6
+
+Tip: A great place to start when researching your entry rules is to print out all the trading candidates you would have liked to have traded in the past. Next, mark on the charts themselves where you would have ideally liked to have entered. Finally, look for common characteristics among those entry points – these similarities can form the basis of your entry rules.
+Adapting a proven system
+
+If you’ve decided adapting a ready-made and tested system is best – I’ve done the hard work for you. I have hand-picked the best systems for your chosen market.These courses will not only educate you about the market you choose but they also provide you with the exact trade entry rules you need to include in your trading plan.
+
+Simply follow the link to your selected market.
+
+   1. Stocks – www.ultimate-trading-systems.com/stocks
+   2. Options – www.ultimate-trading-systems.com/options
+   3. Futures/commodities – www.ultimate-trading-systems.com/futures
+   4. Forex – www.ultimate-trading-systems.com/forex
+
+Documenting your entry
+
+Finally, as with everything we do, it’s important to document your new trade entry rules. As I’ve said, a good set of entry rules are simple, direct and leave no room for human judgement.Take the trade entry rules discovered through your own research or from your selected program and write out exactly how you will enter a position.This simple act of documentation puts you among the top 10% of traders.
+Actions
+
+   1. If you have decided to develop your own system from scratch, plan your entry criteria making sure to do an appropriate amount of back testing – documenting everything.
+   2. If you’re looking for a ready-made entry system to get you started, get yourself the system that corresponds to the market you have decided to trade in:
+
+
+
+************************************************************************************************************************************
+Money Management
+
+‘Risk management is the most important thing to be well understood. Undertrade, undertrade, undertrade is my second piece of advice.Whatever you think your position ought to be, cut it at least in half. ’-Bruce Kovner
+
+‘Never risk more than 1% of your total equity in any one trade. By risking 1%, I am indifferent to any individual trade. Keeping your risk small and constant is absolutely critical.’ –Larry Hite
+
+‘You have to minimize your losses and try to preserve capital for those very few instances where you can make a lot in a very short period of time. What you can’t afford to do is throw away your capital on suboptimal trades.’ –Richard Dennis
+
+Expectancy Is Calculated As:
+
+(% of wins x average win size) – (% of losses x average loss size)
+
+So in our example we can see that:
+
+(80% x $100) – (20% x $1000) or $80 – $200 = –$120
+
+A trading system with these metrics has what is known as a negative expectancy. Compare that with our second example where the system has a positive expectancy and you could lose 80% of the time, yet still be profitable.
+
+(20% x $1000) – (80% x $100) or $200 – $80 = +$120
+
+
+Trading float
+
+Determine how much money you set aside for trading. Remember, the more you trade with, the more you stand to win or lose.
+
+This decision needs to be based on your overall trading goals, while recognising your other financial commitments outside of trading. This was discussed in chapter 3.
+Maximum loss
+
+Determine the maximum amount of capital you are prepared to lose in one trade.
+
+Like the professional poker player I met, you might set your limit at 2%. In Market Wizard Larry Hite recommends not going beyond 1%. Other professional traders say 0.25%.  You need to find the sweet spot to match your trading float.
+Initial stops
+
+Set a predefined point at which you admit defeat and exit the trade.When you enter a position, you never know where you are in the trend. The trend might be in the middle of its run or at its end. That’s why you must set your initial stop.
+
+It’s like saying, ‘If a particular trade doesn’t do what I thought it would, I’m going to get out.’Generally, short-term traders will set their stops closer to the price, while longer term traders tend to give their trades a little more room to move.
+
+Note: by setting your stop losses too tight, you’ll decrease the reliability of your system because you’ll get stopped out more often. Plus, the more you’re in and out of trades, the higher your transaction costs.
+
+There are many ways to set initial stops, such as technicals, indicators, percentages and more.Whatever you choose, the important thing is to just have something in place. Sure, you can always drive through that red light, but you risk getting wiped out by a semi-trailer!
+Trade size
+
+After setting your initial stop, you need a method for calculating your position size so you never risk more than your predefined maximum loss.
+There is a simple formula for calculating this:
+
+maximum loss / initial stop size  = number of units to purchase.
+
+A basic but very powerful equation!
+
+
+Note: Risk and Money management rules should include:
+
+   1. defining your trading float
+   2. setting a maximum loss
+   3. setting you initial stops
+   4. calculating your trade sizes.
+
+
+
+NEVER TRADE MORE THAN x% OF YOUR PORTFOLIO IN ONE TRADE where x is customarily 10%.
+
+
+# How much capital do you place on each trade.
+# What is the heat of your trading.
+# Capital preservation v. capital appreciation.
+# When do you experience expectation of success.
+# When must you take a loss to avoid larger losses.
+# If you are on a losing streak do you trade the same.
+# How must you prepare if trading both long and short positions.
+# Does a portfolio of long and short allow one to trade more positions.
+# How is your trading adjusted with accumulated new profits.
+# How is volatility handled.
+# How do you prepare yourself psychologically.
+# Have you tested your bet sizing.
+
+	
+
+Placing a trade with a predetermined stop-loss point can be compared to placing a bet: The more money risked, the larger the bet. Conservative betting produces conservative performance, while bold betting leads to spectacular ruin. A bold trader placing large bets feels pressure — or heat — from the volatility of the portfolio. A hot portfolio keeps more at risk than does a cold one. Portfolio heat seems to be associated with personality preference; bold traders prefer and are able to take more heat, while more conservative traders generally avoid the circumstances that give rise to heat.
+
+In portfolio management, we call the distributed bet size the heat of the portfolio. A diversified portfolio risking 2% on each of five instrument & has a total heat of 10%, as does a portfolio risking 5% on each of two instruments.
+
+Our studies of heat show several factors, which are:
+
+1 Trading systems have an inherent optimal heat.
+
+2 Setting the heat level is far and away more important than fiddling with trade timing parameters.
+
+3 Many traders are unaware of both these factors.
+****************************************************************************************************************************************
+
+Exits
+
+Trailing stops
+
+So how do you know when to implement your trade exit plan? By using a trailing stop.
+
+In short, trailing stops are typically set in a very similar method to your initial stops, that is, based on technicals, indicators and/or percentages.The only real difference is the price at which you calculate.
+
+Your initial stop is calculated from your entry price whereas your trailing stop is calculated from the highest price since entry. In this way, this stop ‘trails’ price… as price moves up, so too does your stop.
+
+Trailing stops will allow you to ride the trend for longer, while locking in profits should the trend reach its end.The trick is to find the balance between giving your trade enough room to move, while also having the stop tight enough to not give back too much profit.
+
+Again, to echo what was said in the previous chapter: Generally, short-term traders will set their stops closer to the price, while longer term traders tend to give their trades a little more room to move.
+My preferred stop
+
+Despite the fact I always say it doesn’t matter so much what you choose – the important thing is just to have something in place, I’m still often asked what method I use for setting my stops.
+
+I personally like a stop I call the ‘LL stop’.
+
+The LL stop looks for the lowest low (LL) in the past x number of periods, where x is set based on the style of the system I’m trading. I then set my stop one to two points below this point.For example, here’s how I define this in one of my short–medium-term trading systems.
+
+My initial stop is set to be the lowest low (in price) over the past 21 days. As the trade progresses and my trailing stop kicks in, I look for the lowest low in the past 21 days as calculated from the current price.
+
+It’s a great little method, since I find it not only respects a security’s volatility (setting the stop wider or tighter based on price action) but it also has a great knack for finding support lines and setting your stops one to two points below.
+Setting your exits
+
+Think of setting your trade exits as an ejector seat when things go wrong and a seatbelt to strap you in when things go right. As with entry conditions, exits should be precisely defined and 100% mechanical, with no room for emotional intervention.
+
+Part of becoming an experienced trader is not only learning the markets and developing a discipline for sticking to your strategy, but also preparing yourself to take a loss.
+
+Once you start trading, you will learn to not get so attached to individual trades – not to sweat the small stuff. You will be better able to see the big picture and see how small losses are a real and unavoidable part of any successful trader’s system.
+
+You are now ready to document your trade exit rules. By documenting your trade exit rules you have just put yourself among the top 1% of traders.
+Action
+
+   1. Using both Trading Secrets Revealed and the package containing your entry signals, your next task is to document your trailing stop rules.
+
+
+Drawdown Stop
+If the price drops X percent (ie 10%) from the recent high since purchase, sell.
+

@@ -1,0 +1,27 @@
+set terminal png medium size 800,900
+set output "GRMN.turtledata.png"
+set format x "%m-%d"
+set xdata time
+set timefmt "%Y-%m-%d"
+set style fill empty
+set ylabel "Dollars"
+set multiplot
+set title "GRMN Breakout prices"
+set origin 0,0
+set size 1,0.24
+plot "turtle_GRMN.data" using 2:5 with linespoints title "Breakout High 20" , "turtle_GRMN.data" using 2:6 with linespoints title "Breakout Low 20" , "turtle_GRMN.data" using 2:7 with linespoints title "Breakout High 55" , "turtle_GRMN.data" using 2:8 with linespoints title "Breakout Low 55" 
+unset title
+set title "GRMN Prices, Lows, Highs"
+set origin 0,0.25
+set size 1,0.24
+plot "turtle_GRMN.data" using 2:9 with linespoints title "10 Day Low" , "turtle_GRMN.data" using 2:10 with linespoints title "10 Day High" , "turtle_GRMN.data" using 2:11 with linespoints title "20 Day Low" , "turtle_GRMN.data" using 2:12 with linespoints title "20 Day High"  
+unset title
+set title "GRMN Action Price "
+set origin 0,0.5
+set size 1,0.24
+plot "turtle_GRMN.data" using 2:15 with linespoints title "Position Add" , "turtle_GRMN.data" using 2:16 with linespoints title "Sell All Price"  
+unset title
+set title "GRMN Ranges"
+set origin 0,0.75
+set size 1,0.24
+plot "turtle_GRMN.data" using 2:13 with linespoints title "True Range" , "turtle_GRMN.data" using 2:3 with linespoints title "Volatility"  

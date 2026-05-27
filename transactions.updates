@@ -1,0 +1,13 @@
+delete FROM finance.`transaction` where transactiontype like 'CASH %';
+insert into finance.transaction (username, stocksymbol, dollar, transactiontype, account, transactiondate, currency, foreigncurrency)
+select username, 'CASH', dollar, 'CASH USED FOR PURCHASE', account, transactiondate, currency, foreigncurrency from finance.transaction where transactiontype = 'BUY';
+
+insert into finance.transaction (username, stocksymbol, dollar, transactiontype, account, transactiondate, currency, foreigncurrency)
+select username, 'CASH', dollar, 'CASH RECEIVED FROM SALE', account, transactiondate, currency, foreigncurrency from finance.transaction where transactiontype = 'SELL';
+
+insert into finance.transaction (username, stocksymbol, dollar, transactiontype, account, transactiondate, currency, foreigncurrency)
+select username, 'CASH', dollar, 'CASH FROM DIVIDEND', account, transactiondate, currency, foreigncurrency from finance.transaction where transactiontype = 'DIVIDEND';
+
+insert into finance.transaction (username, stocksymbol, dollar, transactiontype, account, transactiondate, currency, foreigncurrency) (select username, 'CASH', dollar, 'CURRENCY EXCHANGE BUY', account, transactiondate, currency, foreigncurrency from finance.transaction where transactiontype = 'CURRENCY EXCHANGE BUY');
+insert into finance.transaction (username, stocksymbol, dollar, transactiontype, account, transactiondate, currency, foreigncurrency) (select username, 'CASH', dollar, 'CURRENCY EXCHANGE SELL', account, transactiondate, currency, foreigncurrency from finance.transaction where transactiontype = 'CURRENCY EXCHANGE SELL');
+

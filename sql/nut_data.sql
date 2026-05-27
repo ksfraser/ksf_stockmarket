@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `nut_data`;
+CREATE TABLE `nut_data` (, PRIMARY KEY ()) ENGINE=InnoDB;

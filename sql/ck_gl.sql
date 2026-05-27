@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_gl`;
+CREATE TABLE `ck_gl` (, PRIMARY KEY ()) ENGINE=InnoDB;

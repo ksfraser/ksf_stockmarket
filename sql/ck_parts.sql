@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_parts`;
+CREATE TABLE `ck_parts` (, PRIMARY KEY ()) ENGINE=InnoDB;

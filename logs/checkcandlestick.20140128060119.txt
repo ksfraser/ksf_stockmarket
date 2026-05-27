@@ -1,0 +1,2 @@
+Latest date in stockprices: 
+Count of dates: 0

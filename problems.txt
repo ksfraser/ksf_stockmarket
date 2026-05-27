@@ -1,0 +1,3 @@
+sumevalfinancial runs out of memory
+calculateevalmarket unknown f.depreciation in field list
+fixportfolio line 46 foreach unknown

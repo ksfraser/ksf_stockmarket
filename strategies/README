@@ -1,0 +1,19 @@
+
+
+This is an inference engine set of rules.
+
+A strategy will be something like:
+	Buy a stock when the following conditions are met:
+		A
+		B
+		C
+	Sell a stock when the following conditions are met:
+		D
+		E
+	Short a stock when the following conditions are met:
+		F
+		G
+	Cover a short when the following conditions are met:
+		H
+		I
+		J

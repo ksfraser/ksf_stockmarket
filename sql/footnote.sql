@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `footnote`;
+CREATE TABLE `footnote` (, PRIMARY KEY ()) ENGINE=InnoDB;

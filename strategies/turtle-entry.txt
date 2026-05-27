@@ -1,0 +1,32 @@
+Entry is deciding when to get into the trade
+
+The turtles used a very simple system:
+they traded either 1, 2, or 50% 1 + 50% 2:
+1 - 20 day breakout
+2 - 55 day breakout.
+
+BREAKOUT:
+The price exceeding the high or low of a particular number of days.  Thus the 20 day breakout is when the price is now higher than the HIGH of the last 20 days.
+
+When the price exceeded the breakout by 1 tick, they bought 1 unit.  Similarily when the price fell 1 tick below the low, they sold 1 unit.
+
+System 1
+
+For the 20 day system, the signal was ignored if the last breakout would have resulted in a winning trade (appears they had a fixed 10 day sale).  It didn't matter if the previous breakout was taken or skipped, nor the direction of the breakout.  The breakout was considered a LOSING trade if it moved 2N against the position before the 10 day exit.  Because of this skip, the *fallback* breakout point is now the 55 day, for this 1 time only to ensure a major move isn't missed out on.
+
+If you are out of the market, there will always be a price which triggers a short and another higher price which triggers a long.  If the breakout was a loser, the entry would be closer to the current price (i.e. 20 day) then had it been a winner in which case the entry signal was farther away (i.e. 55 day).
+
+System 2
+
+If a 55 day breakout occurs, take the appropriate buy/sell action.
+
+ADDING TO A POSITION
+If the price moves 1/2N past the breakout, add a unit.  This 1/2N interval is based upon the fill price of the previous order.  If the price slips 1/2N, then the new fill price is 1N above the breakout price. This continues up to the Unit Maximum rule.
+
+i.e.
+N = 2.50
+55 day breakout = 310
+
+1st	2nd	3rd	4th
+310	311.25	312.5	313.75
+

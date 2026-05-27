@@ -1,0 +1,48 @@
+BODY {
+	FONT-SIZE: 8pt; FONT-FAMILY: Verdana, sans-serif
+}
+TD {
+	FONT-SIZE: 8pt; FONT-FAMILY: Verdana, sans-serif
+}
+TD.label {
+	FONT-SIZE: 8pt; BACKGROUND: #ccccff; FONT-STYLE: normal; FONT-FAMILY: Verdana, sans-serif
+}
+TD.label2 {
+	FONT-SIZE: 8pt; BACKGROUND: #eeeeee; FONT-STYLE: normal; FONT-FAMILY: Verdana, sans-serif
+}
+TD.values {
+	FONT-SIZE: 8pt; FONT-STYLE: normal; FONT-FAMILY: Verdana, sans-serif
+}
+.header {
+	FONT-WEIGHT: normal; FONT-SIZE: 10pt; COLOR: white; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; LETTER-SPACING: 1px
+}
+.bodymaintexthuge {
+	FONT-WEIGHT: bold; FONT-SIZE: 12pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+.bodymaintextbig {
+	FONT-WEIGHT: bold; FONT-SIZE: 10pt; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+.bodymaintext {
+	FONT-SIZE: 8pt; COLOR: black; FONT-FAMILY: Verdana, sans-serif
+}
+.bodymaintextsm {
+	FONT-SIZE: 8pt; COLOR: black; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+.formtext {
+	FONT-SIZE: 8pt; COLOR: black; FONT-FAMILY: Verdana, sans-serif
+}
+.links-yellow {
+	FONT-SIZE: 9pt; COLOR: #ffcc33; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+.links-blue {
+	COLOR: #336699; TEXT-DECORATION: underline
+}
+A {
+	COLOR: #336699; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #339966; TEXT-DECORATION: underline
+}
+.NormalRow {
+	BACKGROUND-COLOR: #ffffff
+}

@@ -1,0 +1,1599 @@
+Started run
+
+STARTING download of newest data
+If Symbol AAPL, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading AAPL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AAPL&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AAPL.2010048-20100416.csv
+
+Wrote 316 characters
+If Symbol ABD, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ABD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ABD&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ABD.2010048-20100416.csv
+
+Wrote 256 characters
+If Symbol ABT, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ABT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ABT&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ABT.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol ABX, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ABX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ABX.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ABX.TO.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol ADM, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ADM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ADM&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ADM.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol ADRE, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ADRE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ADRE&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ADRE.2010048-20100416.csv
+
+Wrote 277 characters
+If Symbol AEM, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading AEM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AEM&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AEM.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol AGU, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading AGU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AGU.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AGU.TO.2010048-20100416.csv
+
+Wrote 283 characters
+If Symbol AMZN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading AMZN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AMZN&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AMZN.2010048-20100416.csv
+
+Wrote 311 characters
+If Symbol APF-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading APF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=APF-UN.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/APF-UN.TO.2010048-20100416.csv
+
+Wrote 254 characters
+If Symbol AU, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading AU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AU&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AU.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol AUY, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading AUY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AUY&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AUY.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol AW-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading AW-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AW-UN.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AW-UN.TO.2010048-20100416.csv
+
+Wrote 274 characters
+If Symbol AZZ, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading AZZ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=AZZ&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/AZZ.2010048-20100416.csv
+
+Wrote 278 characters
+If Symbol BBBY, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BBBY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BBBY&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BBBY.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol BCE, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BCE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BCE.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BCE.TO.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol BDX, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BDX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BDX&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BDX.2010048-20100416.csv
+
+Wrote 283 characters
+If Symbol BEAV, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BEAV
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BEAV&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BEAV.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol BEXP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BEXP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BEXP&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BEXP.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol BF-B, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BF-B
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BF-B&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BF-B.2010048-20100416.csv
+
+Wrote 280 characters
+If Symbol BHP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BHP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BHP&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BHP.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol BLD, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BLD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BLD.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BLD.TO.2010049-20100416.csv
+
+Wrote 210 characters
+If Symbol BMO, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BMO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BMO.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BMO.TO.2010049-20100416.csv
+
+Wrote 236 characters
+If Symbol BMR, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BMR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BMR&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BMR.2010048-20100416.csv
+
+Wrote 284 characters
+If Symbol BNI, Year 2010 Month 2 less than or equal to 2010 04.  Download!
+Downloading BNI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BNI&a=1&b=13&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BNI.2010212-20100416.csv
+
+Wrote 0 characters
+If Symbol BNS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BNS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BNS.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BNS.TO.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol BPF-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BPF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BPF-UN.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BPF-UN.TO.2010048-20100416.csv
+
+Wrote 276 characters
+If Symbol BPO, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BPO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BPO.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BPO.TO.2010048-20100416.csv
+
+Wrote 281 characters
+If Symbol BQI, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BQI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BQI&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BQI.2010049-20100416.csv
+
+Wrote 217 characters
+If Symbol BR-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BR-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BR-UN.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BR-UN.TO.2010048-20100416.csv
+
+Wrote 268 characters
+If Symbol BYDDF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading BYDDF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=BYDDF.PK&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/BYDDF.PK.2010048-20100416.csv
+
+Wrote 266 characters
+If Symbol CAKE, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CAKE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CAKE&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CAKE.2010049-20100416.csv
+
+Wrote 234 characters
+If Symbol CAT, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CAT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CAT&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CAT.2010049-20100416.csv
+
+Wrote 238 characters
+If Symbol CB, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CB&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CB.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol CCJ, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CCJ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CCJ&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CCJ.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol CCL, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CCL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CCL&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CCL.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol CDH, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CDH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CDH.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CDH.TO.2010049-20100416.csv
+
+Wrote 214 characters
+If Symbol CDZ, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CDZ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CDZ.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CDZ.TO.2010048-20100416.csv
+
+Wrote 276 characters
+If Symbol CEO, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CEO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CEO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CEO.2010049-20100416.csv
+
+Wrote 253 characters
+If Symbol CF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CF&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CF.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol CGCA, Year 2009 Month 11 less than or equal to 2010 04.  Download!
+Downloading CGCA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CGCA&a=10&b=6&c=2009&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CGCA.2009115-20100416.csv
+
+Wrote 0 characters
+If Symbol CHK, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CHK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CHK&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CHK.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol CINF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CINF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CINF&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CINF.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol CKI, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CKI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CKI.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CKI.TO.2010048-20100416.csv
+
+Wrote 285 characters
+If Symbol CL, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CL&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CL.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol CLC-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CLC-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLC-UN.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CLC-UN.TO.2010048-20100416.csv
+
+Wrote 280 characters
+If Symbol CLL, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CLL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLL.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CLL.TO.2010049-20100416.csv
+
+Wrote 217 characters
+If Symbol CLS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CLS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLS.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CLS.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol CLX, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CLX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CLX&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CLX.2010049-20100416.csv
+
+Wrote 235 characters
+If Symbol CM, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CM.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CM.TO.2010048-20100416.csv
+
+Wrote 284 characters
+If Symbol CNQ, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CNQ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CNQ.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CNQ.TO.2010048-20100416.csv
+
+Wrote 284 characters
+If Symbol CNR, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CNR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CNR.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CNR.TO.2010048-20100416.csv
+
+Wrote 282 characters
+If Symbol COF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading COF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COF&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/COF.2010049-20100416.csv
+
+Wrote 287 characters
+If Symbol COH, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading COH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COH&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/COH.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol COMP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading COMP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COMP&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/COMP.2010048-20100416.csv
+
+Wrote 316 characters
+If Symbol COP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading COP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=COP&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/COP.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol CP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CP.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CP.TO.2010048-20100416.csv
+
+Wrote 281 characters
+If Symbol CPG, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CPG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CPG.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CPG.TO.2010048-20100416.csv
+
+Wrote 282 characters
+If Symbol CSCO, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CSCO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CSCO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CSCO.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol CSS-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CSS-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CSS-UN.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CSS-UN.TO.2010049-20100416.csv
+
+Wrote 208 characters
+If Symbol CTAS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CTAS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CTAS&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CTAS.2010049-20100416.csv
+
+Wrote 284 characters
+If Symbol CTRP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CTRP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CTRP&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CTRP.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol CU, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CU.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CU.TO.2010049-20100416.csv
+
+Wrote 232 characters
+If Symbol CWI-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading CWI-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=CWI-UN.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/CWI-UN.TO.2010048-20100416.csv
+
+Wrote 251 characters
+If Symbol DGW, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading DGW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DGW&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/DGW.2010048-20100416.csv
+
+Wrote 280 characters
+If Symbol DIS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading DIS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DIS&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/DIS.2010049-20100416.csv
+
+Wrote 289 characters
+If Symbol DMF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading DMF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DMF&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/DMF.2010048-20100416.csv
+
+Wrote 293 characters
+If Symbol DOV, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading DOV
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DOV&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/DOV.2010048-20100416.csv
+
+Wrote 331 characters
+If Symbol DUK, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading DUK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=DUK&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/DUK.2010049-20100416.csv
+
+Wrote 287 characters
+If Symbol EBAY, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading EBAY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EBAY&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EBAY.2010049-20100416.csv
+
+Wrote 290 characters
+If Symbol ECA, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ECA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ECA.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ECA.TO.2010048-20100416.csv
+
+Wrote 286 characters
+If Symbol ED, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ED
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ED&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ED.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol EDU, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading EDU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EDU&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EDU.2010049-20100416.csv
+
+Wrote 232 characters
+If Symbol EIT-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading EIT-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EIT-UN.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EIT-UN.TO.2010048-20100416.csv
+
+Wrote 281 characters
+If Symbol ELON, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ELON
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ELON&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ELON.2010049-20100416.csv
+
+Wrote 212 characters
+If Symbol EMR, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading EMR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EMR&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EMR.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol ENB, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ENB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ENB.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ENB.TO.2010049-20100416.csv
+
+Wrote 282 characters
+If Symbol ERF-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ERF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ERF-UN.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ERF-UN.TO.2010048-20100416.csv
+
+Wrote 281 characters
+If Symbol ESI, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ESI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ESI.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ESI.TO.2010048-20100416.csv
+
+Wrote 281 characters
+If Symbol EVEP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading EVEP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EVEP&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EVEP.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol EWX, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading EWX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EWX&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EWX.2010049-20100416.csv
+
+Wrote 230 characters
+If Symbol EWZ, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading EWZ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=EWZ&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/EWZ.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol F, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading F
+URL:  http://ichart.finance.yahoo.com/table.csv?s=F&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/F.2010049-20100416.csv
+
+Wrote 294 characters
+If Symbol FCR, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading FCR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FCR.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FCR.TO.2010048-20100416.csv
+
+Wrote 276 characters
+If Symbol FDI, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading FDI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FDI&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FDI.2010048-20100416.csv
+
+Wrote 322 characters
+If Symbol FES, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading FES
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FES.TO&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FES.TO.2010048-20100416.csv
+
+Wrote 277 characters
+If Symbol FFDF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading FFDF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FFDF&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FFDF.2010049-20100416.csv
+
+Wrote 223 characters
+If Symbol FNV, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading FNV
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FNV.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FNV.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol FRZNF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading FRZNF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FRZNF.PK&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FRZNF.PK.2010049-20100416.csv
+
+Wrote 266 characters
+If Symbol FTS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading FTS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FTS.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FTS.TO.2010049-20100416.csv
+
+Wrote 281 characters
+If Symbol FWLT, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading FWLT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FWLT&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FWLT.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol FXY, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading FXY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=FXY&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/FXY.2010049-20100416.csv
+
+Wrote 252 characters
+If Symbol GE, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading GE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GE&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GE.2010049-20100416.csv
+
+Wrote 293 characters
+If Symbol GIS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading GIS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GIS&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GIS.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol GLD, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading GLD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GLD&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GLD.2010049-20100416.csv
+
+Wrote 316 characters
+If Symbol GLS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading GLS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GLS&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GLS.2010049-20100416.csv
+
+Wrote 221 characters
+If Symbol GLW, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading GLW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GLW&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GLW.2010049-20100416.csv
+
+Wrote 288 characters
+If Symbol GOOG, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading GOOG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GOOG&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GOOG.2010049-20100416.csv
+
+Wrote 312 characters
+If Symbol GPS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading GPS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GPS&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GPS.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol GPW, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading GPW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GPW&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GPW.2010049-20100416.csv
+
+Wrote 227 characters
+If Symbol GRMN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading GRMN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GRMN&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GRMN.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol GRZ, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading GRZ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GRZ&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GRZ.2010049-20100416.csv
+
+Wrote 251 characters
+If Symbol GSH, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading GSH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GSH&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GSH.2010049-20100416.csv
+
+Wrote 276 characters
+If Symbol GWO, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading GWO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=GWO.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/GWO.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol HBNC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading HBNC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HBNC&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HBNC.2010049-20100416.csv
+
+Wrote 223 characters
+If Symbol HCBK, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading HCBK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HCBK&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HCBK.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol HCG, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading HCG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HCG.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HCG.TO.2010049-20100416.csv
+
+Wrote 229 characters
+If Symbol HD, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading HD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HD&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HD.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol HL, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading HL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HL&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HL.2010049-20100416.csv
+
+Wrote 264 characters
+If Symbol HMIN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading HMIN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HMIN&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HMIN.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol HOU, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading HOU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HOU.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HOU.TO.2010049-20100416.csv
+
+Wrote 226 characters
+If Symbol HR-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading HR-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HR-UN.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HR-UN.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol HSE, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading HSE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HSE.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HSE.TO.2010049-20100416.csv
+
+Wrote 234 characters
+If Symbol HTE-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading HTE-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HTE-UN.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HTE-UN.TO.2010049-20100416.csv
+
+Wrote 201 characters
+If Symbol HTLD, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading HTLD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=HTLD&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/HTLD.2010049-20100416.csv
+
+Wrote 235 characters
+If Symbol IAG, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading IAG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IAG.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IAG.TO.2010049-20100416.csv
+
+Wrote 280 characters
+If Symbol IBM, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading IBM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IBM&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IBM.2010049-20100416.csv
+
+Wrote 311 characters
+If Symbol ICB, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ICB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ICB&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ICB.2010049-20100416.csv
+
+Wrote 276 characters
+If Symbol IGM, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading IGM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IGM.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IGM.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol ILF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ILF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ILF&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ILF.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol IMMR, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading IMMR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IMMR&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IMMR.2010049-20100416.csv
+
+Wrote 212 characters
+If Symbol IMO, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading IMO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IMO.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IMO.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol INN-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading INN-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INN-UN.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/INN-UN.TO.2010049-20100416.csv
+
+Wrote 213 characters
+If Symbol INPH, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading INPH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INPH&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/INPH.2010049-20100416.csv
+
+Wrote 248 characters
+If Symbol INSM, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading INSM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INSM&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/INSM.2010049-20100416.csv
+
+Wrote 215 characters
+If Symbol INTC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading INTC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=INTC&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/INTC.2010049-20100416.csv
+
+Wrote 295 characters
+If Symbol IRC, Year 2010 Month 2 less than or equal to 2010 04.  Download!
+Downloading IRC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IRC.TO&a=1&b=26&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IRC.TO.2010225-20100416.csv
+
+Wrote 0 characters
+If Symbol IRG, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading IRG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IRG.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IRG.TO.2010049-20100416.csv
+
+Wrote 208 characters
+If Symbol ISH, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ISH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ISH&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ISH.2010049-20100416.csv
+
+Wrote 274 characters
+If Symbol ISIS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ISIS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ISIS&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ISIS.2010049-20100416.csv
+
+Wrote 283 characters
+If Symbol IWM, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading IWM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IWM&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IWM.2010049-20100416.csv
+
+Wrote 241 characters
+If Symbol IXC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading IXC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IXC&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IXC.2010049-20100416.csv
+
+Wrote 279 characters
+If Symbol IYF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading IYF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=IYF&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/IYF.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol JCP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading JCP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=JCP&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/JCP.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol JNJ, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading JNJ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=JNJ&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/JNJ.2010049-20100416.csv
+
+Wrote 289 characters
+If Symbol K, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading K
+URL:  http://ichart.finance.yahoo.com/table.csv?s=K.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/K.TO.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol KEG-UN, Year 2007 Month 9 less than or equal to 2010 04.  Download!
+Downloading KEG-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KEG-UN.TO&a=8&b=25&c=2007&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/KEG-UN.TO.2007924-20100416.csv
+
+Wrote 0 characters
+If Symbol KEY, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading KEY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KEY&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/KEY.2010049-20100416.csv
+
+Wrote 266 characters
+If Symbol KEY-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading KEY-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KEY-UN.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/KEY-UN.TO.2010049-20100416.csv
+
+Wrote 232 characters
+If Symbol KFT, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading KFT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KFT&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/KFT.2010049-20100416.csv
+
+Wrote 239 characters
+If Symbol KMB, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading KMB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KMB&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/KMB.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol KO, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading KO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/KO.2010049-20100416.csv
+
+Wrote 288 characters
+If Symbol KOL, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading KOL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=KOL&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/KOL.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol L, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading L
+URL:  http://ichart.finance.yahoo.com/table.csv?s=L.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/L.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol LEO, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading LEO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LEO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/LEO.2010049-20100416.csv
+
+Wrote 251 characters
+If Symbol LIF-UN, Year 2007 Month 9 less than or equal to 2010 04.  Download!
+Downloading LIF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LIF-UN.TO&a=8&b=25&c=2007&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/LIF-UN.TO.2007924-20100416.csv
+
+Wrote 0 characters
+If Symbol LINE, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading LINE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LINE&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/LINE.2010049-20100416.csv
+
+Wrote 236 characters
+If Symbol LLY, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading LLY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LLY&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/LLY.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol LNC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading LNC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LNC&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/LNC.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol LOW, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading LOW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=LOW&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/LOW.2010049-20100416.csv
+
+Wrote 290 characters
+If Symbol MCD, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading MCD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MCD&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MCD.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol MET, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading MET
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MET&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MET.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol MFC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading MFC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MFC.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MFC.TO.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol MG-A, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading MG-A
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MG-A.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MG-A.TO.2010049-20100416.csv
+
+Wrote 213 characters
+If Symbol MKP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading MKP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MKP.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MKP.TO.2010049-20100416.csv
+
+Wrote 226 characters
+If Symbol MMM, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading MMM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MMM&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MMM.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol MOS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading MOS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MOS&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MOS.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol MRD, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading MRD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MRD.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MRD.TO.2010049-20100416.csv
+
+Wrote 273 characters
+If Symbol MRK, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading MRK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MRK&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MRK.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol MS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading MS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MS&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MS.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol MX, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading MX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=MX.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/MX.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol NA, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading NA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NA.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NA.TO.2010049-20100416.csv
+
+Wrote 234 characters
+If Symbol NCX, Year 2009 Month 7 less than or equal to 2010 04.  Download!
+Downloading NCX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NCX.TO&a=6&b=8&c=2009&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NCX.TO.200977-20100416.csv
+
+Wrote 0 characters
+If Symbol NG, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading NG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NG&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NG.2010049-20100416.csv
+
+Wrote 217 characters
+If Symbol NKE, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading NKE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NKE&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NKE.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol NOK, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading NOK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NOK&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NOK.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol NT, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading NT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NT.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NT.TO.2010049-20100416.csv
+
+Wrote 241 characters
+If Symbol NXY, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading NXY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=NXY.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/NXY.TO.2010049-20100416.csv
+
+Wrote 235 characters
+If Symbol OIH, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading OIH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=OIH&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/OIH.2010049-20100416.csv
+
+Wrote 257 characters
+If Symbol ONC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ONC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ONC.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ONC.TO.2010049-20100416.csv
+
+Wrote 251 characters
+If Symbol ORA, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ORA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ORA&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ORA.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol PALAF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PALAF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PALAF.PK&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PALAF.PK.2010049-20100416.csv
+
+Wrote 209 characters
+If Symbol PAR, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PAR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PAR&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PAR.2010049-20100416.csv
+
+Wrote 215 characters
+If Symbol PBI, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PBI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PBI&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PBI.2010049-20100416.csv
+
+Wrote 285 characters
+If Symbol PBR, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PBR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PBR&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PBR.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol PCC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PCC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PCC&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PCC.2010049-20100416.csv
+
+Wrote 208 characters
+If Symbol PDS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PDS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PDS&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PDS.2010049-20100416.csv
+
+Wrote 259 characters
+If Symbol PEP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PEP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PEP&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PEP.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol PEY-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PEY-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PEY-UN.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PEY-UN.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol PFE, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PFE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PFE&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PFE.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol PG, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PG&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PG.2010049-20100416.csv
+
+Wrote 289 characters
+If Symbol PGH, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PGH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PGH&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PGH.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol PMT-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PMT-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PMT-UN.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PMT-UN.TO.2010049-20100416.csv
+
+Wrote 213 characters
+If Symbol POR, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading POR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POR&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/POR.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol POT, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading POT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POT&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/POT.2010049-20100416.csv
+
+Wrote 258 characters
+If Symbol POW, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading POW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=POW.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/POW.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol PPG, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PPG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PPG&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PPG.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol PSJ, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PSJ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PSJ&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PSJ.2010049-20100416.csv
+
+Wrote 228 characters
+If Symbol PTR, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PTR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PTR&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PTR.2010049-20100416.csv
+
+Wrote 306 characters
+If Symbol PVX, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PVX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PVX&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PVX.2010049-20100416.csv
+
+Wrote 217 characters
+If Symbol PWF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading PWF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=PWF.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/PWF.TO.2010049-20100416.csv
+
+Wrote 234 characters
+If Symbol REI-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading REI-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=REI-UN.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/REI-UN.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol RGLD, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading RGLD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RGLD&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RGLD.2010049-20100416.csv
+
+Wrote 234 characters
+If Symbol RIG, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading RIG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RIG&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RIG.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol RIMM, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading RIMM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RIMM&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RIMM.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol RNK, Year 2010 Month 3 less than or equal to 2010 04.  Download!
+Downloading RNK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RNK.TO&a=2&b=25&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RNK.TO.2010324-20100416.csv
+
+Wrote 0 characters
+If Symbol RNK-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading RNK-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RNK-UN.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RNK-UN.TO.2010049-20100416.csv
+
+Wrote 243 characters
+If Symbol ROY, Year 2010 Month 3 less than or equal to 2010 04.  Download!
+Downloading ROY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=ROY&a=2&b=5&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/ROY.201034-20100416.csv
+
+Wrote 0 characters
+If Symbol RPT, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading RPT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RPT&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RPT.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol RTP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading RTP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RTP&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RTP.2010049-20100416.csv
+
+Wrote 253 characters
+If Symbol RUS, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading RUS
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RUS.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RUS.TO.2010049-20100416.csv
+
+Wrote 232 characters
+If Symbol RY, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading RY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=RY.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/RY.TO.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol SAP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SAP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SAP.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SAP.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol SBUX, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SBUX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SBUX&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SBUX.2010049-20100416.csv
+
+Wrote 287 characters
+If Symbol SC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SC.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SC.TO.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol SDRLF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SDRLF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SDRLF.PK&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SDRLF.PK.2010049-20100416.csv
+
+Wrote 182 characters
+If Symbol SGU, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SGU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SGU&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SGU.2010049-20100416.csv
+
+Wrote 252 characters
+If Symbol SGX, Year 2009 Month 12 less than or equal to 2010 04.  Download!
+Downloading SGX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SGX.AX&a=11&b=10&c=2009&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SGX.AX.2009129-20100416.csv
+
+Wrote 0 characters
+If Symbol SH, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SH&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SH.2010049-20100416.csv
+
+Wrote 285 characters
+If Symbol SIF-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SIF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SIF-UN.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SIF-UN.TO.2010049-20100416.csv
+
+Wrote 281 characters
+If Symbol SINA, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SINA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SINA&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SINA.2010049-20100416.csv
+
+Wrote 285 characters
+If Symbol SLF, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SLF
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLF.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SLF.TO.2010049-20100416.csv
+
+Wrote 285 characters
+If Symbol SLV, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SLV
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLV&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SLV.2010049-20100416.csv
+
+Wrote 289 characters
+If Symbol SLW, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SLW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SLW&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SLW.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol SPF-UN, Year 2010 Month 1 less than or equal to 2010 04.  Download!
+Downloading SPF-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SPF-UN.TO&a=0&b=6&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SPF-UN.TO.201015-20100416.csv
+
+Wrote 0 characters
+If Symbol SPXJ, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SPXJ
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SPXJ&a=3&b=9&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SPXJ.2010048-20100416.csv
+
+Wrote 0 characters
+If Symbol SQP-UN, Year 2007 Month 9 less than or equal to 2010 04.  Download!
+Downloading SQP-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SQP-UN.TO&a=8&b=25&c=2007&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SQP-UN.TO.2007924-20100416.csv
+
+Wrote 0 characters
+If Symbol STEC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading STEC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=STEC&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/STEC.2010049-20100416.csv
+
+Wrote 287 characters
+If Symbol STP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading STP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=STP&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/STP.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol SU, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SU.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SU.TO.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol SWK, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SWK
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SWK&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SWK.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol SWY, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SWY
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SWY&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SWY.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol SYNA, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading SYNA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=SYNA&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/SYNA.2010049-20100416.csv
+
+Wrote 282 characters
+If Symbol T, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading T
+URL:  http://ichart.finance.yahoo.com/table.csv?s=T.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/T.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol TAC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading TAC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TAC&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TAC.2010049-20100416.csv
+
+Wrote 229 characters
+If Symbol TAXI, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading TAXI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TAXI&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TAXI.2010049-20100416.csv
+
+Wrote 209 characters
+If Symbol TD, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading TD
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TD.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TD.TO.2010049-20100416.csv
+
+Wrote 236 characters
+If Symbol TEVA, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading TEVA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TEVA&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TEVA.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol TFI, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading TFI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TFI.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TFI.TO.2010049-20100416.csv
+
+Wrote 278 characters
+If Symbol TGT, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading TGT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TGT&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TGT.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol TI, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading TI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TI&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TI.2010049-20100416.csv
+
+Wrote 281 characters
+If Symbol TIH, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading TIH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TIH.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TIH.TO.2010049-20100416.csv
+
+Wrote 229 characters
+If Symbol TLM, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading TLM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TLM.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TLM.TO.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol TRA, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading TRA
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TRA&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TRA.2010049-20100416.csv
+
+Wrote 236 characters
+If Symbol TRP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading TRP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=TRP.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/TRP.TO.2010049-20100416.csv
+
+Wrote 236 characters
+If Symbol UDN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading UDN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UDN&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UDN.2010049-20100416.csv
+
+Wrote 281 characters
+If Symbol UG, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading UG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UG&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UG.2010049-20100416.csv
+
+Wrote 272 characters
+If Symbol UGI, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading UGI
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UGI&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UGI.2010049-20100416.csv
+
+Wrote 234 characters
+If Symbol UNG, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading UNG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UNG&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UNG.2010049-20100416.csv
+
+Wrote 266 characters
+If Symbol UNH, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading UNH
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UNH&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UNH.2010049-20100416.csv
+
+Wrote 240 characters
+If Symbol UNP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading UNP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UNP&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UNP.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol UPL, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading UPL
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UPL&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UPL.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol UTX, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading UTX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UTX&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UTX.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol UUP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading UUP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=UUP&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/UUP.2010049-20100416.csv
+
+Wrote 287 characters
+If Symbol var, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading var
+URL:  http://ichart.finance.yahoo.com/table.csv?s=var&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/var.2010049-20100416.csv
+
+Wrote 285 characters
+If Symbol VMW, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading VMW
+URL:  http://ichart.finance.yahoo.com/table.csv?s=VMW&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/VMW.2010049-20100416.csv
+
+Wrote 237 characters
+If Symbol WDC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading WDC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WDC&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/WDC.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol WFC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading WFC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WFC&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/WFC.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol WFT, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading WFT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WFT&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/WFT.2010049-20100416.csv
+
+Wrote 288 characters
+If Symbol WMT, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading WMT
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WMT&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/WMT.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol WYE, Year 2009 Month 10 less than or equal to 2010 04.  Download!
+Downloading WYE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=WYE&a=9&b=16&c=2009&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/WYE.20091015-20100416.csv
+
+Wrote 0 characters
+If Symbol XBB, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading XBB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XBB.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XBB.TO.2010049-20100416.csv
+
+Wrote 232 characters
+If Symbol XEG, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading XEG
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XEG.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XEG.TO.2010049-20100416.csv
+
+Wrote 233 characters
+If Symbol XIC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading XIC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XIC.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XIC.TO.2010049-20100416.csv
+
+Wrote 231 characters
+If Symbol XIU, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading XIU
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XIU.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XIU.TO.2010049-20100416.csv
+
+Wrote 240 characters
+If Symbol XLB, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading XLB
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XLB&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XLB.2010049-20100416.csv
+
+Wrote 287 characters
+If Symbol XLE, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading XLE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XLE&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XLE.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol XOM, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading XOM
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XOM&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XOM.2010049-20100416.csv
+
+Wrote 291 characters
+If Symbol XRE, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading XRE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XRE.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XRE.TO.2010049-20100416.csv
+
+Wrote 231 characters
+If Symbol XSP, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading XSP
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XSP.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XSP.TO.2010049-20100416.csv
+
+Wrote 281 characters
+If Symbol XTO, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading XTO
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XTO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XTO.2010049-20100416.csv
+
+Wrote 287 characters
+If Symbol XTR, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading XTR
+URL:  http://ichart.finance.yahoo.com/table.csv?s=XTR.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/XTR.TO.2010049-20100416.csv
+
+Wrote 232 characters
+If Symbol YGE, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading YGE
+URL:  http://ichart.finance.yahoo.com/table.csv?s=YGE&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/YGE.2010049-20100416.csv
+
+Wrote 286 characters
+If Symbol YLO-UN, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading YLO-UN
+URL:  http://ichart.finance.yahoo.com/table.csv?s=YLO-UN.TO&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/YLO-UN.TO.2010049-20100416.csv
+
+Wrote 217 characters
+If Symbol YZC, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading YZC
+URL:  http://ichart.finance.yahoo.com/table.csv?s=YZC&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/YZC.2010049-20100416.csv
+
+Wrote 281 characters
+If Symbol ^VIX, Year 2010 Month 4 less than or equal to 2010 04.  Download!
+Downloading ^VIX
+URL:  http://ichart.finance.yahoo.com/table.csv?s=^VIX&a=3&b=10&c=2010&d=04&e=16&f=2010&g=d&ignore=.csv
+Data file:  /mnt/2/development/var/www/html/finance/currentdata/prices/^VIX.2010049-20100416.csv
+
+Wrote 266 characters

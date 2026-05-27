@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_uom`;
+CREATE TABLE `ck_uom` (, PRIMARY KEY ()) ENGINE=InnoDB;

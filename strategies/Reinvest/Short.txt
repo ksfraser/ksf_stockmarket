@@ -1,0 +1,11 @@
+In a long position the gains are "automatically" reinvested since the
+initial sum and the gains are on the market. With a short position this
+is no more true. 
+
+This CloseStrategy tries to defeat this by reinvesting the gains each time
+a certain amount of gain has been made since last time the position was
+augmented.
+
+Use this CloseStrategy at the end of the "system chain" so that a position
+is not augmented if it's planned to be closed.
+

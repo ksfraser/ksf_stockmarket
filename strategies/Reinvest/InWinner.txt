@@ -1,0 +1,4 @@
+This Position Manager will reinvest money in winning trades every time they meet a new target. This strategy is based on the famous "Let your pr
+ofits run and cut your losses" while thinking about trend following systems where it is very profitable to bet more when we catched a "big one" 
+!
+

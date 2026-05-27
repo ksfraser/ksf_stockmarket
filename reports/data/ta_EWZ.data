@@ -1,0 +1,14 @@
+#Header line 	date 	day_close 	typicalprice 	movingaverage50 	movingaverage200 	candlestick 	expmovingaverage9 	expmovingaverage12 	expmovingaverage26 	macd 	momentumoscillator 	mamomentum 	macrossover 	macenterlinecrossover 	priceoscillator 	macd_histogram 	linearregression 	linearregressionangle 	linearregressionslope 	linearregressionintercept 	stochastic 	relativestrenghtindex 	rsioscillator 	commoditychannelindex 	pricechangepercent 	volume12 	volume26 	volume90 	support12 	support26 	resistance12 	resistance26 	bollingerbandmiddle 	bollingerbandupper 	bollingerbandlower 	bollingerpercentb 	bollingerbandwidth 	coefficientofvariation 	movingaverage260 	standarddeviation260 	annualreturn 	annualrisk 	truerange 	expmovingaverage90 	voltrendind90 	voltrendind26 	volume260 	voltrendind260
+EWZ	2010-08-11	0	0	0	0	Bearish_Kic	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		1
+EWZ	2010-08-05	0	0	0	0	Yesterday_D	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		2
+EWZ	2010-08-05	0	0	0	0	Bullish_Eng	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		3
+EWZ	2010-08-04	0	0	0	0	Doji_Near	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		4
+EWZ	2010-08-04	0	0	0	0	Black_Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		5
+EWZ	2010-08-03	0	0	0	0	Bearish_Kic	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		6
+EWZ	2010-07-30	0	0	0	0	Bullish_Eng	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		7
+EWZ	2010-07-28	0	0	0	0	Bullish_Har	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		8
+EWZ	2010-07-27	0	0	0	0	Yesterday_D	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		9
+EWZ	2010-07-27	0	0	0	0	Bearish_Eng	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		10
+EWZ	2010-07-26	0	0	0	0	White_Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		11
+EWZ	2010-07-26	0	0	0	0	Doji_Near	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		12
+EWZ	2010-07-26	0	0	0	0	Doji	0	0	0		0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0			0		13

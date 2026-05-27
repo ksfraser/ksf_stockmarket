@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `object`;
+CREATE TABLE `object` (, PRIMARY KEY ()) ENGINE=InnoDB;

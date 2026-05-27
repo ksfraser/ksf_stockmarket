@@ -1,0 +1,7 @@
+Candlestick and Heikanashi data exists in appropriate tables
+*	Run scripts/candlestick/candlestick.sh
+**		This runs checkcandlestick and heikanashi
+
+Technical Analysis depends on the data being up to date in the TA tables
+
+TURTLE depends on the data being up to date in the turtledata table.

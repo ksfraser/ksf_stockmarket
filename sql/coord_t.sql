@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `coord_t`;
+CREATE TABLE `coord_t` (, PRIMARY KEY ()) ENGINE=InnoDB;

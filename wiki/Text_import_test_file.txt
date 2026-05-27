@@ -1,0 +1,2 @@
+This is a test text file
+to test the import via importTextFile.php

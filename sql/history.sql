@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `history`;
+CREATE TABLE `history` (, PRIMARY KEY ()) ENGINE=InnoDB;

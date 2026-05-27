@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `deriv_cd`;
+CREATE TABLE `deriv_cd` (, PRIMARY KEY ()) ENGINE=InnoDB;

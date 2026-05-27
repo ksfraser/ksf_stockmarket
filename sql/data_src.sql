@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `data_src`;
+CREATE TABLE `data_src` (, PRIMARY KEY ()) ENGINE=InnoDB;

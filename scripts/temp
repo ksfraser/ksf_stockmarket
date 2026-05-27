@@ -1,0 +1,32 @@
+select distinct t.username as username, t.stocksymbol as stocksymbol,
+                (select sum(dollar) from transaction b where b.username=t.username and transactiontype in( 'BUY', 'TRANSFERIN' ) and b.stocksymbol = t.stocksymbol group by stocksymbol) as buy,
+                (select sum(dollar) from transaction s where s.username=t.username and transactiontype in ( 'SELL', 'TRANSFEROUT' ) and s.stocksymbol = t.stocksymbol group by stocksymbol) as sell
+from transaction t;
+
+update portfolio t set bookvalue = (select sum(dollar) from transaction b where b.username=t.username and transactiontype in( 'BUY', 'TRANSFERIN' ) and b.stocksymbol = t.stocksymbol group by stocksymbol) - (select sum(dollar) from transaction s where s.username=t.username and transactiontype in ( 'SELL', 'TRANSFEROUT' ) and s.stocksymbol = t.stocksymbol group by stocksymbol)where 
+username = t.username
+and stocksymbol = t.stocksymbol;
+
+START TRANSACTION;
+SELECT @A:=SUM(salary) FROM table1 WHERE type=1;
+UPDATE table2 SET summary=@A WHERE type=1;
+COMMIT;
+
+
+
+
+
+                (select sum(dollar) from transaction d where d.username=t.username and transactiontype = 'DIVIDEND' and d.stocksymbol = t.stocksymbol group by stocksymbol) as dividend,
+                (select sum(dollar) from transaction sp where sp.username=t.username and transactiontype = 'SPLIT' and sp.stocksymbol = t.stocksymbol group by stocksymbol) as split,
+                (select sum(dollar) from transaction e where e.username=t.username and transactiontype = 'EXCHANGE' and e.stocksymbol = t.stocksymbol group by stocksymbol) as exchange
+
+
+
+update portfolio t set dividendbookvalue =
+ifnull((select sum(dollar) from transaction b where b.username=t.username and transactiontype in ( 'BUY',  'TRANSFERIN', 'DIVIDEND' )  and b.stocksymbol = t.stocksymbol and b.account = t.account group by stocksymbol), 0) -
+ifnull( (select sum(dollar) from transaction s where s.username=t.username and transactiontype in ( 'SELL', 'TRANSFEROUT' ) and s.stocksymbol = t.stocksymbol and s.account = t.account group by stocksymbol), 0)
+
+
+update portfolio t set numbershares =
+ifnull((select sum(numbershares) from transaction b where b.username=t.username and transactiontype in ( 'BUY',  'TRANSFERIN', 'DRIP', 'SPLIT', 'EXCHANGE' )  and b.stocksymbol = t.stocksymbol and b.account = t.account group by stocksymbol), 0) -
+ifnull( (select sum(numbershares) from transaction s where s.username=t.username and transactiontype in ( 'SELL', 'TRANSFEROUT' ) and s.stocksymbol = t.stocksymbol and s.account = t.account group by stocksymbol), 0)

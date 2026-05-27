@@ -1,0 +1,2 @@
+Setting cash to 10000.00
+Jan 02 16:17:00 BACKTEST [notice] Setting cash to 10000.00

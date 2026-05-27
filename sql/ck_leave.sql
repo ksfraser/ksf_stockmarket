@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_leave`;
+CREATE TABLE `ck_leave` (, PRIMARY KEY ()) ENGINE=InnoDB;

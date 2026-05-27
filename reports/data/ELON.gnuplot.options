@@ -1,0 +1,23 @@
+set terminal png medium size 800,600
+set output "ELON.candlestick.png"
+set format x "%m-%d"
+set xdata time
+set timefmt "%Y-%m-%d"
+set title "ELON Prices"
+set style fill empty
+set ylabel "Dollars"
+set multiplot
+set origin 0,0.55
+set size 1,0.45
+plot "ELON.data" using 2:3:6:5:4 with candlesticks title ""
+unset title
+set origin 0,0
+set size 1,0.25
+set ylabel "100,000s"
+plot "ELON.data" using 2:7 with boxes title "Daily Volume"
+unset title
+set origin 0,0.25
+set size 1,0.3
+set ylabel "Signals - Random placement on Y axis"
+plot "ELON.data" using 2:9:8 with labels title "Daily Signals"
+unset multiplot

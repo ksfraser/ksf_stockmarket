@@ -1,0 +1,2 @@
+Latest date in stockprices: 2011-12-09
+Count of dates: 0

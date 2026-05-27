@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_addon`;
+CREATE TABLE `ck_addon` (, PRIMARY KEY ()) ENGINE=InnoDB;

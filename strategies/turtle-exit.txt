@@ -1,0 +1,11 @@
+Exit is pre-determining at what point to get out of a trade.
+Taking a profit too early is the most common mistake.
+
+Most breakouts do not result in trends.  Therefore entering on breakouts results in a high number of loser trades.
+
+System 1 exit - at a 10 day low for a long trade.  All units sold if there is a 10 day breakout against.
+system 2 exit - at a 20 day low for a long trade.   All units sold if there is a
+20 day breakout against.
+
+By holding on until the 10/20 day low, you ensure you've ridden the trend to the top and it is starting to come down.
+

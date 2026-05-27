@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `exercise`;
+CREATE TABLE `exercise` (, PRIMARY KEY ()) ENGINE=InnoDB;

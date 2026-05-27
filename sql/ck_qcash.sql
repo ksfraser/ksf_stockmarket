@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_qcash`;
+CREATE TABLE `ck_qcash` (, PRIMARY KEY ()) ENGINE=InnoDB;

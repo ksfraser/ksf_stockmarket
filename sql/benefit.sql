@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `benefit`;
+CREATE TABLE `benefit` (, PRIMARY KEY ()) ENGINE=InnoDB;

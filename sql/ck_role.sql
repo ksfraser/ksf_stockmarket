@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_role`;
+CREATE TABLE `ck_role` (, PRIMARY KEY ()) ENGINE=InnoDB;

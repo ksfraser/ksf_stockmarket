@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `2units`;
+CREATE TABLE `2units` (, PRIMARY KEY ()) ENGINE=InnoDB;

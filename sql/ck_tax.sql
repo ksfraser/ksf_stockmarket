@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_tax`;
+CREATE TABLE `ck_tax` (, PRIMARY KEY ()) ENGINE=InnoDB;

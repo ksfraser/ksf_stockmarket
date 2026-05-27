@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `ck_comm`;
+CREATE TABLE `ck_comm` (, PRIMARY KEY ()) ENGINE=InnoDB;

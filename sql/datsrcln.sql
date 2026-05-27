@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `datsrcln`;
+CREATE TABLE `datsrcln` (, PRIMARY KEY ()) ENGINE=InnoDB;

@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS `files`;
+CREATE TABLE `files` (, PRIMARY KEY ()) ENGINE=InnoDB;

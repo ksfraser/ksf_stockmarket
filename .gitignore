@@ -1,1 +1,42 @@
+# Dependencies
 /vendor/
+/composer.lock
+
+# Environment
+/config/.env
+
+# IDE
+/.idea/
+/.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+/coverage-html/
+/coverage.xml
+/junit.phpunit.xml
+/.phpunit.cache/
+
+# Logs
+/logs/*.log
+
+# Data (large files — managed separately)
+/data/cache/
+/data/csv/*.csv
+
+# Dependencies (legacy — kept but not tracked)
+/external/
+/class/*.php.cpp
+
+# Python
+__pycache__/
+*.pyc
+/python/venv/
+/python/.venv/
+
+# Uploads
+/reports/generated/

@@ -1,0 +1,9 @@
+# Python Analysis Engine Dependencies
+flask==3.0.*
+gunicorn==23.0.*
+yfinance==0.2.*
+pandas==2.2.*
+numpy==1.26.*
+scipy==1.14.*
+requests==2.32.*
+python-dotenv==1.0.*

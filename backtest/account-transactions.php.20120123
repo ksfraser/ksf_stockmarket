@@ -1,0 +1,208 @@
+<?php
+
+//20090804 KF
+//Account transactions:
+//	Add cash
+//	Remove cash
+//	Convert currencies
+//	Buy Stocks
+//	Sell Stocks
+//	Dividends
+//	Dividend re-investment
+//	Exchange
+//	Split
+//	Reverse Split
+//	Merger
+//	Takeover
+//	Transfer
+//	Currency Exchange Buy
+//	Currency Exchange sell
+//	Special Dividend
+
+
+/***************************************************************************************************************************************
+*	20111203 KF $transaction->addtransaction is a member of the transaction class in model.  
+*	refactoring to remove this duplication.
+*	Also calling the class's built in functions that were duplicated out of here rather than the duplicated code here.
+*//addtransaction( $flog, $username, $symbol, $numbershares, $dollar, $action, $transactiondate, $currency = "CAD", $foreigncurrency = "CAD", $account = "TRADE" )
+*require_once( 'addtransaction.php' );
+*//!20111203 $transaction->addtransaction
+****************************************************************************************************************************************/
+require_once( '../model/transaction.class.php' );
+$transaction = new transaction();
+//!20111203 $transaction->addtransaction
+
+function cleanuser( $flog, $user )
+{
+//20110122 KF This fcn is now available in the transaction class as deleteusertransactions
+	fwrite( $flog, "Cleaning up old transactions for the user $user\n" );
+//	require_once( '../model/transaction.class.php' );
+//	$transaction = new transaction();
+//	$transaction->querystring = "DELETE from transaction where username = '" . $user . "'";
+//	$transaction->GenericQuery();
+	$transaction->deleteusertransactions($user);
+}
+
+function addcash( $flog, $user, $dollars, $transactiondate, $currency = "CAD", $account = "TRADE" )
+{
+//20110122 KF now part of the transaction class as useraccountaddcash
+	//fwrite( $flog, "Adding $" . $dollars . " to the portfolio\n" );
+	//return $transaction->addtransaction( $flog, $user, "CASH", $dollars, $dollars, "TRANSFERIN", $transactiondate, $currency, $currency, $account );
+	return $transaction->useraccountaddcash($flog, $user, $dollars, $transactiondate, $currency, $account);
+
+}
+
+function removecash( $flog, $user, $dollars, $transactiondate, $currency = "CAD", $account = "TRADE" )
+{
+//20110122 KF now part of the transaction class as useraccountremovecash
+	//fwrite( $flog, "Removing $" . $dollars . " to the portfolio\n" );
+	//return $transaction->addtransaction( $flog, $user, "CASH", $dollars, $dollars, "TRANSFEROUT", $transactiondate, $currency, $currency, $account );
+	$transaction->useraccountremovecash($flog, $user, $dollars, $transactiondate, $currency, $account);
+}
+
+function convertcash( $flog, $user, $fromdollars, $todollars, $transactiondate, $fromcurrency = "CAD", $tocurrency = "USD", $account = "TRADE" )
+{
+//20120123 KF Moved into codemeta_functions
+	fwrite( $flog, "Converting cash from " . $fromdollars . " to " . $todollars . "\n" );
+	$transaction->addtransaction( $flog, $user, "CASH", $fromdollars, $fromdollars, "SELL", $transactiondate, $fromcurrency, $fromcurrency, $account );
+	$transaction->addtransaction( $flog, $user, "CASH", $todollars, $todollars, "BUY", $transactiondate, $tocurrency, $tocurrency, $account );
+	return SUCCESS;
+}
+
+function buystock ( $flog, $username, $symbol, $numbershares, $dollar, $transactiondate, $currency = "CAD", $foreigncurrency = "CAD", $account = "TRADE" )
+{
+//20110122 KF Now part of transaction as useraccountbuystock
+	//fwrite( $flog, "Buying " . $numbershares . " of stock " . $symbol . " for $" . $dollar . "\n" );
+	//$transaction->addtransaction( $flog, $username, $symbol, $numbershares, $dollar, "BUY",  $transactiondate, $currency, $foreigncurrency, $account );
+	//$transaction->addtransaction( $flog, $username, "CASH",  $dollar,       $dollar, "SELL", $transactiondate, $currency, $foreigncurrency, $account );
+	$transaction->useraccountbuystock($flog, $username, $symbol, $numbershares, $dollar, $transactiondate, $currency, $foreigncurrency, $account);
+
+}
+
+function sellstock ( $flog, $username, $symbol, $numbershares, $dollar, $transactiondate, $currency = "CAD", $foreigncurrency = "CAD", $account = "TRADE" )
+{
+//20110122 KF Now part of transaction as useraccountsellstock
+	//fwrite( $flog, "Selling " . $numbershares . " of stock " . $symbol . " for $" . $dollar . "\n" );
+	//$transaction->addtransaction( $flog, $username, $symbol, $numbershares, $dollar, "SELL", $transactiondate, $currency, $foreigncurrency, $account );
+	//$transaction->addtransaction( $flog, $username, "CASH",  $dollar,       $dollar, "BUY",  $transactiondate, $currency, $foreigncurrency, $account );
+	$transaction->useraccountsellstock($flog, $username, $symbol, $numbershares, $dollar, $transactiondate, $currency, $foreigncurrency, $account);
+
+}
+
+function dividend( $flog, $username, $symbol, $numbershares, $dollar, $transactiondate, $currency = "CAD", $foreigncurrency = "CAD", $account = "TRADE" )
+{
+//20110122 KF Now part of transaction as useraccountstockdividend
+	//fwrite( $flog, "Received dividend for " . $symbol . " of $" . $dollar . "\n" );
+	//$transaction->addtransaction( $flog, $username, $symbol, "0",     $dollar, "DIVIDEND", $transactiondate, $currency, $foreigncurrency, $account );
+	//$transaction->addtransaction( $flog, $username, "CASH",  "0",     $dollar, "BUY",      $transactiondate, $currency, $foreigncurrency, $account );
+	$transaction->useraccountstockdividend($flog, $username, $symbol, $numbershares, $dollar, $transactiondate, $currency, $foreigncurrency, $account);
+
+}
+
+function dividendreinvest( $flog, $username, $symbol, $numbershares, $dollar, $transactiondate, $currency = "CAD", $foreigncurrency = "CAD", $account = "TRADE" )
+{
+//20110122 KF Now part of transaction as useraccountstockdividendreinvest
+	//fwrite( $flog, "Received dividend for " . $symbol . ".  Reinvested as " . $numbershares . " shares\n" );
+	//$transaction->addtransaction( $flog, $username, $symbol, $numbershares, "0", "DIVIDEND REINVESTMENT", $transactiondate, $currency, $foreigncurrency, $account );
+	$transaction->useraccountstockdividendreinvest($flog, $username, $symbol, $numbershares, $dollar, $transactiondate, $currency, $foreigncurrency, $account);
+
+}
+
+function CalculateDollarsAvailable( $username )
+{
+	return (CalculateDollarsAvailableDate( $username, date( 'Y-m-d' ) );
+}
+
+function CalculateSharesAvailable( $username, $symbol )
+{
+	CalculateSharesAvailableDate( $username, $symbol, date( 'Y-m-d' ) );
+}
+
+function CalculateDollarsAvailableDate( $username, $transactiondate )
+{
+//20120123 KF This is already in metadata_functions
+        $dollar = 0;
+//	require_once( '../model/transaction.class.php' );
+//      $transaction = new transaction();
+	$transaction->fieldspec['username']['extra_sql'] = "";
+	$transaction->orderby = "";
+
+        $transaction->select = "sum(dollar) as buy";
+        $transaction->where = "transactiondate <= '" . $transactiondate . "' and " . "stocksymbol = 'CASH' and username = '" . $username . "' and transactiontype like '%BUY%'";
+        $transaction->Select();
+	//var_dump( $transaction->querystring );
+        //var_dump( $transaction->resultarray );
+        ////echo "<br />";
+        $dollar = $dollar + $transaction->resultarray[0]['buy'];
+
+        $transaction->select = "sum(dollar) as drip";
+        $transaction->where = "transactiondate <= '" . $transactiondate . "' and " . "stocksymbol = 'CASH' and username = '" . $username . "' and transactiontype like '%DIV%REINV%'";
+        $transaction->Select();
+	//var_dump( $transaction->querystring );
+        //var_dump( $transaction->resultarray );
+        ////echo "<br />";
+        $dollar = $dollar + $transaction->resultarray[0]['drip'];
+
+        $transaction->select = "sum(dollar) as split";
+        $transaction->where = "transactiondate <= '" . $transactiondate . "' and " . "stocksymbol = 'CASH' and username = '" . $username . "' and transactiontype like '%SPLIT%'";
+        $transaction->Select();
+	//var_dump( $transaction->querystring );
+        //var_dump( $transaction->resultarray );
+        ////echo "<br />";
+        $dollar = $dollar + $transaction->resultarray[0]['split'];
+
+        $transaction->select = "sum(dollar) as sell";
+        $transaction->where = "transactiondate <= '" . $transactiondate . "' and " . "stocksymbol = 'CASH' and username = '" . $username . "' and transactiontype like '%SELL%'";
+        $transaction->Select();
+	//var_dump( $transaction->querystring );
+        //var_dump( $transaction->resultarray );
+
+        $dollar = $dollar - $transaction->resultarray[0]['sell'];
+
+        return $dollar;
+}
+
+function CalculateSharesAvailableDate( $username, $symbol, $transactiondate )
+{
+//20120123 KF This is already in metadata_functions
+        $numbershares = 0;
+//	require_once( '../model/transaction.class.php' );
+//      $transaction = new transaction();
+	$transaction->fieldspec['username']['extra_sql'] = "";
+	$transaction->orderby = "";
+
+        $transaction->select = "sum(numbershares) as buy";
+        $transaction->where = "transactiondate <= '" . $transactiondate . "' and " . "stocksymbol = '$symbol' and username = '" . $username . "' and transactiontype like '%BUY%'";
+        $transaction->Select();
+	//var_dump( $transaction->querystring );
+        //var_dump( $transaction->resultarray );
+        ////echo "<br />";
+        $numbershares = $numbershares + $transaction->resultarray[0]['buy'];
+
+        $transaction->select = "sum(numbershares) as drip";
+        $transaction->where = "transactiondate <= '" . $transactiondate . "' and " . "stocksymbol = '$symbol' and username = '" . $username . "' and transactiontype like '%DIV%REINV%'";
+        $transaction->Select();
+	//var_dump( $transaction->querystring );
+        //var_dump( $transaction->resultarray );
+        ////echo "<br />";
+        $numbershares = $numbershares + $transaction->resultarray[0]['drip'];
+
+        $transaction->select = "sum(numbershares) as split";
+        $transaction->where = "transactiondate <= '" . $transactiondate . "' and " . "stocksymbol = '$symbol' and username = '" . $username . "' and transactiontype like '%SPLIT%'";
+        $transaction->Select();
+	//var_dump( $transaction->querystring );
+        //var_dump( $transaction->resultarray );
+        ////echo "<br />";
+        $numbershares = $numbershares + $transaction->resultarray[0]['split'];
+
+        $transaction->select = "sum(numbershares) as sell";
+        $transaction->where = "transactiondate <= '" . $transactiondate . "' and " . "stocksymbol = '$symbol' and username = '" . $username . "' and transactiontype like '%SELL%'";
+        $transaction->Select();
+	//var_dump( $transaction->querystring );
+        //var_dump( $transaction->resultarray );
+
+        $numbershares = $numbershares - $transaction->resultarray[0]['sell'];
+
+        return $numbershares;
+}
+

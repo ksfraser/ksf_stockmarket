@@ -1,0 +1,10 @@
+
+
+/*
+//stopprice is determined through a strategy i.e. turtle's
+$stopperunit = $shareprice - $stopprice;
+$numberunits = $dollars2risk / $stopperunit;
+$portfolio_heat = $maxrisk * $numberopentrades;  //Each trading system has an optimum heat...
+$expectancy = ( $percentagewin * $averagewinsize ) - ( $percentagelose * $averagelosesize );// If expectancy is negative, you don't want to use this strategy!!!
+*/
+

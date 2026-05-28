@@ -58,7 +58,81 @@ KSF Stock Market Analysis is a hybrid PHP + Python application for:
                               └──────────────────────┘
 ```
 
-## 3. Component Responsibilities
+## 3. Database Schema Architecture
+
+### 3.1 Strategy: Partitioned Tables + Tiered Indicators
+
+The legacy `stock_market` DB had ~130 tables with no partitioning and the `back_finance` DB had 21 tables — both using MyISAM with latin1 charset. The modernized schema consolidates to ~25 focused tables on InnoDB with utf8mb4, using:
+
+1. **Partition by YEAR**: `stockprices`, `daily_indicators`, `daily_tier2` all partitioned by `YEAR(date)` into ~10 partitions. Enables partition pruning for backtest queries and per-year backup.
+2. **Tier 1 indicators via trigger**: `daily_indicators` table populated on each INSERT into `stockprices` (daily return, gap, SMA-20/50/200, volume SMA-20).
+3. **Tier 2 indicators via daily event**: `daily_tier2` table populated once per day using MySQL event scheduler with window functions (Bollinger Bands, ATR-14, volume ratios, trend classification). Avoids recalculating expensive window functions on every INSERT.
+4. **Unified view**: `v_stock_analysis` joins prices + both indicator tiers for backtesting and UI consumption.
+
+### 3.2 Partitioning: By Year (Not By Symbol)
+
+**Decision: Partition by YEAR, not by symbol.**
+- ~8-10 partitions (one per year) vs 2000+ partitions (one per symbol)
+- Partition pruning handles backtest date-range queries transparently
+- Per-year backup via `mysqldump --where "YEAR(date)=2025"` solves the 2013 4GB dump trauma
+- Adding a new partition each year is trivial: `ALTER TABLE ... ADD PARTITION`
+
+### 3.3 Tier 2 Materialized Table (Not View)
+
+**Decision: Materialized table `daily_tier2`, not a VIEW.**
+- Window functions (Bollinger, ATR) need 14-20 rows per symbol per calculation
+- Calculating on every INSERT would be O(n_symbols) per insert — prohibitive
+- Daily refresh is sufficient because indicator weightings change slowly (weeks/months)
+- Populated by MySQL event scheduler at 10 PM ET daily (after market data refresh)
+- Python cron can also populate this as an alternative to MySQL events
+- `signal_weights` table stores per-symbol, per-signal-type weights that evolve over time via backtesting optimization
+
+### 3.4 Signal Weights: Evolving Over Time
+
+The `signal_weights` table stores optimized weights for each indicator/signal type per symbol:
+- `signal_type`: e.g., `RSI_OVERSOLD`, `MACD_CROSS`, `BB_TOUCH`, `GOLDEN_CROSS`
+- `weight`: Optimized weight (decreases for unreliable signals, increases for reliable ones)
+- `win_rate`: Historical win rate tracked per signal per symbol
+- `updated_by`: `backtest`, `manual`, or `python_ml`
+- Weights start at 1.0 (default) and are refined by backtesting
+
+This means the system learns which indicators work best for each stock over time, rather than using fixed thresholds.
+
+### 3.5 Backup Strategy
+
+Each partition is backed up independently:
+```bash
+# Full backup: one file per year
+for year in $(seq 2008 2026); do
+  mysqldump --single-transaction --where "YEAR(price_date)=${year}" \
+    ksf_stockmarket stockprices > stockprices_${year}.sql
+done
+
+# Incremental: today's partition only
+mysqldump --single-transaction --where "YEAR(price_date)=YEAR(CURDATE())" \
+  ksf_stockmarket stockprices > stockprices_current.sql
+
+# Tier tables (small, full dump)
+mysqldump ksf_stockmarket daily_indicators daily_tier2 signal_weights > indicators.sql
+```
+
+## 3. Legacy Schema Comparison
+
+| Property | `stock_market` (old) | `back_finance` (new) | `ksf_stockmarket` (modern) |
+|---|---|---|---|
+| Origin | Original web app | Finance/trading module | Modernized PHP app |
+| Tables | ~130 (FA + legacy SQL) | 21 tables | ~25 focused tables |
+| Engine | MyISAM / InnoDB mix | MyISAM mostly | InnoDB |
+| Charset | latin1 | latin1 | utf8mb4 |
+| Partitioned | No | No | **Yes** (prices, indicators) |
+| Tier 1 (trigger) | No | No | **Yes** |
+| Tier 2 (materialized) | No | No | **Yes** |
+| Signal weights | No | No | **Yes** |
+| RBAC | No | No | **Yes** |
+
+See `database-comparison.md` for detailed column-level comparison.
+
+## 4. Component Responsibilities
 
 ### PHP Layer (Web Application)
 | Component    | Responsibility                                      |
@@ -83,21 +157,25 @@ KSF Stock Market Analysis is a hybrid PHP + Python application for:
 ### Database Layer
 | Table Group       | Tables                                               |
 |-------------------|------------------------------------------------------|
-| Portfolio         | portfolio, portfolio_history, transactions          |
-| Market Data       | stockprices, dividends, stockinfo                   |
-| Analysis          | tenets, backtest_runs, backtest_trades              |
+| Portfolio         | portfolio, portfolio_history, user_trades           |
+| Market Data       | stockprices (partitioned), dividends, stockinfo     |
+| Tier 1 Indicators | daily_indicators (partitioned, trigger-populated)   |
+| Tier 2 Indicators | daily_tier2 (partitioned, daily event-populated)   |
+| Signal Weights    | signal_weights (per-symbol, evolving)               |
+| Backtesting       | backtest_runs, backtest_trades                      |
 | Users & RBAC      | users, roles, watchlists, watchlist_symbols         |
+| Alerts            | alerts, alerts_raised                               |
 | FA Integration    | fa_transfers                                        |
 | Operations        | data_import_log                                     |
 
-## 4. Technology Stack
+## 5. Technology Stack
 
 | Layer        | Technology         | Version  | Notes                              |
 |--------------|--------------------|----------|------------------------------------|
 | Web Server   | Apache             | 2.4+     | mod_proxy, mod_rewrite             |
 | Backend      | PHP                | 8.1+     | PSR-4 autoloading, typed           |
 | Backend      | Python             | 3.11+    | Flask, pandas, numpy               |
-| Database     | MariaDB            | 10.6+    | InnoDB, utf8mb4                   |
+| Database     | MariaDB            | 10.6+    | InnoDB, utf8mb4, partitioning      |
 | ORM/DBAL     | PDO (native)       | —        | No ORM — raw PDO for performance   |
 | Templating   | Twig               | 3.x      | Auto-escaping, sandboxing          |
 | Logging      | Monolog            | 3.x      | PSR-3 compatible                   |
@@ -107,7 +185,7 @@ KSF Stock Market Analysis is a hybrid PHP + Python application for:
 | Analysis     | ta-lib / pandas-ta | —        | Technical indicators               |
 | CSS Framework| Custom/Tailwind    | —        | To be decided in Phase 4           |
 
-## 5. Deployment Architecture
+## 6. Deployment Architecture
 
 ### Container Structure (via ksf_Infrastructure Ansible)
 
@@ -139,7 +217,7 @@ The existing recipe needs these additions:
 4. Environment variables via `.env` file
 5. Python API container (new)
 
-## 6. API Contract (PHP ↔ Python)
+## 7. API Contract (PHP ↔ Python)
 
 ### Endpoints
 
@@ -154,7 +232,7 @@ The existing recipe needs these additions:
 | POST   | /api/data/import           | symbols[], source         | { import_log }     |
 | GET    | /api/health                | —                         | { status: "ok" }   |
 
-## 7. Security Model
+## 8. Security Model
 
 ### Authentication
 - PHP session-based authentication for web UI
@@ -168,7 +246,7 @@ The existing recipe needs these additions:
 | trader  | View data, run backtests, manage own watchlists          |
 | viewer  | View-only: dashboards, reports, watchlists               |
 
-## 8. Migration Strategy
+## 9. Migration Strategy
 
 ### Parallel Operation
 The legacy PHP application runs alongside the new code during migration:

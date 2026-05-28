@@ -753,6 +753,340 @@ INSERT INTO users (username, email, password_hash, role, first_name, last_name) 
     ('kevin', 'kevin@ksfraser.ca', '$2y$12$placeholder_change_me', 'admin', 'Kevin', 'Fraser');
 
 -- ============================================================================
+-- SCORING & STRATEGY TABLES (preserved from legacy, enhanced for LLM)
+-- ============================================================================
+-- These tables represent the investment thesis scoring system.
+-- Python/LLM populates them by analyzing press releases, 10-K/10-Q filings,
+-- earnings call transcripts, and financial data.
+--
+-- Three categories:
+--   1. Quantitative (ratios): Python calculates from financial data
+--   2. Rule-based qualitative (motleyfool, investorplace): LLM checks criteria
+--   3. Subjective qualitative (tenets, evalbusiness, evalsummary): LLM assists,
+--      human has final say
+--
+-- All scoring tables include source attribution (what document was analyzed)
+-- and user tracking (who populated/overrode the score).
+
+-- --------------------------------------------------------------------------
+-- Motley Fool screening criteria (Rule Breakers / Stock Advisor)
+-- --------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS motleyfool (
+    symbol          CHAR(16)    NOT NULL,
+    doubledigitrisingsales  TINYINT(1)  NULL COMMENT 'Sales growth >= 10%',
+    risingfreecashflow      TINYINT(1)  NULL COMMENT 'Free cash flow rising',
+    risingbookvalue         TINYINT(1)  NULL COMMENT 'Book value rising',
+    improvingmargin         TINYINT(1)  NULL COMMENT 'Margins improving',
+    risingreturnonequity    TINYINT(1)  NULL COMMENT 'ROE rising',
+    insiderownership        TINYINT(1)  NULL COMMENT 'Executive ownership significant',
+    regulardividends        TINYINT(1)  NULL COMMENT 'Consistent dividend payments',
+    mf_score                INT         NULL COMMENT 'Composite MF score',
+    source                  VARCHAR(255) NULL COMMENT 'Data source (10-K, earnings, etc.)',
+    source_date             DATE        NULL COMMENT 'Date of source document',
+    is_llm_generated        TINYINT(1)  NOT NULL DEFAULT 0 COMMENT '1 if LLM-populated',
+    llm_confidence          DECIMAL(5,4) NULL COMMENT 'LLM confidence 0-1',
+    llm_reasoning           TEXT        NULL COMMENT 'LLM explanation for scores',
+    human_overridden        TINYINT(1)  NOT NULL DEFAULT 0 COMMENT '1 if human changed LLM score',
+    created_at              TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at              TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (symbol),
+    INDEX idx_mf_score (mf_score)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------------------------
+-- InvestorPlace screening criteria
+-- --------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS investorplace (
+    id                  INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    symbol              CHAR(16)        NOT NULL,
+    seventyfivepercent  TINYINT(1)      NULL COMMENT 'Domestic sales >= 75%',
+    earningsgrowth      TINYINT(1)      NULL COMMENT 'Earnings growing',
+    earningsaccel       TINYINT(1)      NULL COMMENT 'Earnings growth accelerating',
+    pe                  DECIMAL(10,2)  NULL COMMENT 'P/E ratio',
+    tradingvolume       INT UNSIGNED    NULL COMMENT 'Trading volume',
+    institutioninterest DECIMAL(5,2)   NULL COMMENT 'Institutional ownership %',
+    orderimbalance      TINYINT(1)      NULL COMMENT 'Buy/sell order balance',
+    shortinterest       TINYINT(1)      NULL COMMENT 'High short interest',
+    volatility          DECIMAL(10,4)  NULL COMMENT 'Share volatility',
+    dividendearningratio DECIMAL(10,4) NULL COMMENT 'Dividend/earnings ratio',
+    newproductline      TINYINT(1)      NULL COMMENT 'Innovations / new products',
+    restructuring       TINYINT(1)      NULL COMMENT 'Cost-cutting restructuring',
+    reengineering       TINYINT(1)      NULL COMMENT 'Business reengineering',
+    sharebuyback        TINYINT(1)      NULL COMMENT 'Share buyback program',
+    headcountcuts       TINYINT(1)      NULL COMMENT 'Announced staff reductions',
+    spinoffs            TINYINT(1)      NULL COMMENT 'Business spin-offs',
+    reducedrd           TINYINT(1)      NULL COMMENT 'Reducing R&D',
+    extracash           TINYINT(1)      NULL COMMENT 'Cash on hand',
+    shareholderprofitgoal TINYINT(1)    NULL COMMENT 'Management focused on shareholder profit',
+    dividendincreases   TINYINT(1)      NULL COMMENT 'Track record of dividend increases',
+    ip_score            INT             NULL COMMENT 'Composite IP score',
+    source              VARCHAR(255)    NULL COMMENT 'Data source',
+    source_date         DATE            NULL COMMENT 'Date of source document',
+    is_llm_generated    TINYINT(1)      NOT NULL DEFAULT 0,
+    llm_confidence      DECIMAL(5,4)   NULL,
+    llm_reasoning       TEXT            NULL,
+    human_overridden    TINYINT(1)      NOT NULL DEFAULT 0,
+    created_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_symbol (symbol),
+    INDEX idx_ip_score (ip_score)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------------------------
+-- Business quality assessment (Buffett-style business tenets)
+-- --------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS evalbusiness (
+    id                  INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    symbol              CHAR(16)        NOT NULL,
+    summary             INT             NULL COMMENT 'Summary score (out of 5)',
+    simple              TINYINT(1)      NULL COMMENT 'Simple business model',
+    consistent_history  TINYINT(1)      NULL COMMENT 'Consistent performance history',
+    neededproduct       TINYINT(1)      NULL COMMENT 'Product is needed',
+    noclosesubstitute   TINYINT(1)      NULL COMMENT 'No close substitute',
+    regulated           TINYINT(1)      NULL COMMENT 'Regulated industry (moat)',
+    source              VARCHAR(255)    NULL COMMENT 'Data source',
+    source_date         DATE            NULL,
+    is_llm_generated    TINYINT(1)      NOT NULL DEFAULT 0,
+    llm_confidence      DECIMAL(5,4)   NULL,
+    llm_reasoning       TEXT            NULL,
+    human_overridden    TINYINT(1)      NOT NULL DEFAULT 0,
+    created_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_symbol (symbol)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------------------------
+-- Management & business tenets (Buffett-style, detailed)
+-- --------------------------------------------------------------------------
+-- Note: legacy "tenets" table had per-symbol rows with integer scores.
+-- This enhanced version adds LLM support and source attribution.
+CREATE TABLE IF NOT EXISTS tenets (
+    id                  INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    symbol              CHAR(16)        NOT NULL,
+    simple              INT             NULL COMMENT 'Simple business (0-10)',
+    consistent          INT             NULL COMMENT 'Consistent performance (0-10)',
+    longterm            INT             NULL COMMENT 'Long-term prospects (0-10)',
+    rationalmanager     INT             NULL COMMENT 'Rational management (0-10)',
+    candid              INT             NULL COMMENT 'Candid with shareholders (0-10)',
+    resistinstitution   INT             NULL COMMENT 'Resists institutional pressures (0-10)',
+    focusroe            INT             NULL COMMENT 'Focuses on ROE, not EPS (0-10)',
+    ownerearnings       INT             NULL COMMENT 'Calculates owner earnings (0-10)',
+    highprofitmargin    INT             NULL COMMENT 'High profit margins (0-10)',
+    retainedtomarket    INT             NULL COMMENT 'Retained earnings → market value (0-10)',
+    valueofbusiness     INT             NULL COMMENT 'Intrinsic value calculation (0-10)',
+    discounted          INT             NULL COMMENT 'Purchased at discount (0-10)',
+    total_score         INT             NULL COMMENT 'Sum of all tenet scores',
+    source              VARCHAR(255)    NULL COMMENT 'Data source (annual letter, proxy, etc.)',
+    source_date         DATE            NULL,
+    is_llm_generated    TINYINT(1)      NOT NULL DEFAULT 0,
+    llm_confidence      DECIMAL(5,4)   NULL,
+    llm_reasoning       TEXT            NULL,
+    human_overridden    TINYINT(1)      NOT NULL DEFAULT 0,
+    created_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_symbol (symbol),
+    INDEX idx_total_score (total_score)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------------------------
+-- Financial ratio analysis with attractiveness scoring
+-- --------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS ratios (
+    id                  INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    symbol              CHAR(16)        NOT NULL,
+    -- Raw ratio values
+    roe                 DECIMAL(10,4)  NULL COMMENT 'Return on Equity',
+    roa                 DECIMAL(10,4)  NULL COMMENT 'Return on Assets',
+    roce                DECIMAL(10,4)  NULL COMMENT 'Return on Capital Employed',
+    grossprofitmargin   DECIMAL(10,4)  NULL COMMENT 'Gross Profit Margin',
+    pretaxmargin        DECIMAL(10,4)  NULL COMMENT 'Pre-tax Margin',
+    netmargin           DECIMAL(10,4)  NULL COMMENT 'Net Margin',
+    operatingmargin     DECIMAL(10,4)  NULL COMMENT 'Operating Margin',
+    debtratio           DECIMAL(10,4)  NULL COMMENT 'Debt Ratio (debt/assets)',
+    acceptabledebtratio DECIMAL(10,4)  NULL COMMENT 'Acceptable Debt Ratio',
+    peratio             DECIMAL(10,4)  NULL COMMENT 'P/E Ratio',
+    -- Attractiveness scores (1 = meets threshold, 0 = doesn't)
+    roeattractive       TINYINT(1)      NULL COMMENT 'ROE > 15%',
+    attractiveroa       TINYINT(1)      NULL COMMENT 'ROA attractive',
+    attractiveroce      TINYINT(1)      NULL COMMENT 'ROCE attractive',
+    attractivegross     TINYINT(1)      NULL COMMENT 'Gross margin attractive',
+    attractivepretax    TINYINT(1)      NULL COMMENT 'Pre-tax margin attractive',
+    attractivenet       TINYINT(1)      NULL COMMENT 'Net margin attractive',
+    lowcost             TINYINT(1)      NULL COMMENT 'Low cost operations (opmargin > 10%)',
+    sustaindebtratio    TINYINT(1)      NULL COMMENT 'Debt covered by income long-term',
+    attractivesum       INT             NULL COMMENT 'Sum of all attractive scores',
+    -- Source tracking
+    source              VARCHAR(255)    NULL COMMENT 'Data source (10-K, 10-Q)',
+    source_date         DATE            NULL,
+    is_llm_generated    TINYINT(1)      NOT NULL DEFAULT 0,
+    created_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_symbol (symbol),
+    INDEX idx_attractivesum (attractivesum)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------------------------
+-- Quarterly financial statements
+-- --------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS quarter_statement (
+    id                  INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    symbol              CHAR(16)        NOT NULL,
+    fiscal_year         YEAR            NOT NULL,
+    fiscal_quarter      TINYINT         NOT NULL COMMENT '1-4',
+    -- Income statement
+    revenue             DECIMAL(15,2)  NULL,
+    revenuegrowth       DECIMAL(10,4)  NULL COMMENT 'YoY revenue growth %',
+    revenuegrowth2      DECIMAL(10,4)  NULL COMMENT '2-year revenue growth %',
+    revenuegrowth3      DECIMAL(10,4)  NULL COMMENT '3-year revenue growth %',
+    netincome           DECIMAL(15,2)  NULL,
+    incomegrowth        DECIMAL(10,4)  NULL COMMENT 'YoY income growth %',
+    earningpershare     DECIMAL(10,4)  NULL,
+    -- Balance sheet
+    totalasset          DECIMAL(15,2)  NULL,
+    totalliability      DECIMAL(15,2)  NULL,
+    totalequity         DECIMAL(15,2)  NULL,
+    totaldebt           DECIMAL(15,2)  NULL,
+    retainedearnings    DECIMAL(15,2)  NULL,
+    -- Cash flow
+    ownerearnings       DECIMAL(15,2)  NULL,
+    capitalexpenses     DECIMAL(15,2)  NULL,
+    depletion           DECIMAL(15,2)  NULL,
+    amortization        DECIMAL(15,2)  NULL,
+    workingcapital      DECIMAL(15,2)  NULL,
+    -- Other
+    outstandingshares   BIGINT UNSIGNED NULL,
+    dividendpershare    DECIMAL(10,4)  NULL,
+    -- Source tracking
+    source              VARCHAR(255)    NULL COMMENT '10-Q filing, etc.',
+    source_date         DATE            NULL,
+    is_llm_generated    TINYINT(1)      NOT NULL DEFAULT 0,
+    created_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_symbol_year_qtr (symbol, fiscal_year, fiscal_quarter),
+    INDEX idx_symbol (symbol),
+    INDEX idx_year_qtr (fiscal_year, fiscal_quarter)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------------------------
+-- Management evaluation
+-- --------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS evalmanagement (
+    id                  INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    symbol              CHAR(16)        NOT NULL,
+    management_score    INT             NULL COMMENT 'Composite management score',
+    source              VARCHAR(255)    NULL,
+    source_date         DATE            NULL,
+    is_llm_generated    TINYINT(1)      NOT NULL DEFAULT 0,
+    llm_confidence      DECIMAL(5,4)   NULL,
+    llm_reasoning       TEXT            NULL,
+    human_overridden    TINYINT(1)      NOT NULL DEFAULT 0,
+    created_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_symbol (symbol)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------------------------
+-- Market evaluation
+-- --------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS evalmarket (
+    id                  INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    symbol              CHAR(16)        NOT NULL,
+    market_score        INT             NULL COMMENT 'Composite market evaluation score',
+    source              VARCHAR(255)    NULL,
+    source_date         DATE            NULL,
+    is_llm_generated    TINYINT(1)      NOT NULL DEFAULT 0,
+    llm_confidence      DECIMAL(5,4)   NULL,
+    llm_reasoning       TEXT            NULL,
+    human_overridden    TINYINT(1)      NOT NULL DEFAULT 0,
+    created_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_symbol (symbol)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------------------------
+-- Value assessment
+-- --------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS evalvalue (
+    id                  INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    symbol              CHAR(16)        NOT NULL,
+    value_score         INT             NULL COMMENT 'Composite value score',
+    intrinsic_value     DECIMAL(15,2)  NULL COMMENT 'Calculated intrinsic value',
+    margin_of_safety    DECIMAL(10,4)  NULL COMMENT 'Margin of safety %',
+    source              VARCHAR(255)    NULL,
+    source_date         DATE            NULL,
+    is_llm_generated    TINYINT(1)      NOT NULL DEFAULT 0,
+    llm_confidence      DECIMAL(5,4)   NULL,
+    llm_reasoning       TEXT            NULL,
+    human_overridden    TINYINT(1)      NOT NULL DEFAULT 0,
+    created_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_symbol (symbol)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------------------------
+-- Composite evaluation summary (the "final score" per symbol)
+-- --------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS evalsummary (
+    symbol              CHAR(16)        NOT NULL,
+    totalscore          INT             NULL COMMENT 'Total of all scores (out of 36)',
+    marginsafety        DECIMAL(10,4)  NULL COMMENT 'Margin of safety (%)',
+    ratioscore          INT             NULL COMMENT 'Score from ratios table (out of 8)',
+    iplacecalcscore     INT             NULL COMMENT 'InvestorPlace score (out of 10)',
+    managementscore     INT             NULL COMMENT 'Management tenets score (out of 9)',
+    financialscore      INT             NULL COMMENT 'Financial tenets score (out of 4)',
+    businessscore       INT             NULL COMMENT 'Business tenets score (out of 5)',
+    mf_score            INT             NULL COMMENT 'Motley Fool score',
+    ip_score            INT             NULL COMMENT 'InvestorPlace score',
+    tenet_score         INT             NULL COMMENT 'Tenets total score',
+    value_score         INT             NULL COMMENT 'Value assessment score',
+    -- LLM analysis summary
+    llm_summary         TEXT            NULL COMMENT 'LLM-generated investment thesis summary',
+    llm_confidence      DECIMAL(5,4)   NULL,
+    llm_recommendation  ENUM('STRONG_BUY', 'BUY', 'HOLD', 'SELL', 'STRONG_SELL') NULL,
+    -- Human override
+    human_recommendation ENUM('STRONG_BUY', 'BUY', 'HOLD', 'SELL', 'STRONG_SELL') NULL,
+    human_notes         TEXT            NULL COMMENT 'Human analyst notes',
+    -- Source tracking
+    last_eval_date      DATE            NULL,
+    last_eval_source    VARCHAR(255)    NULL COMMENT 'What triggered the last evaluation',
+    is_llm_generated    TINYINT(1)      NOT NULL DEFAULT 0,
+    created_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (symbol),
+    INDEX idx_totalscore (totalscore),
+    INDEX idx_llm_rec (llm_recommendation),
+    INDEX idx_human_rec (human_recommendation)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------------------------
+-- Scoring history (track how scores change over time)
+-- --------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS scoring_history (
+    id                  BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    symbol              CHAR(16)        NOT NULL,
+    scored_at           DATE            NOT NULL,
+    table_name          VARCHAR(64)     NOT NULL COMMENT 'Which scoring table was updated',
+    field_name          VARCHAR(64)     NOT NULL COMMENT 'Which field changed',
+    old_value           VARCHAR(255)    NULL,
+    new_value           VARCHAR(255)    NULL,
+    source              VARCHAR(255)    NULL COMMENT 'What document triggered the change',
+    is_llm_generated    TINYINT(1)      NOT NULL DEFAULT 0,
+    llm_confidence      DECIMAL(5,4)   NULL,
+    created_at          TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    INDEX idx_symbol_date (symbol, scored_at),
+    INDEX idx_table_field (table_name, field_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ============================================================================
 -- BACKUP PROCEDURES (documented — run via cron or manually)
 -- ============================================================================
 --

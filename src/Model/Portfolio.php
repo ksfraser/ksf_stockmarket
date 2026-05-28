@@ -6,12 +6,15 @@ namespace Ksf\StockMarket\Model;
 
 use PDO;
 use InvalidArgumentException;
-use RuntimeException;
 
 /**
- * Portfolio model — represents a user's holdings.
+ * Modern portfolio model.
  *
- * Modernized from class/portfolio.class.php.cpp
+ * Works with the schema_v2 `portfolio` table structure:
+ *   id, user_id, symbol, shares, cost_basis, cost_total,
+ *   account_type, acquisition_date, is_active, updated_at
+ *
+ * Supports multiple account types (RRSP, TFSA, MARGIN, RESP, CASH).
  */
 class Portfolio
 {
@@ -23,126 +26,149 @@ class Portfolio
     }
 
     /**
-     * Get all positions for a user.
-     *
-     * @param string $user Username
-     * @return array<int, array{symbol: string, shares: int, cost_basis: float, user: string}>
+     * Get all active positions for a user.
      */
-    public function getPositions(string $user = 'default'): array
+    public function getHoldings(int $userId, ?string $accountType = null): array
     {
-        $stmt = $this->db->prepare(
-            'SELECT symbol, number AS shares, cost AS cost_basis, user
-             FROM portfolio
-             WHERE user = :user
-             ORDER BY symbol'
-        );
-        $stmt->execute(['user' => $user]);
+        $sql = 'SELECT * FROM portfolio WHERE user_id = :uid AND is_active = 1';
+        $params = ['uid' => $userId];
 
+        if ($accountType) {
+            $sql .= ' AND account_type = :at';
+            $params['at'] = $accountType;
+        }
+
+        $sql .= ' ORDER BY account_type, symbol';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetchAll();
     }
 
     /**
      * Get a single position.
-     *
-     * @param string $symbol Stock symbol
-     * @param string $user   Username
-     * @return array{symbol: string, shares: int, cost_basis: float}|null
      */
-    public function getPosition(string $symbol, string $user = 'default'): ?array
+    public function getPosition(int $userId, string $symbol, string $accountType = 'CASH'): ?array
     {
         $stmt = $this->db->prepare(
-            'SELECT symbol, number AS shares, cost AS cost_basis
-             FROM portfolio
-             WHERE symbol = :symbol AND user = :user'
+            'SELECT * FROM portfolio
+             WHERE user_id = :uid AND symbol = :sym AND account_type = :at AND is_active = 1'
         );
-        $stmt->execute(['symbol' => $symbol, 'user' => $user]);
-
-        $result = $stmt->fetch();
-
-        return $result ?: null;
+        $stmt->execute(['uid' => $userId, 'sym' => strtoupper($symbol), 'at' => $accountType]);
+        return $stmt->fetch() ?: null;
     }
 
     /**
      * Add or update a position.
-     *
-     * @param string $symbol  Stock symbol
-     * @param int    $shares  Number of shares
-     * @param float  $cost    Total cost in dollars
-     * @param string $user    Username
      */
-    public function setPosition(string $symbol, int $shares, float $cost, string $user = 'default'): void
+    public function setPosition(int $userId, string $symbol, float $shares,
+                                 float $costBasis, string $accountType = 'CASH',
+                                 ?string $acquisitionDate = null): int
     {
         if ($shares < 0) {
             throw new InvalidArgumentException('Shares cannot be negative');
         }
-        if ($cost < 0) {
-            throw new InvalidArgumentException('Cost cannot be negative');
+
+        $costTotal = $shares * $costBasis;
+        $symbol = strtoupper($symbol);
+
+        // Check if position exists
+        $existing = $this->getPosition($userId, $symbol, $accountType);
+
+        if ($existing) {
+            // Update existing
+            $stmt = $this->db->prepare(
+                'UPDATE portfolio SET shares = :shares, cost_basis = :cb, cost_total = :ct
+                 WHERE id = :id'
+            );
+            $stmt->execute([
+                'shares' => $shares, 'cb' => $costBasis, 'ct' => $costTotal,
+                'id' => $existing['id'],
+            ]);
+            return (int) $existing['id'];
         }
 
+        // Insert new
         $stmt = $this->db->prepare(
-            'INSERT INTO portfolio (symbol, number, cost, user)
-             VALUES (:symbol, :shares, :cost, :user)
-             ON DUPLICATE KEY UPDATE number = VALUES(number), cost = VALUES(cost)'
+            'INSERT INTO portfolio (user_id, symbol, shares, cost_basis, cost_total,
+                                    account_type, acquisition_date, is_active)
+             VALUES (:uid, :sym, :shares, :cb, :ct, :at, :ad, 1)'
         );
-
         $stmt->execute([
-            'symbol' => strtoupper($symbol),
-            'shares' => $shares,
-            'cost' => (int) round($cost * 100), // Store as cents
-            'user' => $user,
+            'uid' => $userId, 'sym' => $symbol, 'shares' => $shares,
+            'cb' => $costBasis, 'ct' => $costTotal, 'at' => $accountType,
+            'ad' => $acquisitionDate ?? date('Y-m-d'),
         ]);
+
+        return (int) $this->db->lastInsertId();
     }
 
     /**
-     * Remove a position.
-     *
-     * @param string $symbol Stock symbol
-     * @param string $user   Username
-     * @return bool True if position was removed
+     * Deactivate a position (don't delete — keep history).
      */
-    public function removePosition(string $symbol, string $user = 'default'): bool
+    public function deactivatePosition(int $userId, string $symbol, string $accountType = 'CASH'): bool
     {
         $stmt = $this->db->prepare(
-            'DELETE FROM portfolio WHERE symbol = :symbol AND user = :user'
+            'UPDATE portfolio SET is_active = 0
+             WHERE user_id = :uid AND symbol = :sym AND account_type = :at'
         );
-        $stmt->execute(['symbol' => $symbol, 'user' => $user]);
-
+        $stmt->execute(['uid' => $userId, 'sym' => strtoupper($symbol), 'at' => $accountType]);
         return $stmt->rowCount() > 0;
     }
 
     /**
-     * Get total portfolio value using latest prices.
-     *
-     * @param string $user Username
-     * @return array{total_cost: float, position_count: int}
+     * Record a trade in user_trades table.
      */
-    public function getSummary(string $user = 'default'): array
+    public function recordTrade(int $userId, string $symbol, string $action,
+                                 float $shares, float $price, float $commission = 9.95,
+                                 string $accountType = 'CASH', ?string $notes = null): int
     {
-        $stmt = $this->db->prepare(
-            'SELECT SUM(cost) / 100.0 AS total_cost, COUNT(*) AS position_count
-             FROM portfolio
-             WHERE user = :user'
-        );
-        $stmt->execute(['user' => $user]);
-        $result = $stmt->fetch();
+        $totalAmount = ($shares * $price) + ($action === 'BUY' ? $commission : -$commission);
 
-        return [
-            'total_cost' => (float) ($result['total_cost'] ?? 0),
-            'position_count' => (int) ($result['position_count'] ?? 0),
-        ];
+        $stmt = $this->db->prepare(
+            'INSERT INTO user_trades (user_id, symbol, action, shares, price, commission,
+                                      total_amount, account_type, trade_date, notes)
+             VALUES (:uid, :sym, :action, :shares, :price, :comm, :total, :at, CURDATE(), :notes)'
+        );
+        $stmt->execute([
+            'uid' => $userId, 'sym' => strtoupper($symbol), 'action' => $action,
+            'shares' => $shares, 'price' => $price, 'comm' => $commission,
+            'total' => $totalAmount, 'at' => $accountType, 'notes' => $notes,
+        ]);
+
+        return (int) $this->db->lastInsertId();
     }
 
     /**
-     * Get all distinct users who have positions.
-     *
-     * @return array<int, string>
+     * Get trade history for a user.
      */
-    public function getUsers(): array
+    public function getTrades(int $userId, int $limit = 100): array
     {
-        $stmt = $this->db->query(
-            'SELECT DISTINCT user FROM portfolio ORDER BY user'
+        $stmt = $this->db->prepare(
+            'SELECT * FROM user_trades WHERE user_id = :uid ORDER BY trade_date DESC, id DESC LIMIT :lim'
         );
+        $stmt->bindValue('uid', $userId, PDO::PARAM_INT);
+        $stmt->bindValue('lim', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 
-        return array_column($stmt->fetchAll(), 'user');
+    /**
+     * Get portfolio summary (total value by account type).
+     */
+    public function getSummary(int $userId): array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT account_type,
+                    COUNT(*) as num_positions,
+                    SUM(cost_total) as total_cost,
+                    SUM(shares) as total_shares
+             FROM portfolio
+             WHERE user_id = :uid AND is_active = 1
+             GROUP BY account_type
+             ORDER BY account_type'
+        );
+        $stmt->execute(['uid' => $userId]);
+        return $stmt->fetchAll();
     }
 }

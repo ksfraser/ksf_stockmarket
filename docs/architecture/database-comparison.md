@@ -1,159 +1,106 @@
-# Investment Agent DB vs ksf_stockmarket — Comparison & Migration Plan
+# Database Schema Comparison: Legacy vs. Modernized
 
-## Current State: Three Separate Databases
+## Source Systems
 
-### 1. analysis_results.db (SQLite) — The investment-agent workspace
-**38 tables** covering:
-- **Portfolio data**: `portfolio_holdings`, `portfolio_holdings_v2`, `user_trades`, `transactions`
-- **Market data**: `etf_price_history`, `ticker_summaries`, `dividend_history`
-- **Analysis**: `analysis_runs`, `phase1_results`, `phase2_results`, `phase4_results`, `signals`, `weight_updates`, `signal_weights`, `signal_accuracy`, `signal_coherence`, `timing_buckets`
-- **Screening**: `etf_backtest_results`, `etf_scores`, `etf_metadata`
-- **Monitoring**: `corporate_events`, `news_events`, `price_alerts`, `stop_loss_tracker`, `trailing_stops`, `volume_snapshots`, `volume_spikes`, `volume_daily_summary`
-- **Watchlists**: `watchlist`, `ticker_relationships`
-- **Backtest**: `backtest_periods`, `backtest_periods_5y`
-- **Misc**: `contacts`, `delivery_log`, `enquiry_sources`, `indicator_accuracy`, `indicator_relationships`, `insider_trades`, `journal_entries`, `journal_reviews`, `monitor_state`, `portfolios`, `risk_metrics_log`, `sector_limits`, `signal_type_accuracy`
+| Property | `stock_market` (old) | `back_finance` (new) | `ksf_stockmarket` (git) |
+|---|---|---|---|
+| Origin | Original web app | Finance/trading module | Modernized PHP app |
+| Tables | ~130 (FA + legacy SQL) | 21 tables | 16 tables |
+| Engine | MyISAM / InnoDB mix | MyISAM mostly | InnoDB |
+| Charset | latin1 | latin1 | utf8mb4 |
+| Partitioned | No | No | **Yes** (prices, indicators) |
 
-### 2. seg_funds.db (SQLite) — Segregated fund carrier data
-**6 tables**: `carriers`, `fund_codes`, `fund_families`, `fund_series`, `funds`, `performance_history`, `scrape_log`, `screening_presets`
+## Legacy `stock_market` Tables (selected)
 
-### 3. backtest_results.db (SQLite) — Backtest engine output
-**6 tables**: `backtest_performance`, `backtest_portfolio`, `backtest_positions`, `backtest_screens`, `backtest_strategies`, `backtest_trades`
+Tables from the `stock_market.sql` dump that are relevant to the refactoring:
 
-### 4. ksf_stockmarket (MariaDB) — The legacy PHP app
-**Original tables** (from stocks.sql, ~2009):
-- `portfolio` — symbol, shares, cost, user
-- `stockinfo` — symbol, exchange, name, 52w high/low
-- `transaction` — seq, user, symbol, qty, type, dollar, date
-- `transactiontype` — valid types (BUY, SELL, DIVIDEND, etc.)
-- `users` — username, name, email, password, role
-- `roles` — role descriptions
-- `tenets` — Motley Fool evaluation scores per symbol (13 criteria)
-- *(no price history table — prices were in CSV files)*
+| Table | Columns | Purpose | Migrate To |
+|---|---|---|---|
+| `stockprices` | 12 | OHLCV daily prices | `stockprices` (partitioned) |
+| `stockinfo` | 10+ | Company metadata | `stockinfo` |
+| `stockexchange` | ~6 | Exchange definitions | `stockexchange` |
+| `transaction` | 16 | Trade history | `user_trades` |
+| `transactiontype` | 2 | Transaction categories | `transactiontype` |
+| `portfolio` | ~21 | Current holdings | `portfolio` (modernized) |
+| `portfolio_history` | ~21 | Historical snapshots | `portfolio_history` |
+| `dividends` | ~8 | Dividend records | `dividends` |
+| `stockalert` | ~5 | Price alerts | `alerts` |
+| `tenets` | 14 | Motley Fool scores | Gone (Python handles) |
+| `evalsummary` | ~10 | Evaluation summaries | Gone (Python handles) |
+| `evalbusiness` | 226 | Fundamental analysis | Gone (Python handles) |
+| `ratios` | ~60 | Financial ratios | Gone (Python handles) |
+| `quarter_statement` | ~60 | Quarterly financials | Gone (Python handles) |
+| `technicalanalysis` | ~20 | Precomputed TA | Replaced by tier tables |
+| `candlestickactions` | ~8 | Candlestick patterns | Gone (Python/TA-Lib) |
+| `motleyfool` | ~8 | MF screening | Gone (Python handles) |
+| `investorplace` | ~8 | IP screening | Gone (Python handles) |
+| `heikanashi` | ~8 | Candlestick data | Gone (Python/TA-Lib) |
+| `fxprices` | ~5 | Forex prices | Separate module |
+| `bondrate` | ~3 | Bond rates | Not migrated |
+| `indices` | ~5 | Market indices | Not migrated |
+| `taxstatus` | 76 | Tax lot tracking | `taxstatus` (simplified) |
+| `hedgefolios` | ~8 | Hedge portfolio data | Not migrated |
+| `turtledata` | ~8 | Turtle trading system | Not migrated |
 
-**New tables** (from our Phase 1 schema):
-- `stockprices` — OHLCV data (symbol, date, open, high, low, close, volume)
-- `dividends` — dividend records
-- `portfolio_history` — portfolio value snapshots
-- `watchlists` / `watchlist_symbols` — user watchlists
-- `backtest_runs` / `backtest_trades` — backtest results
-- `fa_transfers` — FA journal entries for transfers
-- `data_import_log` — import operation tracking
+## Key Differences: `stock_market` vs `back_finance`
 
-## Key Differences
+### `stockprices` table
 
-| Aspect | investment-agent (SQLite) | ksf_stockmarket (MariaDB) |
-|--------|--------------------------|--------------------------|
-| **Price data** | `etf_price_history`, CSV files in `currentdata/` | `stockprices` table (new), CSV backups |
-| **Portfolio** | `portfolio_holdings` (multi-user, multi-account) | `portfolio` (simple, single-user) |
-| **Transactions** | `user_trades` | `transaction` |
-| **Analysis** | 15+ analysis/signal tables | `tenets` (MF scores only) |
-| **TA data** | Computed on-the-fly | `technicalanalysis` SQL file (33MB of precomputed patterns) |
-| **Backtest** | Separate DB (`backtest_results.db`) | `backtest_runs` / `backtest_trades` (new schema) |
-| **Seg funds** | Separate DB (`seg_funds.db`) | Not present |
-| **Watchlists** | `watchlist` table | `watchlists` / `watchlist_symbols` (new) |
-| **Users** | Not present (single-user) | `users` table with RBAC |
-| **Data volume** | ~50MB total | 177M CSV + 33MB TA SQL |
+| Column | `stock_market` (old) | `back_finance` (new) | Modern schema |
+|---|---|---|---|
+| symbol | varchar(11) | varchar(12) | **CHAR(16)** |
+| date | date | date | **DATE** |
+| day_open | float | float | **DECIMAL(15,4)** |
+| day_high | float | float | **DECIMAL(15,4)** |
+| day_low | float | float | **DECIMAL(15,4)** |
+| day_close | float | float | **DECIMAL(15,4)** |
+| previous_close | float | float | **DECIMAL(15,4)** |
+| day_change | float | float | **DECIMAL(15,4)** |
+| adj_close | float | — | **DECIMAL(15,4)** |
+| volume | int(11) | int(11) | **BIGINT UNSIGNED** |
+| bid | float | float | **DECIMAL(15,4)** |
+| ask | float | float | **DECIMAL(15,4)** |
+| idstockinfo | — | int(11) | **Removed** (join via symbol) |
+| source | — | — | **VARCHAR(32)** |
+| updated_at | — | — | **TIMESTAMP** |
+| **PRIMARY KEY** | (none!) | (none!) | **(symbol, price_date)** |
+| **Engine** | MyISAM | MyISAM | **InnoDB** |
+| **Partitioned** | No | No | **By YEAR** |
 
-## The Backup Problem (Kevin's 2013 trauma)
+**Critical note**: Neither legacy schema has a PRIMARY KEY on stockprices!
+This means duplicate rows are possible. The migration script needs
+`INSERT IGNORE` or `ON DUPLICATE KEY UPDATE`.
 
-The old monolithic `mysqldump` approach generated one file. When price data + TA data + other tables exceeded 4GB, the filesystem truncated the backup, losing wiki and app data.
+### `stockinfo` table
 
-### Solution: Per-Table Backup Strategy
+| Column | `stock_market` | `back_finance` | Modern schema |
+|---|---|---|---|
+| stocksymbol | CHAR(16) | varchar(12) | CHAR(16) |
+| exchange | VARCHAR(32) | varchar(45) | VARCHAR(32) |
+| corporatename | — | varchar(255) | VARCHAR(255) |
+| `52high` | — | float | DOUBLE |
+| `52low` | — | float | DOUBLE |
+| sector | — | — | VARCHAR(128) |
+| industry | — | — | VARCHAR(128) |
+| market_cap | — | — | BIGINT UNSIGNED |
 
-```
-ksf_stockmarket database backup strategy:
-│
-├── Critical tables (daily backup, small):
-│   ├── portfolio          ~few KB
-│   ├── transaction        ~few MB
-│   ├── users/roles        ~few KB
-│   └── stockinfo          ~few MB
-│
-├── Price data (weekly backup, large):
-│   └── stockprices        ~hundreds of MB
-│       └── PARTITION BY YEAR (see below)
-│
-├── Analysis data (monthly backup, regenerable):
-│   ├── tenets             ~few MB
-│   ├── backtest_runs      ~few MB
-│   └── backtest_trades    ~few MB
-│
-└── Static/reference (backup once):
-    ├── transactiontype    ~1 KB
-    └── turtledata         ~4 KB
-```
+## Migration Plan
 
-### Per-Table Partitioning for Price Data
+### Phase 1: Schema + Import (current)
+1. Deploy `schema_v2_partitioned.sql`
+2. Import CSV data into partitioned `stockprices` (~177MB, ~2000 symbols)
+3. Run Tier 2 event to populate `daily_tier2` for recent dates
+4. Verify trigger works on new inserts
+5. Benchmark query performance
 
-**stockprices** gets partitioned by year to keep individual backup files small:
+### Phase 2: PHP Integration
+1. Update `Database.php` to use modern schema
+2. Update `Portfolio.php` to use new `portfolio` table
+3. Add API endpoints for `v_stock_analysis`
+4. Port FA module tables
 
-```sql
--- Instead of one massive stockprices table:
-CREATE TABLE stockprices (
-    symbol      CHAR(16)        NOT NULL,
-    price_date  DATE            NOT NULL,
-    open        DECIMAL(15,4)   NOT NULL,
-    high        DECIMAL(15,4)   NOT NULL,
-    low         DECIMAL(15,4)   NOT NULL,
-    close       DECIMAL(15,4)   NOT NULL,
-    volume      BIGINT UNSIGNED NOT NULL,
-    adj_close   DECIMAL(15,4)   NULL,
-    source      VARCHAR(32)     NULL DEFAULT 'csv',
-    updated_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (symbol, price_date)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-PARTITION BY RANGE (YEAR(price_date)) (
-    PARTITION p_pre2020 VALUES LESS THAN (2020),
-    PARTITION p_2020 VALUES LESS THAN (2021),
-    PARTITION p_2021 VALUES LESS THAN (2022),
-    PARTITION p_2022 VALUES LESS THAN (2023),
-    PARTITION p_2023 VALUES LESS THAN (2024),
-    PARTITION p_2024 VALUES LESS THAN (2025),
-    PARTITION p_2025 VALUES LESS THAN (2026),
-    PARTITION p_2026 VALUES LESS THAN (2027),
-    PARTITION p_future VALUES LESS THAN MAXVALUE
-);
-```
-
-**Benefits:**
-- Back up each year partition separately: `mysqldump ... stockprices --where "price_date >= '2025-01-01'"`
-- Old partitions are read-only → back up once, archive, done
-- Drop old partitions instantly: `ALTER TABLE stockprices DROP PARTITION p_pre2020`
-- Query performance: planner skips irrelevant partitions
-
-### Moving investment-agent Data into ksf_stockmarket
-
-**Phase 1: Price data (highest volume)**
-- Import `currentdata/` CSV files (177MB, ~2000 symbols) into `stockprices`
-- Import `etf_price_history` from analysis_results.db into `stockprices`
-- Add `source` column to track origin (csv, yfinance, etc.)
-
-**Phase 2: Portfolio holdings**
-- Migrate `portfolio_holdings` → ksf_stockmarket `portfolio` + `user_trades`
-- Add account_type column (RRSP, TFSA, INV, LIRA)
-
-**Phase 3: Analysis tables**
-- Port `signals`, `analysis_runs`, `weight_updates` → ksf_stockmarket
-- Keep `tenets` table from original schema (Motley Fool scores)
-
-**Phase 4: Backtest data**
-- Merge `backtest_results.db` tables into ksf_stockmarket `backtest_runs` / `backtest_trades`
-
-**Phase 5: Monitoring**
-- Port `corporate_events`, `news_events`, `price_alerts` → ksf_stockmarket
-- Port `volume_snapshots`, `volume_spikes` → ksf_stockmarket
-
-**Not migrating (stay in SQLite or separate DB):**
-- `seg_funds.db` — separate carrier data, different domain
-- `etf_metadata`, `etf_scores`, `etf_backtest_results` — investment-agent specific
-- `indicator_accuracy`, `signal_coherence`, `weight_updates` — ML training data
-
-## Refactoring Approach
-
-### Step 1: Create the per-table backup script
-### Step 2: Partition stockprices by year
-### Step 3: Import currentdata CSV → stockprices
-### Step 4: Migrate portfolio data
-### Step 5: Set up FA module tables (users, watchlists, backtest)
-### Step 6: Build the Python→API→PHP bridge
-### Step 7: Decommission SQLite files (or keep as cache layer)
+### Phase 3: Python Bridge
+1. CSV import script → partitioned table
+2. Tier 2 refresh as Python cron (alternative to MySQL event)
+3. Backtesting reads from `v_stock_analysis`
+4. Signal weights written back to `signal_weights` table

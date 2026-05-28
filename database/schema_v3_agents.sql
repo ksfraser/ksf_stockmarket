@@ -57,6 +57,10 @@ CREATE TABLE IF NOT EXISTS nn_predictions (
     predicted_return_5d  DECIMAL(10,6) NULL COMMENT 'Predicted 5-day return %',
     predicted_return_20d DECIMAL(10,6) NULL COMMENT 'Predicted 20-day return %',
 
+    -- Position sizing
+    raw_weight       DECIMAL(7,4)   NULL COMMENT 'NN recommended weight before user cap',
+    user_cap_weight  DECIMAL(7,4)   NULL COMMENT 'Weight after applying user_position_caps (min of the two)',
+
     -- Feature snapshot (key indicators that drove the prediction)
     feature_json    JSON            NULL COMMENT 'Snapshot of key TA values at prediction time',
 
@@ -213,6 +217,40 @@ CREATE TABLE IF NOT EXISTS agent_configs (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------------------------------------------------------
+-- User position sizing caps — per-symbol, per-region, per-sector hard limits
+-- Blender respects these as: effective_weight = min(agent_recommended, user_cap)
+-- ----------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS user_position_caps (
+    id              INT UNSIGNED    NOT NULL AUTO_INCREMENT,
+    cap_type        ENUM('symbol', 'region', 'sector', 'account', 'global') NOT NULL DEFAULT 'symbol',
+    cap_target      VARCHAR(64)     NOT NULL COMMENT 'Symbol ticker, region code, sector name, or account_id',
+    max_position_pct DECIMAL(7,4)  NOT NULL COMMENT 'Maximum portfolio weight (0.0-1.0)',
+    is_active       TINYINT(1)      NOT NULL DEFAULT 1,
+    notes           TEXT            NULL COMMENT 'Why this cap exists',
+    created_at      TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_type_target (cap_type, cap_target),
+    INDEX idx_cap_type (cap_type),
+    INDEX idx_active (is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Seed default position caps (conservative defaults — user adjusts via UI/API)
+INSERT INTO user_position_caps (cap_type, cap_target, max_position_pct, is_active, notes) VALUES
+('global',      'default',    0.10, 1, 'Default max 10% per position across all accounts'),
+('region',      'CDN',        0.15, 1, 'Canadian equities max 15% per position'),
+('region',      'USA',        0.15, 1, 'US equities max 15% per position'),
+('region',      'EURO',       0.08, 1, 'European equities max 8% per position (more volatile FX)'),
+('region',      'EMERGING',   0.05, 1, 'Emerging markets max 5% per position (highest risk)'),
+('account',     'TFSA',       0.10, 1, 'TFSA account max 10% per position'),
+('account',     'RRSP',       0.10, 1, 'RRSP account max 10% per position'),
+('account',     'MARGIN',     0.15, 1, 'Margin account max 15% per position')
+ON DUPLICATE KEY UPDATE
+    max_position_pct = VALUES(max_position_pct),
+    notes = VALUES(notes),
+    updated_at = CURRENT_TIMESTAMP;
+
+-- ----------------------------------------------------------------------------
 -- Seed default configurations
 -- ----------------------------------------------------------------------------
 INSERT INTO agent_configs (agent_type, config_key, config_value, value_type, description) VALUES
@@ -240,6 +278,8 @@ INSERT INTO agent_configs (agent_type, config_key, config_value, value_type, des
 ('nn', 'early_stopping_patience', '10', 'int', 'Epochs without improvement before early stop'),
 ('nn', 'train_split', '0.8', 'float', 'Fraction of data for training (rest for validation)'),
 ('nn', 'confidence_threshold', '0.6', 'float', 'Minimum confidence to generate actionable signal'),
+('nn', 'max_recommended_weight', '0.15', 'float', 'Maximum position weight NN agent can recommend (before user cap)'),
+('nn', 'min_recommended_weight', '0.01', 'float', 'Minimum position weight NN agent can recommend'),
 
 -- RL Agent defaults
 ('rl', 'algorithm', 'PPO', 'string', 'RL algorithm: PPO, A2C, DDPG'),

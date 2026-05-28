@@ -40,3 +40,7 @@ __pycache__/
 
 # Uploads
 /reports/generated/
+
+# Large MariaDB backup dumps (100MB+ each, on disk but not in git)
+sql/MYSQL.*.sql
+sql/.*.sql.*

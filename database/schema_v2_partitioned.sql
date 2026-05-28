@@ -535,13 +535,29 @@ CREATE TABLE signal_weights (
     signal_type     VARCHAR(64)     NOT NULL COMMENT 'e.g., RSI_OVERSOLD, MACD_CROSS, BB_TOUCH',
     weight          DECIMAL(8,4)  NOT NULL DEFAULT 1.0 COMMENT 'Optimized weight for this signal',
     default_weight  DECIMAL(8,4)  NOT NULL DEFAULT 1.0,
+    
+    -- Performance tracking
     win_rate        DECIMAL(5,4)  NULL COMMENT 'Historical win rate for this signal',
     n_trades        INT UNSIGNED    NULL,
+    avg_return      DECIMAL(10,6) NULL COMMENT 'Average return when this signal fires',
+    
+    -- Correlation & lead/lag analysis
+    avg_lead_days   DECIMAL(5,1)  NULL COMMENT 'Avg days between signal and price move (+ = leads, - = lags)',
+    is_pre_indicator TINYINT(1)   DEFAULT 0 COMMENT '1 if signal consistently leads price action',
+    correlation     DECIMAL(5,4)  NULL COMMENT 'Correlation with future 5-day return',
+    correlates_with JSON          NULL COMMENT 'JSON: [{"signal": "MACD_CROSS", "corr": 0.72, "lag_days": 3}]',
+    
+    -- Weight modulation
+    weight_boosted  DECIMAL(8,4)  NULL COMMENT 'Effective weight when pre-indicator confirmed by follow-on',
+    boost_condition VARCHAR(255)  NULL COMMENT 'Condition that triggers boost (e.g., MACD_CROSS within 5 days)',
+    
     last_updated    TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    updated_by      ENUM('backtest', 'manual', 'python_ml') NOT NULL DEFAULT 'manual',
+    updated_by      ENUM('backtest', 'manual', 'python_ml', 'correlation_analysis') NOT NULL DEFAULT 'manual',
     PRIMARY KEY (id),
     UNIQUE KEY uk_symbol_signal (symbol, signal_type),
-    INDEX idx_symbol (symbol)
+    INDEX idx_symbol (symbol),
+    INDEX idx_correlation (correlation),
+    INDEX idx_pre_indicator (is_pre_indicator)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ============================================================================
@@ -1110,4 +1126,45 @@ CREATE TABLE IF NOT EXISTS scoring_history (
 --
 -- 5. Signal weights (portable across environments):
 --    mysqldump ksf_stockmarket signal_weights > signal_weights.sql
+--
+-- 6. Scoring tables (investment thesis — portable):
+--    mysqldump ksf_stockmarket evalsummary motleyfool investorplace tenets \
+--      evalbusiness ratios quarter_statement evalmanagement evalmarket evalvalue \
+--      scoring_history > scoring_tables.sql
+--
+-- 7. TA values (exotic indicators — name-value pairs):
+--    mysqldump ksf_stockmarket ta_values > ta_values.sql
+
+-- ============================================================================
+-- TIER 3: TA VALUES (Python/TA-Lib, name-value storage)
+-- ============================================================================
+-- ~315 exotic indicators stored as name-value pairs.
+-- Common indicators (Tier 1+2) are in wide columns for fast queries.
+-- Exotic indicators (candlestick patterns, custom TA) are here.
+
+CREATE TABLE IF NOT EXISTS ta_values (
+    symbol      CHAR(16)        NOT NULL,
+    price_date  DATE            NOT NULL,
+    indicator   VARCHAR(64)     NOT NULL COMMENT 'e.g., RSI_14, MACD, CDL_DOJI',
+    value       DECIMAL(15,8)  NULL,
+    signal      ENUM('BUY', 'SELL', 'HOLD', 'N/A') NULL COMMENT 'Signal direction for pattern indicators',
+    source      VARCHAR(32)     NULL DEFAULT 'ta_lib' COMMENT 'ta_lib, pandas_ta, custom',
+    updated_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (symbol, price_date, indicator),
+    INDEX idx_symbol_date (symbol, price_date),
+    INDEX idx_indicator (indicator),
+    INDEX idx_signal (signal)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+PARTITION BY RANGE (YEAR(price_date)) (
+    PARTITION p_early VALUES LESS THAN (2010),
+    PARTITION p2010 VALUES LESS THAN (2012),
+    PARTITION p2012 VALUES LESS THAN (2014),
+    PARTITION p2014 VALUES LESS THAN (2016),
+    PARTITION p2016 VALUES LESS THAN (2018),
+    PARTITION p2018 VALUES LESS THAN (2020),
+    PARTITION p2020 VALUES LESS THAN (2022),
+    PARTITION p2022 VALUES LESS THAN (2024),
+    PARTITION p2024 VALUES LESS THAN (2026),
+    PARTITION p_future VALUES LESS THAN MAXVALUE
+);
 --

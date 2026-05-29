@@ -1,0 +1,78 @@
+{
+  "period": "2019-06-01 \u2192 2024-12-31",
+  "symbols": [
+    "RY",
+    "CM"
+  ],
+  "strategies": [
+    "sma_10_50",
+    "bollinger_mr"
+  ],
+  "n_results": 4,
+  "top_20": [
+    {
+      "name": "max_pct_portfolio=0.1_rebalance_days=30_stop_factor=2.0_max_risk_pct=0.01_max_positions=8",
+      "final_value": 101118.87,
+      "pnl": 1118.87,
+      "pnl_pct": 1.12,
+      "max_drawdown": 2.3,
+      "sharpe": 0.2497,
+      "n_trades": 10,
+      "n_buys": 5,
+      "n_sells": 5,
+      "win_rate": 20.0,
+      "avg_win": 2378.88,
+      "avg_loss": -315.0,
+      "expectancy": 223.77,
+      "total_pnl_from_trades": 1118.87
+    },
+    {
+      "name": "max_pct_portfolio=0.1_rebalance_days=30_stop_factor=2.0_max_risk_pct=0.01_max_positions=12",
+      "final_value": 101118.87,
+      "pnl": 1118.87,
+      "pnl_pct": 1.12,
+      "max_drawdown": 2.3,
+      "sharpe": 0.2497,
+      "n_trades": 10,
+      "n_buys": 5,
+      "n_sells": 5,
+      "win_rate": 20.0,
+      "avg_win": 2378.88,
+      "avg_loss": -315.0,
+      "expectancy": 223.77,
+      "total_pnl_from_trades": 1118.87
+    },
+    {
+      "name": "max_pct_portfolio=0.05_rebalance_days=30_stop_factor=2.0_max_risk_pct=0.01_max_positions=8",
+      "final_value": 100495.8,
+      "pnl": 495.8,
+      "pnl_pct": 0.5,
+      "max_drawdown": 1.18,
+      "sharpe": 0.2217,
+      "n_trades": 10,
+      "n_buys": 5,
+      "n_sells": 5,
+      "win_rate": 20.0,
+      "avg_win": 1163.06,
+      "avg_loss": -166.82,
+      "expectancy": 99.16,
+      "total_pnl_from_trades": 495.8
+    },
+    {
+      "name": "max_pct_portfolio=0.05_rebalance_days=30_stop_factor=2.0_max_risk_pct=0.01_max_positions=12",
+      "final_value": 100495.8,
+      "pnl": 495.8,
+      "pnl_pct": 0.5,
+      "max_drawdown": 1.18,
+      "sharpe": 0.2217,
+      "n_trades": 10,
+      "n_buys": 5,
+      "n_sells": 5,
+      "win_rate": 20.0,
+      "avg_win": 1163.06,
+      "avg_loss": -166.82,
+      "expectancy": 99.16,
+      "total_pnl_from_trades": 495.8
+    }
+  ]
+}

@@ -134,14 +134,13 @@ class PositionCapEnforcer:
 
     def _load_caps(self):
         """Load all active caps from the database."""
-        cursor = self.conn.cursor(dictionary=True)
+        from python.db_connector import get_dict_cursor
+        cursor = get_dict_cursor(self.conn)
         cursor.execute("""
             SELECT cap_type, cap_target, max_position_pct
             FROM user_position_caps
             WHERE is_active = 1
-            ORDER BY
-                FIELD(cap_type, 'symbol', 'sector', 'region', 'account', 'global'),
-                cap_target
+            ORDER BY cap_type, cap_target
         """)
         self._caps = {}
         for row in cursor.fetchall():

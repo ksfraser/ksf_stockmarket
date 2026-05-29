@@ -174,6 +174,9 @@ class WeightedSignalGenerator:
         cursor.close()
 
         if evalsum:
+            # Convert sqlite3.Row to dict if needed
+            if hasattr(evalsum, 'keys'):
+                evalsum = {k: evalsum[k] for k in evalsum.keys()}
             # Weight each scoring component
             if evalsum.get('totalscore') is not None:
                 signal_score += self.weights['w_totalscore'] * (evalsum['totalscore'] / 36.0) * 100

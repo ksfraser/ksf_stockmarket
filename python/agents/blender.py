@@ -140,13 +140,17 @@ class SignalConsensus:
             consensus_dir = 'STRONG_SELL'
 
         # Consensus %: how many agents agree on direction
+        # Use "base" direction for agreement check (STRONG_BUY → BUY, STRONG_SELL → SELL)
+        def _base_dir(d):
+            if d in ('STRONG_BUY', 'BUY'):
+                return 'BUY'
+            if d in ('STRONG_SELL', 'SELL'):
+                return 'SELL'
+            return d
+
+        base_consensus = _base_dir(consensus_dir)
         all_dirs = [ga_dir, nn_dir, rl_dir]
-        if consensus_dir in all_dirs:
-            agreement_count = sum(1 for d in all_dirs if d == consensus_dir)
-        else:
-            # Find majority
-            unique = set(all_dirs)
-            agreement_count = max(all_dirs.count(d) for d in unique)
+        agreement_count = sum(1 for d in all_dirs if _base_dir(d) == base_consensus)
         consensus_pct = (agreement_count / 3.0) * 100
 
         # Position sizing: average of NN capped weight and RL target
@@ -156,10 +160,10 @@ class SignalConsensus:
             self.config['ga_weight'] * min(abs(ga_norm) * 0.1, 0.10)
         )
 
-        # Which agents agree
+        # Which agents agree (base direction match)
         agents_agree = []
         for name, d in [('GA', ga_dir), ('NN', nn_dir), ('RL', rl_dir)]:
-            if d == consensus_dir:
+            if _base_dir(d) == base_consensus:
                 agents_agree.append(name)
 
         return {

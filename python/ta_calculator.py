@@ -657,7 +657,7 @@ def compute_signal_reasons(ta_results: Dict, trend: str) -> str:
     elif ta_results.get('CCI_14', 0) > 100:
         reasons.append('CCI_OVERBOUGHT')
     for key, val in ta_results.items():
-        if key.startswith('CDL_') and val != 0:
+        if key.startswith('CDL_') and not key.endswith('_SIGNAL') and isinstance(val, (int, float)) and val != 0:
             direction = 'BULLISH' if val > 0 else 'BEARISH'
             reasons.append(f'{key}_{direction}')
             break

@@ -142,9 +142,17 @@ class BacktestEngine:
         if len(rows) < 200:
             return {'signal': 'HOLD', 'strength': 0, 'reasons': 'insufficient_data'}
 
+        # Convert sqlite3.Row to dicts if needed
+        if rows and hasattr(rows[0], 'keys'):
+            rows = [{k: row[k] for k in row.keys()} for row in rows]
+
         df = DataFrame(rows)
         df['price_date'] = pd.to_datetime(df['price_date'])
         df.set_index('price_date', inplace=True)
+        # Ensure numeric columns are float (SQLite may return strings)
+        for col in ['day_open', 'day_high', 'day_low', 'day_close', 'volume']:
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
 
         # Compute indicators
         ta_results = compute_indicators(df, symbol)
@@ -313,6 +321,13 @@ class BacktestEngine:
         trading_dates = [row[0] for row in cursor.fetchall()]
         cursor.close()
 
+        # Coerce date strings to date objects (SQLite returns strings)
+        from datetime import date as _date
+        trading_dates = [
+            d if isinstance(d, _date) else _date.fromisoformat(str(d)[:10])
+            for d in trading_dates
+        ]
+
         if not trading_dates:
             logger.error("No trading dates found in range")
             return {}
@@ -443,6 +458,7 @@ class BacktestEngine:
 
     def save_results(self, results: dict):
         """Save backtest results to the database."""
+        from datetime import datetime as _dt
         cursor = self.conn.cursor()
 
         cursor.execute("""
@@ -451,7 +467,7 @@ class BacktestEngine:
                  initial_capital, final_value, total_return, annualized_return,
                  sharpe_ratio, max_drawdown, num_trades, win_rate, status, completed_at)
             VALUES
-                (1, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'complete', NOW())
+                (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'complete', ?)
         """, (
             self.strategy,
             json.dumps({
@@ -460,7 +476,8 @@ class BacktestEngine:
                 'commission': self.commission,
                 'universe_size': len(self.symbols) if self.symbols else 'all',
             }),
-            self.start_date, self.end_date,
+            self.start_date.isoformat() if hasattr(self.start_date, 'isoformat') else self.start_date,
+            self.end_date.isoformat() if hasattr(self.end_date, 'isoformat') else self.end_date,
             self.initial_capital,
             results['final_value'],
             results['total_return'] / 100,
@@ -469,6 +486,7 @@ class BacktestEngine:
             results['max_drawdown'] / 100,
             results['num_trades'],
             results['win_rate'] / 100,
+            _dt.now().isoformat(),
         ))
 
         run_id = cursor.lastrowid
@@ -479,12 +497,12 @@ class BacktestEngine:
                 INSERT INTO backtest_trades
                     (backtest_id, symbol, trade_type, trade_date, price,
                      quantity, commission, total_cost, signal_reasons)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 run_id,
                 trade['symbol'],
                 trade['trade_type'],
-                trade['trade_date'],
+                trade['trade_date'].isoformat() if hasattr(trade['trade_date'], 'isoformat') else trade['trade_date'],
                 trade['price'],
                 trade['quantity'],
                 trade['commission'],

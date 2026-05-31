@@ -67,7 +67,7 @@ class PortfolioEnv(gym.Env):
       - minus risk penalty if single position > 15%
     """
 
-    metadata = {'render_modes': ['human']}
+    metadata = {'render_modes': ['human']} if hasattr(gym.spaces, 'Box') else {}
 
     def __init__(self, symbols, prices, signals, indicators,
                  initial_capital=50000.0, transaction_cost=9.95,

@@ -73,30 +73,24 @@ def gaussian_nll_loss(mean, logvar, target):
 
 # ── Data Loading ───────────────────────────────────────────────────────────
 def load_indicator_data(symbols, start, end):
-    """Load indicator time series from MySQL."""
+    """Load indicator time series from MySQL JSON table."""
     conn = pymysql.connect(**MYSQL); c = conn.cursor()
     placeholders = ','.join(['%s'] * len(symbols))
 
-    # Get indicator column names (exclude id, symbol, price_date)
-    c.execute("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS "
-              "WHERE TABLE_SCHEMA='ksfraser_stock_market' AND TABLE_NAME='indicators' "
-              "AND COLUMN_NAME NOT IN ('id','symbol','price_date') ORDER BY ORDINAL_POSITION")
-    ind_cols = [r['COLUMN_NAME'] for r in c.fetchall()]
-
-    if not ind_cols:
-        print("No indicators computed yet. Run indicator_calculator.py first.")
-        return {}, []
-
-    col_str = ','.join([f'`{c}`' for c in ind_cols])
-    c.execute(f"SELECT symbol, price_date, {col_str} FROM indicators "
+    c.execute(f"SELECT symbol, price_date, data FROM indicators_json "
               f"WHERE symbol IN ({placeholders}) AND price_date BETWEEN %s AND %s "
               f"ORDER BY symbol, price_date", list(symbols) + [start, end])
 
     data = {}
+    ind_cols = None
     for r in c.fetchall():
         sym, d = r['symbol'], str(r['price_date'])
-        vals = [float(r[c]) if r[c] is not None else 0.0 for c in ind_cols]
-        data.setdefault(sym, []).append((d, vals))
+        vals = json.loads(r['data']) if isinstance(r['data'], str) else r['data']
+        if ind_cols is None:
+            ind_cols = sorted([k for k in vals.keys() if k not in ('close',)])
+        # Extract values in consistent order
+        ordered = [vals.get(k, 0.0) or 0.0 for k in ind_cols]
+        data.setdefault(sym, []).append((d, ordered))
 
     conn.close()
     return data, ind_cols

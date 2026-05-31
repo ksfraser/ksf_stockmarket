@@ -2,35 +2,32 @@
 """
 layer0_screener.py — Universe Screener (Layer 0)
 
-Weekly run. Filters the 404-symbol universe down to ~80-100 candidates.
-
-Pipeline:
-  1. Load symbols from CurrentData HTML + portfolio holdings
-  2. Fetch fundamentals from yfinance (ROE, D/E, FCF, margins, P/E)
-  3. Apply Buffett-style quality filter
-  4. Apply CIBC Investor's Edge eligibility filter
-  5. Scan recent news for material events (earnings, M&A, regulatory)
-  6. Score and rank survivors
-  7. Save candidates to MySQL layer0_candidates table
+Weekly run. Filters 404-symbol universe through:
+  1. Global hard filters (price, volume, exchange eligibility)
+  2. Per-sleeve screener (Buffett quality, dividend, swing, speculative)
+  3. Buffett fundamentals evaluator (ROE, D/E, FCF, margins)
+  4. CIBC Investor's Edge eligibility
+  5. Dividend calendar mapping (for income sleeve)
 
 Usage:
-    python3 layer0_screener.py [--max 100] [--verbose]
+    python3 layer0_screener.py [--max 50] [--sleeve all] [--verbose]
 """
 import pymysql
 import json
 import sys
 import os
 import argparse
-from datetime import date, datetime
 from dataclasses import dataclass, field
+from datetime import date, datetime
 from typing import Optional
+import time
 
 sys.path.insert(0, os.path.dirname(__file__))
 from config_loader import Config
 
-MYSQL = dict(host='ksfraser.ca', user='ksfraser_stockmarket',
-             password='Zaqwsx9sm1@', database='ksfraser_stock_market',
-             charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+MYSQL_CFG = dict(host='ksfraser.ca', user='ksfraser_stockmarket',
+                 password='Zaqwsx9sm1@', database='ksfraser_stock_market',
+                 charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
 
 
 @dataclass
@@ -39,22 +36,24 @@ class Fundamentals:
     name: str = ""
     sector: str = ""
     industry: str = ""
+    geography: str = "US"
     market_cap: float = 0.0
+    price: float = 0.0
+    beta: float = 1.0
+    avg_volume: float = 0.0
     pe: float = 0.0
     forward_pe: float = 0.0
-    peg: float = 0.0
     pb: float = 0.0
-    ps: float = 0.0
-    # Income statement
-    revenue: float = 0.0
-    revenue_growth_3y: float = 0.0
+    # Profitability
+    roe: float = 0.0
+    roic: float = 0.0
+    roa: float = 0.0
     gross_margin: float = 0.0
     operating_margin: float = 0.0
     net_margin: float = 0.0
-    # Profitability
-    roe: float = 0.0
-    roa: float = 0.0
-    roic: float = 0.0
+    # Growth
+    revenue: float = 0.0
+    revenue_growth_3y: float = 0.0
     # Balance sheet
     total_debt: float = 0.0
     total_equity: float = 0.0
@@ -62,206 +61,141 @@ class Fundamentals:
     current_ratio: float = 0.0
     # Cash flow
     fcf: float = 0.0
-    fcf_5y_streak: int = 0       # consecutive years of positive FCF
+    fcf_5y_streak: int = 0
     # Dividend
     div_yield: float = 0.0
     div_payout_ratio: float = 0.0
-    div_years: int = 0           # consecutive years paying
-    div_growth_5y: float = 0.0   # CAGR of dividend
+    div_years_streak: int = 0
+    div_growth_5y: float = 0.0
     ex_div_date: str = ""
-    # Price
-    price: float = 0.0
-    avg_volume: float = 0.0
-    beta: float = 1.0
-    fifty_two_week_high: float = 0.0
-    fifty_two_week_low: float = 0.0
-    # Options available
-    has_options: bool = False
-    # Buffett score (0-100)
+    div_frequency: str = ""  # monthly, quarterly, semi, annual
+    # 52-week range
+    high_52w: float = 0.0
+    low_52w: float = 0.0
+    # Calculated
     buffet_score: float = 0.0
-    # CIBC eligible
-    cibc_eligible: bool = True
-    # Quality flags
     quality_flags: list = field(default_factory=list)
     red_flags: list = field(default_factory=list)
+    cibc_eligible: bool = True
+    cibc_note: str = ""
+    cibc_cost: float = 0.0
+    volatility_annual: float = 0.0
 
 
 class BuffettEvaluator:
-    """
-    Score stocks on Buffett-style quality metrics.
-    100 = perfect Buffett stock, 0 = terrible.
-    """
+    """Score stocks on Buffett-style quality (0-100)."""
 
-    def __init__(self, config: Config):
-        self.cfg = config.screener
-
-    def evaluate(self, f: Fundamentals) -> tuple:
-        """Returns (score, quality_flags, red_flags)."""
+    def evaluate(self, f: Fundamentals, cfg) -> tuple:
         score = 0.0
-        flags = []
-        red = []
+        flags, red = [], []
+        sc = cfg.sleeves.core_buffett.screener
 
-        # 1. ROE (max 20 pts) — Buffett's favorite metric
-        if f.roe >= 0.20:
-            score += 20; flags.append("ROE>20%")
-        elif f.roe >= 0.15:
-            score += 15; flags.append("ROE>15%")
+        # ROE (max 20 pts)
+        if f.roe >= sc.min_roe:
+            score += 20; flags.append(f"ROE={f.roe:.0%}")
         elif f.roe >= 0.10:
-            score += 8
+            score += 10
         elif f.roe < 0.05:
-            red.append("ROE<5%")
+            red.append(f"ROE={f.roe:.0%}")
 
-        # 2. ROIC (max 15 pts)
-        if f.roic >= 0.15:
-            score += 15; flags.append("ROIC>15%")
-        elif f.roic >= 0.10:
-            score += 10
+        # ROIC (max 15 pts)
+        if f.roic >= sc.min_roic:
+            score += 15; flags.append(f"ROIC={f.roic:.0%}")
+        elif f.roic >= 0.08:
+            score += 8
         elif f.roic < 0.05:
-            red.append("ROIC<5%")
+            red.append(f"ROIC={f.roic:.0%}")
 
-        # 3. Debt/Equity (max 15 pts)
-        if f.debt_equity <= 0.3:
-            score += 15; flags.append("D/E<0.3")
+        # Debt/Equity (max 15 pts)
+        if f.debt_equity <= sc.max_debt_equity:
+            score += 15; flags.append(f"D/E={f.debt_equity:.1f}")
         elif f.debt_equity <= 0.5:
-            score += 10
-        elif f.debt_equity > 1.0:
+            score += 8
+        elif f.debt_equity > 0.8:
             red.append(f"D/E={f.debt_equity:.1f}")
-            score -= 5
 
-        # 4. Free Cash Flow (max 15 pts)
-        if f.fcf > 0 and f.fcf_5y_streak >= 5:
-            score += 15; flags.append("FCF 5yr+")
+        # FCF streak (max 15 pts)
+        if f.fcf > 0 and f.fcf_5y_streak >= sc.min_fcf_5yr_streak:
+            score += 15; flags.append(f"FCF {f.fcf_5y_streak}yr")
         elif f.fcf > 0:
-            score += 8; flags.append("FCF positive")
+            score += 7
         elif f.fcf < 0:
             red.append("negative FCF")
 
-        # 5. Gross Margin (max 10 pts) — moat indicator
-        if f.gross_margin >= 0.60:
-            score += 10; flags.append("margin>60%")
-        elif f.gross_margin >= 0.40:
-            score += 7; flags.append("margin>40%")
+        # Gross Margin (max 10)
+        if f.gross_margin >= sc.min_gross_margin:
+            score += 10; flags.append(f"margin={f.gross_margin:.0%}")
         elif f.gross_margin < 0.20:
             red.append(f"margin={f.gross_margin:.0%}")
 
-        # 6. Revenue Growth (max 10 pts)
-        if f.revenue_growth_3y >= 0.15:
-            score += 10; flags.append("rev growth>15%")
-        elif f.revenue_growth_3y >= 0.05:
-            score += 5
+        # Revenue Growth (max 10)
+        if f.revenue_growth_3y >= sc.min_revenue_growth_3y:
+            score += 10; flags.append(f"rev+{f.revenue_growth_3y:.0%}")
         elif f.revenue_growth_3y < 0:
-            red.append("declining revenue")
+            red.append(f"rev-{abs(f.revenue_growth_3y):.0%}")
 
-        # 7. Current Ratio (max 5 pts)
-        if f.current_ratio >= 1.5:
-            score += 5; flags.append("current>1.5")
-        elif f.current_ratio < 1.0:
-            red.append(f"current={f.current_ratio:.1f}")
-
-        # 8. P/E sanity (max 5 pts)
-        if 0 < f.pe < 20:
-            score += 5; flags.append(f"PE={f.pe:.1f}")
-        elif f.pe > 40:
+        # P/E sanity (max 10)
+        if 0 < f.pe < sc.max_pe:
+            score += 10; flags.append(f"PE={f.pe:.1f}")
+        elif f.pe > 40 or f.pe < 0:
             red.append(f"PE={f.pe:.0f}")
-            score -= 5
 
-        # 9. Dividend (max 5 pts)
-        if f.div_yield >= 0.02 and f.div_years >= 5:
-            score += 5; flags.append(f"div {f.div_yield:.1%} {f.div_years}yr")
-        elif f.div_yield >= 0.01:
-            score += 2
+        # Min market cap
+        if f.market_cap >= sc.min_market_cap:
+            score += 5
+        else:
+            red.append(f"cap=${f.market_cap/1e9:.1f}B")
 
         return (max(0, min(100, score)), flags, red)
 
 
-class CIBCInvestorsEdgeEligible:
-    """
-    CIBC Investor's Edge restrictions:
-    - TSX, TSXV listed: eligible for free trades (CDN)
-    - NYSE, NASDAQ, AMEX, ARCA: eligible (USD)
-    - ADRs: eligible if on major exchanges
-    - Forex: not available as a product (need Norberts Gambit or ETF)
-    - OTC/pink sheet: NOT eligible
-    - Crypto: NOT eligible
-    - Minimum price $0.01 (but we filter > $5)
+class CIBCInvestorsEdge:
+    """CIBC Investor's Edge eligibility and cost."""
 
-    Returns: (eligible: bool, reason: str, trade_cost: float)
-    """
-
-    def check(self, symbol: str, exchange: str = "") -> tuple:
-        sym = symbol.upper()
-        ex = (exchange or "").upper()
-
-        # OTC / pink sheets — not eligible
-        if ".PK" in sym or ".OB" in sym or ex in ("OTC", "OTCBB", "PINK"):
-            return (False, "OTC/Pink Sheet — not CIBC eligible", 0)
-
-        # Crypto — not eligible
-        if "-USD" in sym or "-CAD" in sym or sym.endswith("USD"):
-            return (False, "Cryptocurrency — not CIBC eligible", 0)
-
-        # TSX / TSXV — free trades
-        if sym.endswith(".TO") or sym.endswith(".VN") or ex in ("TSX", "TSXV", "TSE"):
-            return (True, "TSX/TSXV — free trades", 0.0)
-
-        # Major US exchanges — $9.95 USD per trade
-        if ex in ("NYSE", "NASDAQ", "AMEX", "ARCA", "NYSEARCA"):
-            return (True, f"{ex} — $9.95 USD/trade", 9.95)
-
-        # ADRs on major exchanges
-        if ex in ("NYSE", "NASDAQ") and not sym.endswith(".TO"):
-            return (True, f"ADR on {ex}", 9.95)
-
-        # Default: assume eligible (common stocks without suffix)
-        if ex == "" and len(sym) <= 5 and sym.isalpha():
-            return (True, "Likely US-listed — verify", 9.95)
-
-        return (True, f"Exchange: {ex or 'unknown'} — verify CIBC eligible", 9.95)
+    def check(self, sym: str, exchange: str = "") -> tuple:
+        s, e = sym.upper(), (exchange or "").upper()
+        if any(x in s for x in ['.PK', '.OB']) or e in ("OTC", "OTCBB", "PINK"):
+            return False, "OTC/Pink — not eligible", 0
+        if any(x in s for x in ['-USD', '-CAD']) and not s.startswith('BTC'):
+            return False, "Crypto — not eligible", 0
+        if any(s.endswith(x) for x in ['.TO', '.VN']) or e in ("TSX", "TSXV"):
+            return True, "TSX/TSXV — free trades", 0.0
+        if e in ("NYSE", "NASDAQ", "AMEX", "ARCA", "NYSEARCA"):
+            return True, f"{e} — $9.95 USD/trade", 9.95
+        if e == "" and s.isalpha() and len(s) <= 5:
+            return True, "Likely US-listed — $9.95 USD/trade", 9.95
+        return True, f"Exchange: {e or 'unknown'} — verify", 9.95
 
 
-def fetch_fundamentals(symbols: list, config: Config, verbose=False) -> list:
-    """
-    Fetch fundamentals from yfinance for all symbols.
-    Returns list of Fundamentals.
-    """
+def fetch_fundamentals(symbols: list, cfg: Config, verbose=False) -> list:
+    """Fetch fundamentals from yfinance."""
     try:
         import yfinance as yf
     except ImportError:
-        print("yfinance not installed: pip3 install yfinance")
-        return []
+        print("pip3 install yfinance required"); return []
 
-    ev = BuffettEvaluator(config)
-    cibc = CIBCInvestorsEdgeEligible()
+    ev = BuffettEvaluator()
+    cibc = CIBCInvestorsEdge()
     results = []
 
-    print(f"Fetching fundamentals for {len(symbols)} symbols...")
+    print(f"Fetching {len(symbols)} symbols...")
     for i, sym in enumerate(symbols):
         try:
-            ticker = yf.Ticker(sym)
-            info = ticker.get_info() or {}
-
-            if not info or info.get('regularMarketPrice') is None:
-                if verbose:
-                    print(f"  [{i+1}/{len(symbols)}] {sym}: no data")
-                continue
+            t = yf.Ticker(sym)
+            info = t.get_info() or {}
+            if not info or not info.get('regularMarketPrice'):
+                if verbose: print(f"  [{i+1}/{len(symbols)}] {sym}: no price"); continue
 
             f = Fundamentals(symbol=sym)
-
-            # Basic info
             f.name = info.get('longName', info.get('shortName', ''))
             f.sector = info.get('sector', '')
             f.industry = info.get('industry', '')
             f.market_cap = info.get('marketCap', 0) or 0
             f.price = info.get('regularMarketPrice', 0) or 0
             f.beta = info.get('beta', 1) or 1
-
-            # Valuation
             f.pe = info.get('trailingPE', 0) or 0
             f.forward_pe = info.get('forwardPE', 0) or 0
-            f.peg = info.get('pegRatio', 0) or 0
             f.pb = info.get('priceToBook', 0) or 0
-
-            # Financials
             f.revenue = info.get('totalRevenue', 0) or 0
             f.revenue_growth_3y = info.get('revenueGrowth', 0) or 0
             f.gross_margin = info.get('grossMargins', 0) or 0
@@ -269,95 +203,136 @@ def fetch_fundamentals(symbols: list, config: Config, verbose=False) -> list:
             f.net_margin = info.get('profitMargins', 0) or 0
             f.roe = info.get('returnOnEquity', 0) or 0
             f.roa = info.get('returnOnAssets', 0) or 0
-
-            # Debt/equity
-            total_debt = info.get('totalDebt', 0) or 0
-            total_equity = info.get('totalStockholderEquity', 0) or \
-                           info.get('totalEquityGrossMinorityInterest', 0) or 1
-            f.total_debt = total_debt
-            f.total_equity = total_equity
-            f.debt_equity = total_debt / total_equity if total_equity > 0 else 999
-
-            # Cash flow
-            f.fcf = info.get('freeCashflow', 0) or 0
-            f.current_ratio = info.get('currentRatio', 0) or 0
-
-            # Volume
             f.avg_volume = info.get('averageVolume', 0) or 0
-
-            # 52-week range
-            f.fifty_two_week_high = info.get('fiftyTwoWeekHigh', 0) or 0
-            f.fifty_two_week_low = info.get('fiftyTwoWeekLow', 0) or 0
-
-            # Dividends
+            f.high_52w = info.get('fiftyTwoWeekHigh', 0) or 0
+            f.low_52w = info.get('fiftyTwoWeekLow', 0) or 0
             f.div_yield = info.get('dividendYield', 0) or 0
             f.div_payout_ratio = info.get('payoutRatio', 0) or 0
             f.ex_div_date = str(info.get('exDividendDate', ''))
+            f.div_frequency = info.get('dividendFrequency', '') or ''
+            f.current_ratio = info.get('currentRatio', 0) or 0
 
-            # ROIC — need to compute if not available directly
-            nopat = (info.get('operatingIncome', 0) or 0) * 0.75  # rough after-tax
-            invested = (info.get('totalStockholderEquity', 0) or 0) + total_debt
+            td = info.get('totalDebt', 0) or 0
+            te = info.get('totalStockholderEquity', 0) or \
+                 info.get('totalEquityGrossMinorityInterest', 0) or 1
+            f.total_debt, f.total_equity = td, te
+            f.debt_equity = td / te if te > 0 else 999
+
+            f.fcf = info.get('freeCashflow', 0) or 0
+            nopat = (info.get('operatingIncome', 0) or 0) * 0.75
+            invested = (info.get('totalStockholderEquity', 0) or 0) + td
             f.roic = nopat / invested if invested > 0 else 0
 
-            # 5-year FCF streak — FCF history available via .cashflow
+            # FCF 5yr streak
             try:
-                cf = ticker.cashflow
+                cf = t.cashflow
                 if cf is not None and not cf.empty and 'Free Cash Flow' in cf.index:
-                    fcf_vals = cf.loc['Free Cash Flow'].values
-                    streak = 0
-                    for v in fcf_vals[:5]:
-                        if v > 0:
-                            streak += 1
-                        else:
-                            break
+                    streak = sum(1 for v in list(cf.loc['Free Cash Flow'].values)[:5] if v > 0)
                     f.fcf_5y_streak = streak
             except:
                 pass
 
+            # Volatility (estimated from beta × market vol ~15%)
+            f.volatility_annual = abs(f.beta) * 0.15
+
+            # Geography
+            geo = info.get('country', '')
+            if any(sym.endswith(x) for x in ['.TO', '.VN']): geo = 'CA'
+            elif geo in ('Canada',): geo = 'CA'
+            elif geo in ('United States',): geo = 'US'
+            f.geography = geo
+
             # CIBC eligibility
-            exchange = info.get('exchange', '')
-            eligible, reason, cost = cibc.check(sym, exchange)
-            f.cibc_eligible = eligible
+            ex = info.get('exchange', '')
+            elig, note, cost = cibc.check(sym, ex)
+            f.cibc_eligible = elig
+            f.cibc_note = note
+            f.cibc_cost = cost
 
             # Buffett score
-            score, flags, red = ev.evaluate(f)
+            score, flags, red = ev.evaluate(f, cfg)
             f.buffet_score = score
             f.quality_flags = flags
             f.red_flags = red
 
             results.append(f)
-
             if verbose:
-                print(f"  [{i+1}/{len(symbols)}] {sym}: "
-                      f"score={score:.0f} PE={f.pe:.1f} ROE={f.roe:.0%} "
-                      f"yield={f.div_yield:.1%} {'✓' if eligible else '✗'}")
-
+                print(f"  [{i+1}/{len(symbols)}] {sym}: score={score:.0f} "
+                      f"PE={f.pe:.1f} ROE={f.roe:.0%} "
+                      f"div={f.div_yield:.1%} {'✓' if elig else '✗'}")
         except Exception as e:
-            if verbose:
-                print(f"  [{i+1}/{len(symbols)}] {sym}: ERROR {e}")
-
-        # Rate limit — yfinance allows ~2000/hour
-        import time
+            if verbose: print(f"  [{i+1}/{len(symbols)}] {sym}: {e}")
         if (i + 1) % 50 == 0:
             time.sleep(3)
 
-    print(f"\nFetched {len(results)} fundamentals for {len(symbols)} symbols")
+    print(f"Fetched {len(results)} fundamentals")
     return results
 
 
-def save_candidates(candidates: list, db_config=None):
-    """Save screener results to MySQL."""
-    cfg = db_config or MYSQL
+def screen_for_sleeve(fundamentals: list, sleeve_name: str, cfg: Config) -> list:
+    """Filter fundamentals for a specific sleeve."""
+    sc = getattr(cfg.sleeves, sleeve_name, None)
+    if sc is None:
+        return []
+
+    candidates = []
+    for f in fundamentals:
+        # Hard reject
+        if f.price < cfg.screener.min_price:
+            continue
+        if f.avg_volume < cfg.screener.min_avg_volume:
+            continue
+        if f.market_cap < cfg.screener.min_market_cap:
+            continue
+        if not f.cibc_eligible:
+            continue
+        if any(r in ["negative FCF", "D/C=999"] for r in f.red_flags):
+            continue
+
+        # Sleeve-specific filters
+        if sleeve_name == "core_buffett":
+            if f.buffet_score < 40: continue
+            if f.debt_equity > sc.max_debt_equity * 1.5: continue
+            if f.market_cap < sc.min_market_cap: continue
+            if f.beta > sc.max_beta: continue
+
+        elif sleeve_name == "tactical_swing":
+            if f.volatility_annual < sc.min_volatility_annual: continue
+            if f.volatility_annual > sc.max_volatility_annual: continue
+            if f.market_cap < sc.min_market_cap: continue
+            if f.avg_volume < sc.min_avg_volume: continue
+            # Reject if fundamentals are terrible
+            if f.roe < sc.min_roe: continue
+            if f.debt_equity > sc.max_debt_equity: continue
+
+        elif sleeve_name == "income_dividend":
+            if f.div_yield < sc.min_div_yield: continue
+            if f.div_payout_ratio > sc.max_payout_ratio: continue
+            if f.market_cap < sc.min_market_cap: continue
+            if f.roe < sc.min_roe: continue
+
+        elif sleeve_name == "satellite_spec":
+            if f.market_cap < sc.min_market_cap: continue
+            if f.volatility_annual < sc.min_volatility_annual: continue
+            if f.avg_volume < sc.min_avg_volume: continue
+
+        candidates.append(f)
+
+    return candidates
+
+
+def save_results(all_candidates: dict, db_config=None):
+    """Save per-sleeve candidates to MySQL."""
+    cfg = db_config or MYSQL_CFG
     conn = pymysql.connect(**cfg)
     c = conn.cursor()
 
-    # Create table if not exists
     c.execute("""CREATE TABLE IF NOT EXISTS layer0_candidates (
         id INT AUTO_INCREMENT PRIMARY KEY,
         symbol VARCHAR(20) NOT NULL,
         name VARCHAR(200),
         sector VARCHAR(50),
-        industry VARCHAR(80),
+        geography VARCHAR(8),
         price DECIMAL(12,4),
         market_cap BIGINT,
         pe DECIMAL(8,2),
@@ -371,98 +346,78 @@ def save_candidates(candidates: list, db_config=None):
         div_yield DECIMAL(6,4),
         div_payout_ratio DECIMAL(6,4),
         cibc_eligible TINYINT,
+        sleeve VARCHAR(30),
         quality_json JSON,
         red_flags_json JSON,
         scanned_date DATE,
-        UNIQUE KEY uk_symbol_date (symbol, scanned_date),
-        INDEX idx_score (buffet_score DESC),
-        INDEX idx_sector (sector),
-        INDEX idx_cibc (cibc_eligible)
+        INDEX idx_sleeve_score (sleeve, buffet_score DESC),
+        INDEX idx_symbol (symbol),
+        INDEX idx_date (scanned_date)
     ) ENGINE=InnoDB""")
 
     today = date.today().isoformat()
-    for f in candidates:
-        c.execute("""INSERT INTO layer0_candidates 
-            (symbol,name,sector,industry,price,market_cap,pe,roe,roic,
-             debt_equity,gross_margin,fcf,fcf_5y_streak,buffet_score,
-             div_yield,div_payout_ratio,cibc_eligible,quality_json,
-             red_flags_json,scanned_date)
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
-            ON DUPLICATE KEY UPDATE 
-            price=VALUES(price), buffet_score=VALUES(buffet_score), 
-            scanned_date=VALUES(scanned_date)""",
-            (f.symbol, f.name, f.sector, f.industry, f.price,
-             int(f.market_cap), f.pe, f.roe, f.roic, f.debt_equity,
-             f.gross_margin, int(f.fcf), f.fcf_5y_streak, f.buffet_score,
-             f.div_yield, f.div_payout_ratio, 1 if f.cibc_eligible else 0,
-             json.dumps(f.quality_flags), json.dumps(f.red_flags), today))
+    total = 0
+    for sleeve_name, candidates in all_candidates.items():
+        for f in candidates:
+            c.execute("""INSERT INTO layer0_candidates 
+                (symbol,name,sector,geography,price,market_cap,pe,roe,roic,
+                 debt_equity,gross_margin,fcf,fcf_5y_streak,buffet_score,
+                 div_yield,div_payout_ratio,cibc_eligible,sleeve,
+                 quality_json,red_flags_json,scanned_date)
+                VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                ON DUPLICATE KEY UPDATE buffet_score=VALUES(buffet_score)""",
+                (f.symbol, f.name, f.sector, f.geography, f.price,
+                 int(f.market_cap), f.pe, f.roe, f.roic, f.debt_equity,
+                 f.gross_margin, int(f.fcf), f.fcf_5y_streak, f.buffet_score,
+                 f.div_yield, f.div_payout_ratio, 1 if f.cibc_eligible else 0,
+                 sleeve_name, json.dumps(f.quality_flags),
+                 json.dumps(f.red_flags), today))
+            total += 1
 
     conn.commit()
-
-    c.execute("SELECT COUNT(*) as cnt FROM layer0_candidates WHERE scanned_date=%s", (today,))
-    print(f"Saved {c.fetchone()['cnt']} candidates (date={today})")
-
+    for sleeve in all_candidates:
+        c.execute("SELECT COUNT(*) as cnt FROM layer0_candidates WHERE sleeve=%s AND scanned_date=%s",
+                  (sleeve, today))
+        print(f"  {sleeve}: {c.fetchone()['cnt']} candidates")
     conn.close()
+    return total
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Layer 0 — Universe Screener')
-    parser.add_argument('--max', type=int, default=100)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--max-per-sleeve', type=int, default=50)
+    parser.add_argument('--sleeves', default='all')
     parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
 
-    # Load config
-    config = Config('/home/ksf_stockmarket/ksf_stockmarket/config.yaml')
+    cfg = Config('/home/ksf_stockmarket/ksf_stockmarket/config.yaml')
 
-    # Load symbols from MySQL symbol_master
-    conn = pymysql.connect(**MYSQL)
+    # Load symbols
+    conn = pymysql.connect(**MYSQL_CFG)
     c = conn.cursor()
     c.execute("SELECT symbol, geography FROM symbol_master ORDER BY symbol")
-    all_symbols = [r['symbol'] for r in c.fetchall()]
+    all_syms = [r['symbol'] for r in c.fetchall()]
     conn.close()
+    print(f"Layer 0: {len(all_syms)} symbols")
 
-    print(f"Starting Layer 0 screener: {len(all_symbols)} symbols")
+    # Fetch once
+    fundamentals = fetch_fundamentals(all_syms, cfg, verbose=args.verbose)
 
-    # Fetch fundamentals
-    fundamentals = fetch_fundamentals(all_symbols, config, verbose=args.verbose)
-
-    if not fundamentals:
-        print("No fundamentals fetched. Exiting.")
-        return
-
-    # Filter: Buffett score >= 40, CIBC eligible, min price, min volume
-    cfg = config.screener
-    candidates = []
-    for f in fundamentals:
-        if f.price < cfg.min_price:
+    # Screen per sleeve
+    active = cfg.sleeves if hasattr(cfg, 'sleeves') else {}
+    sleeve_names = list(active.keys()) if args.sleeves == 'all' else args.sleeves.split(',')
+    all_candidates = {}
+    for name in sleeve_names:
+        if not getattr(active.get(name, {}), 'enabled', True):
             continue
-        if f.avg_volume < cfg.min_avg_volume and f.market_cap < cfg.min_market_cap:
-            continue
-        if not f.cibc_eligible:
-            continue
-        # Reject hard red flags
-        if any("ROE<5%" in r or "negative FCF" in r or "D/C" in r for r in f.red_flags):
-            continue
-        candidates.append(f)
+        cands = screen_for_sleeve(fundamentals, name, cfg)
+        cands.sort(key=lambda f: f.buffet_score, reverse=True)
+        cands = cands[:args.max_per_sleeve]
+        all_candidates[name] = cands
+        print(f"  {name}: {len(cands)} pass")
 
-    # Sort by Buffett score descending
-    candidates.sort(key=lambda f: f.buffet_score, reverse=True)
-
-    # Take top N
-    candidates = candidates[:args.max]
-
-    print(f"\nScreener results:")
-    print(f"  Passed fundamentals: {len(fundamentals)}")
-    print(f"  Passed all filters:  {len(candidates)}")
-    print(f"  Top 10:")
-    for f in candidates[:10]:
-        print(f"    {f.symbol:<15} score={f.buffet_score:.0f}  "
-              f"ROE={f.roe:.0%}  PE={f.pe:.1f}  "
-              f"div={f.div_yield:.1%}  ${f.price:.2f}")
-
-    # Save to DB
-    save_candidates(candidates)
-    print(f"\n✓ Layer 0 complete: {len(candidates)} candidates saved")
+    total = save_results(all_candidates)
+    print(f"\n✓ Layer 0 complete: {total} total candidates")
 
 
 if __name__ == '__main__':

@@ -157,7 +157,8 @@ def build_sequences(indicator_data, prices, lookback=60, horizon=20):
 def train_model(config, train_data, val_data, device):
     """Train LSTM on training data, validate on val data."""
     cfg = config.nn
-    model = LSTMPredictor(input_size=120, hidden_size=cfg.hidden_size,
+    input_size = train_data[0].shape[-1] if len(train_data[0].shape) > 1 else cfg.input_features
+    model = LSTMPredictor(input_size=input_size, hidden_size=cfg.hidden_size,
                           num_layers=cfg.num_layers, dropout=cfg.dropout,
                           predict_horizon=cfg.predict_horizon).to(device)
 

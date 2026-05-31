@@ -174,9 +174,10 @@ def run_ga(config, symbols, prices, train_start, train_end, test_start, test_end
     toolbox.register("attr_cont", random_continuous)
 
     # Individual = n_syms weights + N_CONTINUOUS params
+    # Build a tuple of callables for DEAP's initCycle
+    cont_attr_funcs = tuple(lambda fi=i: random_continuous(fi) for i in range(N_CONTINUOUS))
     toolbox.register("individual", tools.initCycle, creator.Individual,
-                     (toolbox.attr_weight,) * n_syms +
-                     (lambda i=i: random_continuous(i) for i in range(N_CONTINUOUS)),
+                     (toolbox.attr_weight,) * n_syms + cont_attr_funcs,
                      n=1)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
@@ -194,7 +195,7 @@ def run_ga(config, symbols, prices, train_start, train_end, test_start, test_end
 
     train_prices = {}
     for sym, sym_data in prices.items():
-        train_prices[sym] = {d: p for d, p in sym_data.items() if train_start <= d[:4] <= train_end}
+        train_prices[sym] = {d: p for d, p in sym_data.items() if str(train_start) <= d[:4] <= str(train_end)}
 
     train_sim_cfg = SimConfig(
         start_date=f'{train_start}-01-01', end_date=f'{train_end}-12-31',
@@ -246,7 +247,7 @@ def run_ga(config, symbols, prices, train_start, train_end, test_start, test_end
 
     test_prices = {}
     for sym, sym_data in prices.items():
-        test_prices[sym] = {d: p for d, p in sym_data.items() if test_start <= d[:4] <= test_end}
+        test_prices[sym] = {d: p for d, p in sym_data.items() if str(test_start) <= d[:4] <= str(test_end)}
 
     test_sim_cfg = SimConfig(
         start_date=f'{test_start}-01-01', end_date=f'{test_end}-12-31',

@@ -73,3 +73,17 @@ Progress: 10/371 done, 10 failures
 [20/371] FAIL: BQI
 Progress: 20/371 done, 20 failures
 [21/371] OK: BR-UN.TO
+[22/371] FAIL: BR.TO
+[23/371] FAIL: BRK-UN.TO
+[2026-05-31 13:40:17]   Attempt 2/3 timed out for BR.TO
+[24/371] OK: BRK.TO
+[25/371] FAIL: BYDDF.PK
+[2026-05-31 13:45:27]   Attempt 3/3 timed out for BR.TO
+[2026-05-31 13:45:27]   FAIL BR.TO - skipping
+[2026-05-31 13:45:27] [23/371] Backfilling BRK-UN.TO...
+[2026-05-31 13:45:29]   OK BRK-UN.TO done
+[2026-05-31 13:45:29] [24/371] Backfilling BRK.TO...
+[2026-05-31 13:45:31]   OK BRK.TO done
+[2026-05-31 13:45:31] [25/371] Backfilling BYDDF.PK...
+[2026-05-31 13:45:34]   OK BYDDF.PK done
+[2026-05-31 13:45:34] [26/371] Backfilling CAH...

@@ -59,13 +59,10 @@ def load_prices_from_db(symbols, start, end):
     return data
 
 
-def get_candidate_symbols(config, sleeve=None):
-    """Get candidate symbols from screener or DB."""
+def get_candidate_symbols(config):
+    """Get symbols from screener or DB."""
     conn = pymysql.connect(**MYSQL); c = conn.cursor()
-    if sleeve:
-        c.execute("SELECT DISTINCT symbol FROM layer0_candidates WHERE sleeve=%s ORDER BY buffet_score DESC LIMIT 50", (sleeve,))
-    else:
-        c.execute("SELECT symbol FROM symbol_master WHERE cibc_eligible=1 ORDER BY symbol LIMIT 100")
+    c.execute("SELECT DISTINCT symbol FROM indicators_json ORDER BY symbol LIMIT 30")
     syms = [r['symbol'] for r in c.fetchall()]
     conn.close()
     return syms

@@ -100,7 +100,9 @@ def main():
         ok += 1
         total_rows += n
         elapsed = (i + 1) * 1.5  # rough time estimate
-        print(f"  [{i+1}/{len(pending)}] {sym}: {n} rows ({hist.index[0].date()} → {hist.index[-1().date()}")
+        start_d = str(hist.index[0])[:10]
+        end_d = str(hist.index[-1])[:10]
+        print(f"  [{i+1}/{len(pending)}] {sym}: {n} rows ({start_d} -> {end_d})")
 
         # Rate limit: max ~100/hour
         time.sleep(1.5)

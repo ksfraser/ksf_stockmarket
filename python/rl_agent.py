@@ -326,8 +326,7 @@ def train_rl(config, symbols, train_start, train_end, test_start=None, test_end=
                 gae_lambda=cfg.gae_lambda,
                 clip_range=cfg.clip_range,
                 verbose=int(verbose),
-                device=device,
-                tensorboard_log="/tmp/rl_logs/")
+                device=device)
 
     print(f"Training {total_timesteps} timesteps...")
     model.learn(total_timesteps=total_timesteps, progress_bar=verbose)

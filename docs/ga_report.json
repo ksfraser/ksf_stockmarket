@@ -1,0 +1,30 @@
+{
+  "best_weights": {
+    "AMZN": 0.291,
+    "AAPL": 0.134,
+    "BB.TO": 0.117,
+    "AEM": 0.103,
+    "APF-UN.TO": 0.092,
+    "ABX.TO": 0.09,
+    "AQN.TO": 0.068,
+    "ABT": 0.044,
+    "AU": 0.025,
+    "ARCC": 0.017
+  },
+  "best_params": {
+    "atr_stop_mult": 2.27,
+    "risk_per_trade": 0.019,
+    "forex_shift": -0.055,
+    "rebalance_pct": -0.029,
+    "dca_installments": 2.86
+  },
+  "fitness": -26717,
+  "walk_forward": {
+    "ga_terminal": 10993.82,
+    "eq_terminal": 7261.42,
+    "outperformance_pct": 51.4,
+    "ga_cagr": 8.59,
+    "eq_cagr": 6.86
+  },
+  "note": "pop=30, gen=20, 19 symbols, train=2014-2018, test=2019-2024"
+}

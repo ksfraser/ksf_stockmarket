@@ -210,7 +210,7 @@ class PortfolioEnv(gym.Env):
                     self.cash * buy_pct,
                     pv_before * self.max_position  # position limit
                 )
-                if max_invest > 100:  # minimum $100 trade
+                if max_invest > 100 and prices.get(sym, 0) > 0:  # minimum $100 trade
                     cost = max_invest + self.transaction_cost
                     if cost <= self.cash:
                         shares = max_invest / prices[sym]
@@ -238,7 +238,7 @@ class PortfolioEnv(gym.Env):
         trade_penalty = trades_today * self.transaction_cost * 0.01  # small penalty
 
         # Concentration penalty
-        max_w = max((self.positions[s] * new_prices.get(s, 0) / max(pv_after, 1)
+        max_w = max((self.positions[s] * (new_prices.get(s) or 0) / max(pv_after, 1)
                      for s in self.symbols), default=0)
         concent_penalty = max(0, max_w - self.max_position) * 1000
 

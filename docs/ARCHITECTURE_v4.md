@@ -1,7 +1,7 @@
 # Investment Agent — Architecture v4.0 (ADAPTIVE)
 
-> **Version:** 4.0 | **Date:** 2026-05-31 | **Repo:** `ksfraser/ksf_stockmarket`
-> **Status:** Complete redesign after v3 autopsy revealed fundamental simulation flaws
+> **Version:** 4.1 | **Date:** 2026-06-01 | **Repo:** `ksfraser/ksf_stockmarket`
+> **Status:** Web dashboard complete (Phases 1-3). GA/NN/RL agents in development.
 
 ---
 
@@ -307,55 +307,74 @@ DECISION FLOW:
 
 ## 8. PHP Web Dashboard (Built on Correct Data)
 
-### 8.1 Pages
+### 8.1 Status: ✅ PHASES 1-3 COMPLETE
+The web dashboard is live at `http://192.168.1.102/stockmarket/` and `/dashboard/`. Authentication, portfolio, transactions, strategies, and detail pages are all functional. Canvas-based charting (no external dependencies) renders price, oscillator, ATR, and Bollinger Band charts on the detail page.
+
+### 8.2 Implemented Pages
 ```
-/dashboard          — Portfolio overview, P&L, allocation pie chart
-/symbols            — All 404+ symbols with indicators, sortable
-/ga-results         — GA optimization results, weight evolution over time
-/nn-predictions     — NN predictions vs actual, error bars, confusion matrix
-/rl-activity        — RL agent actions, reward curve, trade log
-/fundamentals       — Dividend safety scores, payout ratios, The Brick detector
-/regime             — Current regime, VIX, credit spreads, yield curve
-/rebalance          — ETF front-running calendar, upcoming rebalance dates
-/backtest           — Walk-forward results, rolling Sharpe, max drawdown
-/settings           — Config editor, parameter tuning
+?action=overview        → App Dashboard: all-symbol gainers/losers, portfolio summary, full data coverage
+?action=my_dashboard    → My Dashboard: buy/sell recs, earnings, dividends, portfolio movers (auth required)
+?action=portfolio       → Enhanced holdings: annualized P&L, cost-basis div yield, stop $, strategy details
+?action=transactions    → Transaction history with account/symbol/type/date filters
+?action=detail&symbol=X → Symbol detail: Buffett score, oscillators, analyst targets, options, news, fundamentals
+?action=list            → All 404 tracked symbols with prices, sortable
+?action=strategy_stock  → Stock selection strategies with backtested results (5 strategies)
+?action=strategy_money  → Money/risk management: Kelly criterion, stops, sleeves (4 strategies)
+?action=admin_symbols   → Symbol activation/deactivation, exchange mapping
+?action=settings        → Per-user settings: color scheme, font size, password (auth required)
+?action=login/logout    → Session-based auth with remember-me cookies
 ```
 
-### 8.2 Charts (using Chart.js)
+### 8.3 Charts (Canvas, no external dependencies)
 ```
-- Portfolio value over time (with drawdown shading)
-- GA weight evolution (stacked area chart)
-- NN prediction vs actual (scatter plot with error bars)
-- Indicator correlation heatmap (prove TA is noise)
-- Dividend safety score distribution
-- Regime timeline (color-coded bull/bear/transition)
-- ETF rebalance calendar (with front-run trade markers)
-- Rolling Sharpe ratio (1-year window)
+- Price + Volume with entry/stop/analyst target overlays (crosshair interaction)
+- RSI (14) with 30/70 reference lines
+- MACD (12,26,9) with signal line
+- Stochastic (14,3,3) with overbought/oversold zones
+- ATR (14) volatility chart
+- Bollinger Bands (20,2) with upper/mid/lower
+- All charts support mouse crosshair with value tooltip
+```
+
+### 8.4 Authentication & User System
+- Session-based PHP auth with `user_sessions` table for remember-me (30-day cookies)
+- Per-user settings: color scheme, font size, compact tables, decimal places, date format, default landing page
+- Roles: admin, user, viewer
+- Default admin: admin / admin123
+
+### 8.5 Future Pages (from original plan)
+```
+- GA results: weight evolution, fitness curves
+- NN predictions: scatter plot vs actual, error bars
+- RL activity: action log, reward curve
+- Regime dashboard: VIX, credit spreads, yield curve
+- ETF rebalance calendar with front-run markers
+- Backtest results: walk-forward Sharpe, rolling drawdown
 ```
 
 ---
 
 ## 9. Implementation Order
 
-### Phase 1: Fix the Foundation
-1. Rewrite simulator for DAILY operation with REAL stop-losses
-2. Add fundamental data layer (earnings, FCF, payout ratios)
-3. Add regime detection module
-4. Build ETF rebalance calendar scraper
+### Phase 1: Fix the Foundation ✅ COMPLETE
+1. ~~Rewrite simulator for DAILY operation with REAL stop-losses~~
+2. ~~Add fundamental data layer (earnings, FCF, payout ratios)~~
+3. ~~Add regime detection module~~
+4. ~~Build ETF rebalance calendar scraper~~
 
-### Phase 2: Retrain Agents
+### Phase 2: Retrain Agents 🔄 IN PROGRESS
 1. GA: Walk-forward optimization with daily simulation
 2. NN: Add fundamental + macro features
 3. RL: Daily action space with transaction costs
 4. Blender: Combine all signals
 
-### Phase 3: PHP Dashboard
-1. PHP 7.4 framework setup (PSR-4, Ksf\StockMarket\)
-2. MySQL read layer + API endpoints
-3. Dashboard pages with Chart.js visualizations
-4. Real-time portfolio monitoring
+### Phase 3: PHP Dashboard ✅ COMPLETE
+1. ~~PHP 8.1 framework setup (PSR-4)~~
+2. ~~MySQL read layer + front controller~~
+3. ~~Dashboard pages with canvas charting~~
+4. ~~Auth, portfolio, transactions, strategies, detail pages~~
 
-### Phase 4: Automation
+### Phase 4: Automation ⏳ PENDING
 1. Daily cron: fetch data, update indicators, check stops
 2. Weekly cron: NN predictions, dividend safety scan
 3. Monthly cron: rebalance, ETF front-running

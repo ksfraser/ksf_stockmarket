@@ -23,10 +23,12 @@ DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'analysis_results.db')
 
 # Portfolio symbols (from migrate)
 PORTFOLIO_SYMBOLS = [
-    'BPF.UN', 'CDZ', 'CEF', 'CM', 'CNR', 'FEZ', 'IEV', 'KEG.UN',
+    'BPF.UN', 'CDZ', 'CEF', 'CM', 'CNR', 'FEZ', 'IEV',
     'MTY', 'MX', 'PDC', 'PZA', 'RGLD', 'RUS', 'RY', 'SPEU',
     'SRV.UN', 'TFII', 'UL', 'WJX',
 ]
+# Symbols that are inactive (delisted/taken private) — kept for backtesting but not fetched
+INACTIVE_SYMBOLS = {'KEG.UN'}
 
 
 def ensure_tables(db):

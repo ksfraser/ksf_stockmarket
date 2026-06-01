@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ksf-stockmarket"
+version = "1.0.0"
+description = "KSF Stock Market Analysis — portfolio tracking, backtesting, technical analysis"
+requires-python = ">=3.9"
+license = {text = "Proprietary"}
+dependencies = [
+    "yfinance>=0.2.36",
+    "pymysql>=1.1.0",
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "pytest-asyncio>=0.21",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+addopts = "-v --tb=short"
+
+[tool.setuptools.packages.find]
+include = ["python*"]

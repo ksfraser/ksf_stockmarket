@@ -1,1 +1,1 @@
-# integration tests package
+# tests/integration/__init__.py

@@ -1,0 +1,165 @@
+<?php
+/**
+ * Front controller — routes all requests.
+ */
+
+// Start session early for auth
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Autoload
+spl_autoload_register(function ($class) {
+    $paths = [
+        '/var/www/stockmarket-app/src/Controller/' . $class . '.php',
+        '/var/www/stockmarket-app/src/Model/' . $class . '.php',
+    ];
+    foreach ($paths as $p) {
+        if (file_exists($p)) { require_once $p; return; }
+    }
+});
+
+// Helpers
+require_once '/var/www/stockmarket-app/src/View/helpers.php';
+
+$action = $_GET['action'] ?? 'overview';
+
+// Check auth status
+$currentUser = AuthController::checkSession();
+
+// JSON API endpoints (public)
+if ($action === 'api_chart' && isset($_GET['symbol'])) {
+    header('Content-Type: application/json');
+    $ctrl = new StockController();
+    echo json_encode($ctrl->chartData($_GET['symbol'], (int)($_GET['days'] ?? 250)));
+    exit;
+}
+
+// Auth routes (no login required)
+if ($action === 'login') {
+    $ctrl = new AuthController();
+    $result = $ctrl->login();
+    if (is_array($result)) {
+        $pageTitle = $result['pageTitle'] ?? 'Login';
+        $template = $result['template'] ?? 'login';
+        $data = $result;
+        require '/var/www/stockmarket-app/templates/layout.php';
+    }
+    exit;
+}
+
+if ($action === 'logout') {
+    $ctrl = new AuthController();
+    $ctrl->logout();
+    exit;
+}
+
+if ($action === 'register') {
+    $ctrl = new AuthController();
+    $result = $ctrl->register();
+    $pageTitle = 'Register';
+    $template = 'register';
+    $data = $result;
+    require '/var/www/stockmarket-app/templates/layout.php';
+    exit;
+}
+
+// Route to controller
+$pageTitle = 'Dashboard';
+$template = 'overview';
+$data = [];
+$data['current_user'] = $currentUser;
+
+switch ($action) {
+    case 'overview':
+        $ctrl = new DashboardController();
+        $data = array_merge($data, $ctrl->overview());
+        $pageTitle = 'Dashboard';
+        $template = 'overview';
+        break;
+    case 'my_dashboard':
+        $ctrl = new UserController();
+        $data = array_merge($data, $ctrl->myDashboard());
+        break;
+    case 'settings':
+        $ctrl = new UserController();
+        $data = array_merge($data, $ctrl->settings());
+        break;
+    case 'list':
+        $ctrl = new StockController();
+        $data['symbols'] = $ctrl->listSymbols($_GET['search'] ?? '', $_GET['exchange'] ?? '', $_GET['sort'] ?? 'symbol', $_GET['dir'] ?? 'ASC');
+        $pageTitle = 'All Symbols';
+        $template = 'list';
+        break;
+    case 'detail':
+        $ctrl = new StockController();
+        $data = array_merge($data, $ctrl->detail($_GET['symbol'] ?? ''));
+        $pageTitle = htmlspecialchars($_GET['symbol'] ?? '') . ' - Detail';
+        $template = 'detail';
+        break;
+    case 'portfolio':
+        $ctrl = new StockController();
+        $data = array_merge($data, $ctrl->portfolio($_GET['account'] ?? 'all'));
+        break;
+    case 'admin_symbols':
+        $ctrl = new SymbolAdminController();
+        $subaction = $_GET['subaction'] ?? 'list';
+        if ($subaction === 'deactivate' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $ctrl->setDeactivationReason($_POST['symbol'] ?? '', $_POST['reason'] ?? '');
+            header('Location: ?action=admin_symbols&filter=inactive');
+            exit;
+        }
+        if ($subaction === 'reactivate') {
+            $ctrl->toggleActive($_GET['symbol'] ?? '');
+            header('Location: ?action=admin_symbols');
+            exit;
+        }
+        if ($subaction === 'save_mapping' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $ctrl->saveExchangeMapping($_POST);
+            header('Location: ?action=admin_symbols');
+            exit;
+        }
+        $data = array_merge($data, $ctrl->listSymbols($_GET['filter'] ?? 'all', $_GET['search'] ?? ''));
+        $pageTitle = 'Symbol Admin';
+        $template = 'admin_symbols';
+        break;
+    case 'indicators':
+        $ctrl = new StockController();
+        $data = array_merge($data, $ctrl->detail($_GET['symbol'] ?? ''));
+        $pageTitle = htmlspecialchars($_GET['symbol'] ?? '') . ' - Indicators';
+        $template = 'indicators';
+        break;
+    case 'transactions':
+        require_once '/var/www/stockmarket-app/src/Controller/TransactionController.php';
+        $ctrl = new TransactionController();
+        $data = array_merge($data, $ctrl->listTransactions(
+            $_GET['account'] ?? '',
+            $_GET['symbol'] ?? '',
+            $_GET['type'] ?? '',
+            $_GET['date_from'] ?? '',
+            $_GET['date_to'] ?? ''
+        ));
+        $pageTitle = 'Transactions';
+        $template = 'transactions';
+        break;
+    case 'strategy_stock':
+        require_once '/var/www/stockmarket-app/src/Controller/StrategyController.php';
+        $ctrl = new StrategyController();
+        $data = array_merge($data, $ctrl->stockSelection());
+        $pageTitle = 'Stock Selection Strategies';
+        $template = 'strategy_stock';
+        break;
+    case 'strategy_money':
+        require_once '/var/www/stockmarket-app/src/Controller/StrategyController.php';
+        $ctrl = new StrategyController();
+        $data = array_merge($data, $ctrl->moneyManagement());
+        $pageTitle = 'Money & Risk Management';
+        $template = 'strategy_money';
+        break;
+    default:
+        $ctrl = new DashboardController();
+        $data = array_merge($data, $ctrl->overview());
+        $template = 'overview';
+}
+
+require '/var/www/stockmarket-app/templates/layout.php';

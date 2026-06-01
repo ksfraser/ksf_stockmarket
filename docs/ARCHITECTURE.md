@@ -1,7 +1,7 @@
 # Investment Agent — Architecture & Specification
 
-> **Version:** 3.0 | **Date:** 2026-05-30 | **Repo:** `ksfraser/ksf_stockmarket`
-> **Status:** Phase 1 complete (data + tax + allocation). Phase 2 in progress (GA/NN/RL agents).
+> **Version:** 5.0 | **Date:** 2026-06-01 | **Repo:** `ksfraser/ksf_stockmarket`
+> **Status:** Web dashboard complete. Auth, portfolio, transactions, strategies pages live. GA/NN/RL agents in development.
 
 ---
 
@@ -16,6 +16,8 @@
 - Annual withdrawal: $12K in December
 - TFSA room: $7K/yr, RRSP room: ~$6K/yr
 - Transition income may decline (part-time) — creates RRSP deregistration opportunity
+- 23 portfolio holdings across RRSP, TFSA, MARGIN accounts (~$137K book, ~$384K market)
+- 404 symbols tracked in `symbol_master`, 49 with price data (May 2025)
 
 ---
 
@@ -49,15 +51,20 @@ From the 222-indicator correlation study:
 - **Quarterly (90d):** Dividend calendar, FCF seasonality → cash flow planning
 - Candlestick patterns: uniformly noise at all horizons → **dropped entirely**
 
+### 2.7 SOLID PHP, Typed Python
+- PHP: PSR-4 autoloading, `declare(strict_types=1)`, DI via constructors, SRP controllers
+- Python: Type hints, abstract base classes, config-driven factory pattern
+- Both: Comprehensive test coverage (pytest for Python, PHPUnit for PHP)
+
 ---
 
 ## 3. System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    ORCHESTRATOR (weekly)                     │
-│  Runs Layer 0, triggers Layer 1 daily, feeds GA/NN/RL       │
-└──────────────────────────┬──────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                     ORCHESTRATOR (weekly)                        │
+│  Runs Layer 0, triggers Layer 1 daily, feeds GA/NN/RL          │
+└──────────────────────────┬──────────────────────────────────────┘
                            │
      ┌─────────────────────┼─────────────────────┐
      ▼                     ▼                     ▼
@@ -69,7 +76,7 @@ From the 222-indicator correlation study:
      │                     │                     │
      ▼                     ▼                     ▼
 ┌─────────┐         ┌──────────┐         ┌──────────┐
-│ Layer 3  │         │ Layer 4  │          │Agents    │
+│ Layer 3  │         │ Layer 4  │         │Agents    │
 │ Portfolio│         │ Risk     │         │GA/NN/RL │
 │ Construct│         │ Mgt      │         │(weekly)  │
 └─────────┘         └──────────┘         └──────────┘
@@ -83,6 +90,77 @@ From the 222-indicator correlation study:
 │  → Final positions per sleeve                             │
 └──────────────────────────────────────────────────────────┘
 ```
+
+### 3.0 Web Dashboard (PHP 8.1 + Apache)
+
+**URL:** `http://192.168.1.102/stockmarket/` and `http://192.168.1.102/dashboard/`
+
+**Stack:** PHP 8.1, Apache, PHP-FPM, PDO MySQL, inline CSS/JS (canvas charts), sessions
+
+**Directory Layout:**
+```
+/var/www/stockmarket-app/          ← Workspace (authoritative)
+  index.php                        ← Front controller
+  src/Controller/                  ← PSR-4 controllers
+    DashboardController.php        ← App-level overview
+    StockController.php            ← Symbol list, detail, portfolio
+    TransactionController.php      ← Transaction history
+    StrategyController.php         ← Backtested strategy results
+    UserController.php             ← My Dashboard + Settings
+    AuthController.php             ← Login/logout/session
+    SymbolAdminController.php      ← Symbol activation/deactivation
+    FundamentalsController.php     ← Fundamental data fetcher
+  src/Model/Database.php           ← PDO singleton
+  src/View/helpers.php             ← Template helpers
+  templates/                       ← PHP templates
+  config/database.php              ← DB credentials
+
+/var/www/html/stockmarket/         ← Apache web root (rsync copy)
+/var/www/html/dashboard-owl/       ← /dashboard/ alias (copy)
+```
+
+**Web Routes:**
+
+| Action | Controller | Description |
+|---|---|---|
+| `overview` (default) | DashboardController | App-level dashboard: all-symbol gainers/losers, portfolio summary, full data coverage |
+| `my_dashboard` | UserController | Personal dashboard: buy/sell recs, earnings, dividends, portfolio movers |
+| `portfolio` | StockController | Holdings with annualized P&L, cost-basis div yield, stop prices, strategy details |
+| `transactions` | TransactionController | Filterable transaction history (account/symbol/type/date) |
+| `detail&symbol=X` | StockController | Single symbol with Buffett score, oscillators, analyst targets, options, news |
+| `list` | StockController | All 404 tracked symbols with prices |
+| `strategy_stock` | StrategyController | Stock selection strategies with backtested results |
+| `strategy_money` | StrategyController | Money/risk management with Kelly criterion, stops, sleeves |
+| `admin_symbols` | SymbolAdminController | Symbol activate/deactivate, exchange mapping |
+| `settings` | UserController | Per-user settings (color scheme, font size, password) |
+| `login` / `logout` | AuthController | Session-based auth with remember-me cookies |
+
+**Authentication:**
+- Session-based PHP auth with `user_sessions` table for remember-me (30-day cookies)
+- Default admin: `admin` / `admin123` (change immediately)
+- Per-user settings: color scheme, font size, compact tables, decimal places, date format, landing page
+
+**Portfolio Page Columns:**
+
+| Column | Description |
+|---|---|
+| Symbol | Link to detail page |
+| Account | RRSP / TFSA / MARGIN |
+| Shares | Quantity |
+| Cost Basis | Average cost per share |
+| Current | Latest close price |
+| Market Value | Shares × current price |
+| P&L $ | Dollar gain/loss |
+| P&L % | Percentage gain/loss |
+| **Annualized P&L %** | CAGR since entry date |
+| **Cost Basis Allocation %** | Cost basis as % of total portfolio cost |
+| Div Yield | Current dividend yield |
+| **Cost-Basis Div Yield** | Yield relative to what was paid |
+| **Safety** | Dividend safety score with tooltip explanation |
+| **Stop $** | Effective stop price in green/yellow/red |
+| **Strategy** | Trailing stop % + ATR multiplier details |
+
+**CSS Theme:** Grey background (#4a5568), blue-ish data boxes (#5a7a9e), white text, accent blue (#63b3ed)
 
 ### 3.1 Layer 0 — Universe Screener (weekly, Sundays)
 **Input:** 404 symbols from CurrentData/ + portfolio holdings
@@ -113,76 +191,35 @@ For each symbol:
 | Market cap | > $5B | > $1B | > $2B | > $500M |
 
 ### 3.2 Layer 1 — Signal Generation (daily, market close)
-**Input:** Layer 0 candidates + 120 indicators from `indicators` table
-**Output:** Per-symbol signals per sleeve in MySQL `signals_daily`
+**Input:** Layer 0 candidates + indicators from `indicators_json` table (142 per symbol/day)
+**Output:** Per-symbol signals per sleeve
 
 ```
 For each candidate in each sleeve:
   a. Short-horizon: BB position (3d), MA deviation, RSI
-  b. Medium-horizon: RSI(14/21), MACD, ADX, NATR(7/14/20)
+  b. Medium-horizon: RSI(14), MACD, ADX, NATR(14)
   c. Regime: ADX > 20 required for trend trades
   d. Volume: OBV > 50d average
   e. Conviction: count agreeing signals / total signals
   f. Output: signal_strength [-1, 1], conviction [0, 1]
-
-  For Income sleeve additionally:
-  g. Dividend calendar: days to ex-div, yield on cost
-  h. Quality check: earnings trend, payout trajectory
 ```
 
-### 3.3 Layer 2 — Money Management (on each signal + monthly)
-**Input:** Signals from Layer 1 + current portfolio state
-**Output:** Orders (buy quantity, DCA schedule, stop price)
+### 3.3 Layer 2 — Money Management
+- ATR risk model: shares = (portfolio × risk_pct) / (ATR × stop_mult)
+- Kelly Criterion: f* = (bp - q) / b, quarter-Kelly for satellite
+- Trailing stop activation: triggered at +3× ATR profit
+- Stop methodology: max(trailing_stop, fixed_stop) — trailing overrides when higher
 
-```
-For each BUY signal:
-  1. Position sizing:
-     - ATR risk model: shares = (portfolio × risk_pct) / (ATR × stop_mult)
-     - Kelly (satellite only): f* = (bp - q) / b, quarter-Kelly
-     - Yield-weighted (income): higher yield = larger allocation
-  2. DCA schedule: 2-3 installments over 5-20 days
-  3. Stop loss: entry - N×ATR (N varies by sleeve)
-  4. Account placement: which account type for this symbol
-  5. Trailing stop activation: triggered at +3% profit
+### 3.4 Layer 3 — Portfolio Construction
+- Tax-loss harvest: Dec only if unrealized loss > 5% and saves > $50 tax
+- Sleeve allocation: Core 40%, Tactical 30%, Income 20%, Satellite 10%
+- Cash buffer: maintain 5%
 
-For each position (monthly):
-  6. Rebalance check: drift > 5% from target
-  7. Stop check: price below ATR stop
-  8. Conviction check: if signal strength < 0.3 → EXIT
-  9. Time stop: if held beyond sleeve max days → EXIT
-```
-
-### 3.4 Layer 3 — Portfolio Construction (monthly)
-**Input:** All orders from Layer 2 + tax-loss harvesting triggers + forex signal
-**Output:** Executed portfolio state in MySQL `portfolio`
-
-```
-1. Process BUY orders (DCA on schedule)
-2. Process SELL orders (exits, stops)
-3. Tax-loss harvest: Dec only if unrealized loss > 5% and saves > $50 tax
-4. Forex geo-shift: if USD/CAD 20d trend rising → +5% US, -5% CDN (bounded)
-5. Diversification check:
-   - Max 15 names total
-   - Max 25% single sector
-   - Geographic constraints per forex-aware config
-6. Cash buffer: maintain 5%
-7. Move to next sleeve if conviction deteriorates
-```
-
-### 3.5 Layer 4 — Risk Management (continuous)
-**Input:** Portfolio state + market data + VIX + correlations
-**Output:** Risk alerts + emergency actions
-
-```
-Continuous monitoring:
-  1. Portfolio drawdown > 15% → reduce position sizes 50%
-  2. Portfolio drawdown > 25% → shift 30% to cash
-  3. VIX > 30 → halve new position sizes
-  4. VIX > 40 → emergency cash shift
-  5. Single position drops 3% in a day → review for exit
-  6. Portfolio avg correlation > 0.75 → reduce concentration
-  7. RRSP dereg check: if income forecast < $55K → model withdrawal sweep
-```
+### 3.5 Layer 4 — Risk Management
+- Portfolio drawdown > 15% → reduce position sizes 50%
+- Portfolio drawdown > 25% → shift 30% to cash
+- VIX > 30 → halve new position sizes
+- VIX > 40 → emergency cash shift
 
 ---
 
@@ -190,61 +227,90 @@ Continuous monitoring:
 
 ### 4.1 GA (DEAP) — Strategic Allocation Optimizer
 **Purpose:** Find the optimal static allocation across sleeves and symbols within each sleeve.
-
-**Input:** Historical returns (after-tax), indicator correlations, forex trends, tax rates
-**Output:** Optimal sleeve weights + symbol weights within each sleeve
-
-**Fitness function:**
-```
-fitness = after_tax_terminal_value - λ_dd × max_drawdown - λ_cash_depletion × I(portfolio_hits_0)
-```
-
-**GA optimizes:**
-- Sleeve allocation percentages (within global constraints)
-- Symbol weights within each sleeve (within sleeve constraints)
-- DCA installments and stop multipliers (continuous parameters)
-- Forex shift sensitivity (how aggressively to rebalance on USD/CAD signal)
-
+**Fitness:** after_tax_terminal_value − λ_dd × max_drawdown − λ_cash_depletion × I(portfolio_hits_0)
 **Training:** Walk-forward 2014-2018, test 2019-2024. Population 200, generations 100.
 
 ### 4.2 NN (PyTorch LSTM) — Tactical Return Predictor
 **Purpose:** Predict 20-day forward return distribution for each candidate symbol.
-
-**Input:** 60-day sequence of 120 indicators per symbol
-**Output:** Mean and variance of expected 20-day return
-
 **Architecture:** 2-layer LSTM (128 hidden, dropout 0.2), linear output head with uncertainty.
-
 **Training:** Walk-forward on Layer 0 candidate symbols. Train on 5 years, validate on 1 year.
-
-**Use:** Feed expected returns into the GA as prior estimates. NN confidence (inverse variance) weights GA evaluation.
+**Backtest result:** 53.1% directional accuracy
 
 ### 4.3 RL (SB3 PPO) — Dynamic Rebalancing Agent
 **Purpose:** Learn when to deviate from GA static allocation based on market conditions.
-
 **State:** Portfolio composition + signal consensus + market regime (ADX, VIX) + time since last rebalance
-**Action:** For each position: [-1 sell half, -0.5 trim, 0 hold, +0.5 add, +1 double] + account transfer decisions
-**Reward:** Daily after-tax P&L − transaction_cost − risk_penalty
-
+**Action:** For each position: [-1 sell half, -0.5 trim, 0 hold, +0.5 add, +1 double]
 **Training:** 100K timesteps per walk-forward step, rolling annually.
 
 ### 4.4 Blender
-**Purpose:** Combine the three agents' outputs into final portfolio decisions.
-
 ```
 final_weight(symbol) = 
   GA_weight × GA_static_weight(symbol) +
   NN_weight × NN_tactical_adjustment(symbol) +
   RL_weight × RL_dynamic_adjustment(symbol)
-
-where GA_weight + NN_weight + RL_weight = 1.0
 ```
-
 **Rebalancing:** Every 90 days, re-blend based on trailing 90-day Sharpe ratio of each agent.
 
 ---
 
-## 5. Key Research Findings (From 222-Indicator Study)
+## 5. Backtested Strategy Results (as of 2026-02-01)
+
+| Strategy | Win Rate | Profit Factor | Max Drawdown | Status |
+|---|---|---|---|---|
+| Candlestick Patterns | 12% | 0.82 | -24.3% | Needs Improvement |
+| Oscillators (RSI/MACD/Stoch) | 44% | 1.31 | -14.7% | Promising |
+| Neural Network Directional | 53.1% | 1.42 | -11.2% | Battle Tested |
+| Buffett Quality Score | N/A (screening) | N/A | N/A | Screening Tool |
+| Ensemble Blend (NN+Osc+Cdl) | 51.4% | 1.58 | -9.1% | Battle Tested |
+| Kelly + Win Rate Inversion | Varies | 1.72 | -6.8% | Recommended |
+| Sleeve-Based Allocation | N/A | N/A | -8.2% | Active |
+
+---
+
+## 6. Database (MySQL at ksfraser.ca)
+
+| Table | Purpose | Key Columns |
+|---|---|---|
+| `stockprices` | OHLCV daily prices | symbol, price_date, close, volume |
+| `indicators_json` | 142 TA indicators per row | symbol, price_date, data (JSON) |
+| `symbol_master` | 404-symbol universe | symbol, name, exchange, sector, is_active |
+| `portfolio` | 23 current positions | symbol, account_type, shares, cost_basis, trailing_stop_pct, atr_multiplier |
+| `users` | Authentication | username, password_hash, role, is_active |
+| `user_settings` | Per-user preferences | user_id, setting_key, setting_value |
+| `user_sessions` | Remember-me tokens | id, user_id, expires_at |
+| `fundamentals` | Fundamental data | symbol, fetch_date, pe, div_yield, roe, ... |
+| `analyst_ratings` | Analyst predictions | symbol, date, firm, rating, price_target |
+| `symbol_news` | News articles | symbol, date, title, url, source |
+| `options_snapshot` | Options data | symbol, fetch_date, put_call_ratio, iv |
+| `exchange_mapping` | Symbol→exchange map | symbol, exchange, yahoo_suffix |
+| `transactions` | Transaction history | symbol, trade_date, type, quantity, price, total |
+
+---
+
+## 7. Python DB Adapter Layer
+
+**Abstract interface** (`python/db/adapter.py`):
+```python
+class DBConnection(ABC):
+    @abstractmethod
+    def execute(self, query, params=None): ...
+    @abstractmethod
+    def fetchall(self): ...
+    @abstractmethod
+    def fetchone(self): ...
+```
+
+**Implementations:**
+- `MySQLAdapter` — pymysql, connects to ksfraser.ca
+- `SQLiteAdapter` — sqlite3, for local testing
+
+**Factory:** `Database.from_config('config.yaml')` picks adapter based on `db.engine` key
+
+**Tests:** 18 unit tests passing (SQLite adapter), `tests/unit/test_db_adapter.py`
+
+---
+
+## 8. Key Research Findings
 
 ### Indicator Horizons
 | Horizon | Avg |corr| | Max |corr| | Best For |
@@ -253,32 +319,31 @@ where GA_weight + NN_weight + RL_weight = 1.0
 | 3d | 0.027 | 0.096 | Bollinger, MA deviation |
 | 5d | 0.035 | 0.096 | Entry timing |
 | 10d | 0.052 | 0.127 | Direction, regime |
-| 20d | 0.066 | **0.162** | NATR, position sizing, worst-case planning |
+| 20d | 0.066 | **0.162** | NATR, position sizing |
 
 ### Indicator Groups by Use
 | Use | Indicators | Horizon |
 |---|---|---|
 | **Stock selection** | NATR_7/14/20, STDDEV_14, VAR_14 | 20d |
 | **Entry timing** | BB position, MA deviation, short NATR | 3-5d |
-| **Direction** | RSI, MACD(12,26,9), ADX | 20d (regime filters) |
+| **Direction** | RSI, MACD(12,26,9), ADX | 20d |
 | **Position sizing** | NATR (inverse relationship) | 20d |
 | **Confirmation** | OBV rising, volume > 50d avg | 20d |
 | **Candlestick patterns** | ALL 59: noise | ALL: ignore |
 
 ---
 
-## 6. Database (MySQL at ksfraser.ca)
+## 9. File Locations
 
-| Table | Purpose | Key Columns |
-|---|---|---|
-| `stockprices` | OHLCV daily prices | symbol, price_date, close, volume — partitioned by YEAR |
-| `indicators` | 120 TA-Lib indicators | symbol, price_date, natr_7.., rsi_14.., macd_.. — partitioned |
-| `indicator_correlation` | Cached correlation study | indicator, horizon, avg_corr, verdict |
-| `symbol_master` | 404-symbol universe | symbol, geography, sector, is_portfolio |
-| `layer0_candidates` | Weekly screener output | symbol, sleeve, buffet_score, div_yield |
-| `signals_daily` | Layer 1 signals | symbol, sleeve, signal_strength, conviction |
-| `portfolio` | Current positions | symbol, acct_type, shares, cost_basis, entry_date |
-| `evalsummary` | Scoring engine output | symbol, date, consensus_signal, position_size |
-| `tax_parameters` | CDN tax data | bracket, rates, DTC, gross_up |
-| `allocation_strategies` | Strategy definitions | name, type, geo_weights |
-| `after_tax_returns` | Results storage | date, strategy, pre_tax, tax, after_tax |
+| Component | Path |
+|---|---|
+| PHP workspace | `/var/www/stockmarket-app/` |
+| Apache web root | `/var/www/html/stockmarket/` |
+| Dashboard alias | `/var/www/html/dashboard-owl/` |
+| Python project | `/home/ksf_stockmarket/ksf_stockmarket/` |
+| Python DB adapter | `python/db/` |
+| Python pipeline | `python/daily_pipeline.py` |
+| Python tests | `tests/unit/test_db_adapter.py` |
+| Config | `config.yaml` (Python), `config/database.php` (PHP) |
+| MySQL host | `ksfraser.ca` |
+| DB name | `ksfraser_stock_market` |

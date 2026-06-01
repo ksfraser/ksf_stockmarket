@@ -798,3 +798,698 @@ Progress: 190/371 done, 99 failures
 [2026-06-01 02:22:17]   OK MS done
 [2026-06-01 02:22:17] [204/276] Backfilling MUR...
 [197/371] OK: MMM
+[2026-06-01 02:27:17]   Attempt 1/3 timed out for MUR
+[198/371] OK: MOS
+[2026-06-01 02:32:22]   Attempt 2/3 timed out for MUR
+[2026-06-01 02:37:33]   Attempt 3/3 timed out for MUR
+[2026-06-01 02:37:33]   FAIL MUR - skipping
+[2026-06-01 02:37:33] [205/276] Backfilling MX.TO...
+[199/371] OK: MRD.TO
+[2026-06-01 02:42:33]   Attempt 1/3 timed out for MX.TO
+[2026-06-01 02:47:38]   Attempt 2/3 timed out for MX.TO
+[200/371] OK: MRK
+Progress: 200/371 done, 101 failures
+[201/371] FAIL: MRU-A.TO
+[202/371] FAIL: MRU.A.TO
+[2026-06-01 02:52:48]   Attempt 3/3 timed out for MX.TO
+[2026-06-01 02:52:48]   FAIL MX.TO - skipping
+[2026-06-01 02:52:48] [206/276] Backfilling NA.TO...
+[203/371] OK: MS
+[2026-06-01 02:57:48]   Attempt 1/3 timed out for NA.TO
+[2026-06-01 03:02:53]   Attempt 2/3 timed out for NA.TO
+[204/371] OK: MUR
+[2026-06-01 03:08:03]   Attempt 3/3 timed out for NA.TO
+[2026-06-01 03:08:03]   FAIL NA.TO - skipping
+[2026-06-01 03:08:03] [207/276] Backfilling NCX.TO...
+[2026-06-01 03:08:05]   OK NCX.TO done
+[2026-06-01 03:08:05] [208/276] Backfilling NG...
+[2026-06-01 03:13:05]   Attempt 1/3 timed out for NG
+[205/371] OK: MX.TO
+[2026-06-01 03:18:10]   Attempt 2/3 timed out for NG
+[206/371] OK: NA.TO
+[207/371] FAIL: NCX.TO
+[2026-06-01 03:23:20]   Attempt 3/3 timed out for NG
+[2026-06-01 03:23:20]   FAIL NG - skipping
+[2026-06-01 03:23:20] [209/276] Backfilling NGP.TO...
+[2026-06-01 03:23:23]   OK NGP.TO done
+[2026-06-01 03:23:23] [210/276] Backfilling NKE...
+[2026-06-01 03:28:23]   Attempt 1/3 timed out for NKE
+[208/371] OK: NG
+[209/371] FAIL: NGP.TO
+[2026-06-01 03:33:28]   Attempt 2/3 timed out for NKE
+[2026-06-01 03:34:31]   OK NKE done
+[2026-06-01 03:34:31] Rate limit: sleeping 30s...
+[2026-06-01 03:35:01] [211/276] Backfilling NLY...
+[2026-06-01 03:35:55]   OK NLY done
+[2026-06-01 03:35:55] [212/276] Backfilling NOK...
+[2026-06-01 03:36:49]   OK NOK done
+[2026-06-01 03:36:49] [213/276] Backfilling NT.TO...
+[2026-06-01 03:36:50]   OK NT.TO done
+[2026-06-01 03:36:50] [214/276] Backfilling NVS...
+[2026-06-01 03:37:44]   OK NVS done
+[2026-06-01 03:37:44] [215/276] Backfilling NXY.TO...
+[2026-06-01 03:37:46]   OK NXY.TO done
+[2026-06-01 03:37:46] [216/276] Backfilling OBQI.OB...
+[2026-06-01 03:37:48]   OK OBQI.OB done
+[2026-06-01 03:37:48] [217/276] Backfilling OIH...
+[2026-06-01 03:38:42]   OK OIH done
+[2026-06-01 03:38:42] [218/276] Backfilling ONC.TO...
+[2026-06-01 03:38:44]   OK ONC.TO done
+[2026-06-01 03:38:44] [219/276] Backfilling ORA...
+[2026-06-01 03:39:37]   OK ORA done
+[2026-06-01 03:39:37] [220/276] Backfilling OZRK...
+[2026-06-01 03:39:39]   OK OZRK done
+[2026-06-01 03:39:39] Rate limit: sleeping 30s...
+[2026-06-01 03:40:09] [221/276] Backfilling PAAS...
+[210/371] OK: NKE
+Progress: 210/371 done, 105 failures
+[2026-06-01 03:45:10]   Attempt 1/3 timed out for PAAS
+[2026-06-01 03:50:15]   Attempt 2/3 timed out for PAAS
+[211/371] OK: NLY
+[2026-06-01 03:55:25]   Attempt 3/3 timed out for PAAS
+[2026-06-01 03:55:25]   FAIL PAAS - skipping
+[2026-06-01 03:55:25] [222/276] Backfilling PALAF.PK...
+[2026-06-01 03:55:27]   OK PALAF.PK done
+[2026-06-01 03:55:27] [223/276] Backfilling PALL...
+[212/371] OK: NOK
+[213/371] FAIL: NT.TO
+[2026-06-01 04:00:27]   Attempt 1/3 timed out for PALL
+[2026-06-01 04:00:36]   OK PALL done
+[2026-06-01 04:00:36] [224/276] Backfilling PAR...
+[2026-06-01 04:05:36]   Attempt 1/3 timed out for PAR
+[214/371] OK: NVS
+[215/371] FAIL: NXY.TO
+[216/371] FAIL: OBQI.OB
+[2026-06-01 04:10:41]   Attempt 2/3 timed out for PAR
+[2026-06-01 04:15:51]   Attempt 3/3 timed out for PAR
+[2026-06-01 04:15:51]   FAIL PAR - skipping
+[2026-06-01 04:15:51] [225/276] Backfilling PBI...
+[217/371] OK: OIH
+[218/371] FAIL: ONC.TO
+[2026-06-01 04:20:51]   Attempt 1/3 timed out for PBI
+[219/371] OK: ORA
+[220/371] FAIL: OZRK
+Progress: 220/371 done, 110 failures
+[2026-06-01 04:25:56]   Attempt 2/3 timed out for PBI
+[2026-06-01 04:31:06]   Attempt 3/3 timed out for PBI
+[2026-06-01 04:31:06]   FAIL PBI - skipping
+[2026-06-01 04:31:06] [226/276] Backfilling PBR...
+[221/371] OK: PAAS
+[222/371] FAIL: PALAF.PK
+[223/371] OK: PALL
+[2026-06-01 04:36:06]   Attempt 1/3 timed out for PBR
+[224/371] OK: PAR
+[2026-06-01 04:41:12]   Attempt 2/3 timed out for PBR
+[2026-06-01 04:46:22]   Attempt 3/3 timed out for PBR
+[2026-06-01 04:46:22]   FAIL PBR - skipping
+[2026-06-01 04:46:22] [227/276] Backfilling PC.TO...
+[2026-06-01 04:46:24]   OK PC.TO done
+[2026-06-01 04:46:24] [228/276] Backfilling PCC...
+[2026-06-01 04:46:26]   OK PCC done
+[2026-06-01 04:46:26] [229/276] Backfilling PDM-UN.TO...
+[2026-06-01 04:46:28]   OK PDM-UN.TO done
+[2026-06-01 04:46:28] [230/276] Backfilling PDS...
+[225/371] OK: PBI
+[2026-06-01 04:51:28]   Attempt 1/3 timed out for PDS
+[2026-06-01 04:56:33]   Attempt 2/3 timed out for PDS
+[226/371] OK: PBR
+[227/371] FAIL: PC.TO
+[228/371] FAIL: PCC
+[229/371] FAIL: PDM-UN.TO
+[230/371] FAIL: PDS
+Progress: 230/371 done, 115 failures
+[2026-06-01 05:01:43]   Attempt 3/3 timed out for PDS
+[2026-06-01 05:01:43]   FAIL PDS - skipping
+[2026-06-01 05:01:43] Rate limit: sleeping 30s...
+[2026-06-01 05:02:13] [231/276] Backfilling PEP...
+[2026-06-01 05:03:06]   OK PEP done
+[2026-06-01 05:03:06] [232/276] Backfilling PEY-UN.TO...
+[2026-06-01 05:07:29]   OK PEY-UN.TO done
+[2026-06-01 05:07:29] [233/276] Backfilling PEY.UN.TO...
+[2026-06-01 05:07:31]   OK PEY.UN.TO done
+[2026-06-01 05:07:31] [234/276] Backfilling PFE...
+[231/371] OK: PEP
+[232/371] OK: PEY-UN.TO
+[233/371] FAIL: PEY.UN.TO
+[2026-06-01 05:12:31]   Attempt 1/3 timed out for PFE
+[2026-06-01 05:13:29]   OK PFE done
+[2026-06-01 05:13:29] [235/276] Backfilling PG...
+[2026-06-01 05:14:23]   OK PG done
+[2026-06-01 05:14:23] [236/276] Backfilling PGH...
+[2026-06-01 05:15:16]   OK PGH done
+[2026-06-01 05:15:16] [237/276] Backfilling PKPL.OB...
+[2026-06-01 05:15:18]   OK PKPL.OB done
+[2026-06-01 05:15:18] [238/276] Backfilling PMT-UN.TO...
+[2026-06-01 05:16:10]   OK PMT-UN.TO done
+[2026-06-01 05:16:10] [239/276] Backfilling PMT.UN.TO...
+[2026-06-01 05:16:13]   OK PMT.UN.TO done
+[2026-06-01 05:16:13] [240/276] Backfilling POR...
+[2026-06-01 05:17:06]   OK POR done
+[2026-06-01 05:17:06] Rate limit: sleeping 30s...
+[2026-06-01 05:17:36] [241/276] Backfilling POT...
+[2026-06-01 05:17:38]   OK POT done
+[2026-06-01 05:17:38] [242/276] Backfilling POW.TO...
+[2026-06-01 05:18:31]   OK POW.TO done
+[2026-06-01 05:18:31] [243/276] Backfilling PPG...
+[2026-06-01 05:19:25]   OK PPG done
+[2026-06-01 05:19:25] [244/276] Backfilling PSJ...
+[234/371] OK: PFE
+[2026-06-01 05:24:25]   Attempt 1/3 timed out for PSJ
+[235/371] OK: PG
+[2026-06-01 05:29:30]   Attempt 2/3 timed out for PSJ
+[2026-06-01 05:29:44]   OK PSJ done
+[2026-06-01 05:29:44] [245/276] Backfilling PTR...
+[2026-06-01 05:29:46]   OK PTR done
+[2026-06-01 05:29:46] [246/276] Backfilling PVD...
+[2026-06-01 05:29:48]   OK PVD done
+[2026-06-01 05:29:48] [247/276] Backfilling PVG.TO...
+[2026-06-01 05:29:50]   OK PVG.TO done
+[2026-06-01 05:29:50] [248/276] Backfilling PVX...
+[236/371] OK: PGH
+[237/371] FAIL: PKPL.OB
+[2026-06-01 05:33:20]   OK PVX done
+[2026-06-01 05:33:20] [249/276] Backfilling PWF.TO...
+[2026-06-01 05:33:22]   OK PWF.TO done
+[2026-06-01 05:33:22] [250/276] Backfilling PZA.TO...
+[238/371] OK: PMT-UN.TO
+[239/371] FAIL: PMT.UN.TO
+[2026-06-01 05:38:22]   Attempt 1/3 timed out for PZA.TO
+[240/371] OK: POR
+Progress: 240/371 done, 118 failures
+[241/371] FAIL: POT
+[2026-06-01 05:43:27]   Attempt 2/3 timed out for PZA.TO
+[2026-06-01 05:48:37]   Attempt 3/3 timed out for PZA.TO
+[2026-06-01 05:48:37]   FAIL PZA.TO - skipping
+[2026-06-01 05:48:37] --- Progress: 199 OK, 51 FAIL, 984.5 min elapsed ---
+[2026-06-01 05:48:37] Running indicator recalculation...
+[2026-06-01 05:49:59] Indicators recalculated successfully.
+[2026-06-01 05:50:00] Remaining symbols after refresh: 247
+[2026-06-01 05:50:00] [251/247] Backfilling RAX...
+[2026-06-01 05:50:02]   OK RAX done
+[2026-06-01 05:50:02] [252/247] Backfilling REI-UN.TO...
+[242/371] OK: POW.TO
+[2026-06-01 05:55:02]   Attempt 1/3 timed out for REI-UN.TO
+[243/371] OK: PPG
+[244/371] OK: PSJ
+[245/371] FAIL: PTR
+[246/371] FAIL: PVD
+[2026-06-01 06:00:07]   Attempt 2/3 timed out for REI-UN.TO
+[247/371] FAIL: PVG.TO
+[248/371] OK: PVX
+[249/371] FAIL: PWF.TO
+[2026-06-01 06:05:12]   OK REI-UN.TO done
+[2026-06-01 06:05:12] [253/247] Backfilling REI.UN.TO...
+[2026-06-01 06:05:14]   OK REI.UN.TO done
+[2026-06-01 06:05:14] [254/247] Backfilling RIG...
+[250/371] OK: PZA.TO
+Progress: 250/371 done, 123 failures
+[251/371] FAIL: RAX
+[2026-06-01 06:10:15]   Attempt 1/3 timed out for RIG
+[2026-06-01 06:15:20]   Attempt 2/3 timed out for RIG
+[252/371] OK: REI-UN.TO
+[253/371] FAIL: REI.UN.TO
+[254/371] FAIL: RIG
+[255/371] FAIL: RIMM
+[2026-06-01 06:20:30]   Attempt 3/3 timed out for RIG
+[2026-06-01 06:20:30]   FAIL RIG - skipping
+[2026-06-01 06:20:30] [255/247] Backfilling RIMM...
+[2026-06-01 06:20:31]   OK RIMM done
+[2026-06-01 06:20:31] [256/247] Backfilling RIO...
+[2026-06-01 06:21:25]   OK RIO done
+[2026-06-01 06:21:25] [257/247] Backfilling RNK-UN.TO...
+[2026-06-01 06:21:27]   OK RNK-UN.TO done
+[2026-06-01 06:21:27] [258/247] Backfilling RNK.TO...
+[2026-06-01 06:21:29]   OK RNK.TO done
+[2026-06-01 06:21:29] [259/247] Backfilling ROC...
+[2026-06-01 06:21:36]   OK ROC done
+[2026-06-01 06:21:36] [260/247] Backfilling ROC.TO...
+[2026-06-01 06:21:38]   OK ROC.TO done
+[2026-06-01 06:21:38] [261/247] Backfilling ROY...
+[2026-06-01 06:21:40]   OK ROY done
+[2026-06-01 06:21:40] [262/247] Backfilling RPM...
+[2026-06-01 06:26:40]   Attempt 1/3 timed out for RPM
+[256/371] OK: RIO
+[257/371] FAIL: RNK-UN.TO
+[258/371] FAIL: RNK.TO
+[259/371] OK: ROC
+[260/371] FAIL: ROC.TO
+Progress: 260/371 done, 130 failures
+[261/371] FAIL: ROY
+[2026-06-01 06:31:45]   Attempt 2/3 timed out for RPM
+[2026-06-01 06:32:49]   OK RPM done
+[2026-06-01 06:32:49] [263/247] Backfilling RPT...
+[2026-06-01 06:36:45]   OK RPT done
+[2026-06-01 06:36:45] [264/247] Backfilling RSO...
+[2026-06-01 06:36:47]   OK RSO done
+[2026-06-01 06:36:47] [265/247] Backfilling RTM...
+[2026-06-01 06:37:40]   OK RTM done
+[2026-06-01 06:37:40] [266/247] Backfilling RTP...
+[2026-06-01 06:37:43]   OK RTP done
+[2026-06-01 06:37:43] [267/247] Backfilling RUS.TO...
+[2026-06-01 06:38:36]   OK RUS.TO done
+[2026-06-01 06:38:36] [268/247] Backfilling RY.TO...
+[262/371] OK: RPM
+[263/371] OK: RPT
+[264/371] FAIL: RSO
+[2026-06-01 06:43:36]   Attempt 1/3 timed out for RY.TO
+[265/371] OK: RTM
+[266/371] FAIL: RTP
+[2026-06-01 06:48:41]   Attempt 2/3 timed out for RY.TO
+[2026-06-01 06:53:51]   Attempt 3/3 timed out for RY.TO
+[2026-06-01 06:53:51]   FAIL RY.TO - skipping
+[2026-06-01 06:53:51] [269/247] Backfilling SAP.TO...
+[267/371] OK: RUS.TO
+[2026-06-01 06:58:51]   Attempt 1/3 timed out for SAP.TO
+[268/371] OK: RY.TO
+[2026-06-01 07:03:56]   Attempt 2/3 timed out for SAP.TO
+[2026-06-01 07:05:00]   OK SAP.TO done
+[2026-06-01 07:05:00] [270/247] Backfilling SBUX...
+[2026-06-01 07:05:54]   OK SBUX done
+[2026-06-01 07:05:54] [271/247] Backfilling SC.TO...
+[2026-06-01 07:06:47]   OK SC.TO done
+[2026-06-01 07:06:47] [272/247] Backfilling SDRLF.PK...
+[2026-06-01 07:06:50]   OK SDRLF.PK done
+[2026-06-01 07:06:50] [273/247] Backfilling SDY...
+[2026-06-01 07:07:43]   OK SDY done
+[2026-06-01 07:07:43] [274/247] Backfilling SGGDD.PK...
+[2026-06-01 07:07:45]   OK SGGDD.PK done
+[2026-06-01 07:07:45] [275/247] Backfilling SGU...
+[2026-06-01 07:08:39]   OK SGU done
+[2026-06-01 07:08:39] [276/247] Backfilling SGX.AX...
+[2026-06-01 07:08:41]   OK SGX.AX done
+[2026-06-01 07:08:41] [277/247] Backfilling SH...
+[2026-06-01 07:09:34]   OK SH done
+[2026-06-01 07:09:34] [278/247] Backfilling SIF-UN.TO...
+[2026-06-01 07:09:37]   OK SIF-UN.TO done
+[2026-06-01 07:09:37] [279/247] Backfilling SIF.UN.TO...
+[2026-06-01 07:09:39]   OK SIF.UN.TO done
+[2026-06-01 07:09:39] [280/247] Backfilling SINA...
+[2026-06-01 07:09:41]   OK SINA done
+[2026-06-01 07:09:41] [281/247] Backfilling SKT...
+[2026-06-01 07:10:35]   OK SKT done
+[2026-06-01 07:10:35] [282/247] Backfilling SLF.TO...
+[2026-06-01 07:11:29]   OK SLF.TO done
+[2026-06-01 07:11:29] [283/247] Backfilling SLV...
+[269/371] OK: SAP.TO
+[2026-06-01 07:16:29]   Attempt 1/3 timed out for SLV
+[2026-06-01 07:21:34]   Attempt 2/3 timed out for SLV
+[270/371] OK: SBUX
+Progress: 270/371 done, 133 failures
+[2026-06-01 07:26:44]   Attempt 3/3 timed out for SLV
+[2026-06-01 07:26:44]   FAIL SLV - skipping
+[2026-06-01 07:26:44] [284/247] Backfilling SLW...
+[2026-06-01 07:26:46]   OK SLW done
+[2026-06-01 07:26:46] [285/247] Backfilling SOR...
+[271/371] OK: SC.TO
+[272/371] FAIL: SDRLF.PK
+[2026-06-01 07:31:46]   Attempt 1/3 timed out for SOR
+[273/371] OK: SDY
+[274/371] FAIL: SGGDD.PK
+[2026-06-01 07:36:51]   Attempt 2/3 timed out for SOR
+[2026-06-01 07:42:01]   Attempt 3/3 timed out for SOR
+[2026-06-01 07:42:01]   FAIL SOR - skipping
+[2026-06-01 07:42:01] [286/247] Backfilling SPB.TO...
+[275/371] OK: SGU
+[276/371] FAIL: SGX.AX
+[2026-06-01 07:47:02]   Attempt 1/3 timed out for SPB.TO
+[277/371] OK: SH
+[278/371] FAIL: SIF-UN.TO
+[279/371] FAIL: SIF.UN.TO
+[280/371] FAIL: SINA
+Progress: 280/371 done, 139 failures
+[2026-06-01 07:52:07]   Attempt 2/3 timed out for SPB.TO
+[2026-06-01 07:57:17]   Attempt 3/3 timed out for SPB.TO
+[2026-06-01 07:57:17]   FAIL SPB.TO - skipping
+[2026-06-01 07:57:17] [287/247] Backfilling SPF-UN.TO...
+[2026-06-01 07:57:19]   OK SPF-UN.TO done
+[2026-06-01 07:57:19] [288/247] Backfilling SPXJ.L...
+[281/371] OK: SKT
+[2026-06-01 08:02:19]   Attempt 1/3 timed out for SPXJ.L
+[282/371] OK: SLF.TO
+[2026-06-01 08:07:24]   Attempt 2/3 timed out for SPXJ.L
+[2026-06-01 08:12:34]   Attempt 3/3 timed out for SPXJ.L
+[2026-06-01 08:12:34]   FAIL SPXJ.L - skipping
+[2026-06-01 08:12:34] [289/247] Backfilling SQP-UN.TO...
+[2026-06-01 08:12:36]   OK SQP-UN.TO done
+[2026-06-01 08:12:36] [290/247] Backfilling SQP.TO...
+[2026-06-01 08:12:38]   OK SQP.TO done
+[2026-06-01 08:12:38] [291/247] Backfilling SRV-UN.TO...
+[283/371] OK: SLV
+[284/371] FAIL: SLW
+[2026-06-01 08:17:38]   Attempt 1/3 timed out for SRV-UN.TO
+[285/371] OK: SOR
+[2026-06-01 08:22:44]   Attempt 2/3 timed out for SRV-UN.TO
+[2026-06-01 08:27:54]   Attempt 3/3 timed out for SRV-UN.TO
+[2026-06-01 08:27:54]   FAIL SRV-UN.TO - skipping
+[2026-06-01 08:27:54] [292/247] Backfilling SRV.UN.TO...
+[2026-06-01 08:27:56]   OK SRV.UN.TO done
+[2026-06-01 08:27:56] [293/247] Backfilling STEC...
+[2026-06-01 08:27:58]   OK STEC done
+[2026-06-01 08:27:58] [294/247] Backfilling STP...
+[286/371] OK: SPB.TO
+[287/371] FAIL: SPF-UN.TO
+[2026-06-01 08:32:58]   Attempt 1/3 timed out for STP
+[288/371] OK: SPXJ.L
+[289/371] FAIL: SQP-UN.TO
+[290/371] FAIL: SQP.TO
+Progress: 290/371 done, 143 failures
+[2026-06-01 08:38:03]   Attempt 2/3 timed out for STP
+[2026-06-01 08:43:13]   Attempt 3/3 timed out for STP
+[2026-06-01 08:43:13]   FAIL STP - skipping
+[2026-06-01 08:43:13] [295/247] Backfilling STX...
+[291/371] OK: SRV-UN.TO
+[292/371] FAIL: SRV.UN.TO
+[293/371] FAIL: STEC
+[2026-06-01 08:48:14]   Attempt 1/3 timed out for STX
+[294/371] OK: STP
+[2026-06-01 08:53:19]   Attempt 2/3 timed out for STX
+[2026-06-01 08:54:22]   OK STX done
+[2026-06-01 08:54:22] [296/247] Backfilling SU.TO...
+[2026-06-01 08:55:16]   OK SU.TO done
+[2026-06-01 08:55:16] [297/247] Backfilling SWK...
+[2026-06-01 08:56:09]   OK SWK done
+[2026-06-01 08:56:09] [298/247] Backfilling SWY...
+[2026-06-01 08:56:11]   OK SWY done
+[2026-06-01 08:56:11] [299/247] Backfilling SYNA...
+[2026-06-01 08:57:05]   OK SYNA done
+[2026-06-01 08:57:05] [300/247] Backfilling T.TO...
+[2026-06-01 08:57:58]   OK T.TO done
+[2026-06-01 08:57:58] --- Progress: 241 OK, 59 FAIL, 1173.9 min elapsed ---
+[2026-06-01 08:57:58] Running indicator recalculation...
+[2026-06-01 08:58:00] Indicators recalculated successfully.
+[2026-06-01 08:58:01] Remaining symbols after refresh: 222
+[2026-06-01 08:58:01] [301/222] Backfilling TAC...
+[2026-06-01 08:58:54]   OK TAC done
+[2026-06-01 08:58:54] [302/222] Backfilling TAXI...
+[2026-06-01 08:59:11]   OK TAXI done
+[2026-06-01 08:59:11] [303/222] Backfilling TBL-UN.TO...
+[2026-06-01 08:59:13]   OK TBL-UN.TO done
+[2026-06-01 08:59:13] [304/222] Backfilling TBL.TO...
+[295/371] OK: STX
+[2026-06-01 09:04:13]   Attempt 1/3 timed out for TBL.TO
+[296/371] OK: SU.TO
+[2026-06-01 09:09:18]   Attempt 2/3 timed out for TBL.TO
+[2026-06-01 09:14:28]   Attempt 3/3 timed out for TBL.TO
+[2026-06-01 09:14:28]   FAIL TBL.TO - skipping
+[2026-06-01 09:14:28] [305/222] Backfilling TBL.UN.TO...
+[2026-06-01 09:14:30]   OK TBL.UN.TO done
+[2026-06-01 09:14:30] [306/222] Backfilling TBT...
+[297/371] OK: SWK
+[298/371] FAIL: SWY
+[2026-06-01 09:19:31]   Attempt 1/3 timed out for TBT
+[2026-06-01 09:24:36]   Attempt 2/3 timed out for TBT
+[299/371] OK: SYNA
+[2026-06-01 09:29:46]   Attempt 3/3 timed out for TBT
+[2026-06-01 09:29:46]   FAIL TBT - skipping
+[2026-06-01 09:29:46] [307/222] Backfilling TD.TO...
+[300/371] OK: T.TO
+Progress: 300/371 done, 146 failures
+[2026-06-01 09:34:46]   Attempt 1/3 timed out for TD.TO
+[2026-06-01 09:39:51]   Attempt 2/3 timed out for TD.TO
+[301/371] OK: TAC
+[302/371] OK: TAXI
+[303/371] FAIL: TBL-UN.TO
+[2026-06-01 09:45:01]   Attempt 3/3 timed out for TD.TO
+[2026-06-01 09:45:01]   FAIL TD.TO - skipping
+[2026-06-01 09:45:01] [308/222] Backfilling TDT.BK...
+[2026-06-01 09:45:03]   OK TDT.BK done
+[2026-06-01 09:45:03] [309/222] Backfilling TEI...
+[304/371] OK: TBL.TO
+[305/371] FAIL: TBL.UN.TO
+[2026-06-01 09:50:03]   Attempt 1/3 timed out for TEI
+[2026-06-01 09:55:08]   Attempt 2/3 timed out for TEI
+[306/371] OK: TBT
+[2026-06-01 10:00:18]   Attempt 3/3 timed out for TEI
+[2026-06-01 10:00:18]   FAIL TEI - skipping
+[2026-06-01 10:00:18] [310/222] Backfilling TEO...
+[307/371] OK: TD.TO
+[308/371] FAIL: TDT.BK
+[2026-06-01 10:05:18]   Attempt 1/3 timed out for TEO
+[2026-06-01 10:10:00]   OK TEO done
+[2026-06-01 10:10:00] [311/222] Backfilling TEVA...
+[309/371] OK: TEI
+[2026-06-01 10:15:00]   Attempt 1/3 timed out for TEVA
+[2026-06-01 10:20:05]   Attempt 2/3 timed out for TEVA
+[310/371] OK: TEO
+Progress: 310/371 done, 149 failures
+[311/371] FAIL: TEVA
+[312/371] FAIL: TFI.TO
+[2026-06-01 10:25:15]   Attempt 3/3 timed out for TEVA
+[2026-06-01 10:25:15]   FAIL TEVA - skipping
+[2026-06-01 10:25:15] [312/222] Backfilling TFI.TO...
+[2026-06-01 10:25:17]   OK TFI.TO done
+[2026-06-01 10:25:17] [313/222] Backfilling TGT...
+[2026-06-01 10:26:10]   OK TGT done
+[2026-06-01 10:26:10] [314/222] Backfilling TI...
+[2026-06-01 10:26:12]   OK TI done
+[2026-06-01 10:26:12] [315/222] Backfilling TICC...
+[2026-06-01 10:26:14]   OK TICC done
+[2026-06-01 10:26:14] [316/222] Backfilling TIH.TO...
+[2026-06-01 10:31:14]   Attempt 1/3 timed out for TIH.TO
+[313/371] OK: TGT
+[314/371] FAIL: TI
+[315/371] FAIL: TICC
+[2026-06-01 10:36:19]   Attempt 2/3 timed out for TIH.TO
+[2026-06-01 10:37:24]   OK TIH.TO done
+[2026-06-01 10:37:24] [317/222] Backfilling TJX...
+[2026-06-01 10:38:18]   OK TJX done
+[2026-06-01 10:38:18] [318/222] Backfilling TLM.TO...
+[2026-06-01 10:39:11]   OK TLM.TO done
+[2026-06-01 10:39:11] [319/222] Backfilling TMA...
+[2026-06-01 10:39:12]   OK TMA done
+[2026-06-01 10:39:12] [320/222] Backfilling TOC.TO...
+[2026-06-01 10:39:14]   OK TOC.TO done
+[2026-06-01 10:39:14] [321/222] Backfilling TRA...
+[2026-06-01 10:39:16]   OK TRA done
+[2026-06-01 10:39:16] [322/222] Backfilling TRP.TO...
+[2026-06-01 10:40:10]   OK TRP.TO done
+[2026-06-01 10:40:10] [323/222] Backfilling UDN...
+[2026-06-01 10:41:03]   OK UDN done
+[2026-06-01 10:41:03] [324/222] Backfilling UG...
+[2026-06-01 10:41:57]   OK UG done
+[2026-06-01 10:41:57] [325/222] Backfilling UGI...
+[2026-06-01 10:42:50]   OK UGI done
+[2026-06-01 10:42:50] [326/222] Backfilling UNG...
+[2026-06-01 10:43:44]   OK UNG done
+[2026-06-01 10:43:44] [327/222] Backfilling UNH...
+[316/371] OK: TIH.TO
+[2026-06-01 10:48:44]   Attempt 1/3 timed out for UNH
+[317/371] OK: TJX
+[2026-06-01 10:53:49]   Attempt 2/3 timed out for UNH
+[318/371] OK: TLM.TO
+[319/371] FAIL: TMA
+[320/371] FAIL: TOC.TO
+Progress: 320/371 done, 155 failures
+[2026-06-01 10:58:59]   Attempt 3/3 timed out for UNH
+[2026-06-01 10:58:59]   FAIL UNH - skipping
+[2026-06-01 10:58:59] [328/222] Backfilling UNP...
+[321/371] FAIL: TRA
+[2026-06-01 11:03:59]   Attempt 1/3 timed out for UNP
+[322/371] OK: TRP.TO
+[2026-06-01 11:09:04]   Attempt 2/3 timed out for UNP
+[323/371] OK: UDN
+[2026-06-01 11:14:14]   Attempt 3/3 timed out for UNP
+[2026-06-01 11:14:14]   FAIL UNP - skipping
+[2026-06-01 11:14:14] [329/222] Backfilling UPL...
+[2026-06-01 11:14:17]   OK UPL done
+[2026-06-01 11:14:17] [330/222] Backfilling UTX...
+[2026-06-01 11:14:19]   OK UTX done
+[2026-06-01 11:14:19] [331/222] Backfilling UUP...
+[2026-06-01 11:19:19]   Attempt 1/3 timed out for UUP
+[324/371] OK: UG
+[2026-06-01 11:24:24]   Attempt 2/3 timed out for UUP
+[2026-06-01 11:29:34]   Attempt 3/3 timed out for UUP
+[2026-06-01 11:29:34]   FAIL UUP - skipping
+[2026-06-01 11:29:34] [332/222] Backfilling VAR...
+[2026-06-01 11:29:36]   OK VAR done
+[2026-06-01 11:29:36] [333/222] Backfilling VIVO...
+[325/371] OK: UGI
+[2026-06-01 11:33:30]   OK VIVO done
+[2026-06-01 11:33:30] [334/222] Backfilling VMW...
+[2026-06-01 11:33:32]   OK VMW done
+[2026-06-01 11:33:32] [335/222] Backfilling WDC...
+[326/371] OK: UNG
+[2026-06-01 11:38:32]   Attempt 1/3 timed out for WDC
+[2026-06-01 11:43:37]   Attempt 2/3 timed out for WDC
+[327/371] OK: UNH
+[2026-06-01 11:48:47]   Attempt 3/3 timed out for WDC
+[2026-06-01 11:48:47]   FAIL WDC - skipping
+[2026-06-01 11:48:47] [336/222] Backfilling WDX...
+[328/371] OK: UNP
+[2026-06-01 11:53:40]   OK WDX done
+[2026-06-01 11:53:40] [337/222] Backfilling WFC...
+[329/371] FAIL: UPL
+[330/371] FAIL: UTX
+Progress: 330/371 done, 158 failures
+[2026-06-01 11:58:40]   Attempt 1/3 timed out for WFC
+[331/371] OK: UUP
+[332/371] FAIL: VAR
+[333/371] OK: VIVO
+[334/371] FAIL: VMW
+[2026-06-01 12:03:45]   Attempt 2/3 timed out for WFC
+[2026-06-01 12:08:55]   Attempt 3/3 timed out for WFC
+[2026-06-01 12:08:55]   FAIL WFC - skipping
+[2026-06-01 12:08:55] [338/222] Backfilling WFT...
+[2026-06-01 12:08:57]   OK WFT done
+[2026-06-01 12:08:57] [339/222] Backfilling WJX-UN.TO...
+[2026-06-01 12:08:59]   OK WJX-UN.TO done
+[2026-06-01 12:08:59] [340/222] Backfilling WJX.TO...
+[335/371] OK: WDC
+[336/371] OK: WDX
+[2026-06-01 12:14:00]   Attempt 1/3 timed out for WJX.TO
+[337/371] OK: WFC
+[338/371] FAIL: WFT
+[2026-06-01 12:19:05]   Attempt 2/3 timed out for WJX.TO
+[339/371] FAIL: WJX-UN.TO
+[340/371] FAIL: WJX.TO
+Progress: 340/371 done, 163 failures
+[2026-06-01 12:24:15]   Attempt 3/3 timed out for WJX.TO
+[2026-06-01 12:24:15]   FAIL WJX.TO - skipping
+[2026-06-01 12:24:15] [341/222] Backfilling WMT...
+[2026-06-01 12:25:09]   OK WMT done
+[2026-06-01 12:25:09] [342/222] Backfilling WRLS...
+[2026-06-01 12:25:12]   OK WRLS done
+[2026-06-01 12:25:12] [343/222] Backfilling WYE...
+[2026-06-01 12:25:14]   OK WYE done
+[2026-06-01 12:25:14] [344/222] Backfilling XBB.TO...
+[2026-06-01 12:30:14]   Attempt 1/3 timed out for XBB.TO
+[341/371] OK: WMT
+[342/371] FAIL: WRLS
+[343/371] FAIL: WYE
+[344/371] FAIL: XBB.TO
+[2026-06-01 12:35:19]   Attempt 2/3 timed out for XBB.TO
+[2026-06-01 12:36:24]   OK XBB.TO done
+[2026-06-01 12:36:24] [345/222] Backfilling XEG.TO...
+[2026-06-01 12:37:18]   OK XEG.TO done
+[2026-06-01 12:37:18] [346/222] Backfilling XIC.TO...
+[2026-06-01 12:42:18]   Attempt 1/3 timed out for XIC.TO
+[345/371] OK: XEG.TO
+[346/371] FAIL: XIC.TO
+[2026-06-01 12:47:23]   Attempt 2/3 timed out for XIC.TO
+[2026-06-01 12:48:49]   OK XIC.TO done
+[2026-06-01 12:48:49] [347/222] Backfilling XIU.TO...
+[2026-06-01 12:49:43]   OK XIU.TO done
+[2026-06-01 12:49:43] [348/222] Backfilling XLB...
+[347/371] OK: XIU.TO
+[2026-06-01 12:54:43]   Attempt 1/3 timed out for XLB
+[2026-06-01 12:55:42]   OK XLB done
+[2026-06-01 12:55:42] [349/222] Backfilling XLE...
+[2026-06-01 12:56:36]   OK XLE done
+[2026-06-01 12:56:36] [350/222] Backfilling XOM...
+[2026-06-01 12:57:29]   OK XOM done
+[2026-06-01 12:57:29] --- Progress: 280 OK, 70 FAIL, 1413.4 min elapsed ---
+[2026-06-01 12:57:29] Running indicator recalculation...
+[2026-06-01 12:57:31] Indicators recalculated successfully.
+[2026-06-01 12:57:32] Remaining symbols after refresh: 191
+[2026-06-01 12:57:32] [351/191] Backfilling XON...
+[2026-06-01 12:57:34]   OK XON done
+[2026-06-01 12:57:34] [352/191] Backfilling XRE.TO...
+[2026-06-01 12:58:28]   OK XRE.TO done
+[2026-06-01 12:58:28] [353/191] Backfilling XSP.TO...
+[2026-06-01 12:59:21]   OK XSP.TO done
+[2026-06-01 12:59:21] [354/191] Backfilling XTO...
+[2026-06-01 12:59:24]   OK XTO done
+[2026-06-01 12:59:24] [355/191] Backfilling XTR.TO...
+[2026-06-01 13:00:17]   OK XTR.TO done
+[2026-06-01 13:00:17] [356/191] Backfilling YGE...
+[2026-06-01 13:00:19]   OK YGE done
+[2026-06-01 13:00:19] [357/191] Backfilling YLO-UN.TO...
+[2026-06-01 13:00:21]   OK YLO-UN.TO done
+[2026-06-01 13:00:21] [358/191] Backfilling YLO.TO...
+[2026-06-01 13:01:14]   OK YLO.TO done
+[2026-06-01 13:01:14] [359/191] Backfilling YLO.UN.TO...
+[2026-06-01 13:01:16]   OK YLO.UN.TO done
+[2026-06-01 13:01:16] [360/191] Backfilling YZC...
+[2026-06-01 13:01:18]   OK YZC done
+[2026-06-01 13:01:18] [361/191] Backfilling ZACCLAI.TO...
+[2026-06-01 13:01:20]   OK ZACCLAI.TO done
+[2026-06-01 13:01:20] [362/191] Backfilling ZCMDF.TO...
+[2026-06-01 13:01:22]   OK ZCMDF.TO done
+[2026-06-01 13:01:22] [363/191] Backfilling ZCSTGF.TO...
+[2026-06-01 13:01:25]   OK ZCSTGF.TO done
+[2026-06-01 13:01:25] [364/191] Backfilling ZGCF.TO...
+[2026-06-01 13:01:27]   OK ZGCF.TO done
+[2026-06-01 13:01:27] [365/191] Backfilling ZRCGF.TO...
+[2026-06-01 13:01:29]   OK ZRCGF.TO done
+[2026-06-01 13:01:29] [366/191] Backfilling ZRCSCGF.TO...
+[2026-06-01 13:01:32]   OK ZRCSCGF.TO done
+[2026-06-01 13:01:32] [367/191] Backfilling ZRIGF.TO...
+[2026-06-01 13:01:34]   OK ZRIGF.TO done
+[2026-06-01 13:01:34] [368/191] Backfilling ZRUSRSP.TO...
+[2026-06-01 13:01:36]   OK ZRUSRSP.TO done
+[2026-06-01 13:01:36] [369/191] Backfilling ZSMMF.TO...
+[2026-06-01 13:01:39]   OK ZSMMF.TO done
+[2026-06-01 13:01:39] [370/191] Backfilling ZZZ.TO...
+[2026-06-01 13:01:41]   OK ZZZ.TO done
+[2026-06-01 13:01:41] [371/191] Backfilling ^VIX...
+[348/371] OK: XLB
+[2026-06-01 13:06:41]   Attempt 1/3 timed out for ^VIX
+[349/371] OK: XLE
+[2026-06-01 13:11:46]   Attempt 2/3 timed out for ^VIX
+[2026-06-01 13:16:56]   Attempt 3/3 timed out for ^VIX
+[2026-06-01 13:16:56]   FAIL ^VIX - skipping
+[2026-06-01 13:16:56] Running indicator recalculation...
+[2026-06-01 13:16:58] Indicators recalculated successfully.
+[2026-06-01 13:16:58] ============================================================
+[2026-06-01 13:16:58] BACKFILL COMPLETE
+[2026-06-01 13:16:58]   Processed: 371
+[2026-06-01 13:16:58]    Success:   300
+[2026-06-01 13:16:58]    Failed:    71
+[2026-06-01 13:16:58]    Time:      1432.9 minutes
+[2026-06-01 13:16:58]    Failed symbols: BR.TO, CF, CHY, CINF, CKI.TO, CL, CLS.TO, CLX, CNQ.TO, COF, CSCO, DIS, EIT-UN.TO, EMP-A.TO, EMR, ENB.TO, EOG, ESI.TO, EWX, F, FNV.TO, FXY, HD, HL, HOU.TO, HR-UN.TO, HTLD, IAG.TO, INSM, INTC, IPT.V, IWM, IXC, IYF, L.TO, LEO, LLY, LNC, LOW, MCD, MFA, MUR, MX.TO, NA.TO, NG, PAAS, PAR, PBI, PBR, PDS, PZA.TO, RIG, RY.TO, SLV, SOR, SPB.TO, SPXJ.L, SRV-UN.TO, STP, TBL.TO, TBT, TD.TO, TEI, TEVA, UNH, UNP, UUP, WDC, WFC, WJX.TO, ^VIX
+[2026-06-01 13:16:58] ============================================================
+[350/371] OK: XOM
+Progress: 350/371 done, 167 failures
+[351/371] FAIL: XON
+[352/371] OK: XRE.TO
+[353/371] OK: XSP.TO
+[354/371] FAIL: XTO
+[355/371] OK: XTR.TO
+[356/371] FAIL: YGE
+[357/371] FAIL: YLO-UN.TO
+[358/371] OK: YLO.TO
+[359/371] OK: YLO.UN.TO
+[360/371] OK: YZC
+Progress: 360/371 done, 171 failures
+[361/371] OK: ZACCLAI.TO
+[362/371] OK: ZCMDF.TO
+[363/371] OK: ZCSTGF.TO
+[364/371] OK: ZGCF.TO
+[365/371] OK: ZRCGF.TO
+[366/371] OK: ZRCSCGF.TO
+[367/371] OK: ZRIGF.TO
+[368/371] OK: ZRUSRSP.TO
+[369/371] OK: ZSMMF.TO
+[370/371] OK: ZZZ.TO
+Progress: 370/371 done, 171 failures
+[371/371] OK: ^VIX
+
+===== Indicators: Mon 01 Jun 2026 01:59:55 PM MDT ====
+Traceback (most recent call last):
+  File "/home/ksf_stockmarket/ksf_stockmarket/python/daily_pipeline.py", line 829, in <module>
+    calc.calculate_all_missing(verbose=args.verbose)
+  File "/home/ksf_stockmarket/ksf_stockmarket/python/daily_pipeline.py", line 771, in calculate_all_missing
+    symbols = self.get_symbols_needing_indicators()
+  File "/home/ksf_stockmarket/ksf_stockmarket/python/daily_pipeline.py", line 452, in get_symbols_needing_indicators
+    rows = conn.fetchall("""
+  File "/home/ksf_stockmarket/ksf_stockmarket/python/db/mysql_adapter.py", line 55, in fetchall
+    cur.execute(sql, params or ())
+  File "/usr/local/lib/python3.10/site-packages/pymysql/cursors.py", line 159, in execute
+    result = self._query(query)
+  File "/usr/local/lib/python3.10/site-packages/pymysql/cursors.py", line 330, in _query
+    conn.query(q)
+  File "/usr/local/lib/python3.10/site-packages/pymysql/connections.py", line 582, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "/usr/local/lib/python3.10/site-packages/pymysql/connections.py", line 847, in _read_query_result
+    result.read()
+  File "/usr/local/lib/python3.10/site-packages/pymysql/connections.py", line 1245, in read
+    first_packet = self.connection._read_packet()
+  File "/usr/local/lib/python3.10/site-packages/pymysql/connections.py", line 803, in _read_packet
+    packet.raise_for_error()
+  File "/usr/local/lib/python3.10/site-packages/pymysql/protocol.py", line 219, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "/usr/local/lib/python3.10/site-packages/pymysql/err.py", line 154, in raise_mysql_exception
+    raise errorclass(errno, errval, sqlstate=sqlstate)
+pymysql.err.ProgrammingError: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' '-' || CAST(30 AS TEXT) || ' days')\n                AND ij.id IS NULL\n      ...' at line 5")
+
+===== DONE: Mon 01 Jun 2026 01:59:57 PM MDT =====

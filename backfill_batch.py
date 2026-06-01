@@ -63,15 +63,16 @@ def run_indicators():
         log(f"Indicator recalculation exception: {e}")
 
 def get_remaining_symbols():
-    """Get symbols still without data."""
+    """Get active symbols still without data."""
     import pymysql
     conn = pymysql.connect(
         host='ksfraser.ca', user='ksfraser_stockmarket',
         password='Zaqwsx9sm1@', database='ksfraser_stock_market'
     )
     cur = conn.cursor()
-    cur.execute("""SELECT symbol FROM symbol_master 
-                   WHERE symbol NOT IN (SELECT DISTINCT symbol FROM stockprices) 
+    cur.execute("""SELECT symbol FROM symbol_master
+                   WHERE is_active = 1
+                   AND symbol NOT IN (SELECT DISTINCT symbol FROM stockprices)
                    ORDER BY symbol""")
     symbols = [row[0] for row in cur.fetchall()]
     conn.close()

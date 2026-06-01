@@ -1,1 +1,1 @@
-# unit tests package
+# tests/unit/__init__.py

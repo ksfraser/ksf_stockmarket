@@ -116,3 +116,491 @@ Progress: 20/371 done, 20 failures
 [2026-05-31 14:03:24]   Attempt 1/3 timed out for CF
 [2026-05-31 14:08:29]   Attempt 2/3 timed out for CF
 [28/371] OK: CAT
+[2026-05-31 14:13:39]   Attempt 3/3 timed out for CF
+[2026-05-31 14:13:39]   FAIL CF - skipping
+[2026-05-31 14:13:39] [38/371] Backfilling CGCA...
+[2026-05-31 14:13:41]   OK CGCA done
+[2026-05-31 14:13:41] [39/371] Backfilling CH...
+[2026-05-31 14:13:43]   OK CH done
+[2026-05-31 14:13:43] [40/371] Backfilling CHK...
+[2026-05-31 14:13:45]   OK CHK done
+[2026-05-31 14:13:45] Rate limit: sleeping 30s...
+[2026-05-31 14:14:15] [41/371] Backfilling CHY...
+[29/371] OK: CB
+[2026-05-31 14:19:15]   Attempt 1/3 timed out for CHY
+[2026-05-31 14:24:20]   Attempt 2/3 timed out for CHY
+[30/371] OK: CCJ
+Progress: 30/371 done, 23 failures
+[2026-05-31 14:29:30]   Attempt 3/3 timed out for CHY
+[2026-05-31 14:29:30]   FAIL CHY - skipping
+[2026-05-31 14:29:30] [42/371] Backfilling CINF...
+[2026-05-31 14:34:31]   Attempt 1/3 timed out for CINF
+[31/371] OK: CCL
+[2026-05-31 14:39:36]   Attempt 2/3 timed out for CINF
+[32/371] OK: CDE
+[33/371] FAIL: CDH.TO
+[2026-05-31 14:44:46]   Attempt 3/3 timed out for CINF
+[2026-05-31 14:44:46]   FAIL CINF - skipping
+[2026-05-31 14:44:46] [43/371] Backfilling CIX-UN.TO...
+[2026-05-31 14:44:48]   OK CIX-UN.TO done
+[2026-05-31 14:44:48] [44/371] Backfilling CIX.UN.TO...
+[2026-05-31 14:44:51]   OK CIX.UN.TO done
+[2026-05-31 14:44:51] [45/371] Backfilling CKI.TO...
+[34/371] OK: CDZ.TO
+[2026-05-31 14:49:51]   Attempt 1/3 timed out for CKI.TO
+[35/371] FAIL: CEANF.PK
+[36/371] FAIL: CEO
+[2026-05-31 14:54:56]   Attempt 2/3 timed out for CKI.TO
+[37/371] OK: CF
+[38/371] FAIL: CGCA
+[39/371] FAIL: CH
+[40/371] FAIL: CHK
+Progress: 40/371 done, 29 failures
+[2026-05-31 15:00:06]   Attempt 3/3 timed out for CKI.TO
+[2026-05-31 15:00:06]   FAIL CKI.TO - skipping
+[2026-05-31 15:00:06] [46/371] Backfilling CL...
+[2026-05-31 15:05:06]   Attempt 1/3 timed out for CL
+[41/371] OK: CHY
+[2026-05-31 15:10:11]   Attempt 2/3 timed out for CL
+[42/371] OK: CINF
+[43/371] FAIL: CIX-UN.TO
+[44/371] FAIL: CIX.UN.TO
+[2026-05-31 15:15:21]   Attempt 3/3 timed out for CL
+[2026-05-31 15:15:21]   FAIL CL - skipping
+[2026-05-31 15:15:21] [47/371] Backfilling CLC-UN.TO...
+[2026-05-31 15:15:23]   OK CLC-UN.TO done
+[2026-05-31 15:15:23] [48/371] Backfilling CLC.UN.TO...
+[2026-05-31 15:15:26]   OK CLC.UN.TO done
+[2026-05-31 15:15:26] [49/371] Backfilling CLCT...
+[2026-05-31 15:15:28]   OK CLCT done
+[2026-05-31 15:15:28] [50/371] Backfilling CLL.TO...
+[2026-05-31 15:15:30]   OK CLL.TO done
+[2026-05-31 15:15:30] --- Progress: 44 OK, 6 FAIL, 111.4 min elapsed ---
+[2026-05-31 15:15:30] Running indicator recalculation...
+[2026-05-31 15:15:32] Indicators recalculated successfully.
+[2026-05-31 15:15:32] Remaining symbols after refresh: 358
+[2026-05-31 15:15:32] Rate limit: sleeping 30s...
+[2026-05-31 15:16:02] [51/358] Backfilling CLS.TO...
+[2026-05-31 15:21:02]   Attempt 1/3 timed out for CLS.TO
+[45/371] OK: CKI.TO
+[2026-05-31 15:26:07]   Attempt 2/3 timed out for CLS.TO
+[2026-05-31 15:31:17]   Attempt 3/3 timed out for CLS.TO
+[2026-05-31 15:31:17]   FAIL CLS.TO - skipping
+[2026-05-31 15:31:17] [52/358] Backfilling CLX...
+[46/371] OK: CL
+[47/371] FAIL: CLC-UN.TO
+[48/371] FAIL: CLC.UN.TO
+[49/371] FAIL: CLCT
+[50/371] FAIL: CLL.TO
+Progress: 50/371 done, 35 failures
+[2026-05-31 15:36:18]   Attempt 1/3 timed out for CLX
+[2026-05-31 15:41:23]   Attempt 2/3 timed out for CLX
+[51/371] OK: CLS.TO
+[52/371] FAIL: CLX
+[2026-05-31 15:46:33]   Attempt 3/3 timed out for CLX
+[2026-05-31 15:46:33]   FAIL CLX - skipping
+[2026-05-31 15:46:33] [53/358] Backfilling CM.TO...
+[2026-05-31 15:47:27]   OK CM.TO done
+[2026-05-31 15:47:27] [54/358] Backfilling CMO...
+[2026-05-31 15:47:29]   OK CMO done
+[2026-05-31 15:47:29] [55/358] Backfilling CNQ.TO...
+[2026-05-31 15:52:29]   Attempt 1/3 timed out for CNQ.TO
+[53/371] OK: CM.TO
+[54/371] FAIL: CMO
+[55/371] FAIL: CNQ.TO
+[2026-05-31 15:57:34]   Attempt 2/3 timed out for CNQ.TO
+[2026-05-31 16:02:44]   Attempt 3/3 timed out for CNQ.TO
+[2026-05-31 16:02:44]   FAIL CNQ.TO - skipping
+[2026-05-31 16:02:44] [56/358] Backfilling CNR.TO...
+[2026-05-31 16:03:38]   OK CNR.TO done
+[2026-05-31 16:03:38] [57/358] Backfilling COF...
+[56/371] OK: CNR.TO
+[57/371] FAIL: COF
+[58/371] FAIL: COH
+[2026-05-31 16:08:38]   Attempt 1/3 timed out for COF
+[59/371] OK: COMP
+[2026-05-31 16:13:43]   Attempt 2/3 timed out for COF
+[60/371] OK: COP
+Progress: 60/371 done, 40 failures
+[2026-05-31 16:18:53]   Attempt 3/3 timed out for COF
+[2026-05-31 16:18:53]   FAIL COF - skipping
+[2026-05-31 16:18:53] [58/358] Backfilling COH...
+[2026-05-31 16:18:55]   OK COH done
+[2026-05-31 16:18:55] [59/358] Backfilling COMP...
+[2026-05-31 16:18:58]   OK COMP done
+[2026-05-31 16:18:58] [60/358] Backfilling COP...
+[2026-05-31 16:19:04]   OK COP done
+[2026-05-31 16:19:04] Rate limit: sleeping 30s...
+[2026-05-31 16:19:34] [61/358] Backfilling CP.TO...
+[2026-05-31 16:20:28]   OK CP.TO done
+[2026-05-31 16:20:28] [62/358] Backfilling CPG.TO...
+[2026-05-31 16:20:30]   OK CPG.TO done
+[2026-05-31 16:20:30] [63/358] Backfilling CSCO...
+[2026-05-31 16:25:30]   Attempt 1/3 timed out for CSCO
+[61/371] OK: CP.TO
+[62/371] FAIL: CPG.TO
+[63/371] FAIL: CSCO
+[2026-05-31 16:30:35]   Attempt 2/3 timed out for CSCO
+[64/371] FAIL: CSS-UN.TO
+[65/371] OK: CSS.TO
+[2026-05-31 16:35:45]   Attempt 3/3 timed out for CSCO
+[2026-05-31 16:35:45]   FAIL CSCO - skipping
+[2026-05-31 16:35:45] [64/358] Backfilling CSS-UN.TO...
+[2026-05-31 16:35:47]   OK CSS-UN.TO done
+[2026-05-31 16:35:47] [65/358] Backfilling CSS.TO...
+[2026-05-31 16:35:51]   OK CSS.TO done
+[2026-05-31 16:35:51] [66/358] Backfilling CTAS...
+[2026-05-31 16:36:45]   OK CTAS done
+[2026-05-31 16:36:45] [67/358] Backfilling CTRP...
+[2026-05-31 16:36:47]   OK CTRP done
+[2026-05-31 16:36:47] [68/358] Backfilling CTXS...
+[2026-05-31 16:36:49]   OK CTXS done
+[2026-05-31 16:36:49] [69/358] Backfilling CU.TO...
+[2026-05-31 16:41:49]   Attempt 1/3 timed out for CU.TO
+[66/371] OK: CTAS
+[67/371] FAIL: CTRP
+[68/371] FAIL: CTXS
+[2026-05-31 16:46:54]   Attempt 2/3 timed out for CU.TO
+[2026-05-31 16:47:58]   OK CU.TO done
+[2026-05-31 16:47:58] [70/358] Backfilling CWI-UN.TO...
+[2026-05-31 16:48:00]   OK CWI-UN.TO done
+[2026-05-31 16:48:00] Rate limit: sleeping 30s...
+[2026-05-31 16:48:30] [71/358] Backfilling CWI.UN.TO...
+[2026-05-31 16:48:32]   OK CWI.UN.TO done
+[2026-05-31 16:48:32] [72/358] Backfilling DBA...
+[2026-05-31 16:49:26]   OK DBA done
+[2026-05-31 16:49:26] [73/358] Backfilling DBB...
+[2026-05-31 16:50:19]   OK DBB done
+[2026-05-31 16:50:19] [74/358] Backfilling DGW...
+[69/371] FAIL: CU.TO
+[2026-05-31 16:52:15]   OK DGW done
+[2026-05-31 16:52:15] [75/358] Backfilling DIS...
+[70/371] FAIL: CWI-UN.TO
+Progress: 70/371 done, 47 failures
+[71/371] FAIL: CWI.UN.TO
+[2026-05-31 16:57:15]   Attempt 1/3 timed out for DIS
+[72/371] OK: DBA
+[2026-05-31 17:02:20]   Attempt 2/3 timed out for DIS
+[73/371] OK: DBB
+[74/371] OK: DGW
+[2026-05-31 17:07:30]   Attempt 3/3 timed out for DIS
+[2026-05-31 17:07:30]   FAIL DIS - skipping
+[2026-05-31 17:07:30] [76/358] Backfilling DMF...
+[2026-05-31 17:07:32]   OK DMF done
+[2026-05-31 17:07:32] [77/358] Backfilling DOV...
+[2026-05-31 17:08:26]   OK DOV done
+[2026-05-31 17:08:26] [78/358] Backfilling DUK...
+[2026-05-31 17:09:20]   OK DUK done
+[2026-05-31 17:09:20] [79/358] Backfilling DVN...
+[2026-05-31 17:10:14]   OK DVN done
+[2026-05-31 17:10:14] [80/358] Backfilling DWX...
+[2026-05-31 17:11:08]   OK DWX done
+[2026-05-31 17:11:08] Rate limit: sleeping 30s...
+[2026-05-31 17:11:38] [81/358] Backfilling EBAY...
+[2026-05-31 17:12:32]   OK EBAY done
+[2026-05-31 17:12:32] [82/358] Backfilling ECA.TO...
+[2026-05-31 17:12:34]   OK ECA.TO done
+[2026-05-31 17:12:34] [83/358] Backfilling ED...
+[2026-05-31 17:13:28]   OK ED done
+[2026-05-31 17:13:28] [84/358] Backfilling EDU...
+[2026-05-31 17:14:22]   OK EDU done
+[2026-05-31 17:14:22] [85/358] Backfilling EIT-UN.TO...
+[75/371] OK: DIS
+[76/371] FAIL: DMF
+[2026-05-31 17:19:22]   Attempt 1/3 timed out for EIT-UN.TO
+[77/371] OK: DOV
+[2026-05-31 17:24:27]   Attempt 2/3 timed out for EIT-UN.TO
+[2026-05-31 17:29:37]   Attempt 3/3 timed out for EIT-UN.TO
+[2026-05-31 17:29:37]   FAIL EIT-UN.TO - skipping
+[2026-05-31 17:29:37] [86/358] Backfilling EIT.UN.TO...
+[2026-05-31 17:29:39]   OK EIT.UN.TO done
+[2026-05-31 17:29:39] [87/358] Backfilling ELON...
+[2026-05-31 17:29:54]   OK ELON done
+[2026-05-31 17:29:54] [88/358] Backfilling EMP-A.TO...
+[78/371] OK: DUK
+[2026-05-31 17:34:54]   Attempt 1/3 timed out for EMP-A.TO
+[2026-05-31 17:39:59]   Attempt 2/3 timed out for EMP-A.TO
+[79/371] OK: DVN
+[2026-05-31 17:45:09]   Attempt 3/3 timed out for EMP-A.TO
+[2026-05-31 17:45:09]   FAIL EMP-A.TO - skipping
+[2026-05-31 17:45:09] [89/358] Backfilling EMP.A.TO...
+[2026-05-31 17:45:11]   OK EMP.A.TO done
+[2026-05-31 17:45:11] [90/358] Backfilling EMR...
+[80/371] OK: DWX
+Progress: 80/371 done, 49 failures
+[2026-05-31 17:50:11]   Attempt 1/3 timed out for EMR
+[2026-05-31 17:55:16]   Attempt 2/3 timed out for EMR
+[81/371] OK: EBAY
+[82/371] FAIL: ECA.TO
+[2026-05-31 18:00:27]   Attempt 3/3 timed out for EMR
+[2026-05-31 18:00:27]   FAIL EMR - skipping
+[2026-05-31 18:00:27] Rate limit: sleeping 30s...
+[2026-05-31 18:00:57] [91/358] Backfilling ENB.TO...
+[83/371] OK: ED
+[2026-05-31 18:05:57]   Attempt 1/3 timed out for ENB.TO
+[84/371] OK: EDU
+[2026-05-31 18:11:02]   Attempt 2/3 timed out for ENB.TO
+[2026-05-31 18:16:12]   Attempt 3/3 timed out for ENB.TO
+[2026-05-31 18:16:12]   FAIL ENB.TO - skipping
+[2026-05-31 18:16:12] [92/358] Backfilling EOG...
+[85/371] OK: EIT-UN.TO
+[86/371] FAIL: EIT.UN.TO
+[87/371] OK: ELON
+[2026-05-31 18:21:12]   Attempt 1/3 timed out for EOG
+[88/371] OK: EMP-A.TO
+[89/371] FAIL: EMP.A.TO
+[2026-05-31 18:26:17]   Attempt 2/3 timed out for EOG
+[2026-05-31 18:31:27]   Attempt 3/3 timed out for EOG
+[2026-05-31 18:31:27]   FAIL EOG - skipping
+[2026-05-31 18:31:27] [93/358] Backfilling ERF-UN.TO...
+[2026-05-31 18:31:29]   OK ERF-UN.TO done
+[2026-05-31 18:31:29] [94/358] Backfilling ERF.UN.TO...
+[2026-05-31 18:31:31]   OK ERF.UN.TO done
+[2026-05-31 18:31:31] [95/358] Backfilling ESI.TO...
+[90/371] OK: EMR
+Progress: 90/371 done, 52 failures
+[2026-05-31 18:36:31]   Attempt 1/3 timed out for ESI.TO
+[2026-05-31 18:41:37]   Attempt 2/3 timed out for ESI.TO
+[91/371] OK: ENB.TO
+[2026-05-31 18:46:47]   Attempt 3/3 timed out for ESI.TO
+[2026-05-31 18:46:47]   FAIL ESI.TO - skipping
+[2026-05-31 18:46:47] [96/358] Backfilling ETR...
+[92/371] OK: EOG
+[93/371] FAIL: ERF-UN.TO
+[2026-05-31 18:51:47]   Attempt 1/3 timed out for ETR
+[94/371] FAIL: ERF.UN.TO
+[2026-05-31 18:56:52]   Attempt 2/3 timed out for ETR
+[2026-05-31 19:01:38]   OK ETR done
+[2026-05-31 19:01:38] [97/358] Backfilling EUO...
+[2026-05-31 19:03:41]   OK EUO done
+[2026-05-31 19:03:41] [98/358] Backfilling EVEP...
+[2026-05-31 19:03:43]   OK EVEP done
+[2026-05-31 19:03:43] [99/358] Backfilling EWX...
+[95/371] OK: ESI.TO
+[2026-05-31 19:08:43]   Attempt 1/3 timed out for EWX
+[96/371] OK: ETR
+[2026-05-31 19:13:48]   Attempt 2/3 timed out for EWX
+[2026-05-31 19:18:59]   Attempt 3/3 timed out for EWX
+[2026-05-31 19:18:59]   FAIL EWX - skipping
+[2026-05-31 19:18:59] [100/358] Backfilling EWZ...
+[97/371] OK: EUO
+[98/371] FAIL: EVEP
+[2026-05-31 19:23:26]   OK EWZ done
+[2026-05-31 19:23:26] --- Progress: 81 OK, 19 FAIL, 359.3 min elapsed ---
+[2026-05-31 19:23:26] Running indicator recalculation...
+[2026-05-31 19:23:27] Indicators recalculated successfully.
+[2026-05-31 19:23:28] Remaining symbols after refresh: 328
+[2026-05-31 19:23:28] Rate limit: sleeping 30s...
+[2026-05-31 19:23:58] [101/328] Backfilling EXK...
+[99/371] OK: EWX
+[2026-05-31 19:28:58]   Attempt 1/3 timed out for EXK
+[100/371] OK: EWZ
+Progress: 100/371 done, 55 failures
+[2026-05-31 19:34:03]   Attempt 2/3 timed out for EXK
+[2026-05-31 19:35:06]   OK EXK done
+[2026-05-31 19:35:06] [102/328] Backfilling EXK.TO...
+[2026-05-31 19:35:08]   OK EXK.TO done
+[2026-05-31 19:35:08] [103/328] Backfilling F...
+[2026-05-31 19:40:09]   Attempt 1/3 timed out for F
+[101/371] OK: EXK
+[102/371] FAIL: EXK.TO
+[103/371] FAIL: F
+[104/371] FAIL: FCR.TO
+[105/371] FAIL: FDI
+[106/371] FAIL: FES.TO
+[2026-05-31 19:45:14]   Attempt 2/3 timed out for F
+[2026-05-31 19:50:24]   Attempt 3/3 timed out for F
+[2026-05-31 19:50:24]   FAIL F - skipping
+[2026-05-31 19:50:24] [104/328] Backfilling FCR.TO...
+[2026-05-31 19:50:26]   OK FCR.TO done
+[2026-05-31 19:50:26] [105/328] Backfilling FDI...
+[2026-05-31 19:50:28]   OK FDI done
+[2026-05-31 19:50:28] [106/328] Backfilling FES.TO...
+[2026-05-31 19:50:30]   OK FES.TO done
+[2026-05-31 19:50:30] [107/328] Backfilling FFDF...
+[2026-05-31 19:51:23]   OK FFDF done
+[2026-05-31 19:51:23] [108/328] Backfilling FNV.TO...
+[107/371] OK: FFDF
+[108/371] FAIL: FNV.TO
+[2026-05-31 19:56:23]   Attempt 1/3 timed out for FNV.TO
+[109/371] FAIL: FRZNF.PK
+[2026-05-31 20:01:28]   Attempt 2/3 timed out for FNV.TO
+[2026-05-31 20:06:38]   Attempt 3/3 timed out for FNV.TO
+[2026-05-31 20:06:38]   FAIL FNV.TO - skipping
+[2026-05-31 20:06:38] [109/328] Backfilling FRZNF.PK...
+[2026-05-31 20:06:41]   OK FRZNF.PK done
+[2026-05-31 20:06:41] [110/328] Backfilling FTS.TO...
+[2026-05-31 20:07:34]   OK FTS.TO done
+[2026-05-31 20:07:34] Rate limit: sleeping 30s...
+[2026-05-31 20:08:04] [111/328] Backfilling FWLT...
+[2026-05-31 20:08:06]   OK FWLT done
+[2026-05-31 20:08:06] [112/328] Backfilling FXY...
+[2026-05-31 20:13:06]   Attempt 1/3 timed out for FXY
+[110/371] OK: FTS.TO
+Progress: 110/371 done, 62 failures
+[111/371] FAIL: FWLT
+[112/371] FAIL: FXY
+[113/371] FAIL: GDI-UN.TO
+[2026-05-31 20:18:11]   Attempt 2/3 timed out for FXY
+[114/371] FAIL: GDI.TO
+[2026-05-31 20:23:21]   Attempt 3/3 timed out for FXY
+[2026-05-31 20:23:21]   FAIL FXY - skipping
+[2026-05-31 20:23:21] [113/328] Backfilling GDI-UN.TO...
+[2026-05-31 20:23:23]   OK GDI-UN.TO done
+[2026-05-31 20:23:23] [114/328] Backfilling GDI.TO...
+[2026-05-31 20:23:25]   OK GDI.TO done
+[2026-05-31 20:23:25] [115/328] Backfilling GE...
+[2026-05-31 20:24:19]   OK GE done
+[2026-05-31 20:24:19] [116/328] Backfilling GIM...
+[2026-05-31 20:24:21]   OK GIM done
+[2026-05-31 20:24:21] [117/328] Backfilling GIS...
+[115/371] OK: GE
+[116/371] FAIL: GIM
+[2026-05-31 20:29:21]   Attempt 1/3 timed out for GIS
+[2026-05-31 20:30:20]   OK GIS done
+[2026-05-31 20:30:20] [118/328] Backfilling GLD...
+[2026-05-31 20:31:13]   OK GLD done
+[2026-05-31 20:31:13] [119/328] Backfilling GLS...
+[2026-05-31 20:31:15]   OK GLS done
+[2026-05-31 20:31:15] [120/328] Backfilling GLW...
+[2026-05-31 20:32:09]   OK GLW done
+[2026-05-31 20:32:09] Rate limit: sleeping 30s...
+[2026-05-31 20:32:39] [121/328] Backfilling GOOG...
+[2026-05-31 20:33:32]   OK GOOG done
+[2026-05-31 20:33:32] [122/328] Backfilling GPS...
+[2026-05-31 20:33:34]   OK GPS done
+[2026-05-31 20:33:34] [123/328] Backfilling GPW...
+[2026-05-31 20:33:36]   OK GPW done
+[2026-05-31 20:33:36] [124/328] Backfilling GRMN...
+[2026-05-31 20:34:30]   OK GRMN done
+[2026-05-31 20:34:30] [125/328] Backfilling GRZ...
+[2026-05-31 20:34:32]   OK GRZ done
+[2026-05-31 20:34:32] [126/328] Backfilling GSH...
+[2026-05-31 20:34:34]   OK GSH done
+[2026-05-31 20:34:34] [127/328] Backfilling GTU.UN.TO...
+[2026-05-31 20:34:36]   OK GTU.UN.TO done
+[2026-05-31 20:34:36] [128/328] Backfilling GWO.TO...
+[2026-05-31 20:35:30]   OK GWO.TO done
+[2026-05-31 20:35:30] [129/328] Backfilling HBNC...
+[2026-05-31 20:36:23]   OK HBNC done
+[2026-05-31 20:36:23] [130/328] Backfilling HCBK...
+[2026-05-31 20:36:25]   OK HCBK done
+[2026-05-31 20:36:25] Rate limit: sleeping 30s...
+[2026-05-31 20:36:55] [131/328] Backfilling HCG.TO...
+[2026-05-31 20:36:57]   OK HCG.TO done
+[2026-05-31 20:36:57] [132/328] Backfilling HD...
+[117/371] OK: GIS
+[2026-05-31 20:41:57]   Attempt 1/3 timed out for HD
+[118/371] OK: GLD
+[119/371] FAIL: GLS
+[2026-05-31 20:47:02]   Attempt 2/3 timed out for HD
+[2026-05-31 20:52:13]   Attempt 3/3 timed out for HD
+[2026-05-31 20:52:13]   FAIL HD - skipping
+[2026-05-31 20:52:13] [133/328] Backfilling HGIC...
+[2026-05-31 20:52:14]   OK HGIC done
+[2026-05-31 20:52:14] [134/328] Backfilling HL...
+[120/371] OK: GLW
+Progress: 120/371 done, 68 failures
+[2026-05-31 20:57:15]   Attempt 1/3 timed out for HL
+[121/371] OK: GOOG
+[122/371] FAIL: GPS
+[123/371] FAIL: GPW
+[2026-05-31 21:02:20]   Attempt 2/3 timed out for HL
+[2026-05-31 21:07:30]   Attempt 3/3 timed out for HL
+[2026-05-31 21:07:30]   FAIL HL - skipping
+[2026-05-31 21:07:30] [135/328] Backfilling HMIN...
+[2026-05-31 21:07:32]   OK HMIN done
+[2026-05-31 21:07:32] [136/328] Backfilling HOU.TO...
+[124/371] OK: GRMN
+[125/371] FAIL: GRZ
+[126/371] FAIL: GSH
+[127/371] FAIL: GTU.UN.TO
+[2026-05-31 21:12:32]   Attempt 1/3 timed out for HOU.TO
+[2026-05-31 21:17:37]   Attempt 2/3 timed out for HOU.TO
+[128/371] OK: GWO.TO
+[2026-05-31 21:22:47]   Attempt 3/3 timed out for HOU.TO
+[2026-05-31 21:22:47]   FAIL HOU.TO - skipping
+[2026-05-31 21:22:47] [137/328] Backfilling HR-UN.TO...
+[129/371] OK: HBNC
+[130/371] FAIL: HCBK
+Progress: 130/371 done, 74 failures
+[131/371] FAIL: HCG.TO
+[2026-05-31 21:27:47]   Attempt 1/3 timed out for HR-UN.TO
+[2026-05-31 21:32:52]   Attempt 2/3 timed out for HR-UN.TO
+[132/371] OK: HD
+[133/371] FAIL: HGIC
+[2026-05-31 21:38:02]   Attempt 3/3 timed out for HR-UN.TO
+[2026-05-31 21:38:02]   FAIL HR-UN.TO - skipping
+[2026-05-31 21:38:02] [138/328] Backfilling HR.UN.TO...
+[2026-05-31 21:38:04]   OK HR.UN.TO done
+[2026-05-31 21:38:04] [139/328] Backfilling HSE.TO...
+[2026-05-31 21:38:07]   OK HSE.TO done
+[2026-05-31 21:38:07] [140/328] Backfilling HTE-UN.TO...
+[2026-05-31 21:38:08]   OK HTE-UN.TO done
+[2026-05-31 21:38:08] Rate limit: sleeping 30s...
+[2026-05-31 21:38:39] [141/328] Backfilling HTE.DB.E.TSE:B...
+[2026-05-31 21:38:41]   OK HTE.DB.E.TSE:B done
+[2026-05-31 21:38:41] [142/328] Backfilling HTE.UN.TO...
+[2026-05-31 21:38:43]   OK HTE.UN.TO done
+[2026-05-31 21:38:43] [143/328] Backfilling HTLD...
+[2026-05-31 21:43:43]   Attempt 1/3 timed out for HTLD
+[134/371] OK: HL
+[135/371] FAIL: HMIN
+[2026-05-31 21:48:48]   Attempt 2/3 timed out for HTLD
+[136/371] OK: HOU.TO
+[2026-05-31 21:53:58]   Attempt 3/3 timed out for HTLD
+[2026-05-31 21:53:58]   FAIL HTLD - skipping
+[2026-05-31 21:53:58] [144/328] Backfilling IAG.TO...
+[137/371] OK: HR-UN.TO
+[138/371] FAIL: HR.UN.TO
+[2026-05-31 21:58:58]   Attempt 1/3 timed out for IAG.TO
+[139/371] FAIL: HSE.TO
+[140/371] FAIL: HTE-UN.TO
+Progress: 140/371 done, 80 failures
+[141/371] FAIL: HTE.DB.E.TSE:B
+[142/371] FAIL: HTE.UN.TO
+[2026-05-31 22:04:04]   Attempt 2/3 timed out for IAG.TO
+[143/371] OK: HTLD
+[2026-05-31 22:09:14]   Attempt 3/3 timed out for IAG.TO
+[2026-05-31 22:09:14]   FAIL IAG.TO - skipping
+[2026-05-31 22:09:14] [145/328] Backfilling IBM...
+[2026-05-31 22:10:07]   OK IBM done
+[2026-05-31 22:10:07] [146/328] Backfilling ICB...
+[2026-05-31 22:11:00]   OK ICB done
+[2026-05-31 22:11:00] [147/328] Backfilling IEX...
+[2026-05-31 22:11:54]   OK IEX done
+[2026-05-31 22:11:54] [148/328] Backfilling IGM.TO...
+[2026-05-31 22:12:48]   OK IGM.TO done
+[2026-05-31 22:12:48] [149/328] Backfilling ILF...
+[2026-05-31 22:13:41]   OK ILF done
+[2026-05-31 22:13:41] [150/328] Backfilling IMMR...
+[2026-05-31 22:14:35]   OK IMMR done
+[2026-05-31 22:14:35] --- Progress: 122 OK, 28 FAIL, 530.5 min elapsed ---
+[2026-05-31 22:14:35] Running indicator recalculation...
+[2026-05-31 22:14:37] Indicators recalculated successfully.
+[2026-05-31 22:14:38] Remaining symbols after refresh: 310
+[2026-05-31 22:14:38] Rate limit: sleeping 30s...
+[2026-05-31 22:15:08] [151/310] Backfilling IMO.TO...
+[2026-05-31 22:16:02]   OK IMO.TO done
+[2026-05-31 22:16:02] [152/310] Backfilling INN-UN.TO...
+[2026-05-31 22:16:05]   OK INN-UN.TO done
+[2026-05-31 22:16:05] [153/310] Backfilling INPH...
+[2026-05-31 22:16:07]   OK INPH done
+[2026-05-31 22:16:07] [154/310] Backfilling INSM...
+[144/371] OK: IAG.TO
+[2026-05-31 22:21:07]   Attempt 1/3 timed out for INSM
+[145/371] OK: IBM
+[146/371] OK: ICB
+[2026-05-31 22:26:12]   Attempt 2/3 timed out for INSM
+[2026-05-31 22:31:22]   Attempt 3/3 timed out for INSM
+[2026-05-31 22:31:22]   FAIL INSM - skipping
+[2026-05-31 22:31:22] [155/310] Backfilling INTC...
+[147/371] OK: IEX
+[2026-05-31 22:36:22]   Attempt 1/3 timed out for INTC
+[2026-05-31 22:41:27]   Attempt 2/3 timed out for INTC
+[148/371] OK: IGM.TO
+[2026-05-31 22:46:38]   Attempt 3/3 timed out for INTC
+[2026-05-31 22:46:38]   FAIL INTC - skipping
+[2026-05-31 22:46:38] [156/310] Backfilling IPT.V...
+[149/371] OK: ILF
+[2026-05-31 22:51:38]   Attempt 1/3 timed out for IPT.V

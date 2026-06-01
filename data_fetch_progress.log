@@ -604,3 +604,24 @@ Progress: 140/371 done, 80 failures
 [2026-05-31 22:46:38] [156/310] Backfilling IPT.V...
 [149/371] OK: ILF
 [2026-05-31 22:51:38]   Attempt 1/3 timed out for IPT.V
+[2026-05-31 22:56:43]   Attempt 2/3 timed out for IPT.V
+[150/371] OK: IMMR
+Progress: 150/371 done, 82 failures
+[2026-05-31 23:01:53]   Attempt 3/3 timed out for IPT.V
+[2026-05-31 23:01:53]   FAIL IPT.V - skipping
+[2026-05-31 23:01:53] [157/310] Backfilling IRC.TO...
+[2026-05-31 23:01:55]   OK IRC.TO done
+[2026-05-31 23:01:55] [158/310] Backfilling IRG.TO...
+[2026-05-31 23:05:51]   OK IRG.TO done
+[2026-05-31 23:05:51] [159/310] Backfilling ISH...
+[2026-05-31 23:05:53]   OK ISH done
+[2026-05-31 23:05:53] [160/310] Backfilling ISIS...
+[2026-05-31 23:05:55]   OK ISIS done
+[2026-05-31 23:05:55] Rate limit: sleeping 30s...
+[2026-05-31 23:06:25] [161/310] Backfilling IWM...
+[151/371] OK: IMO.TO
+[152/371] FAIL: INN-UN.TO
+[153/371] FAIL: INPH
+[2026-05-31 23:11:25]   Attempt 1/3 timed out for IWM
+[154/371] OK: INSM
+[2026-05-31 23:16:30]   Attempt 2/3 timed out for IWM

@@ -83,8 +83,15 @@ ksf_stockmarket/                   ← Git repo root (Python + docs)
 ## Database (MySQL at ksfraser.ca)
 
 - **Database:** `ksfraser_stock_market`
-- **Key tables:** stockprices (135K rows), indicators_json (126K rows), symbol_master (404), portfolio (23)
+- **Key tables:** stockprices (1.19M rows), indicators_json (213K rows), symbol_master (404), portfolio (23)
 - **Python DB adapter:** Abstract `DBConnection` with MySQL + SQLite implementations, 18 tests passing
+- **Credentials:** All secrets stored in Ansible Vault (`group_vars/vault.yml`), never in source code. See [SECURITY.md](SECURITY.md).
+
+## Security
+
+All database passwords and API keys are stored in an Ansible Vault encrypted file.
+See **[SECURITY.md](SECURITY.md)** for setup instructions, adding secrets, and
+vault password rotation.
 
 ## Setup
 

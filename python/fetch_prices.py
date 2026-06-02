@@ -23,7 +23,7 @@ def get_existing_symbols(c):
 
 
 def get_pending_symbols(c, existing):
-    c.execute("SELECT symbol FROM symbol_master ORDER BY symbol")
+    c.execute("SELECT symbol FROM symbol_master WHERE is_active = 1 ORDER BY symbol")
     all_syms = set(r['symbol'] for r in c.fetchall())
     return sorted(all_syms - existing)
 

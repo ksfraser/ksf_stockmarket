@@ -183,6 +183,13 @@ switch ($action) {
         $pageTitle = $data['pageTitle'] ?? 'Upload Documents';
         $template = $data['template'] ?? 'upload';
         break;
+    case 'alerts_status':
+        require_once '/var/www/stockmarket-app/src/Controller/AlertsController.php';
+        $ctrl = new AlertsController();
+        $data = array_merge($data, $ctrl->index());
+        $pageTitle = 'Alerts & Cron Status';
+        $template = 'alerts_status';
+        break;
     default:
         $ctrl = new DashboardController();
         $data = array_merge($data, $ctrl->overview());

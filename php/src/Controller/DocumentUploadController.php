@@ -101,7 +101,7 @@ class DocumentUploadController
 
         return [
             'pageTitle' => 'Upload Results',
-            'template'  => 'upload_results',
+            'template'  => 'upload',
             'results'   => $results,
             'errors'    => $errors,
             'history'   => $this->getImportHistory(),

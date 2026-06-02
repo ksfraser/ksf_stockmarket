@@ -424,6 +424,13 @@ backtesting:
   benchmark:                  "XIC.TO"
 
 #═══════════════════════════════════════════════════════════════════════════
+# ── SECRETS (Ansible Vault) ───────────────────────────────────────────────
+# db_password and other secrets are stored in an encrypted vault file.
+# vault_password_file is chmod 600 and owned by ksf_stockmarket.
+vault:
+  vault_path: "group_vars/vault.yml"
+  vault_password_file: "/home/ksf_stockmarket/.vault_pass"
+
 # DATA & LOGGING
 #═══════════════════════════════════════════════════════════════════════════
 data:

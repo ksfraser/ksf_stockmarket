@@ -25,9 +25,15 @@ import time
 sys.path.insert(0, os.path.dirname(__file__))
 from config_loader import Config
 
-MYSQL_CFG = dict(host='ksfraser.ca', user='ksfraser_stockmarket',
-                 password='Zaqwsx9sm1@', database='ksfraser_stock_market',
-                 charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+_cfg = Config()
+MYSQL_CFG = dict(
+    host=_cfg.data.db_host,
+    user=_cfg.data.db_user,
+    password=_cfg.db_password,
+    database=_cfg.data.db_name,
+    charset='utf8mb4',
+    cursorclass=pymysql.cursors.DictCursor
+)
 
 
 @dataclass

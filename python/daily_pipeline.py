@@ -75,19 +75,20 @@ def _build_db():
         return Database(SQLiteAdapter(db_path))
     elif env_backend == 'mysql':
         cfg = Config(os.path.join(_PYTHON_DIR, '..', 'config.yaml'))
-        db_cfg = getattr(cfg, 'database', {})
+        db_cfg = cfg.data
         return Database(MySQLAdapter(
-            host=getattr(db_cfg, 'host', 'ksfraser.ca'),
-            user=getattr(db_cfg, 'user', 'ksfraser_stockmarket'),
-            password=getattr(db_cfg, 'password', ''),
-            database=getattr(db_cfg, 'database', 'ksfraser_stock_market'),
+            host=getattr(db_cfg, 'db_host', 'ksfraser.ca'),
+            user=getattr(db_cfg, 'db_user', 'ksfraser_stockmarket'),
+            password=cfg.db_password,
+            database=getattr(db_cfg, 'db_name', 'ksfraser_stock_market'),
             port=int(getattr(db_cfg, 'port', 3306)),
         ))
     else:
-        # Default: try MySQL with hardcoded credentials (backward compat)
+        # Fallback: load from vault via config_loader
+        cfg = Config(os.path.join(_PYTHON_DIR, '..', 'config.yaml'))
         return Database(MySQLAdapter(
             host='ksfraser.ca', user='ksfraser_stockmarket',
-            password='Zaqwsx9sm1@', database='ksfraser_stock_market'
+            password=cfg.db_password, database='ksfraser_stock_market'
         ))
 
 

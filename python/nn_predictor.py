@@ -25,9 +25,17 @@ try:
 except ImportError:
     print("PyTorch not installed: pip3 install torch"); sys.exit(1)
 
-MYSQL = dict(host='ksfraser.ca', user='ksfraser_stockmarket',
-             password='Zaqwsx9sm1@', database='ksfraser_stock_market',
-             charset='utf8mb4', cursorclass=pymysql.cursors.DictCursor)
+# Credentials loaded from Ansible Vault via config_loader
+_cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config.yaml')
+_cfg = Config(_cfg_path) if os.path.exists(_cfg_path) else Config()
+MYSQL = dict(
+    host=_cfg.data.db_host,
+    user=_cfg.data.db_user,
+    password=_cfg.db_password,
+    database=_cfg.data.db_name,
+    charset='utf8mb4',
+    cursorclass=pymysql.cursors.DictCursor
+)
 
 
 # ── Dataset ────────────────────────────────────────────────────────────────

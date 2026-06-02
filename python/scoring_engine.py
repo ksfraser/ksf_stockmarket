@@ -1723,7 +1723,7 @@ def sync_quarterly_from_yfinance(conn, symbol: str) -> bool:
             # Extract values from financials
             row_fin = q_financials[col]
             row_bs = q_balance.get(col, pd.Series(dtype=float))
-            row_cf = q_cashflow.get(col, pd.Series=float)
+            row_cf = q_cashflow.get(col, pd.Series(dtype=float))
 
             revenue = safe_float(row_fin.get('Total Revenue'))
             net_income = safe_float(row_fin.get('Net Income'))

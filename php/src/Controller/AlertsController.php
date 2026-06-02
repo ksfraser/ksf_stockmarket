@@ -33,6 +33,8 @@ class AlertsController
         $volumeSnapshots = $this->getVolumeSnapshotInfo($jobs);
         $priceAlerts = $this->getPriceAlertInfo($jobs);
 
+        $watchlistSymbols = $this->loadWatchlistSymbols();
+
         return [
             'pageTitle'       => 'Alerts & Cron Status',
             'template'        => 'alerts_status',
@@ -40,6 +42,7 @@ class AlertsController
             'summary'         => $summary,
             'volumeSnapshots' => $volumeSnapshots,
             'priceAlerts'     => $priceAlerts,
+            'watchlistSymbols'=> $watchlistSymbols,
         ];
     }
 
@@ -159,6 +162,25 @@ class AlertsController
             return $dt->format('Y-m-d H:i');
         } catch (Exception $e) {
             return $ts;
+        }
+    }
+
+    /**
+     * Load watchlist_symbols from the database.
+     */
+    private function loadWatchlistSymbols(): array
+    {
+        try {
+            $pdo = Database::get();
+            $stmt = $pdo->query("
+                SELECT symbol, list_type, monitor_volume, monitor_price,
+                       volume_spike_threshold, alert_threshold_pct, notes, is_active
+                FROM watchlist_symbols
+                ORDER BY list_type, symbol
+            ");
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            return [];
         }
     }
 

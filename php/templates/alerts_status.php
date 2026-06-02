@@ -165,21 +165,68 @@ function statusBadge(string $status): array
 </div>
 <?php endif; ?>
 
-<!-- Inactive Symbols Note -->
-<div class="card" style="margin-top:24px;border-color:var(--yellow);">
-    <div class="card-header">&#x26A0;&#xFE0F; Inactive Symbols</div>
-    <p style="font-size:0.85em;color:var(--text2);">
-        The following symbols are marked <strong>is_active = 0</strong> in <code>symbol_master</code>
-        and are excluded from price fetching and volume monitoring:
+<!-- Watchlist Symbols (DB-driven) -->
+<?php
+$watchlistSymbols = $data['watchlistSymbols'] ?? [];
+$portfolioSymbols = array_filter($watchlistSymbols, fn($s) => $s['list_type'] === 'portfolio' && $s['is_active']);
+$watchlistOnly = array_filter($watchlistSymbols, fn($s) => $s['list_type'] === 'watchlist' && $s['is_active']);
+$inactiveWatchlist = array_filter($watchlistSymbols, fn($s) => !$s['is_active']);
+?>
+
+<?php if (!empty($watchlistSymbols)): ?>
+<div class="card" style="margin-top:24px;border-color:var(--green);">
+    <div class="card-header">&#x1F4CB; Volume Spike Watchlist (DB-Driven)</div>
+    <p style="font-size:0.85em;color:var(--text3);margin-bottom:12px;">
+        These symbols are monitored by the volume spike checker. Add/remove symbols in the
+        <code>watchlist_symbols</code> table — changes take effect immediately (no script edits needed).
     </p>
-    <ul style="margin:8px 0 0 20px;font-size:0.85em;color:var(--text3);">
-        <li><strong>KEG-UN.TO</strong> — Taken private/delisted. Historical data preserved. Price fetchers and volume snapshots skip this symbol.</li>
-    </ul>
-    <p style="font-size:0.8em;color:var(--text3);margin-top:8px;">
-        To deactivate a symbol: <a href="?action=admin_symbols">Symbol Admin → Deactivate</a>.
-        Inactive symbols keep their historical prices but no new data is fetched.
-    </p>
+    <div class="grid-2">
+        <div>
+            <h4 style="color:var(--accent);margin-bottom:8px;">Portfolio (<?= count($portfolioSymbols) ?>)</h4>
+            <div style="font-family:monospace;font-size:0.85em;color:var(--text2);">
+                <?php foreach ($portfolioSymbols as $s): ?>
+                    <div style="padding:2px 0;">
+                        <?= htmlspecialchars($s['symbol']) ?>
+                        <?php if ($s['volume_spike_threshold'] != 2.0): ?>
+                            <span style="color:var(--text3);font-size:0.8em;">(<?= $s['volume_spike_threshold'] ?>×)</span>
+                        <?php endif; ?>
+                        <?php if ($s['notes']): ?>
+                            <span style="color:var(--text3);font-size:0.8em;">— <?= htmlspecialchars($s['notes']) ?></span>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div>
+            <h4 style="color:var(--orange);margin-bottom:8px;">Watchlist (<?= count($watchlistOnly) ?>)</h4>
+            <div style="font-family:monospace;font-size:0.85em;color:var(--text2);">
+                <?php foreach ($watchlistOnly as $s): ?>
+                    <div style="padding:2px 0;">
+                        <?= htmlspecialchars($s['symbol']) ?>
+                        <?php if ($s['volume_spike_threshold'] != 2.0): ?>
+                            <span style="color:var(--text3);font-size:0.8em;">(<?= $s['volume_spike_threshold'] ?>×)</span>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
 </div>
+<?php endif; ?>
+
+<?php if (!empty($inactiveWatchlist)): ?>
+<div class="card" style="margin-top:12px;border-color:var(--yellow);">
+    <div class="card-header">&#x26A0;&#xFE0F; Inactive Watchlist Symbols</div>
+    <p style="font-size:0.85em;color:var(--text2);">
+        These symbols are in the watchlist but marked <strong>is_active = 0</strong> — excluded from monitoring:
+    </p>
+    <div style="font-family:monospace;font-size:0.85em;color:var(--text3);margin-top:8px;">
+        <?php foreach ($inactiveWatchlist as $s): ?>
+            <span style="margin-right:12px;"><?= htmlspecialchars($s['symbol']) ?> (<?= $s['list_type'] ?>)</span>
+        <?php endforeach; ?>
+    </div>
+</div>
+<?php endif; ?>
 
 <div style="display:flex;gap:12px;margin-top:24px;justify-content:center;">
     <a href="?action=overview" class="btn">&larr; Dashboard</a>

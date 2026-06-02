@@ -18,6 +18,7 @@
     <a href="?action=transactions" class="<?php echo active_class('transactions', $action); ?>">Transactions</a>
     <a href="?action=list" class="<?php echo active_class('list', $action); ?>">All Symbols</a>
     <a href="?action=strategy_stock" class="<?php echo active_class('strategy_stock', $action); ?>">Strategies</a>
+    <a href="?action=upload" class="<?php echo active_class('upload', $action); ?>">&#x1F4E4; Upload</a>
     <a href="?action=admin_symbols" class="<?php echo active_class('admin_symbols', $action); ?>">Admin</a>
     <span class="right">
         <?php if (!empty($data['current_user'])): ?>

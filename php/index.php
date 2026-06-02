@@ -176,6 +176,13 @@ switch ($action) {
         $pageTitle = 'Timing & Technical Strategies';
         $template = 'strategy_timing';
         break;
+    case 'upload':
+        require_once '/var/www/stockmarket-app/src/Controller/DocumentUploadController.php';
+        $ctrl = new DocumentUploadController();
+        $data = array_merge($data, $ctrl->handle());
+        $pageTitle = $data['pageTitle'] ?? 'Upload Documents';
+        $template = $data['template'] ?? 'upload';
+        break;
     default:
         $ctrl = new DashboardController();
         $data = array_merge($data, $ctrl->overview());

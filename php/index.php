@@ -8,8 +8,15 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Autoload
+// Autoload — PSR-4 style for App namespace
 spl_autoload_register(function ($class) {
+    // App\ namespace → src/
+    if (strpos($class, 'App\\') === 0) {
+        $relative = str_replace('App\\', '', $class);
+        $file = '/var/www/stockmarket-app/src/' . str_replace('\\', '/', $relative) . '.php';
+        if (file_exists($file)) { require_once $file; return; }
+    }
+    // Legacy controller/model paths
     $paths = [
         '/var/www/stockmarket-app/src/Controller/' . $class . '.php',
         '/var/www/stockmarket-app/src/Model/' . $class . '.php',
@@ -80,10 +87,14 @@ switch ($action) {
     case 'my_dashboard':
         $ctrl = new UserController();
         $data = array_merge($data, $ctrl->myDashboard());
+        $pageTitle = 'My Dashboard';
+        $template = 'my_dashboard';
         break;
     case 'settings':
         $ctrl = new UserController();
         $data = array_merge($data, $ctrl->settings());
+        $pageTitle = 'Settings';
+        $template = 'settings';
         break;
     case 'list':
         $ctrl = new StockController();
@@ -100,6 +111,8 @@ switch ($action) {
     case 'portfolio':
         $ctrl = new StockController();
         $data = array_merge($data, $ctrl->portfolio($_GET['account'] ?? 'all'));
+        $pageTitle = 'Portfolio';
+        $template = 'portfolio';
         break;
     case 'admin_symbols':
         $ctrl = new SymbolAdminController();
@@ -143,18 +156,25 @@ switch ($action) {
         $template = 'transactions';
         break;
     case 'strategy_stock':
-        require_once '/var/www/stockmarket-app/src/Controller/StrategyController.php';
-        $ctrl = new StrategyController();
+        $registry = \App\Strategy\StrategyFactory::create();
+        $ctrl = new StrategyController($registry);
         $data = array_merge($data, $ctrl->stockSelection());
         $pageTitle = 'Stock Selection Strategies';
         $template = 'strategy_stock';
         break;
     case 'strategy_money':
-        require_once '/var/www/stockmarket-app/src/Controller/StrategyController.php';
-        $ctrl = new StrategyController();
+        $registry = \App\Strategy\StrategyFactory::create();
+        $ctrl = new StrategyController($registry);
         $data = array_merge($data, $ctrl->moneyManagement());
         $pageTitle = 'Money & Risk Management';
         $template = 'strategy_money';
+        break;
+    case 'strategy_timing':
+        $registry = \App\Strategy\StrategyFactory::create();
+        $ctrl = new StrategyController($registry);
+        $data = array_merge($data, $ctrl->timing());
+        $pageTitle = 'Timing & Technical Strategies';
+        $template = 'strategy_timing';
         break;
     default:
         $ctrl = new DashboardController();

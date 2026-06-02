@@ -16,7 +16,7 @@ class UserController {
     public function myDashboard(): array {
         $this->currentUser = AuthController::requireAuth();
         $pdo = Database::get();
-        $userId = $this->currentUser['user_id'];
+        $userId = $this->currentUser['id'];
 
         // Get user settings
         $settings = $this->getSettings($userId);
@@ -55,7 +55,7 @@ class UserController {
     public function settings(): array {
         $this->currentUser = AuthController::requireAuth();
         $pdo = Database::get();
-        $userId = $this->currentUser['user_id'];
+        $userId = $this->currentUser['id'];
         $message = '';
         $error = '';
 

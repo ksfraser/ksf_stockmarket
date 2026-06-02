@@ -11,16 +11,16 @@
 <div class="nav">
     <span class="nav-brand">&#x1F989; OWL Investment</span>
     <a href="?action=overview" class="<?php echo active_class('overview', $action); ?>">Dashboard</a>
-    <?php if (!empty($data['current_user'])): ?>
-        <a href="?action=my_dashboard" class="<?php echo active_class('my_dashboard', $action); ?>">My Dashboard</a>
-    <?php endif; ?>
-    <a href="?action=portfolio" class="<?php echo active_class('portfolio', $action); ?>">Portfolio</a>
-    <a href="?action=transactions" class="<?php echo active_class('transactions', $action); ?>">Transactions</a>
     <a href="?action=list" class="<?php echo active_class('list', $action); ?>">All Symbols</a>
     <a href="?action=strategy_stock" class="<?php echo active_class('strategy_stock', $action); ?>">Strategies</a>
-    <a href="?action=alerts_status" class="<?php echo active_class('alerts_status', $action); ?>">&#x1F4E3; Alerts</a>
-    <a href="?action=upload" class="<?php echo active_class('upload', $action); ?>">&#x1F4E4; Upload</a>
-    <a href="?action=admin_symbols" class="<?php echo active_class('admin_symbols', $action); ?>">Admin</a>
+    <?php if (!empty($data['current_user'])): ?>
+        <a href="?action=my_dashboard" class="<?php echo active_class('my_dashboard', $action); ?>">My Dashboard</a>
+        <a href="?action=portfolio" class="<?php echo active_class('portfolio', $action); ?>">Portfolio</a>
+        <a href="?action=transactions" class="<?php echo active_class('transactions', $action); ?>">Transactions</a>
+        <a href="?action=alerts_status" class="<?php echo active_class('alerts_status', $action); ?>">&#x1F4E3; Alerts</a>
+        <a href="?action=upload" class="<?php echo active_class('upload', $action); ?>">&#x1F4E4; Upload</a>
+        <a href="?action=admin_symbols" class="<?php echo active_class('admin_symbols', $action); ?>">Admin</a>
+    <?php endif; ?>
     <span class="right">
         <?php if (!empty($data['current_user'])): ?>
             <a href="?action=settings" style="font-size:0.85em;">&#x2699;&#xFE0F; <?php echo htmlspecialchars($data['current_user']['username']); ?></a>

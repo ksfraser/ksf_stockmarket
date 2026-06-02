@@ -71,6 +71,14 @@ if ($action === 'register') {
     exit;
 }
 
+// Routes requiring authentication (portfolio, transactions, personal data)
+$protectedRoutes = ['portfolio', 'transactions', 'detail', 'indicators', 'my_dashboard', 'settings', 'alerts_status', 'upload'];
+if (in_array($action, $protectedRoutes, true) && !AuthController::checkSession()) {
+    $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
+    header('Location: ?action=login');
+    exit;
+}
+
 // Route to controller
 $pageTitle = 'Dashboard';
 $template = 'overview';

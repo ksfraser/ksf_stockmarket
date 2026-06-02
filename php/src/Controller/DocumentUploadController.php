@@ -94,8 +94,11 @@ class DocumentUploadController
                     'type'      => $ext,
                     'parse'     => $parseResult,
                 ];
+                // Clean up processed file
+                @unlink($destPath);
             } catch (Exception $e) {
                 $errors[] = "{$file['name']}: Parse error — " . $e->getMessage();
+                // Keep file for debugging on error
             }
         }
 

@@ -22,31 +22,6 @@
     </div>
 </div>
 
-<!-- Portfolio Summary -->
-<div class="card">
-    <div class="card-header">Portfolio Summary</div>
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-value">$<?php echo number_format($data['stats']['portfolio_value'], 0); ?></div>
-            <div class="stat-label">Current Value</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value">$<?php echo number_format($data['stats']['portfolio_cost'], 0); ?></div>
-            <div class="stat-label">Cost Basis</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value <?php echo ($data['stats']['portfolio_pnl'] >= 0) ? 'pnl-positive' : 'pnl-negative'; ?>">
-                <?php echo ($data['stats']['portfolio_pnl'] >= 0) ? '+' : ''; ?>$<?php echo number_format($data['stats']['portfolio_pnl'], 0); ?>
-            </div>
-            <div class="stat-label">Unrealized P&amp;L</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value"><?php echo $data['stats']['portfolio_holdings']; ?></div>
-            <div class="stat-label">Holdings</div>
-        </div>
-    </div>
-</div>
-
 <!-- Top Gainers & Losers — ALL SYMBOLS (App Level) -->
 <div class="grid-2">
     <div class="card">

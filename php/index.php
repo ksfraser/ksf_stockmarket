@@ -33,6 +33,7 @@ $action = $_GET['action'] ?? 'overview';
 
 // Check auth status
 $currentUser = AuthController::checkSession();
+$userId = $currentUser ? (int) $currentUser['id'] : null;
 
 // JSON API endpoints (public)
 if ($action === 'api_chart' && isset($_GET['symbol'])) {
@@ -153,6 +154,11 @@ switch ($action) {
     case 'transactions':
         require_once '/var/www/stockmarket-app/src/Controller/TransactionController.php';
         $ctrl = new TransactionController();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'record') {
+            $result = $ctrl->recordTransaction($_POST, $userId);
+            $data['txn_result'] = $result;
+            $data['txn_form'] = $_POST;
+        }
         $data = array_merge($data, $ctrl->listTransactions(
             $_GET['account'] ?? '',
             $_GET['symbol'] ?? '',
@@ -160,6 +166,8 @@ switch ($action) {
             $_GET['date_from'] ?? '',
             $_GET['date_to'] ?? ''
         ));
+        // Validation: compare transactions to holdings
+        $data = array_merge($data, $ctrl->validateHoldings());
         $pageTitle = 'Transactions';
         $template = 'transactions';
         break;

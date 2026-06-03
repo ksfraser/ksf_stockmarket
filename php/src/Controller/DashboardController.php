@@ -11,38 +11,13 @@ class DashboardController {
     }
 
     public function overview(): array {
-        // Portfolio summary
-        $port = $this->pdo->query("
-            SELECT p.*, latest.close as current_price
-            FROM portfolio p
-            LEFT JOIN (
-                SELECT sp1.symbol, sp1.close
-                FROM stockprices sp1
-                INNER JOIN (
-                    SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol
-                ) sp2 ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
-            ) latest ON p.symbol = latest.symbol
-            ORDER BY p.symbol
-        ")->fetchAll();
-
-        $totalCost = 0;
-        $totalValue = 0;
-        foreach ($port as $h) {
-            $totalCost += $h['shares'] * $h['cost_basis'];
-            $totalValue += $h['shares'] * ($h['current_price'] ?? 0);
-        }
-
-        // Summary stats — ALL symbols (app level)
+        // Summary stats — ALL symbols (app level, no portfolio data)
         $stats = [
             'total_symbols'       => $this->pdo->query("SELECT COUNT(DISTINCT symbol) FROM stockprices")->fetchColumn(),
             'with_indicators'     => $this->pdo->query("SELECT COUNT(DISTINCT symbol) FROM indicators_json")->fetchColumn(),
             'total_prices'        => $this->pdo->query("SELECT COUNT(*) FROM stockprices")->fetchColumn(),
             'total_indicators'    => $this->pdo->query("SELECT COUNT(*) FROM indicators_json")->fetchColumn(),
             'active_fetching'     => $this->pdo->query("SELECT COUNT(*) FROM symbol_master WHERE is_active = 1")->fetchColumn(),
-            'portfolio_holdings'  => count($port),
-            'portfolio_cost'      => $totalCost,
-            'portfolio_value'     => $totalValue,
-            'portfolio_pnl'       => $totalValue - $totalCost,
             'last_update'         => date('Y-m-d H:i:s'),
         ];
 
@@ -89,11 +64,10 @@ class DashboardController {
         ")->fetch();
 
         return [
-            'stats'     => $stats,
-            'portfolio' => $port,
-            'gainers'   => $gainers,
-            'losers'    => $losers,
-            'freshness' => $freshness,
+            'stats'       => $stats,
+            'gainers'     => $gainers,
+            'losers'      => $losers,
+            'freshness'   => $freshness,
             'last_update' => date('Y-m-d H:i:s'),
         ];
     }

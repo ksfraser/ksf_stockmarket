@@ -22,19 +22,22 @@ class UserController {
         $settings = $this->getSettings($userId);
 
         // Get buy/sell recommendations for user's portfolio
-        $recommendations = $this->getRecommendations($pdo);
+        $recommendations = $this->getRecommendations($pdo, $userId);
 
         // Upcoming earnings for portfolio symbols
-        $upcomingEarnings = $this->getUpcomingEarnings($pdo);
+        $upcomingEarnings = $this->getUpcomingEarnings($pdo, $userId);
 
         // Dividend dates
-        $dividendDates = $this->getDividendDates($pdo);
+        $dividendDates = $this->getDividendDates($pdo, $userId);
 
         // Top gainers/losers within portfolio
-        $portfolioMovers = $this->getPortfolioMovers($pdo);
+        $portfolioMovers = $this->getPortfolioMovers($pdo, $userId);
 
         // Data coverage: count symbols in portfolio with indicators
-        $coverage = $this->getPortfolioCoverage($pdo);
+        $coverage = $this->getPortfolioCoverage($pdo, $userId);
+
+        // Portfolio summary for My Dashboard
+        $portfolioSummary = $this->getPortfolioSummary($pdo, $userId);
 
         return [
             'pageTitle' => 'My Dashboard',
@@ -44,6 +47,7 @@ class UserController {
             'upcoming_earnings' => $upcomingEarnings,
             'dividend_dates' => $dividendDates,
             'portfolio_movers' => $portfolioMovers,
+            'portfolio_summary' => $portfolioSummary,
             'coverage' => $coverage,
             'user' => $this->currentUser,
         ];
@@ -157,7 +161,7 @@ class UserController {
     /**
      * Get buy/sell recommendations for portfolio holdings.
      */
-    private function getRecommendations(PDO $pdo): array {
+    private function getRecommendations(PDO $pdo, int $userId): array {
         $sql = "
             SELECT p.symbol, p.shares, p.cost_basis, p.trailing_stop_pct, p.stop_loss_pct,
                    p.strategy, p.atr_multiplier,
@@ -177,9 +181,12 @@ class UserController {
                 INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM indicators_json GROUP BY symbol) i2
                     ON i1.symbol = i2.symbol AND i1.price_date = i2.max_date
             ) ind ON p.symbol = ind.symbol
+            WHERE p.user_id = :uid AND p.shares > 0
             ORDER BY p.symbol
         ";
-        $rows = $pdo->query($sql)->fetchAll();
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':uid' => $userId]);
+        $rows = $stmt->fetchAll();
 
         $recs = [];
         foreach ($rows as $r) {
@@ -234,12 +241,12 @@ class UserController {
     /**
      * Get upcoming earnings dates for portfolio symbols.
      */
-    private function getUpcomingEarnings(PDO $pdo): array {
+    private function getUpcomingEarnings(PDO $pdo, int $userId): array {
         try {
-            $stmt = $pdo->query("
+            $stmt = $pdo->prepare("
                 SELECT DISTINCT f.symbol, f.earnings_date, f.eps_estimate, f.revenue_estimate
                 FROM fundamentals f
-                INNER JOIN portfolio p ON f.symbol = p.symbol
+                INNER JOIN portfolio p ON f.symbol = p.symbol AND p.user_id = :uid AND p.shares > 0
                 INNER JOIN (
                     SELECT symbol, MAX(fetch_date) as max_date FROM fundamentals GROUP BY symbol
                 ) latest ON f.symbol = latest.symbol AND f.fetch_date = latest.max_date
@@ -247,6 +254,7 @@ class UserController {
                 ORDER BY f.earnings_date ASC
                 LIMIT 20
             ");
+            $stmt->execute([':uid' => $userId]);
             return $stmt->fetchAll();
         } catch (Exception $e) {
             return [];
@@ -256,12 +264,12 @@ class UserController {
     /**
      * Get upcoming dividend dates for portfolio symbols.
      */
-    private function getDividendDates(PDO $pdo): array {
+    private function getDividendDates(PDO $pdo, int $userId): array {
         try {
-            $stmt = $pdo->query("
+            $stmt = $pdo->prepare("
                 SELECT DISTINCT f.symbol, f.dividend_rate, f.ex_dividend_date, f.dividend_yield
                 FROM fundamentals f
-                INNER JOIN portfolio p ON f.symbol = p.symbol
+                INNER JOIN portfolio p ON f.symbol = p.symbol AND p.user_id = :uid AND p.shares > 0
                 INNER JOIN (
                     SELECT symbol, MAX(fetch_date) as max_date FROM fundamentals GROUP BY symbol
                 ) latest ON f.symbol = latest.symbol AND f.fetch_date = latest.max_date
@@ -269,6 +277,7 @@ class UserController {
                 ORDER BY f.ex_dividend_date ASC
                 LIMIT 20
             ");
+            $stmt->execute([':uid' => $userId]);
             return $stmt->fetchAll();
         } catch (Exception $e) {
             return [];
@@ -278,7 +287,7 @@ class UserController {
     /**
      * Get top gainers and losers within portfolio.
      */
-    private function getPortfolioMovers(PDO $pdo): array {
+    private function getPortfolioMovers(PDO $pdo, int $userId): array {
         $sql = "
             SELECT p.symbol,
                    latest.close as current_price,
@@ -301,9 +310,12 @@ class UserController {
                     GROUP BY symbol
                 ) sp4 ON sp3.symbol = sp4.symbol AND sp3.price_date = sp4.max_date
             ) prev ON p.symbol = prev.symbol
+            WHERE p.user_id = :uid AND p.shares > 0
             ORDER BY change_pct DESC
         ";
-        $rows = $pdo->query($sql)->fetchAll();
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':uid' => $userId]);
+        $rows = $stmt->fetchAll();
 
         $gainers = array_filter($rows, fn($r) => ($r['change_pct'] ?? 0) > 0);
         $losers = array_filter($rows, fn($r) => ($r['change_pct'] ?? 0) < 0);
@@ -317,26 +329,88 @@ class UserController {
     /**
      * Get data coverage stats for portfolio symbols.
      */
-    private function getPortfolioCoverage(PDO $pdo): array {
-        $totalSymbols = $pdo->query("SELECT COUNT(DISTINCT symbol) FROM portfolio")->fetchColumn();
-        $withPrices = $pdo->query("
+    private function getPortfolioCoverage(PDO $pdo, int $userId): array {
+        $stmt = $pdo->prepare("SELECT COUNT(DISTINCT symbol) FROM portfolio WHERE user_id = :uid AND shares > 0");
+        $stmt->execute([':uid' => $userId]);
+        $totalSymbols = $stmt->fetchColumn();
+
+        $stmt = $pdo->prepare("
             SELECT COUNT(DISTINCT p.symbol) FROM portfolio p
             INNER JOIN stockprices sp ON p.symbol = sp.symbol
-        ")->fetchColumn();
-        $withIndicators = $pdo->query("
+            WHERE p.user_id = :uid AND p.shares > 0
+        ");
+        $stmt->execute([':uid' => $userId]);
+        $withPrices = $stmt->fetchColumn();
+
+        $stmt = $pdo->prepare("
             SELECT COUNT(DISTINCT p.symbol) FROM portfolio p
             INNER JOIN indicators_json ij ON p.symbol = ij.symbol
-        ")->fetchColumn();
-        $totalRows = $pdo->query("
+            WHERE p.user_id = :uid AND p.shares > 0
+        ");
+        $stmt->execute([':uid' => $userId]);
+        $withIndicators = $stmt->fetchColumn();
+
+        $stmt = $pdo->prepare("
             SELECT COUNT(*) FROM stockprices sp
             INNER JOIN portfolio p ON sp.symbol = p.symbol
-        ")->fetchColumn();
+            WHERE p.user_id = :uid AND p.shares > 0
+        ");
+        $stmt->execute([':uid' => $userId]);
+        $totalRows = $stmt->fetchColumn();
 
         return [
             'total' => $totalSymbols,
             'with_prices' => $withPrices,
             'with_indicators' => $withIndicators,
             'total_rows' => $totalRows,
+        ];
+    }
+
+    /**
+     * Get portfolio summary for My Dashboard.
+     */
+    private function getPortfolioSummary(PDO $pdo, int $userId): ?array {
+        $stmt = $pdo->prepare("
+            SELECT p.symbol, p.shares, p.cost_basis, p.account_type,
+                   latest.close as current_price
+            FROM portfolio p
+            LEFT JOIN (
+                SELECT sp1.symbol, sp1.close
+                FROM stockprices sp1
+                INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol) sp2
+                    ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
+            ) latest ON p.symbol = latest.symbol
+            WHERE p.user_id = :uid AND p.shares > 0
+            ORDER BY p.symbol
+        ");
+        $stmt->execute([':uid' => $userId]);
+        $holdings = $stmt->fetchAll();
+
+        if (empty($holdings)) return null;
+
+        $totalCost = 0;
+        $totalValue = 0;
+        $topPnlPct = -999;
+        $worstPnlPct = 999;
+
+        foreach ($holdings as $h) {
+            $cost = $h['shares'] * $h['cost_basis'];
+            $value = $h['shares'] * ($h['current_price'] ?? 0);
+            $totalCost += $cost;
+            $totalValue += $value;
+            $pnlPct = $cost > 0 ? (($value - $cost) / $cost) * 100 : 0;
+            if ($pnlPct > $topPnlPct) $topPnlPct = $pnlPct;
+            if ($pnlPct < $worstPnlPct) $worstPnlPct = $pnlPct;
+        }
+
+        return [
+            'market_value' => $totalValue,
+            'cost_basis' => $totalCost,
+            'pnl' => $totalValue - $totalCost,
+            'pnl_pct' => $totalCost > 0 ? (($totalValue - $totalCost) / $totalCost) * 100 : 0,
+            'num_holdings' => count($holdings),
+            'top_pnl_pct' => $topPnlPct,
+            'worst_pnl_pct' => $worstPnlPct,
         ];
     }
 }

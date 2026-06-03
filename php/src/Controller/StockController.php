@@ -207,8 +207,26 @@ class StockController {
             $where = "WHERE p.account_type = " . $this->pdo->quote($account_filter);
         }
 
+        // Aggregate across accounts: each symbol appears once with total shares & weighted cost basis
+        $accountJoin = '';
+        $accountWhere = '';
+        if ($account_filter !== 'all') {
+            $af = $this->pdo->quote($account_filter);
+            $accountWhere = "WHERE p.account_type = $af";
+        }
         $stmt = $this->pdo->query("
-            SELECT p.*, latest.close as current_price, latest.volume as current_volume, latest.price_date as price_date
+            SELECT p.symbol,
+                   GROUP_CONCAT(DISTINCT p.account_type ORDER BY p.account_type) as accounts,
+                   SUM(p.shares) as shares,
+                   SUM(p.shares * p.cost_basis) / NULLIF(SUM(p.shares), 0) as cost_basis,
+                   MIN(p.entry_date) as entry_date,
+                   AVG(p.trailing_stop_pct) as trailing_stop_pct,
+                   AVG(p.stop_loss_pct) as stop_loss_pct,
+                   p.strategy,
+                   AVG(p.atr_multiplier) as atr_multiplier,
+                   latest.close as current_price,
+                   latest.volume as current_volume,
+                   latest.price_date as price_date
             FROM portfolio p
             LEFT JOIN (
                 SELECT sp1.symbol, sp1.close, sp1.volume, sp1.price_date
@@ -217,7 +235,8 @@ class StockController {
                     SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol
                 ) sp2 ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
             ) latest ON p.symbol = latest.symbol
-            {$where}
+            {$accountWhere}
+            GROUP BY p.symbol
             ORDER BY p.symbol
         ");
         $holdings = $stmt->fetchAll();

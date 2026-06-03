@@ -116,7 +116,7 @@ $SAFETY_TOOLTIP = "Dividend Safety Score (0-100): Based on payout ratio, " .
         ?>
             <tr>
                 <td><strong><a href="?action=detail&symbol=<?= urlencode($h['symbol']) ?>"><?= htmlspecialchars($h['symbol']) ?></a></strong></td>
-                <td><?= htmlspecialchars($h['account_type']) ?></td>
+                <td><?= htmlspecialchars(str_replace(',', '/', $h['accounts'])) ?></td>
                 <td class="r"><?= number_format($h['shares'], 2) ?></td>
                 <td class="r">$<?= number_format($h['cost_basis'], 2) ?></td>
                 <td class="r"><?= fmt_price($h['current_price'] ?? null) ?></td>

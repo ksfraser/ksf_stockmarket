@@ -36,10 +36,11 @@ class SymbolAdminController
 
         $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-        $sql = "SELECT sm.symbol, sm.name, sm.exchange, sm.sector, sm.is_active,
+        $sql = "SELECT sm.symbol, sm.name, COALESCE(NULLIF(sm.exchange, ''), em.exchange) as exchange, sm.sector, sm.is_active,
                        sm.deactivated_at, sm.deactivated_reason,
                        CASE WHEN sm.is_active = 0 THEN 'Inactive' ELSE 'Active' END as status_label
                 FROM symbol_master sm
+                LEFT JOIN exchange_mapping em ON sm.symbol = em.symbol AND em.is_primary = 1
                 {$whereSql}
                 ORDER BY sm.is_active DESC, sm.symbol
                 LIMIT 500";

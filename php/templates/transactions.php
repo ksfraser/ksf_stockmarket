@@ -1,6 +1,6 @@
 <?php
 /**
- * Transactions page — filterable transaction history.
+ * Transactions page — filterable transaction history + record form + validation.
  */
 $txns = $data['transactions'] ?? [];
 $summary = $data['summary'] ?? [];
@@ -12,7 +12,99 @@ $sf = $data['symbol_filter'] ?? '';
 $tf = $data['type_filter'] ?? '';
 $df = $data['date_from'] ?? '';
 $dt = $data['date_to'] ?? '';
+$txnResult = $data['txn_result'] ?? null;
+$txnForm = $data['txn_form'] ?? [];
+$discrepancies = $data['holding_discrepancies'] ?? [];
 ?>
+
+<!-- Record Transaction Form -->
+<div class="card">
+    <div class="card-header">&#x1F4DD; Record Transaction</div>
+    <?php if ($txnResult): ?>
+        <?php if ($txnResult['success']): ?>
+            <div style="background:#1a3a1a;border:1px solid #2a5a2a;padding:10px 14px;border-radius:6px;margin-bottom:12px;color:#4a4;">
+                &#x2705; <?php echo htmlspecialchars($txnResult['message'] ?? 'Transaction recorded.'); ?>
+            </div>
+        <?php else: ?>
+            <div style="background:#3a1a1a;border:1px solid #5a2a2a;padding:10px 14px;border-radius:6px;margin-bottom:12px;color:#a44;">
+                &#x274C; <?php echo htmlspecialchars(implode(' ', $txnResult['errors'] ?? ['Unknown error'])); ?>
+            </div>
+        <?php endif; ?>
+    <?php endif; ?>
+    <form method="POST" action="?action=transactions" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;">
+        <input type="hidden" name="action" value="record">
+        <div>
+            <label style="font-size:0.8em;color:var(--text3);">Symbol</label>
+            <input type="text" name="symbol" value="<?php echo htmlspecialchars($txnForm['symbol'] ?? ''); ?>" placeholder="RY.TO" required style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
+        </div>
+        <div>
+            <label style="font-size:0.8em;color:var(--text3);">Type</label>
+            <select name="type" required style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
+                <option value="BUY" <?php echo ($txnForm['type'] ?? '') === 'BUY' ? 'selected' : ''; ?>>BUY</option>
+                <option value="SELL" <?php echo ($txnForm['type'] ?? '') === 'SELL' ? 'selected' : ''; ?>>SELL</option>
+                <option value="DIVIDEND" <?php echo ($txnForm['type'] ?? '') === 'DIVIDEND' ? 'selected' : ''; ?>>DIVIDEND</option>
+                <option value="SPLIT" <?php echo ($txnForm['type'] ?? '') === 'SPLIT' ? 'selected' : ''; ?>>SPLIT</option>
+            </select>
+        </div>
+        <div>
+            <label style="font-size:0.8em;color:var(--text3);">Date</label>
+            <input type="date" name="trade_date" value="<?php echo htmlspecialchars($txnForm['trade_date'] ?? date('Y-m-d')); ?>" required style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
+        </div>
+        <div>
+            <label style="font-size:0.8em;color:var(--text3);">Account</label>
+            <select name="account_type" required style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
+                <option value="RRSP" <?php echo ($txnForm['account_type'] ?? '') === 'RRSP' ? 'selected' : ''; ?>>RRSP</option>
+                <option value="TFSA" <?php echo ($txnForm['account_type'] ?? '') === 'TFSA' ? 'selected' : ''; ?>>TFSA</option>
+                <option value="MARGIN" <?php echo ($txnForm['account_type'] ?? '') === 'MARGIN' ? 'selected' : ''; ?>>MARGIN</option>
+            </select>
+        </div>
+        <div>
+            <label style="font-size:0.8em;color:var(--text3);">Quantity</label>
+            <input type="number" name="quantity" step="0.0001" min="0.0001" value="<?php echo htmlspecialchars($txnForm['quantity'] ?? ''); ?>" placeholder="100" required style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
+        </div>
+        <div>
+            <label style="font-size:0.8em;color:var(--text3);">Price</label>
+            <input type="number" name="price" step="0.0001" min="0.0001" value="<?php echo htmlspecialchars($txnForm['price'] ?? ''); ?>" placeholder="150.00" style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
+        </div>
+        <div>
+            <label style="font-size:0.8em;color:var(--text3);">Commission</label>
+            <input type="number" name="commission" step="0.01" min="0" value="<?php echo htmlspecialchars($txnForm['commission'] ?? '9.95'); ?>" placeholder="9.95" style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
+        </div>
+        <div>
+            <label style="font-size:0.8em;color:var(--text3);">Total (auto-calc if blank)</label>
+            <input type="number" name="total" step="0.01" value="<?php echo htmlspecialchars($txnForm['total'] ?? ''); ?>" placeholder="auto" style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
+        </div>
+        <div style="grid-column:1/-1;">
+            <label style="font-size:0.8em;color:var(--text3);">Notes</label>
+            <input type="text" name="notes" value="<?php echo htmlspecialchars($txnForm['notes'] ?? ''); ?>" placeholder="Optional notes" style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
+        </div>
+        <div style="grid-column:1/-1;">
+            <button type="submit" style="padding:8px 24px;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:600;">&#x1F4BE; Record Transaction</button>
+        </div>
+    </form>
+</div>
+
+<!-- Holdings Validation -->
+<?php if (!empty($discrepancies)): ?>
+<div class="card" style="border-color:#5a4a1a;">
+    <div class="card-header" style="color:#cc9900;">&#x26A0;&#xFE0F; Holdings / Transaction Mismatch</div>
+    <p style="font-size:0.85em;color:var(--text3);margin-bottom:10px;">Portfolio holdings don't match the sum of BUY/SELL transactions. This usually means transactions are missing or holdings were imported from a statement without corresponding trade records.</p>
+    <table>
+        <thead><tr><th>Symbol</th><th>Account</th><th>Expected (txns)</th><th>Actual (portfolio)</th><th>Difference</th></tr></thead>
+        <tbody>
+        <?php foreach ($discrepancies as $d): ?>
+            <tr>
+                <td><strong><?php echo htmlspecialchars($d['symbol']); ?></strong></td>
+                <td><?php echo htmlspecialchars($d['account']); ?></td>
+                <td class="r"><?php echo number_format($d['expected'], 2); ?></td>
+                <td class="r"><?php echo number_format($d['actual'], 2); ?></td>
+                <td class="r" style="color:<?php echo $d['diff'] > 0 ? '#4a4' : '#a44'; ?>;"><?php echo ($d['diff'] > 0 ? '+' : '') . number_format($d['diff'], 2); ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<?php endif; ?>
 
 <?php if ($note): ?>
     <div class="card">

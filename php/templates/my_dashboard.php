@@ -9,7 +9,52 @@ $divDates = $data['dividend_dates'] ?? [];
 $movers = $data['portfolio_movers'] ?? ['gainers' => [], 'losers' => []];
 $coverage = $data['coverage'] ?? ['total' => 0, 'with_prices' => 0, 'with_indicators' => 0, 'total_rows' => 0];
 $settings = $data['settings'] ?? [];
+$portfolioSummary = $data['portfolio_summary'] ?? null;
 ?>
+
+<!-- Portfolio Summary (User's Holdings) -->
+<?php if ($portfolioSummary): ?>
+<div class="card" style="border-color:var(--accent);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div>
+            <h2 style="margin:0;font-size:1.3em;">&#x1F4CA; My Portfolio</h2>
+            <p style="margin:4px 0 0;font-size:0.85em;color:var(--text3);">
+                Personal holdings summary &mdash; <a href="?action=portfolio" style="color:var(--accent);">View full portfolio &rarr;</a>
+            </p>
+        </div>
+        <a href="?action=overview" style="font-size:0.85em;color:var(--accent);">&larr; Switch to App Dashboard</a>
+    </div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value">$<?php echo number_format($portfolioSummary['market_value'], 0); ?></div>
+            <div class="stat-label">Current Value</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">$<?php echo number_format($portfolioSummary['cost_basis'], 0); ?></div>
+            <div class="stat-label">Cost Basis</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value <?php echo ($portfolioSummary['pnl'] >= 0) ? 'pnl-positive' : 'pnl-negative'; ?>">
+                <?php echo ($portfolioSummary['pnl'] >= 0) ? '+' : ''; ?>$<?php echo number_format($portfolioSummary['pnl'], 0); ?>
+                <span style="font-size:0.7em;">(<?php echo ($portfolioSummary['pnl_pct'] >= 0) ? '+' : ''; ?><?php echo number_format($portfolioSummary['pnl_pct'], 1); ?>%)</span>
+            </div>
+            <div class="stat-label">Unrealized P&amp;L</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value"><?php echo $portfolioSummary['num_holdings']; ?></div>
+            <div class="stat-label">Holdings</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="font-size:1.1em;"><?php echo number_format($portfolioSummary['top_pnl_pct'] ?? 0, 1); ?>%</div>
+            <div class="stat-label">Best Performer</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="font-size:1.1em;"><?php echo number_format($portfolioSummary['worst_pnl_pct'] ?? 0, 1); ?>%</div>
+            <div class="stat-label">Worst Performer</div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 
 <!-- Buy/Sell Recommendations -->
 <div class="card">

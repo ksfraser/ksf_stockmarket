@@ -51,3 +51,4 @@ analysis_results.db
 portfolio.db
 group_vars/vault.yml
 .vault_pass
+php/vendor/

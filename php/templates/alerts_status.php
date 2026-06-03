@@ -81,7 +81,11 @@ function statusBadge(string $status): array
         </span>
     </div>
     <div style="display:flex;gap:20px;margin-top:8px;font-size:0.8em;color:var(--text3);">
-        <span>Last run: <strong><?= htmlspecialchars($job['last_run']) ?></strong></span>
+        <span>Last run: <strong><?= htmlspecialchars($job['last_run']) ?></strong><?php if (!empty($job['last_run_at'])): ?><?php
+            $age = time() - strtotime($job['last_run_at']);
+            $staleClass = $age > 86400 ? 'red' : ($age > 3600 ? 'yellow' : 'green');
+            $ageStr = $age < 60 ? $age . 's ago' : ($age < 3600 ? floor($age/60) . 'm ago' : ($age < 86400 ? floor($age/3600) . 'h ago' : floor($age/86400) . 'd ago'));
+        ?><span style="color:var(--<?= $staleClass ?>);font-size:0.9em;"> (<?= $ageStr ?>)</span><?php endif; ?></span>
         <span>Next run: <strong><?= htmlspecialchars($job['next_run']) ?></strong></span>
         <?php if ($job['last_error']): ?>
             <span style="color:var(--red);">Error: <?= htmlspecialchars($job['last_error']) ?></span>
@@ -110,7 +114,11 @@ function statusBadge(string $status): array
         </span>
     </div>
     <div style="display:flex;gap:20px;margin-top:8px;font-size:0.8em;color:var(--text3);">
-        <span>Last: <strong><?= htmlspecialchars($job['last_run']) ?></strong></span>
+        <span>Last: <strong><?= htmlspecialchars($job['last_run']) ?></strong><?php if (!empty($job['last_run_at'])): ?><?php
+            $age = time() - strtotime($job['last_run_at']);
+            $staleClass = $age > 86400 ? 'red' : ($age > 3600 ? 'yellow' : 'green');
+            $ageStr = $age < 60 ? $age . 's ago' : ($age < 3600 ? floor($age/60) . 'm ago' : ($age < 86400 ? floor($age/3600) . 'h ago' : floor($age/86400) . 'd ago'));
+        ?><span style="color:var(--<?= $staleClass ?>);font-size:0.9em;"> (<?= $ageStr ?>)</span><?php endif; ?></span>
         <span>Next: <strong><?= htmlspecialchars($job['next_run']) ?></strong></span>
     </div>
 </div>
@@ -155,7 +163,11 @@ function statusBadge(string $status): array
             <?php endif; ?>
         </td>
         <td style="padding:8px 12px;"><code style="font-size:0.85em;"><?= htmlspecialchars($job['schedule']) ?></code></td>
-        <td style="padding:8px 12px;color:var(--text2);"><?= htmlspecialchars($job['last_run']) ?></td>
+        <td style="padding:8px 12px;color:var(--text2);"><?= htmlspecialchars($job['last_run']) ?><?php if (!empty($job['last_run_at'])): ?><?php
+            $age = time() - strtotime($job['last_run_at']);
+            $staleClass = $age > 86400 ? 'red' : ($age > 3600 ? 'yellow' : 'green');
+            $ageStr = $age < 60 ? $age . 's ago' : ($age < 3600 ? floor($age/60) . 'm ago' : ($age < 86400 ? floor($age/3600) . 'h ago' : floor($age/86400) . 'd ago'));
+        ?><br><span style="color:var(--<?= $staleClass ?>);font-size:0.8em;"><?= $ageStr ?></span><?php endif; ?></td>
         <td style="padding:8px 12px;color:var(--text2);"><?= htmlspecialchars($job['next_run']) ?></td>
         <td style="padding:8px 12px;color:var(--text3);"><?= htmlspecialchars($job['deliver']) ?></td>
     </tr>

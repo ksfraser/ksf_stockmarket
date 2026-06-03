@@ -50,18 +50,20 @@ def extract_text(pdf_path: str) -> tuple[str, int]:
 def detect_format(text: str) -> str:
     """Detect brokerage format from PDF text."""
     text_lower = text.lower()
+    # Normalize apostrophes and special chars
+    text_clean = text_lower.replace('\u2019', "'").replace('\u2018', "'").replace('\u2013', '-')
 
-    if "cibc" in text_lower and "investor's edge" in text_lower:
+    if "cibc" in text_clean:
         return "cibc"
-    if "questrade" in text_lower:
+    if "questrade" in text_clean:
         return "questrade"
-    if "td direct investing" in text_lower or "td wealth" in text_lower:
+    if "td direct investing" in text_clean or "td wealth" in text_clean:
         return "td"
-    if "bmo investorline" in text_lower or "bmo.com/investorline" in text_lower:
+    if "bmo" in text_clean and ("investorline" in text_clean or "investor line" in text_clean):
         return "bmo"
-    if "scotiabank" in text_lower and "itrade" in text_lower:
+    if "scotiabank" in text_clean and "itrade" in text_clean:
         return "scotia"
-    if "rbc direct investing" in text_lower:
+    if "rbc" in text_clean and "direct investing" in text_clean:
         return "rbc"
 
     # Generic — has transaction-like patterns
@@ -72,41 +74,205 @@ def detect_format(text: str) -> str:
 
 
 def parse_cibc(text: str) -> list[dict]:
-    """Parse CIBC Investor's Edge statements."""
+    """Parse CIBC Investor's Edge statements — handles multiple format eras (2014-2024+)."""
     transactions = []
+    seen = set()
+    lines = text.split('\n')
 
-    # CIBC Activity/Transaction table patterns
-    # Date, Description, Debit, Credit, Balance
-    # Or: Date, Activity, Quantity, Description, Price, Amount
+    for line in lines:
+        stripped = line.strip()
+        if not stripped or len(stripped) < 20:
+            continue
 
-    date_patterns = [
-        r'(\d{4}-\d{2}-\d{2})\s+(.+?)\s+([\d,]+\.\d{2})\s+([\d,]+\.\d{2})',
-        r'(\w{3}\s+\d{1,2},?\s+\d{4})\s+(.+?)\s+\$?([\d,]+\.\d{2})',
-    ]
+        # Skip header/footer lines
+        if any(h in stripped.upper() for h in ['BALANCE FORWARD', 'PAGE', 'STATEMENT PERIOD',
+            'OPENING BALANCE', 'CLOSING BALANCE', 'TOTAL', 'CIBC INVESTOR', 'TRADE DATE',
+            'DESCRIPTION', 'DEBIT', 'CREDIT', '---']):
+            continue
 
-    for pattern in date_patterns:
-        for match in re.finditer(pattern, text, re.MULTILINE):
-            date_str = match.group(1)
-            desc = match.group(2).strip()
-            amount = match.group(3).replace(',', '')
+        # Pattern 1: TRADE lines with B,S prefix (Format B: ~2014-2018)
+        # "15 Mar 2014 TRADE     B,RBC BANK COM NPV                         5,000.00    45,234.56"
+        trade_match = re.match(
+            r'(\d{1,2}\s+\w{3}\s+\d{4}|\d{4}-\d{2}-\d{2})\s+'
+            r'(TRADE|DIV|BUY|SELL|PURCHASE|TRANSFER|FEE)\s+'
+            r'(.+)',
+            stripped
+        )
+        if trade_match:
+            date_str = trade_match.group(1)
+            activity = trade_match.group(2)
+            remainder = trade_match.group(3).strip()
+
+            # Extract all dollar amounts from the rest of the line
+            amounts = re.findall(r'[\d,]+\.\d{2}', remainder)
+            if len(amounts) < 1:
+                continue
+
+            # Remove amounts to get description
+            desc = remainder
+            for amt in amounts:
+                desc = desc.replace(amt, '', 1)
+            desc = desc.strip()
+
+            # Determine buy/sell from B,S prefix in description
+            action = 'OTHER'
+            if activity == 'TRADE':
+                bs_match = re.match(r'([BS]),\s*(.*)', desc)
+                if bs_match:
+                    action = 'BUY' if bs_match.group(1).upper() == 'B' else 'SELL'
+                    desc = bs_match.group(2).strip()
+                elif 'buy' in desc.lower() or 'purchase' in desc.lower():
+                    action = 'BUY'
+                elif 'sell' in desc.lower() or 'sale' in desc.lower():
+                    action = 'SELL'
+            elif activity in ('BUY', 'PURCHASE'):
+                action = 'BUY'
+            elif activity in ('SELL', 'SALE'):
+                action = 'SELL'
+            elif activity == 'DIV':
+                action = 'DIVIDEND'
+
+            # For CIBC format: amounts appear left to right as: Credit | Debit | Balance
+            # For BUY:  Debit column has the transaction amount, Credit is empty
+            # For SELL: Credit column has the transaction amount, Debit is empty
+            # The last amount is always the running balance
+            amounts_clean = [float(a.replace(',', '')) for a in amounts]
+            if len(amounts_clean) >= 3:
+                # 3+ amounts: first is credit, second is debit, last is balance
+                if action == 'BUY':
+                    total_amt = amounts_clean[1]  # debit
+                elif action == 'SELL':
+                    total_amt = amounts_clean[0]  # credit
+                else:
+                    total_amt = min(amounts_clean)  # dividend etc: smaller amount
+            elif len(amounts_clean) == 2:
+                # 2 amounts: one is transaction, one is balance (larger = balance)
+                total_amt = min(amounts_clean)
+            else:
+                total_amt = amounts_clean[0] if amounts_clean else 0
 
             txn = {
                 'trade_date': parse_date(date_str),
-                'type': 'BUY' if 'buy' in desc.lower() or 'purchase' in desc.lower() else
-                       'SELL' if 'sell' in desc.lower() else 'OTHER',
-                'symbol': extract_symbol(desc),
+                'type': activity if activity in ('BUY', 'SELL', 'DIVIDEND', 'TRANSFER', 'FEE') else action,
+                'symbol': extract_cibc_symbol(desc),
                 'quantity': 0,
-                'price': float(amount) if amount else 0,
-                'total': float(amount) if amount else 0,
+                'price': total_amt,
+                'total': total_amt,
                 'commission': 0,
-                'account_type': extract_account_type(desc),
+                'account_type': extract_account_type(text),
                 'currency': 'CAD' if 'CAD' in text[:5000] else 'USD',
-                'description': desc[:200],
+                'description': desc[:250],
             }
-            if txn['trade_date'] and txn['symbol']:
+            key = (txn['trade_date'], txn['type'], txn['description'][:60])
+            if txn['trade_date'] and key not in seen:
+                seen.add(key)
+                transactions.append(txn)
+            continue
+
+        # Pattern 2: Generic date + amounts (no TRADE keyword)
+        # "2024-03-15  PURCHASE RY.TO 100 @ $150.25          $15,025.00   $85,234.56"
+        gen_match = re.match(
+            r'(\d{4}-\d{2}-\d{2}|\d{1,2}\s+\w{3,9}\s+\d{4})\s+(.+)',
+            stripped
+        )
+        if gen_match:
+            date_str = gen_match.group(1)
+            remainder = gen_match.group(2).strip()
+            amounts = re.findall(r'\$?([\d,]+\.\d{2})', remainder)
+            if len(amounts) < 1:
+                continue
+
+            desc = remainder
+            for amt in amounts:
+                desc = desc.replace(amt, '').replace('$', '', 1)
+            desc = desc.strip()
+
+            desc_lower = desc.lower()
+            if any(h in desc.upper() for h in ['BALANCE', 'PAGE', 'STATEMENT', 'TOTAL', 'OPENING', 'CLOSING']):
+                continue
+
+            action = 'BUY' if any(kw in desc_lower for kw in ['buy', 'purchase', 'b,', 'b ,']) else \
+                     'SELL' if any(kw in desc_lower for kw in ['sell', 'sale', 's,', 's ,']) else 'OTHER'
+
+            amounts_clean = [float(a.replace(',', '')) for a in amounts]
+            txn = {
+                'trade_date': parse_date(date_str),
+                'type': action,
+                'symbol': extract_cibc_symbol(desc),
+                'quantity': 0,
+                'price': amounts_clean[0] if amounts_clean else 0,
+                'total': amounts_clean[-1] if amounts_clean else 0,
+                'commission': 0,
+                'account_type': extract_account_type(text),
+                'currency': 'CAD' if 'CAD' in text[:5000] else 'USD',
+                'description': desc[:250],
+            }
+            key = (txn['trade_date'], txn['type'], txn['description'][:60])
+            if txn['trade_date'] and key not in seen:
+                seen.add(key)
                 transactions.append(txn)
 
     return transactions
+
+
+def extract_cibc_symbol(desc: str) -> str:
+    """Extract symbol from CIBC statement description.
+    
+    CIBC statements often use full names like 'RBC BANK COM NPV' or 'BNS COM NPV'
+    instead of ticker symbols. This maps common CIBC descriptions to tickers.
+    """
+    desc_upper = desc.upper()
+
+    # Map common CIBC description patterns to tickers (check FIRST)
+    cibc_name_map = [
+        (r'R\s*B\s*C\s+BANK', 'RY.TO'),
+        (r'B\s*M\s*O\s+BANK', 'BMO.TO'),
+        (r'B\s*N\s*S|BANK\s+OF\s+NOVA\s+SCOTIA', 'BNS.TO'),
+        (r'T\s*D\s+BANK|TORONTO\s+DOMINION', 'TD.TO'),
+        (r'C\s*I\s*B\s*C|CANADIAN\s+IMPERIAL', 'CM.TO'),
+        (r'SUN\s+LIFE', 'SLF.TO'),
+        (r'MANULIFE', 'MFC.TO'),
+        (r'POWER\s+CORP', 'POW.TO'),
+        (r'NATIONAL\s+BANK', 'NA.TO'),
+        (r'ENBRIDGE', 'ENB.TO'),
+        (r'CANADIAN\s+NATURAL|CNRL', 'CNQ.TO'),
+        (r'SUNCOR', 'SU.TO'),
+        (r'TRANS\s+CANADA|TC\s+ENERGY|TC\s+P\s*E', 'TRP.TO'),
+        (r'IMPERIAL\s+OIL|IMO', 'IMO.TO'),
+        (r'CANADIAN\s+UTILITIES', 'CU.TO'),
+        (r'FORTIS', 'FTS.TO'),
+        (r'HYDRO\s+ONE', 'H.TO'),
+        (r'PIPESTONE\s+ENERGY', 'PIPE.TO'),
+        (r'GIBSON\s+ENERGY', 'GEI.TO'),
+        (r'ALTAGAS', 'ALA.TO'),
+        (r'KEYERA', 'KEY.TO'),
+        (r'PARK\s+LAND\s+CORP', 'PKI.TO'),
+        (r'INTER\s+PIPELINE', 'IPL.TO'),
+        (r'PEMBINA\s+PIPELINE', 'PPL.TO'),
+        (r'CENOVUS', 'CVE.TO'),
+        (r'ARC\s+RESOURCES', 'ARX.TO'),
+        (r'BIRCHCLIFF\s+ENERGY', 'BIR.TO'),
+        (r'BONAVISTA\s+ENERGY', 'BNP.TO'),
+        (r'KELT\s+EXPLORATION', 'KEL.TO'),
+        (r'MULLEN\s+GROUP', 'MTL.TO'),
+        (r'C\s+PLUS', 'CPX.TO'),
+        (r'ATCO\s+CLASS', 'ACO-X.TO'),
+    ]
+    
+    for pattern, ticker in cibc_name_map:
+        if re.search(pattern, desc_upper):
+            return ticker
+
+    # Direct ticker pattern: 1-5 uppercase letters, optionally .TO/.NY/.etc
+    m = re.search(r'\b([A-Z]{1,5}(?:\.[A-Z]{1,2})?)\b', desc)
+    if m:
+        sym = m.group(1)
+        # Filter out common words that look like tickers
+        non_symbols = {'COM', 'NPV', 'USD', 'CAD', 'THE', 'BANK', 'CORP', 'INC', 'CLASS', 'SERIES', 'FUND', 'ETF', 'TRUST', 'LIMITED', 'LTD', 'AND', 'OF', 'TO', 'FOR'}
+        if sym not in non_symbols:
+            return sym
+
+    return ''
 
 
 def parse_questrade(text: str) -> list[dict]:
@@ -210,10 +376,11 @@ def extract_account_type(text: str) -> str:
 
 def main():
     if len(sys.argv) < 2:
-        print(json.dumps({"error": "Usage: parse_pdf_statement.py <pdf_path>"}))
+        print(json.dumps({"error": "Usage: parse_pdf_statement.py <pdf_path> [--debug]"}))
         sys.exit(1)
 
     pdf_path = sys.argv[1]
+    debug_mode = '--debug' in sys.argv
 
     try:
         text, pages = extract_text(pdf_path)
@@ -240,6 +407,18 @@ def main():
         'pages': pages,
         'transactions': transactions,
     }
+
+    # Include text preview when 0 transactions found or in debug mode
+    if debug_mode or len(transactions) == 0:
+        result['text_preview'] = text[:3000]
+        # Also include lines that look like they could be transactions
+        suspicious_lines = []
+        for line in text.split('\n'):
+            s = line.strip()
+            if len(s) > 15 and re.search(r'\d{1,2}\s+\w{3,9}\s+\d{4}|\d{4}-\d{2}-\d{2}', s):
+                if re.search(r'[\d,]+\.\d{2}', s):
+                    suspicious_lines.append(s[:200])
+        result['suspicious_lines'] = suspicious_lines[:20]
 
     print(json.dumps(result, indent=2))
 

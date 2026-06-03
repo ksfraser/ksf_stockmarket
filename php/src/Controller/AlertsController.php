@@ -74,6 +74,7 @@ class AlertsController
                 'enabled'      => $job['enabled'] ?? false,
                 'state'        => $job['state'] ?? 'unknown',
                 'last_run'     => $this->formatTimestamp($job['last_run_at'] ?? null),
+                'last_run_at'  => $job['last_run_at'] ?? null,
                 'next_run'     => $this->formatTimestamp($job['next_run_at'] ?? null),
                 'last_status'  => $job['last_status'] ?? 'never_run',
                 'last_error'   => $job['last_delivery_error'] ?? null,

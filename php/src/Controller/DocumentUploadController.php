@@ -323,14 +323,11 @@ class DocumentUploadController
         if (file_exists($script)) {
             $output = [];
             $exitCode = 0;
-            exec("/usr/bin/python3 " . escapeshellarg($script) . " " . escapeshellarg($path) . " 2>&1", $output, $exitCode);
+            exec("/usr/bin/python3 " . escapeshellarg($script) . " " . escapeshellarg($path) . " --debug 2>&1", $output, $exitCode);
 
             if ($exitCode === 0 && !empty($output)) {
                 $result = json_decode(implode("\n", $output), true);
                 if ($result && isset($result['transactions'])) {
-                    if (empty($result['transactions'])) {
-                        throw new Exception("PDF parsed successfully but no transactions found. The statement may be a summary-only page or cover page.");
-                    }
                     $imported = $this->importTransactions($result['transactions']);
                     return [
                         'format' => $result['format'] ?? 'pdf',
@@ -340,6 +337,11 @@ class DocumentUploadController
                         'skipped' => count($result['transactions']) - $imported,
                         'pages' => $result['pages'] ?? null,
                         'account' => $result['account'] ?? null,
+                        'note' => count($result['transactions']) === 0
+                            ? 'PDF parsed but no transactions recognized. The statement format may not be supported yet. Try uploading as CSV export instead.'
+                            : null,
+                        'text_preview' => $result['text_preview'] ?? null,
+                        'suspicious_lines' => $result['suspicious_lines'] ?? null,
                     ];
                 }
             }

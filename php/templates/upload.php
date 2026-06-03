@@ -54,6 +54,20 @@ $error   = $data['error'] ?? '';
                 <?php if (!empty($r['note'])): ?>
                     <div style="color:#aa4;font-size:0.8em;margin-top:4px;">&#x26A0;&#xFE0F; <?php echo htmlspecialchars($r['note']); ?></div>
                 <?php endif; ?>
+                <?php if (!empty($r['suspicious_lines']) || !empty($r['text_preview'])): ?>
+                    <details style="margin-top:6px;font-size:0.8em;">
+                        <summary style="cursor:pointer;color:var(--text3);">&#x1F50D; Debug: extracted text preview</summary>
+                        <?php if (!empty($r['text_preview'])): ?>
+                            <pre style="background:var(--bg1);border:1px solid var(--border);padding:8px;margin-top:4px;max-height:200px;overflow:auto;white-space:pre-wrap;font-size:0.75em;color:var(--text3);"><?php echo htmlspecialchars($r['text_preview']); ?></pre>
+                        <?php endif; ?>
+                        <?php if (!empty($r['suspicious_lines'])): ?>
+                            <div style="margin-top:4px;color:var(--text3);">Lines with dates + amounts (potential transactions):</div>
+                            <?php foreach ($r['suspicious_lines'] as $sl): ?>
+                                <pre style="background:var(--bg1);border:1px solid var(--border);padding:4px 8px;margin-top:2px;font-size:0.75em;color:#aa4;white-space:pre-wrap;"><?php echo htmlspecialchars($sl); ?></pre>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </details>
+                <?php endif; ?>
             <?php else: ?>
                 <span style="color:#a44;">&#x274C; Error</span>
                 <span style="color:var(--text3);font-size:0.85em;"> — <?php echo htmlspecialchars($r['error'] ?? 'Unknown error'); ?></span>

@@ -5,7 +5,7 @@ parse_pdf_statement.py — Parse brokerage PDF statements and extract transactio
 Supports: CIBC Investor's Edge, Questrade, TD Direct Investing, BMO InvestorLine,
 Scotiabank iTrade, RBC Direct Investing, and generic formats.
 
-Usage: python3 parse_pdf_statement.py <pdf_path>
+Usage: python3 parse_pdf_statement.py <pdf_path> [--debug]
 
 Output: JSON to stdout with structure:
 {
@@ -32,6 +32,7 @@ Output: JSON to stdout with structure:
 import sys
 import json
 import re
+import os
 from datetime import datetime
 
 
@@ -73,12 +74,162 @@ def detect_format(text: str) -> str:
     return "unknown"
 
 
+def parse_cibc_multiline_date(date_str: str, text: str) -> str:
+    """Parse date from multi-line CIBC format like 'Jan 15' using statement period for year."""
+    # Try to find year from statement period
+    year_match = re.search(r'(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d+\s*[-–]\s*(?:January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d+,?\s+(\d{4})', text)
+    year = year_match.group(1) if year_match else None
+
+    # Try to parse the date with various formats
+    for fmt in ['%b %d', '%B %d']:
+        try:
+            dt = datetime.strptime(date_str.strip(), fmt)
+            if year:
+                return f"{year}-{dt.month:02d}-{dt.day:02d}"
+            else:
+                return f"2014-{dt.month:02d}-{dt.day:02d}"  # fallback
+        except ValueError:
+            continue
+
+    return date_str
+
+
 def parse_cibc(text: str) -> list[dict]:
-    """Parse CIBC Investor's Edge statements — handles multiple format eras (2014-2024+)."""
+    """Parse CIBC Investor's Edge statements — handles multiple format eras (2014-2024+).
+
+    Supports three distinct formats:
+    A) Multi-line (2014-2016): Each transaction spans multiple lines:
+       Jan 15
+       Dividend
+       TRANSFORCE INC
+       −
+       $40.89
+       CASH DIV ON 282 SHS ...
+
+    B) Single-line TRADE (2014-2018): "15 Mar 2014 TRADE  B,RBC BANK COM NPV  5,000.00  45,234.56"
+
+    C) Single-line generic (2018+): "2024-03-15  PURCHASE RY.TO 100 @ $150.25  $15,025.00"
+    """
     transactions = []
     seen = set()
     lines = text.split('\n')
 
+    # ── Detect which format we're dealing with ──
+    activity_keywords = ['Dividend', 'Dividends', 'Transfer', 'Purchase', 'Sale', 'Trade',
+                         'Contribution', 'Withdrawal', 'Fee', 'Interest', 'Reinvestment']
+    multiline_count = 0
+    for line in lines:
+        s = line.strip()
+        if s in activity_keywords:
+            multiline_count += 1
+
+    use_multiline = multiline_count >= 2
+
+    if use_multiline:
+        # ── Format A: Multi-line parser ──
+        i = 0
+        while i < len(lines):
+            line = lines[i].strip()
+
+            # Look for a date-like line: "Jan 15", "Feb 1", "Mar 31", etc.
+            date_match = re.match(r'^(\w{3,9}\s+\d{1,2})$', line)
+            if not date_match:
+                i += 1
+                continue
+
+            date_str = date_match.group(1)
+
+            # Next line should be the activity type
+            if i + 1 >= len(lines):
+                i += 1
+                continue
+            activity_line = lines[i + 1].strip()
+            activity_map = {
+                'Dividend': 'DIVIDEND', 'Dividends': 'DIVIDEND',
+                'Transfer': 'TRANSFER', 'Contribution': 'TRANSFER',
+                'Withdrawal': 'WITHDRAWAL', 'Purchase': 'BUY',
+                'Sale': 'SELL', 'Trade': 'TRADE',
+                'Fee': 'FEE', 'Interest': 'INTEREST',
+                'Reinvestment': 'DIVIDEND_REINVEST',
+            }
+            activity = activity_map.get(activity_line, 'OTHER')
+
+            if activity == 'OTHER':
+                i += 1
+                continue
+
+            # Collect remaining lines
+            desc_lines = []
+            amount_val = 0
+            j = i + 2
+
+            # Description (company name, possibly multi-line)
+            while j < len(lines) and len(desc_lines) < 3:
+                dl = lines[j].strip()
+                if not dl or dl in ('−', '-', '--'):
+                    j += 1
+                    break
+                if re.match(r'^\w{3,9}\s+\d{1,2}$', dl):
+                    break
+                desc_lines.append(dl)
+                j += 1
+
+            # Skip separator line
+            while j < len(lines):
+                dl = lines[j].strip()
+                if dl in ('−', '-', '--'):
+                    j += 1
+                    continue
+                break
+
+            # Amount line
+            if j < len(lines):
+                amt_line = lines[j].strip()
+                amt_match = re.search(r'\$?([\d,]+\.?\d*)', amt_line)
+                if amt_match:
+                    try:
+                        amount_val = float(amt_match.group(1).replace(',', ''))
+                    except ValueError:
+                        amount_val = 0
+                j += 1
+
+            # Remaining detail lines
+            detail_lines = []
+            while j < len(lines):
+                dl = lines[j].strip()
+                if not dl:
+                    break
+                if re.match(r'^\w{3,9}\s+\d{1,2}$', dl):
+                    break
+                if dl in activity_keywords:
+                    break
+                detail_lines.append(dl)
+                j += 1
+
+            desc = ' '.join(desc_lines + detail_lines)[:250]
+            full_date = parse_cibc_multiline_date(date_str, text)
+
+            txn = {
+                'trade_date': full_date,
+                'type': activity,
+                'symbol': extract_cibc_symbol(desc),
+                'quantity': 0,
+                'price': amount_val,
+                'total': amount_val,
+                'commission': 0,
+                'account_type': extract_account_type(text),
+                'currency': 'CAD' if 'Canadian Dollars' in text[:8000] or 'CAD' in text[:8000] else 'USD',
+                'description': desc,
+            }
+            key = (txn['trade_date'], txn['type'], txn['description'][:60])
+            if txn['trade_date'] and key not in seen:
+                seen.add(key)
+                transactions.append(txn)
+
+            i = j
+        return transactions
+
+    # ── Format B: Single-line TRADE parser ──
     for line in lines:
         stripped = line.strip()
         if not stripped or len(stripped) < 20:
@@ -90,8 +241,6 @@ def parse_cibc(text: str) -> list[dict]:
             'DESCRIPTION', 'DEBIT', 'CREDIT', '---']):
             continue
 
-        # Pattern 1: TRADE lines with B,S prefix (Format B: ~2014-2018)
-        # "15 Mar 2014 TRADE     B,RBC BANK COM NPV                         5,000.00    45,234.56"
         trade_match = re.match(
             r'(\d{1,2}\s+\w{3}\s+\d{4}|\d{4}-\d{2}-\d{2})\s+'
             r'(TRADE|DIV|BUY|SELL|PURCHASE|TRANSFER|FEE)\s+'
@@ -103,18 +252,15 @@ def parse_cibc(text: str) -> list[dict]:
             activity = trade_match.group(2)
             remainder = trade_match.group(3).strip()
 
-            # Extract all dollar amounts from the rest of the line
             amounts = re.findall(r'[\d,]+\.\d{2}', remainder)
             if len(amounts) < 1:
                 continue
 
-            # Remove amounts to get description
             desc = remainder
             for amt in amounts:
                 desc = desc.replace(amt, '', 1)
             desc = desc.strip()
 
-            # Determine buy/sell from B,S prefix in description
             action = 'OTHER'
             if activity == 'TRADE':
                 bs_match = re.match(r'([BS]),\s*(.*)', desc)
@@ -132,21 +278,15 @@ def parse_cibc(text: str) -> list[dict]:
             elif activity == 'DIV':
                 action = 'DIVIDEND'
 
-            # For CIBC format: amounts appear left to right as: Credit | Debit | Balance
-            # For BUY:  Debit column has the transaction amount, Credit is empty
-            # For SELL: Credit column has the transaction amount, Debit is empty
-            # The last amount is always the running balance
             amounts_clean = [float(a.replace(',', '')) for a in amounts]
             if len(amounts_clean) >= 3:
-                # 3+ amounts: first is credit, second is debit, last is balance
                 if action == 'BUY':
-                    total_amt = amounts_clean[1]  # debit
+                    total_amt = amounts_clean[1]
                 elif action == 'SELL':
-                    total_amt = amounts_clean[0]  # credit
+                    total_amt = amounts_clean[0]
                 else:
-                    total_amt = min(amounts_clean)  # dividend etc: smaller amount
+                    total_amt = min(amounts_clean)
             elif len(amounts_clean) == 2:
-                # 2 amounts: one is transaction, one is balance (larger = balance)
                 total_amt = min(amounts_clean)
             else:
                 total_amt = amounts_clean[0] if amounts_clean else 0
@@ -169,8 +309,7 @@ def parse_cibc(text: str) -> list[dict]:
                 transactions.append(txn)
             continue
 
-        # Pattern 2: Generic date + amounts (no TRADE keyword)
-        # "2024-03-15  PURCHASE RY.TO 100 @ $150.25          $15,025.00   $85,234.56"
+        # ── Format C: Generic single-line parser ──
         gen_match = re.match(
             r'(\d{4}-\d{2}-\d{2}|\d{1,2}\s+\w{3,9}\s+\d{4})\s+(.+)',
             stripped
@@ -216,14 +355,9 @@ def parse_cibc(text: str) -> list[dict]:
 
 
 def extract_cibc_symbol(desc: str) -> str:
-    """Extract symbol from CIBC statement description.
-    
-    CIBC statements often use full names like 'RBC BANK COM NPV' or 'BNS COM NPV'
-    instead of ticker symbols. This maps common CIBC descriptions to tickers.
-    """
+    """Extract symbol from CIBC statement description."""
     desc_upper = desc.upper()
 
-    # Map common CIBC description patterns to tickers (check FIRST)
     cibc_name_map = [
         (r'R\s*B\s*C\s+BANK', 'RY.TO'),
         (r'B\s*M\s*O\s+BANK', 'BMO.TO'),
@@ -257,18 +391,19 @@ def extract_cibc_symbol(desc: str) -> str:
         (r'MULLEN\s+GROUP', 'MTL.TO'),
         (r'C\s+PLUS', 'CPX.TO'),
         (r'ATCO\s+CLASS', 'ACO-X.TO'),
+        (r'TRANSFORCE', 'TFI.TO'),
+        (r'KEG\s+ROYALTIES', 'KEG.UN.TO'),
     ]
-    
+
     for pattern, ticker in cibc_name_map:
         if re.search(pattern, desc_upper):
             return ticker
 
-    # Direct ticker pattern: 1-5 uppercase letters, optionally .TO/.NY/.etc
+    # Direct ticker pattern
     m = re.search(r'\b([A-Z]{1,5}(?:\.[A-Z]{1,2})?)\b', desc)
     if m:
         sym = m.group(1)
-        # Filter out common words that look like tickers
-        non_symbols = {'COM', 'NPV', 'USD', 'CAD', 'THE', 'BANK', 'CORP', 'INC', 'CLASS', 'SERIES', 'FUND', 'ETF', 'TRUST', 'LIMITED', 'LTD', 'AND', 'OF', 'TO', 'FOR'}
+        non_symbols = {'COM', 'NPV', 'USD', 'CAD', 'THE', 'BANK', 'CORP', 'INC', 'CLASS', 'SERIES', 'FUND', 'ETF', 'TRUST', 'LIMITED', 'LTD', 'AND', 'OF', 'TO', 'FOR', 'ON', 'SHS', 'REC', 'PAY', 'DIV', 'CASH'}
         if sym not in non_symbols:
             return sym
 
@@ -278,9 +413,7 @@ def extract_cibc_symbol(desc: str) -> str:
 def parse_questrade(text: str) -> list[dict]:
     """Parse Questrade statements."""
     transactions = []
-
-    # Questrade: Trade Date, Symbol, Quantity, Price, Commission, Net Amount, Type
-    pattern = r'(\d{4}-\d{2}-\d{2})\s+([A-Z0-9.]+)\s+(Buy|Sell)\s+([\d,]+)\s+\$?([\d.]+)\s+\$?([\d.]+)\s+\$?([\d.]+)'
+    pattern = r'(\d{4}-\d{2}-\d{2})\s+([A-Z0-9.]+)\s+(Buy|Sell)\s+([[\d,]+)\s+\$?([\d.]+)\s+\$?([\d.]+)\s+\$?([\d.]+)'
 
     for match in re.finditer(pattern, text):
         qty = float(match.group(4).replace(',', ''))
@@ -308,15 +441,12 @@ def parse_questrade(text: str) -> list[dict]:
 def parse_generic(text: str) -> list[dict]:
     """Generic parser — tries to find transaction-like patterns."""
     transactions = []
-
-    # Look for lines with: Date + Symbol + BUY/SELL + Amount
     lines = text.split('\n')
     for line in lines:
-        # Match: 2024-01-15  BUY  100 RY.TO  $150.25  $15,025.00
         m = re.search(
             r'(\d{4}-\d{2}-\d{2}|\d{2}/\d{2}/\d{4}|\w{3}\s+\d{1,2},?\s+\d{4})\s+'
             r'(BUY|SELL|PURCHASE|SALE)\s+'
-            r'([\d,]+)\s+'
+            r'([[\d,]+)\s+'
             r'([A-Z]{1,5}(?:\.[A-Z]{1,2})?)\s+'
             r'\$?([\d,.]+)',
             line, re.IGNORECASE
@@ -391,7 +521,6 @@ def main():
     fmt = detect_format(text)
     account = extract_account_type(text)
 
-    # Dispatch to appropriate parser
     parsers = {
         'cibc': parse_cibc,
         'questrade': parse_questrade,
@@ -408,10 +537,9 @@ def main():
         'transactions': transactions,
     }
 
-    # Include text preview when 0 transactions found or in debug mode
+    # Debug output
     if debug_mode or len(transactions) == 0:
         result['text_preview'] = text[:3000]
-        # Also include lines that look like they could be transactions
         suspicious_lines = []
         for line in text.split('\n'):
             s = line.strip()
@@ -419,23 +547,24 @@ def main():
                 if re.search(r'[\d,]+\.\d{2}', s):
                     suspicious_lines.append(s[:200])
         result['suspicious_lines'] = suspicious_lines[:20]
-    
-    # Also write debug to file for easier diagnosis
-    if debug_mode or len(transactions) == 0:
-        import os
-        debug_dir = '/var/www/stockmarket-app/uploads/debug/'
-        os.makedirs(debug_dir, exist_ok=True)
-        debug_file = debug_dir + os.path.basename(pdf_path) + '.debug.txt'
-        with open(debug_file, 'w') as f:
-            f.write(f"Format: {fmt}\n")
-            f.write(f"Account: {account}\n")
-            f.write(f"Pages: {pages}\n")
-            f.write(f"Transactions found: {len(transactions)}\n\n")
-            f.write("=== FULL EXTRACTED TEXT ===\n")
-            f.write(text)
-            f.write("\n=== SUSPICIOUS LINES ===\n")
-            for sl in result.get('suspicious_lines', []):
-                f.write(sl + "\n")
+
+        # Write debug file
+        try:
+            debug_dir = '/var/www/stockmarket-app/uploads/debug/'
+            os.makedirs(debug_dir, exist_ok=True)
+            debug_file = debug_dir + os.path.basename(pdf_path) + '.debug.txt'
+            with open(debug_file, 'w') as f:
+                f.write(f"Format: {fmt}\n")
+                f.write(f"Account: {account}\n")
+                f.write(f"Pages: {pages}\n")
+                f.write(f"Transactions found: {len(transactions)}\n\n")
+                f.write("=== FULL EXTRACTED TEXT ===\n")
+                f.write(text)
+                f.write("\n=== SUSPICIOUS LINES ===\n")
+                for sl in result.get('suspicious_lines', []):
+                    f.write(sl + "\n")
+        except Exception:
+            pass
 
     print(json.dumps(result, indent=2))
 

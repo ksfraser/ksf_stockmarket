@@ -221,39 +221,29 @@ def extract_cibc_symbol(desc: str) -> str:
     CIBC statements often use full names like 'RBC BANK COM NPV' or 'BNS COM NPV'
     instead of ticker symbols. This maps common CIBC descriptions to tickers.
     """
-    # Direct ticker pattern: 1-5 uppercase letters, optionally .TO/.NY/.etc
-    m = re.search(r'\b([A-Z]{1,5}(?:\.[A-Z]{1,2})?)\b', desc)
-    if m:
-        sym = m.group(1)
-        # Filter out common words that look like tickers
-        non_symbols = {'COM', 'NPV', 'USD', 'CAD', 'THE', 'BANK', 'CORP', 'INC', 'CLASS', 'SERIES', 'FUND', 'ETF', 'TRUST', 'LIMITED', 'LTD'}
-        if sym not in non_symbols:
-            return sym
+    desc_upper = desc.upper()
 
-    # Map common CIBC description patterns to tickers
-    # These are common in older CIBC statements
+    # Map common CIBC description patterns to tickers (check FIRST)
     cibc_name_map = [
-        (r'RBC\s+BANK', 'RY.TO'),
-        (r'BMO\s+BANK', 'BMO.TO'),
-        (r'BNS|BANK\s+OF\s+NOVA\s+SCOTIA', 'BNS.TO'),
-        (r'TD\s+BANK|TORONTO\s+DOMINION', 'TD.TO'),
-        (r'CIBC|CANADIAN\s+IMPERIAL', 'CM.TO'),
+        (r'R\s*B\s*C\s+BANK', 'RY.TO'),
+        (r'B\s*M\s*O\s+BANK', 'BMO.TO'),
+        (r'B\s*N\s*S|BANK\s+OF\s+NOVA\s+SCOTIA', 'BNS.TO'),
+        (r'T\s*D\s+BANK|TORONTO\s+DOMINION', 'TD.TO'),
+        (r'C\s*I\s*B\s*C|CANADIAN\s+IMPERIAL', 'CM.TO'),
         (r'SUN\s+LIFE', 'SLF.TO'),
         (r'MANULIFE', 'MFC.TO'),
         (r'POWER\s+CORP', 'POW.TO'),
         (r'NATIONAL\s+BANK', 'NA.TO'),
         (r'ENBRIDGE', 'ENB.TO'),
-        (r'CANADIAN\s+NATURAL', 'CNQ.TO'),
+        (r'CANADIAN\s+NATURAL|CNRL', 'CNQ.TO'),
         (r'SUNCOR', 'SU.TO'),
-        (r'CANADIAN\s+OIL\s+SANDS', 'COS.TO'),  # not real but common name
-        (r'TRANS\s+CANADA|TC\s+ENERGY', 'TRP.TO'),
-        (r'IMPERIAL\s+OIL|IMPERIAL', 'IMO.TO'),
+        (r'TRANS\s+CANADA|TC\s+ENERGY|TC\s+P\s*E', 'TRP.TO'),
+        (r'IMPERIAL\s+OIL|IMO', 'IMO.TO'),
         (r'CANADIAN\s+UTILITIES', 'CU.TO'),
         (r'FORTIS', 'FTS.TO'),
         (r'HYDRO\s+ONE', 'H.TO'),
         (r'PIPESTONE\s+ENERGY', 'PIPE.TO'),
         (r'GIBSON\s+ENERGY', 'GEI.TO'),
-        (r'VERITONE\s+ENERGY', 'VET.TO'),
         (r'ALTAGAS', 'ALA.TO'),
         (r'KEYERA', 'KEY.TO'),
         (r'PARK\s+LAND\s+CORP', 'PKI.TO'),
@@ -265,16 +255,24 @@ def extract_cibc_symbol(desc: str) -> str:
         (r'BONAVISTA\s+ENERGY', 'BNP.TO'),
         (r'KELT\s+EXPLORATION', 'KEL.TO'),
         (r'MULLEN\s+GROUP', 'MTL.TO'),
-        (r'TIDAL\s+ROYALTY', 'TAL.TO'),
         (r'C\s+PLUS', 'CPX.TO'),
         (r'ATCO\s+CLASS', 'ACO-X.TO'),
     ]
     
-    desc_upper = desc.upper()
     for pattern, ticker in cibc_name_map:
         if re.search(pattern, desc_upper):
             return ticker
 
+    # Direct ticker pattern: 1-5 uppercase letters, optionally .TO/.NY/.etc
+    m = re.search(r'\b([A-Z]{1,5}(?:\.[A-Z]{1,2})?)\b', desc)
+    if m:
+        sym = m.group(1)
+        # Filter out common words that look like tickers
+        non_symbols = {'COM', 'NPV', 'USD', 'CAD', 'THE', 'BANK', 'CORP', 'INC', 'CLASS', 'SERIES', 'FUND', 'ETF', 'TRUST', 'LIMITED', 'LTD', 'AND', 'OF', 'TO', 'FOR'}
+        if sym not in non_symbols:
+            return sym
+
+    return ''
     return ''
 
 

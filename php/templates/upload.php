@@ -37,9 +37,9 @@ $error   = $data['error'] ?? '';
 </div>
 
 <!-- Processing Results -->
-<?php if (!empty($results) || !empty($errors)): ?>
-<div class="card">
+<div id="uploadResults" class="card" style="<?php echo (empty($results) && empty($errors)) ? 'display:none;' : ''; ?>">
     <div class="card-header">&#x1F4CB; Upload Results</div>
+    <?php if (!empty($results) || !empty($errors)): ?>
     <?php foreach ($results as $r): ?>
         <div style="margin-bottom:8px;padding:10px;border-radius:6px;background:<?php echo ($r['status'] ?? '') === 'error' ? '#3a1a1a' : '#1a3a1a'; ?>;border:1px solid <?php echo ($r['status'] ?? '') === 'error' ? '#5a2a2a' : '#2a5a2a'; ?>;">
             <strong><?php echo htmlspecialchars($r['filename']); ?></strong>
@@ -80,11 +80,11 @@ $error   = $data['error'] ?? '';
             <span style="color:#a44;">&#x274C; <?php echo htmlspecialchars($e['error']); ?></span>
         </div>
     <?php endforeach; ?>
+    <?php endif; ?>
 </div>
-<?php endif; ?>
 
 <!-- Upload History (from upload_log table) -->
-<div class="card">
+<div class="card" id="historyCard">
     <div class="card-header">&#x1F4C5; Upload History</div>
     <?php if (empty($history)): ?>
         <p class="text-muted">No uploads yet.</p>
@@ -181,9 +181,29 @@ async function submitFiles() {
         const resp = await fetch('?action=upload', { method: 'POST', body: fd });
         if (resp.ok) {
             const html = await resp.text();
-            document.open();
-            document.write(html);
-            document.close();
+            // Parse the response and replace only the results area, not the whole document
+            const parser = new DOMParser();
+            const newDoc = parser.parseFromString(html, 'text/html');
+
+            // Update results card
+            const newResults = newDoc.querySelector('#uploadResults');
+            const existingResults = document.querySelector('#uploadResults');
+
+            if (newResults && existingResults) {
+                existingResults.replaceWith(newResults);
+            }
+
+            // Update history card
+            const newHistory = newDoc.querySelector('#historyCard');
+            const existingHistory = document.querySelector('#historyCard');
+            if (newHistory && existingHistory) {
+                existingHistory.replaceWith(newHistory);
+            }
+
+            // Clear file list and reset
+            selectedFiles = [];
+            renderFileList();
+            uploadStatus.textContent = '';
         } else {
             uploadStatus.textContent = 'Upload failed (HTTP ' + resp.status + ')';
             uploadBtn.disabled = false;

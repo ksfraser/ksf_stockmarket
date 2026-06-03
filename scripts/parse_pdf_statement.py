@@ -419,6 +419,23 @@ def main():
                 if re.search(r'[\d,]+\.\d{2}', s):
                     suspicious_lines.append(s[:200])
         result['suspicious_lines'] = suspicious_lines[:20]
+    
+    # Also write debug to file for easier diagnosis
+    if debug_mode or len(transactions) == 0:
+        import os
+        debug_dir = '/var/www/stockmarket-app/uploads/debug/'
+        os.makedirs(debug_dir, exist_ok=True)
+        debug_file = debug_dir + os.path.basename(pdf_path) + '.debug.txt'
+        with open(debug_file, 'w') as f:
+            f.write(f"Format: {fmt}\n")
+            f.write(f"Account: {account}\n")
+            f.write(f"Pages: {pages}\n")
+            f.write(f"Transactions found: {len(transactions)}\n\n")
+            f.write("=== FULL EXTRACTED TEXT ===\n")
+            f.write(text)
+            f.write("\n=== SUSPICIOUS LINES ===\n")
+            for sl in result.get('suspicious_lines', []):
+                f.write(sl + "\n")
 
     print(json.dumps(result, indent=2))
 

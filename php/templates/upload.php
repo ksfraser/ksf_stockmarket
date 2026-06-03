@@ -27,11 +27,11 @@ $error   = $data['error'] ?? '';
             <div style="font-size:2em;margin-bottom:8px;">&#x1F4C1;</div>
             <div style="color:var(--text3);font-size:0.9em;">Drag &amp; drop files here, or click to browse</div>
             <div style="color:var(--text3);font-size:0.75em;margin-top:4px;">PDF, CSV, TXT — up to 100MB each</div>
-            <input type="file" name="documents[]" id="fileInput" multiple accept=".pdf,.csv,.txt" style="display:none;">
         </div>
         <div id="fileList" style="margin-top:10px;"></div>
         <div style="margin-top:12px;">
-            <button type="submit" id="uploadBtn" disabled style="padding:8px 24px;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:600;opacity:0.5;">&#x1F4E4; Upload &amp; Process</button>
+            <button type="button" id="uploadBtn" onclick="submitFiles()" disabled style="padding:8px 24px;background:var(--accent);color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:600;opacity:0.5;">&#x1F4E4; Upload &amp; Process</button>
+            <span id="uploadStatus" style="margin-left:12px;font-size:0.85em;color:var(--text3);"></span>
         </div>
     </form>
 </div>
@@ -94,10 +94,10 @@ $error   = $data['error'] ?? '';
             <tr>
                 <td><strong><?php echo htmlspecialchars($h['original_filename']); ?></strong></td>
                 <td class="r"><?php
-    $sz = $h['file_size']; $u = ['B','KB','MB','GB']; $i = 0;
-    while ($sz >= 1024 && $i < 3) { $sz /= 1024; $i++; }
-    echo round($sz,1) . ' ' . $u[$i];
-?></td>
+                    $sz = $h['file_size']; $u = ['B','KB','MB','GB']; $i = 0;
+                    while ($sz >= 1024 && $i < 3) { $sz /= 1024; $i++; }
+                    echo round($sz,1) . ' ' . $u[$i];
+                ?></td>
                 <td>
                     <?php
                     $statusColors = ['processed' => '#4a4', 'error' => '#a44', 'partial' => '#aa4', 'processing' => '#888'];
@@ -124,20 +124,10 @@ $error   = $data['error'] ?? '';
 
 <script>
 const dropZone = document.getElementById('dropZone');
-const fileInput = document.getElementById('fileInput');
 const fileList  = document.getElementById('fileList');
-const uploadBtn = document.getElementById('uploadButton');
+const uploadBtn = document.getElementById('uploadBtn');
+const uploadStatus = document.getElementById('uploadStatus');
 let selectedFiles = [];
-
-dropZone.addEventListener('click', () => fileInput.click());
-dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--accent)'; });
-dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = 'var(--border)'; });
-dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropZone.style.borderColor = 'var(--border)';
-    handleFiles(e.dataTransfer.files);
-});
-fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 
 function handleFiles(files) {
     selectedFiles = [...selectedFiles, ...Array.from(files)];
@@ -146,12 +136,16 @@ function handleFiles(files) {
 
 function renderFileList() {
     fileList.innerHTML = '';
-    if (!selectedFiles.length) { uploadBtn.disabled = true; uploadBtn.style.opacity = '0.5'; return; }
+    if (!selectedFiles.length) {
+        uploadBtn.disabled = true; uploadBtn.style.opacity = '0.5';
+        return;
+    }
     uploadBtn.disabled = false; uploadBtn.style.opacity = '1';
     selectedFiles.forEach((f, i) => {
         const div = document.createElement('div');
         div.style.cssText = 'padding:6px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:4px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;';
-        div.innerHTML = `<span>${f.name} <span style="color:var(--text3);font-size:0.8em;">(${(f.size/1024).toFixed(0)} KB)</span></span><button type="button" onclick="removeFile(${i})" style="background:none;border:none;color:#a44;cursor:pointer;">&#x2715;</button>`;
+        const sizeKB = (f.size / 1024).toFixed(0);
+        div.innerHTML = '<span>' + f.name + ' <span style="color:var(--text3);font-size:0.8em;">(' + sizeKB + ' KB)</span></span><button type="button" onclick="removeFile(' + i + ')" style="background:none;border:none;color:#a44;cursor:pointer;font-size:1.2em;">&times;</button>';
         fileList.appendChild(div);
     });
 }
@@ -160,4 +154,47 @@ function removeFile(idx) {
     selectedFiles.splice(idx, 1);
     renderFileList();
 }
+
+async function submitFiles() {
+    if (!selectedFiles.length) return;
+    uploadBtn.disabled = true;
+    uploadStatus.textContent = 'Uploading...';
+
+    const fd = new FormData();
+    selectedFiles.forEach(f => fd.append('documents[]', f, f.name));
+
+    try {
+        const resp = await fetch('?action=upload', { method: 'POST', body: fd });
+        if (resp.ok) {
+            const html = await resp.text();
+            document.open();
+            document.write(html);
+            document.close();
+        } else {
+            uploadStatus.textContent = 'Upload failed (HTTP ' + resp.status + ')';
+            uploadBtn.disabled = false;
+        }
+    } catch (err) {
+        uploadStatus.textContent = 'Upload error: ' + err.message;
+        uploadBtn.disabled = false;
+    }
+}
+
+dropZone.addEventListener('click', () => {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.multiple = true;
+    inp.accept = '.pdf,.csv,.txt';
+    inp.style.display = 'none';
+    inp.addEventListener('change', () => { handleFiles(inp.files); inp.remove(); });
+    document.body.appendChild(inp);
+    inp.click();
+});
+
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.style.borderColor = 'var(--accent)'; });
+dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = 'var(--border)'; });
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.style.borderColor = 'var(--border)';
+    if (e.dataTransfer.files.length) handleFiles(e.dataTransfer.files);
+});
 </script>

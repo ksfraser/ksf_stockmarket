@@ -199,6 +199,21 @@ switch ($action) {
         $pageTitle = $data['pageTitle'] ?? 'Upload Documents';
         $template = $data['template'] ?? 'upload';
         break;
+    case 'export':
+        require_once '/var/www/stockmarket-app/src/Controller/ExportController.php';
+        $ctrl = new ExportController();
+        $result = $ctrl->handle();
+        // If the controller returned raw OFX data, output it directly
+        if (!empty($result['raw_output'])) {
+            header('Content-Type: application/x-ofx');
+            header('Content-Disposition: attachment; filename="' . $result['filename'] . '"');
+            echo $result['ofx_data'];
+            exit;
+        }
+        $data = array_merge($data, $result);
+        $pageTitle = $data['pageTitle'] ?? 'Export Transactions';
+        $template = $data['template'] ?? 'export';
+        break;
     case 'alerts_status':
         require_once '/var/www/stockmarket-app/src/Controller/AlertsController.php';
         $ctrl = new AlertsController();

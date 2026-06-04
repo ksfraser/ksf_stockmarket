@@ -19,6 +19,7 @@
         <a href="?action=transactions" class="<?php echo active_class('transactions', $action); ?>">Transactions</a>
         <a href="?action=alerts_status" class="<?php echo active_class('alerts_status', $action); ?>">&#x1F4E3; Alerts</a>
         <a href="?action=upload" class="<?php echo active_class('upload', $action); ?>">&#x1F4E4; Upload</a>
+        <a href="?action=export" class="<?php echo active_class('export', $action); ?>">&#x1F4BE; Export</a>
         <a href="?action=admin_symbols" class="<?php echo active_class('admin_symbols', $action); ?>">Admin</a>
     <?php endif; ?>
     <span class="right">

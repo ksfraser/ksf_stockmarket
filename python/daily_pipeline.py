@@ -455,7 +455,7 @@ class IndicatorCalculator:
                 FROM stockprices sp
                 INNER JOIN symbol_master sm ON sp.symbol = sm.symbol AND sm.is_active = 1
                 LEFT JOIN indicators_json ij ON sp.symbol = ij.symbol AND sp.price_date = ij.price_date
-                WHERE sp.price_date >= DATE('now', '-' || CAST(%s AS TEXT) || ' days')
+                WHERE sp.price_date >= DATE_SUB(CURDATE(), INTERVAL %s DAY)
                 AND ij.id IS NULL
                 ORDER BY sp.symbol
             """, (lookback_days,))

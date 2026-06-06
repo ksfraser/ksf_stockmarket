@@ -234,9 +234,7 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                 <td class="c">
                 <?php 
                 $srcFile = $t['source_file'] ?? '';
-                // Debug: show raw value to understand what's happening
-                error_log("Template debug: id={$t['id']}, source_file=" . var_export($srcFile, true));
-                $isManual = ($srcFile === 'manual_entry');
+                                $isManual = ($srcFile === 'manual_entry');
                 $isImported = ($srcFile !== '' && $srcFile !== 'manual_entry');
                 ?>
                 <?php if ($isManual): ?>

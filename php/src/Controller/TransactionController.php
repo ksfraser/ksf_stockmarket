@@ -272,12 +272,9 @@ class TransactionController {
             $sourceFile = $txn['source_file'] ?? '';
             
             // Imported transactions have source_file set to a filename (e.g., 'upload', 'statement.csv')
-            // Only block deletion if source_file is clearly an import (non-empty and not 'manual_entry')
+            // Only allow deletion for manual_entry or empty (legacy manual) - block for imports
             $isImport = ($sourceFile !== '' && $sourceFile !== 'manual_entry');
-            
-            error_log("deleteTransaction check: srcFile='$sourceFile', isImport=" . ($isImport ? 'yes' : 'no'));
-            
-            // Allow deletion for manual_entry or empty/null (legacy) - block for actual imports
+
             if ($isImport) {
                 $pdo->rollBack();
                 return ['success' => false, 'errors' => ['Only manually added transactions can be deleted. Imported transactions must be edited to correct errors.']];
@@ -289,7 +286,6 @@ class TransactionController {
             $quantity = (float) $txn['quantity'];
 
             // Reverse portfolio impact
-            error_log("deleteTransaction: txnId=$txnId, type=$type, symbol=$symbol, qty=$quantity, userId=$userId");
             try {
                 if ($type === 'BUY') {
                     $this->reverseBuy($pdo, $userId, $symbol, $account, $quantity, (float) $txn['price'], (float) $txn['commission']);
@@ -300,7 +296,6 @@ class TransactionController {
                 }
             } catch (RuntimeException $e) {
                 $pdo->rollBack();
-                error_log("deleteTransaction: reverse failed - " . $e->getMessage());
                 return ['success' => false, 'errors' => ['Cannot delete: ' . $e->getMessage()]];
             }
 

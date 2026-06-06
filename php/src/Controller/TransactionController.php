@@ -464,13 +464,18 @@ class TransactionController {
             $params[':commission'] = (float)$post['commission'];
         }
 
+        if (isset($post['total']) && (float)$post['total'] > 0) {
+            $updates[] = "total = :total";
+            $params[':total'] = (float)$post['total'];
+        }
+
         if (isset($post['notes'])) {
             $updates[] = "notes = :notes";
             $params[':notes'] = trim($post['notes']);
         }
 
-        // Auto-calculate total if quantity and price are present
-        if (isset($post['quantity']) && isset($post['price'])) {
+        // Auto-calculate total if quantity and price are present (for BUY/SELL corrections)
+        if (isset($post['quantity']) && isset($post['price']) && (float)$post['price'] > 0) {
             $qty = (float)$post['quantity'];
             $prc = (float)$post['price'];
             $comm = isset($post['commission']) ? (float)$post['commission'] : (float)($txn['commission'] ?? 0);

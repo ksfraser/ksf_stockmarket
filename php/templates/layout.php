@@ -13,9 +13,11 @@
     <a href="?action=overview" class="<?php echo active_class('overview', $action); ?>">Dashboard</a>
     <a href="?action=list" class="<?php echo active_class('list', $action); ?>">All Symbols</a>
     <a href="?action=strategy_stock" class="<?php echo active_class('strategy_stock', $action); ?>">Strategies</a>
+    <a href="?action=seg_funds" class="<?php echo in_array($action, ['seg_funds','seg_fund_detail']) ? 'active' : ''; ?>">Seg Funds</a>
     <?php if (!empty($data['current_user'])): ?>
         <a href="?action=my_dashboard" class="<?php echo active_class('my_dashboard', $action); ?>">My Dashboard</a>
         <a href="?action=portfolio" class="<?php echo active_class('portfolio', $action); ?>">Portfolio</a>
+        <a href="?action=stop_orders" class="<?php echo active_class('stop_orders', $action); ?>">Stop Orders</a>
         <a href="?action=transactions" class="<?php echo active_class('transactions', $action); ?>">Transactions</a>
         <a href="?action=alerts_status" class="<?php echo active_class('alerts_status', $action); ?>">&#x1F4E3; Alerts</a>
         <a href="?action=upload" class="<?php echo active_class('upload', $action); ?>">&#x1F4E4; Upload</a>

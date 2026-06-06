@@ -435,4 +435,109 @@ class StockController {
 
         return $perf;
     }
+
+    /**
+     * GET /?action=stop_orders — List stop loss / trailing stop orders with prices.
+     */
+    public function stopOrders(string $account_filter = 'all'): array {
+        $holdings = $this->getHoldingsWithPrices($account_filter);
+        $orders = [];
+
+        foreach ($holdings as $h) {
+            $symbol = $h['symbol'];
+            $currentPrice = $h['current_price'] ?? 0;
+            
+            // Skip if no current price
+            if (!$currentPrice) continue;
+
+            // Get ATR for ATR-based stops
+            $indicators = $this->getLatestIndicators($symbol);
+            $atr14 = $indicators['atr_14'] ?? null;
+
+            // Calculate stop prices
+            $trailingStopPct = $h['trailing_stop_pct'] ?? 0.10;
+            $stopLossPct = $h['stop_loss_pct'] ?? 0.15;
+            $atrMultiplier = $h['atr_multiplier'] ?? 2.0;
+
+            $trailingStopPrice = $currentPrice > 0 ? $currentPrice * (1 - $trailingStopPct) : 0;
+            $stopLossPrice = $h['cost_basis'] * (1 - $stopLossPct);
+            $atrStopPrice = $atr14 ? $currentPrice - ($atr14 * $atrMultiplier) : null;
+
+            // Effective stop = max of trailing and stop_loss
+            $effectiveStopPrice = max($trailingStopPrice, $stopLossPrice);
+
+            // Determine stop status
+            if ($effectiveStopPrice >= $currentPrice) {
+                $stopStatus = 'breach';
+            } elseif ($effectiveStopPrice >= $currentPrice * 0.98) {
+                $stopStatus = 'warning';
+            } else {
+                $stopStatus = 'safe';
+            }
+
+            $orders[] = [
+                'symbol' => $symbol,
+                'accounts' => $h['accounts'],
+                'shares' => $h['shares'],
+                'cost_basis' => $h['cost_basis'],
+                'current_price' => $currentPrice,
+                'market_value' => $h['shares'] * $currentPrice,
+                'trailing_stop_pct' => $trailingStopPct,
+                'trailing_stop_price' => $trailingStopPrice,
+                'stop_loss_pct' => $stopLossPct,
+                'stop_loss_price' => $stopLossPrice,
+                'atr_14' => $atr14,
+                'atr_multiplier' => $atrMultiplier,
+                'atr_stop_price' => $atrStopPrice,
+                'effective_stop_price' => $effectiveStopPrice,
+                'stop_status' => $stopStatus,
+                'strategy' => $h['strategy'] ?? 'Trailing Stop',
+            ];
+        }
+
+        return [
+            'pageTitle' => 'Stop Orders',
+            'template' => 'stop_orders',
+            'orders' => $orders,
+            'total_orders' => count($orders),
+            'account_filter' => $account_filter,
+            'account_types' => array_unique(array_merge(...array_map(fn($o) => explode(',', $o['accounts']), $orders))),
+        ];
+    }
+
+    /**
+     * Helper: Get holdings with current prices (extracted from portfolio method).
+     */
+    private function getHoldingsWithPrices(string $account_filter = 'all'): array {
+        $accountWhere = '';
+        if ($account_filter !== 'all') {
+            $af = $this->pdo->quote($account_filter);
+            $accountWhere = "WHERE p.account_type = $af";
+        }
+        
+        $stmt = $this->pdo->query("
+            SELECT p.symbol,
+                   GROUP_CONCAT(DISTINCT p.account_type ORDER BY p.account_type) as accounts,
+                   SUM(p.shares) as shares,
+                   SUM(p.shares * p.cost_basis) / NULLIF(SUM(p.shares), 0) as cost_basis,
+                   AVG(p.trailing_stop_pct) as trailing_stop_pct,
+                   AVG(p.stop_loss_pct) as stop_loss_pct,
+                   p.strategy,
+                   AVG(p.atr_multiplier) as atr_multiplier,
+                   latest.close as current_price
+            FROM portfolio p
+            LEFT JOIN (
+                SELECT sp1.symbol, sp1.close
+                FROM stockprices sp1
+                INNER JOIN (
+                    SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol
+                ) sp2 ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
+            ) latest ON p.symbol = latest.symbol
+            {$accountWhere}
+            GROUP BY p.symbol
+            HAVING SUM(p.shares) > 0
+            ORDER BY p.symbol
+        ");
+        return $stmt->fetchAll();
+    }
 }

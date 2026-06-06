@@ -1,0 +1,22 @@
+---
+# roles/stockmarket-app/tasks/main.yml
+# Deploy the OWL Stockmarket App — PHP frontend + Python NAV fetcher
+# Supports three deployment modes (set via stockmarket_db_mode):
+#   local_mariadb  — MariaDB in a Podman container on this host
+#   shared_mariadb — Existing Podman container (e.g. ksfii-pod)
+#   remote_mariadb — Remote MariaDB (e.g. ksfraser.ca)
+
+- name: Include variables
+  include_vars: main.yml
+
+- name: Deploy PHP web application
+  include_tasks: deploy-php.yml
+
+- name: Deploy Python NAV fetcher
+  include_tasks: deploy-python.yml
+
+- name: Configure systemd services
+  include_tasks: systemd.yml
+
+- name: Configure cron jobs
+  include_tasks: cron.yml

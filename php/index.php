@@ -73,7 +73,7 @@ if ($action === 'register') {
 }
 
 // Routes requiring authentication (portfolio, transactions, personal data)
-$protectedRoutes = ['portfolio', 'transactions', 'detail', 'indicators', 'my_dashboard', 'settings', 'alerts_status', 'upload'];
+$protectedRoutes = ['portfolio', 'transactions', 'detail', 'indicators', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders'];
 if (in_array($action, $protectedRoutes, true) && !AuthController::checkSession()) {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header('Location: ?action=login');
@@ -123,6 +123,12 @@ switch ($action) {
         $pageTitle = 'Portfolio';
         $template = 'portfolio';
         break;
+    case 'stop_orders':
+        $ctrl = new StockController();
+        $data = array_merge($data, $ctrl->stopOrders($_GET['account'] ?? 'all'));
+        $pageTitle = 'Stop Orders';
+        $template = 'stop_orders';
+        break;
     case 'admin_symbols':
         $ctrl = new SymbolAdminController();
         $subaction = $_GET['subaction'] ?? 'list';
@@ -154,11 +160,46 @@ switch ($action) {
     case 'transactions':
         require_once '/var/www/stockmarket-app/src/Controller/TransactionController.php';
         $ctrl = new TransactionController();
+
+        // Handle delete action - only for manual_entry transactions
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
+            $result = $ctrl->deleteTransaction((int)($_POST['txn_id'] ?? 0), $userId);
+            $_SESSION['flash_message'] = $result;
+            // Preserve query params on redirect
+            $qs = http_build_query(array_filter([
+                'account' => $_GET['account'] ?? null,
+                'symbol' => $_GET['symbol'] ?? null,
+                'type' => $_GET['type'] ?? null,
+                'date_from' => $_GET['date_from'] ?? null,
+                'date_to' => $_GET['date_to'] ?? null
+            ]));
+            header('Location: ?action=transactions' . ($qs ? '&' . $qs : ''));
+            exit;
+        }
+
+        // Handle edit action - for all transactions
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'edit') {
+            $result = $ctrl->editTransaction($_POST, (int)($_POST['txn_id'] ?? 0), $userId);
+            $_SESSION['flash_message'] = $result;
+            // Preserve query params on redirect
+            $qs = http_build_query(array_filter([
+                'account' => $_GET['account'] ?? null,
+                'symbol' => $_GET['symbol'] ?? null,
+                'type' => $_GET['type'] ?? null,
+                'date_from' => $_GET['date_from'] ?? null,
+                'date_to' => $_GET['date_to'] ?? null
+            ]));
+            header('Location: ?action=transactions' . ($qs ? '&' . $qs : ''));
+            exit;
+        }
+
+        // Handle record action
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'record') {
             $result = $ctrl->recordTransaction($_POST, $userId);
             $data['txn_result'] = $result;
             $data['txn_form'] = $_POST;
         }
+
         $data = array_merge($data, $ctrl->listTransactions(
             $_GET['account'] ?? '',
             $_GET['symbol'] ?? '',

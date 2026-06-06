@@ -1,0 +1,55 @@
+---
+# roles/stockmarket-app/tasks/deploy-php.yml
+# Deploy the PHP web application into a Podman container
+
+- name: Create app directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ stockmarket_app_dir }}"
+    - "{{ stockmarket_webroot }}"
+    - "{{ stockmarket_data_dir }}"
+    - "{{ stockmarket_log_dir }}"
+
+- name: Copy PHP application files
+  copy:
+    src: "{{ stockmarket_repo_dir }}/"
+    dest: "{{ stockmarket_webroot }}/"
+    mode: '0644'
+
+- name: Template PHP database config
+  template:
+    src: database.php.j2
+    dest: "{{ stockmarket_webroot }}/config/database.php"
+    mode: '0644'
+
+- name: Template Apache vhost config
+  template:
+    src: apache-vhost.conf.j2
+    dest: "{{ stockmarket_webroot }}/apache-vhost.conf"
+    mode: '0644'
+
+- name: Create PHP container
+  containers.podman.podman_container:
+    name: "{{ stockmarket_php_container_name }}"
+    image: "{{ stockmarket_php_image }}"
+    pod: "{{ stockmarket_pod_name }}"
+    state: started
+    restart_policy: always
+    volumes:
+      - "{{ stockmarket_webroot }}:/var/www/html:Z"
+      - "{{ stockmarket_log_dir }}/php:/var/log/apache2:Z"
+    env:
+      DB_HOST: "{{ (stockmarket_db_mode == 'remote_mariadb') | ternary(stockmarket_remote_db_host, '127.0.0.1') }}"
+      DB_PORT: "{{ (stockmarket_db_mode == 'remote_mariadb') | ternary(stockmarket_remote_db_port | string, stockmarket_port_mariadb | string) }}"
+      DB_NAME: "{{ stockmarket_mariadb_database }}"
+      DB_USER: "{{ stockmarket_mariadb_user }}"
+      DB_PASS: "{{ stockmarket_mariadb_password }}"
+      DB_CHARSET: "utf8mb4"
+    ports:
+      - "{{ stockmarket_port_php }}:80"
+    command: >
+      bash -c "a2enmod rewrite headers &&
+               apache2-foreground"

@@ -1,0 +1,44 @@
+---
+# roles/stockmarket-app/vars/main.yml
+
+# ── Deployment mode ─────────────────────────────────────────────────────────
+# Options: local_mariadb | shared_mariadb | remote_mariadb
+stockmarket_db_mode: "remote_mariadb"
+
+# ── Podman settings ─────────────────────────────────────────────────────────
+stockmarket_pod_name: "stockmarket-pod"
+stockmarket_mariadb_container_name: "stockmarket-mariadb"
+stockmarket_php_container_name: "stockmarket-php"
+stockmarket_python_container_name: "stockmarket-python"
+
+# Port mappings (host:container)
+stockmarket_port_php: "8087"
+stockmarket_port_mariadb: "3307"  # Only for local_mariadb mode
+
+# ── Container images ────────────────────────────────────────────────────────
+stockmarket_mariadb_image: "docker.io/library/mariadb:10.11"
+stockmarket_php_image: "docker.io/library/php:8.1-apache"
+stockmarket_python_image: "docker.io/library/python:3.11-slim"
+
+# ── MariaDB settings ────────────────────────────────────────────────────────
+stockmarket_mariadb_root_password: "{{ vault_mariadb_root_password | default('changeme') }}"
+stockmarket_mariadb_database: "ksfraser_stock_market"
+stockmarket_mariadb_user: "ksfraser_stockmarket"
+stockmarket_mariadb_password: "{{ vault_mariadb_password | default('changeme') }}"
+
+# Remote MariaDB (for remote_mariadb mode)
+stockmarket_remote_db_host: "ksfraser.ca"
+stockmarket_remote_db_port: 3306
+
+# ── App paths ───────────────────────────────────────────────────────────────
+stockmarket_app_dir: "/opt/stockmarket"
+stockmarket_webroot: "/opt/stockmarket/webroot"
+stockmarket_python_dir: "/opt/stockmarket/python"
+stockmarket_data_dir: "/opt/stockmarket/data"
+stockmarket_log_dir: "/var/log/stockmarket"
+
+# ── Cron schedule ───────────────────────────────────────────────────────────
+stockmarket_nav_cron_hour: "6"
+stockmarket_nav_cron_minute: "0"
+stockmarket_pipeline_cron_hour: "2"
+stockmarket_pipeline_cron_minute: "0"

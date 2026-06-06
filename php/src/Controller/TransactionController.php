@@ -247,6 +247,259 @@ class TransactionController {
     }
 
     /**
+     * Delete a manual transaction (only those with source_file = 'manual_entry').
+     * Reverses the portfolio impact for BUY/SELL/SPLIT transactions.
+     */
+    public function deleteTransaction(int $txnId, int $userId): array
+    {
+        $pdo = Database::get();
+
+        try {
+            $pdo->beginTransaction();
+
+            // Get the transaction to delete
+            $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id");
+            $stmt->execute([':id' => $txnId]);
+            $txn = $stmt->fetch();
+
+            if (!$txn) {
+                $pdo->rollBack();
+                return ['success' => false, 'errors' => ['Transaction not found or access denied.']];
+            }
+
+            // Only allow deletion of manually added transactions (source_file = 'manual_entry' for manual entries)
+            // Note: legacy empty/null source_file treated as manual for backwards compatibility
+            $sourceFile = $txn['source_file'] ?? '';
+            
+            // Imported transactions have source_file set to a filename (e.g., 'upload', 'statement.csv')
+            // Only block deletion if source_file is clearly an import (non-empty and not 'manual_entry')
+            $isImport = ($sourceFile !== '' && $sourceFile !== 'manual_entry');
+            
+            error_log("deleteTransaction check: srcFile='$sourceFile', isImport=" . ($isImport ? 'yes' : 'no'));
+            
+            // Allow deletion for manual_entry or empty/null (legacy) - block for actual imports
+            if ($isImport) {
+                $pdo->rollBack();
+                return ['success' => false, 'errors' => ['Only manually added transactions can be deleted. Imported transactions must be edited to correct errors.']];
+            }
+
+            $symbol = $txn['symbol'];
+            $account = $txn['account_type'];
+            $type = $txn['type'];
+            $quantity = (float) $txn['quantity'];
+
+            // Reverse portfolio impact
+            error_log("deleteTransaction: txnId=$txnId, type=$type, symbol=$symbol, qty=$quantity, userId=$userId");
+            try {
+                if ($type === 'BUY') {
+                    $this->reverseBuy($pdo, $userId, $symbol, $account, $quantity, (float) $txn['price'], (float) $txn['commission']);
+                } elseif ($type === 'SELL') {
+                    $this->reverseSell($pdo, $userId, $symbol, $account, $quantity, (float) $txn['price'], (float) $txn['commission']);
+                } elseif ($type === 'SPLIT') {
+                    $this->reverseSplit($pdo, $userId, $symbol, $quantity);
+                }
+            } catch (RuntimeException $e) {
+                $pdo->rollBack();
+                error_log("deleteTransaction: reverse failed - " . $e->getMessage());
+                return ['success' => false, 'errors' => ['Cannot delete: ' . $e->getMessage()]];
+            }
+
+            // Delete the transaction
+            $del = $pdo->prepare("DELETE FROM transactions WHERE id = :id");
+            $delResult = $del->execute([':id' => $txnId]);
+            
+            if (!$delResult || $del->rowCount() === 0) {
+                $pdo->rollBack();
+                return ['success' => false, 'errors' => ['Transaction could not be deleted (may have been deleted already or access denied).']];
+            }
+
+            $pdo->commit();
+            return ['success' => true, 'message' => "Deleted {$type} transaction for {$symbol}."];
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            error_log("deleteTransaction error: " . $e->getMessage() . " for txn_id=$txnId");
+            return ['success' => false, 'errors' => ['Database error: ' . $e->getMessage()]];
+        }
+    }
+
+    /**
+     * Reverse a BUY: subtract shares, remove if fully sold.
+     */
+    private function reverseBuy(PDO $pdo, int $userId, string $symbol, string $account, float $qty, float $price, float $commission): void
+    {
+        $stmt = $pdo->prepare("SELECT id, shares, cost_basis, cost_basis_total FROM portfolio WHERE user_id = :uid AND symbol = :sym AND account_type = :acct");
+        $stmt->execute([':uid' => $userId, ':sym' => $symbol, ':acct' => $account]);
+        $existing = $stmt->fetch();
+
+        if (!$existing) {
+            throw new RuntimeException("Cannot reverse BUY: no holding found for {$symbol} in {$account}.");
+        }
+
+        $oldShares = (float) $existing['shares'];
+        $newShares = $oldShares - $qty;
+
+        if ($newShares <= 0.001) {
+            // Fully removed - delete from portfolio
+            $del = $pdo->prepare("DELETE FROM portfolio WHERE id = :id");
+            $del->execute([':id' => $existing['id']]);
+        } else {
+            // Partially removed - reduce shares, recalculate cost basis
+            $oldCostTotal = (float) $existing['cost_basis_total'];
+            $soldCost = ($qty * $price) + $commission;
+            $newCostTotal = $oldCostTotal - $soldCost;
+            $newCostBasis = $newCostTotal / $newShares;
+
+            $upd = $pdo->prepare("UPDATE portfolio SET shares = :shares, cost_basis = :cb, cost_basis_total = :cbt, updated_at = NOW() WHERE id = :id");
+            $upd->execute([
+                ':shares' => round($newShares, 2),
+                ':cb' => round($newCostBasis, 4),
+                ':cbt' => round($newCostTotal, 2),
+                ':id' => $existing['id'],
+            ]);
+        }
+    }
+
+    /**
+     * Reverse a SELL: add shares back.
+     */
+    private function reverseSell(PDO $pdo, int $userId, string $symbol, string $account, float $qty, float $price, float $commission): void
+    {
+        $stmt = $pdo->prepare("SELECT id, shares, cost_basis FROM portfolio WHERE user_id = :uid AND symbol = :sym AND account_type = :acct");
+        $stmt->execute([':uid' => $userId, ':sym' => $symbol, ':acct' => $account]);
+        $existing = $stmt->fetch();
+
+        $totalReceived = ($qty * $price) - $commission;
+
+        if ($existing) {
+            // Add shares back, keeping the same cost basis
+            $oldShares = (float) $existing['shares'];
+            $oldCost = (float) $existing['cost_basis'];
+            $newShares = $oldShares + $qty;
+            // Use existing cost basis (the shares were sold at market price, not cost)
+
+            $upd = $pdo->prepare("UPDATE portfolio SET shares = :shares, cost_basis_total = :cbt, updated_at = NOW() WHERE id = :id");
+            $upd->execute([
+                ':shares' => round($newShares, 2),
+                ':cbt' => round($newShares * $oldCost, 2),
+                ':id' => $existing['id'],
+            ]);
+        } else {
+            // No existing holding - create one with cost basis from the sell price
+            $ins = $pdo->prepare("
+                INSERT INTO portfolio (user_id, symbol, account_type, shares, cost_basis, cost_basis_total, entry_date, strategy, trailing_stop_pct, stop_loss_pct, atr_multiplier, notes, updated_at)
+                VALUES (:uid, :sym, :acct, :shares, :cb, :cbt, CURDATE(), 'Reversal', 0.10, 0.15, 2.0, 'Reversal of deleted SELL', NOW())
+            ");
+            $ins->execute([
+                ':uid' => $userId, ':sym' => $symbol, ':acct' => $account,
+                ':shares' => $qty, ':cb' => round($price, 4), ':cbt' => round($totalReceived, 2),
+            ]);
+        }
+    }
+
+    /**
+     * Reverse a SPLIT: divide shares back.
+     */
+    private function reverseSplit(PDO $pdo, int $userId, string $symbol, float $ratio): void
+    {
+        if ($ratio <= 0) throw new RuntimeException("Split ratio must be > 0.");
+
+        $stmt = $pdo->prepare("SELECT id, shares, cost_basis FROM portfolio WHERE user_id = :uid AND symbol = :sym");
+        $stmt->execute([':uid' => $userId, ':sym' => $symbol]);
+        $rows = $stmt->fetchAll();
+
+        if (empty($rows)) {
+            throw new RuntimeException("Cannot reverse split: no holding found for {$symbol}.");
+        }
+
+        foreach ($rows as $r) {
+            $newShares = (float) $r['shares'] / $ratio;
+            $newCostBasis = (float) $r['cost_basis'] * $ratio;
+            $upd = $pdo->prepare("UPDATE portfolio SET shares = :shares, cost_basis = :cb, cost_basis_total = :cbt, updated_at = NOW() WHERE id = :id");
+            $upd->execute([
+                ':shares' => round($newShares, 2),
+                ':cb' => round($newCostBasis, 4),
+                ':cbt' => round($newShares * $newCostBasis, 2),
+                ':id' => $r['id'],
+            ]);
+        }
+    }
+
+    /**
+     * Edit a transaction (both manual and imported).
+     * Updates transaction data without affecting portfolio holdings.
+     */
+    public function editTransaction(array $post, int $txnId, int $userId = 0): array
+    {
+        $pdo = Database::get();
+        $errors = [];
+
+        // Get the transaction
+        $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id");
+        $stmt->execute([':id' => $txnId]);
+        $txn = $stmt->fetch();
+
+        if (!$txn) {
+            return ['success' => false, 'errors' => ['Transaction not found.']];
+        }
+
+        $originalSource = $txn['source_file'] ?? '';
+
+        // Build update fields
+        $updates = [];
+        $params = [':id' => $txnId];
+
+        // Allow updating some fields
+        if (isset($post['trade_date']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $post['trade_date'])) {
+            $updates[] = "trade_date = :trade_date";
+            $params[':trade_date'] = $post['trade_date'];
+        }
+
+        if (isset($post['quantity']) && (float)$post['quantity'] > 0) {
+            $updates[] = "quantity = :quantity";
+            $params[':quantity'] = (float)$post['quantity'];
+        }
+
+        if (isset($post['price']) && (float)$post['price'] > 0) {
+            $updates[] = "price = :price";
+            $params[':price'] = (float)$post['price'];
+        }
+
+        if (isset($post['commission'])) {
+            $updates[] = "commission = :commission";
+            $params[':commission'] = (float)$post['commission'];
+        }
+
+        if (isset($post['notes'])) {
+            $updates[] = "notes = :notes";
+            $params[':notes'] = trim($post['notes']);
+        }
+
+        // Auto-calculate total if quantity and price are present
+        if (isset($post['quantity']) && isset($post['price'])) {
+            $qty = (float)$post['quantity'];
+            $prc = (float)$post['price'];
+            $comm = isset($post['commission']) ? (float)$post['commission'] : (float)($txn['commission'] ?? 0);
+            $total = ($txn['type'] ?? '') === 'SELL' ? ($qty * $prc) - $comm : ($qty * $prc) + $comm;
+            $updates[] = "total = :total";
+            $params[':total'] = $total;
+        }
+
+        if (empty($updates)) {
+            return ['success' => false, 'errors' => ['No fields to update.']];
+        }
+
+        try {
+            $sql = "UPDATE transactions SET " . implode(', ', $updates) . ", updated_at = NOW() WHERE id = :id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+
+            return ['success' => true, 'message' => "Updated transaction.", 'source_file' => $originalSource];
+        } catch (Exception $e) {
+            return ['success' => false, 'errors' => ['Database error: ' . $e->getMessage()]];
+        }
+    }
+
+    /**
      * Validate: compare sum of BUY/SELL transactions to portfolio holdings.
      * Returns discrepancies for display.
      */

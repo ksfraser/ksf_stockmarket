@@ -11,6 +11,7 @@ class FundamentalsController {
 
     /**
      * Get latest fundamental data for a symbol.
+     * Tries .TO suffix for Canadian symbols if no direct match.
      */
     public function getSymbol(string $symbol): array {
         $stmt = $this->pdo->prepare("
@@ -19,7 +20,19 @@ class FundamentalsController {
             ORDER BY fetch_date DESC LIMIT 1
         ");
         $stmt->execute([':sym' => $symbol]);
-        return $stmt->fetch() ?: [];
+        $result = $stmt->fetch();
+        
+        // If no match, try .TO suffix for Canadian symbols
+        if (!$result && preg_match('/^[A-Z]/', $symbol)) {
+            $stmt = $this->pdo->prepare("
+                SELECT * FROM fundamentals
+                WHERE symbol = :sym
+                ORDER BY fetch_date DESC LIMIT 1
+            ");
+            $stmt->execute([':sym' => $symbol . '.TO']);
+            $result = $stmt->fetch();
+        }
+        return $result ?: [];
     }
 
     /**
@@ -96,14 +109,20 @@ class FundamentalsController {
 
     /**
      * Get dividend history for a symbol.
+     * Tries .TO suffix for Canadian symbols if no direct match.
      */
     public function getDividends(string $symbol): array {
-        $stmt = $this->pdo->prepare("
-            SELECT * FROM dividends
-            WHERE symbol = :sym
-            ORDER BY ex_date DESC LIMIT 50
-        ");
+        $sql = "SELECT * FROM dividends WHERE symbol = :sym ORDER BY ex_date DESC LIMIT 50";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':sym' => $symbol]);
-        return $stmt->fetchAll();
+        $result = $stmt->fetchAll();
+        
+        // If no match, try .TO suffix for Canadian symbols
+        if (empty($result) && preg_match('/^[A-Z]/', $symbol)) {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':sym' => $symbol . '.TO']);
+            $result = $stmt->fetchAll();
+        }
+        return $result;
     }
 }

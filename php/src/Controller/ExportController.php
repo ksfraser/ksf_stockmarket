@@ -20,7 +20,7 @@ class ExportController
      */
     public function handle(): array
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             return $this->download();
         }
         return $this->form();
@@ -109,30 +109,34 @@ class ExportController
             return '';
         }
 
+        $tmpFile = '/tmp/ofx_export_' . uniqid() . '.ofx';
         $cmd = ['/usr/bin/python3', $script];
 
         if ($accountType) {
-            $cmd[] = '--account=' . $accountType;
+            $cmd[] = '--account';
+            $cmd[] = $accountType;
         }
         if ($startDate) {
-            $cmd[] = '--start=' . $startDate;
+            $cmd[] = '--start';
+            $cmd[] = $startDate;
         }
         if ($endDate) {
-            $cmd[] = '--end=' . $endDate;
+            $cmd[] = '--end';
+            $cmd[] = $endDate;
         }
-        $cmd[] = '--output=/tmp/ofx_export_' . uniqid() . '.ofx';
+        $cmd[] = '--output';
+        $cmd[] = $tmpFile;
 
         $output = [];
         $exitCode = 0;
         exec(implode(' ', array_map('escapeshellarg', $cmd)) . ' 2>&1', $output, $exitCode);
 
         if ($exitCode !== 0) {
+            // Log error for debugging
+            error_log('OFX export failed: exit=' . $exitCode . ' output=' . implode("\n", $output));
             return '';
         }
 
-        // Read the generated file
-        $tmpFile = end($cmd);
-        $tmpFile = trim($tmpFile, "'");
         if (file_exists($tmpFile)) {
             $data = file_get_contents($tmpFile);
             @unlink($tmpFile);

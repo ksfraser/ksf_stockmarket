@@ -234,6 +234,8 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                 <td class="c">
                 <?php 
                 $srcFile = $t['source_file'] ?? '';
+                // Debug: show raw value to understand what's happening
+                error_log("Template debug: id={$t['id']}, source_file=" . var_export($srcFile, true));
                 $isManual = ($srcFile === 'manual_entry');
                 $isImported = ($srcFile !== '' && $srcFile !== 'manual_entry');
                 ?>
@@ -244,11 +246,11 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                         <button type="submit" style="background:none;border:none;color:#a44;cursor:pointer;font-size:0.9em;" title="Delete">&#x1F5D1;</button>
                     </form>
                 <?php elseif ($isImported): ?>
-                    <button type="button" onclick="openEditModal(<?php echo $t['id']; ?>, '<?php echo htmlspecialchars($t['trade_date'] ?? ''); ?>', <?php echo (float)($t['quantity'] ?? 0); ?>, <?php echo (float)($t['price'] ?? 0); ?>, <?php echo (float)($t['total'] ?? 0); ?>, <?php echo (float)($t['commission'] ?? 0); ?>, '<?php echo htmlspecialchars($t['notes'] ?? ''); ?>', '<?php echo htmlspecialchars($t['type'] ?? ''); ?>', '<?php echo htmlspecialchars($t['source_file'] ?? ''); ?>')" style="background:none;border:none;color:#cc9900;cursor:pointer;font-size:0.9em;" title="Edit">&#x270F;&#xFE0F;</button>
+                    <button type="button" onclick="openEditModal(<?php echo $t['id']; ?>, '<?php echo htmlspecialchars($t['trade_date'] ?? ''); ?>', <?php echo (float)($t['quantity'] ?? 0); ?>, <?php echo (float)($t['price'] ?? 0); ?>, <?php echo (float)($t['commission'] ?? 0); ?>, '<?php echo htmlspecialchars($t['notes'] ?? ''); ?>', '<?php echo htmlspecialchars($t['source_file'] ?? ''); ?>')" style="background:none;border:none;color:#cc9900;cursor:pointer;font-size:0.9em;" title="Edit">&#x270F;&#xFE0F;</button>
                 <?php else: ?>
                     <span style="color:#a00;font-size:0.8em;" title="No action: src='<?php echo htmlspecialchars($srcFile); ?>'">EMPTY</span>
                 <?php endif; ?>
-                </td>
+            </td>
             </tr>
         <?php endforeach; ?>
         </tbody>
@@ -271,19 +273,13 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                 <label style="display:block;font-size:0.8em;color:var(--text3);margin-bottom:4px;">Date</label>
                 <input type="date" id="edit_trade_date" name="trade_date" required style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-                <div>
-                    <label style="display:block;font-size:0.8em;color:var(--text3);margin-bottom:4px;">Quantity</label>
-                    <input type="number" id="edit_quantity" name="quantity" step="0.0001" min="0" style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
-                </div>
-                <div>
-                    <label style="display:block;font-size:0.8em;color:var(--text3);margin-bottom:4px;">Price</label>
-                    <input type="number" id="edit_price" name="price" step="0.0001" min="0" style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
-                </div>
+            <div style="margin-bottom:12px;">
+                <label style="display:block;font-size:0.8em;color:var(--text3);margin-bottom:4px;">Quantity</label>
+                <input type="number" id="edit_quantity" name="quantity" step="0.0001" min="0.0001" required style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
             </div>
             <div style="margin-bottom:12px;">
-                <label style="display:block;font-size:0.8em;color:var(--text3);margin-bottom:4px;">Total / Dividend Amount</label>
-                <input type="number" id="edit_total" name="total" step="0.01" min="0" style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
+                <label style="display:block;font-size:0.8em;color:var(--text3);margin-bottom:4px;">Price</label>
+                <input type="number" id="edit_price" name="price" step="0.0001" min="0.0001" required style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
             </div>
             <div style="margin-bottom:12px;">
                 <label style="display:block;font-size:0.8em;color:var(--text3);margin-bottom:4px;">Commission</label>
@@ -294,7 +290,6 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                 <input type="text" id="edit_notes" name="notes" style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
             </div>
             <div style="margin-bottom:8px;">
-                <span id="edit_txn_type" style="font-size:0.75em;color:var(--text3);margin-right:12px;"></span>
                 <span id="edit_source_file" style="font-size:0.75em;color:var(--text3);"></span>
             </div>
             <div style="text-align:right;">
@@ -306,15 +301,13 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
 </div>
 
 <script>
-function openEditModal(txnId, tradeDate, quantity, price, total, commission, notes, txnType, sourceFile) {
+function openEditModal(txnId, tradeDate, quantity, price, commission, notes, sourceFile) {
     document.getElementById('edit_txn_id').value = txnId;
     document.getElementById('edit_trade_date').value = tradeDate;
     document.getElementById('edit_quantity').value = quantity;
-    document.getElementById('edit_price').value = price || '';
-    document.getElementById('edit_total').value = total;
-    document.getElementById('edit_commission').value = commission || '';
-    document.getElementById('edit_notes').value = notes || '';
-    document.getElementById('edit_txn_type').textContent = 'Type: ' + txnType;
+    document.getElementById('edit_price').value = price;
+    document.getElementById('edit_commission').value = commission;
+    document.getElementById('edit_notes').value = notes;
     document.getElementById('edit_source_file').textContent = 'Source: ' + sourceFile;
     document.getElementById('editModal').style.display = 'flex';
 }

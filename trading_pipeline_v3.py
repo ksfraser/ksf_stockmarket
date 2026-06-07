@@ -372,6 +372,69 @@ def signal_donchian_breakout(df, period=20):
             in_long = False
     return sig, strength
 
+
+def signal_sneaky_pivot(df):
+    """Sneaky Pivot Strategy — Fade false breakouts at pivot points with low volume.
+    
+    Classic floor pivot points act as magnets. When institutions push price through
+    a pivot on low volume, they're often "fading themselves" — the breakout fails
+    and price snaps back to the pivot. This strategy captures that failure.
+    
+    Classic pivot formula:
+        Pivot = (H + L + C) / 3
+        R1 = 2×P - L, S1 = 2×P - H
+        R2 = P + (H - L), S2 = P - (H - L)
+    
+    Rules (LONG only):
+        BUY: Price crosses below S1 OR fails at pivot (tested above, closed below)
+             AND volume < 50th percentile (distribution absent)
+             AND price > 200-day MA (trend filter)
+        SELL: Price closes above pivot AND volume > 75th percentile (institutional buying)
+              OR price closes below S2 (pivot failure)
+    """
+    sig = np.zeros(len(df))
+    strength = np.zeros(len(df))
+    
+    c = df['c'].values.astype(float)
+    h = df['h'].values.astype(float)
+    l = df['l'].values.astype(float)
+    v = df['v'].values.astype(float) if 'v' in df.columns else np.ones(len(df)) * 1e6
+    
+    for i in range(1, len(df)):
+        if i < 20 or np.any(np.isnan([h[i], l[i], c[i]])):
+            continue
+            
+        # Previous day for pivot calculation
+        prev_h, prev_l, prev_c = h[i-1], l[i-1], c[i-1]
+        
+        # Calculate floor pivot levels
+        pivot = (prev_h + prev_l + prev_c) / 3.0
+        r1 = 2 * pivot - prev_l
+        s1 = 2 * pivot - prev_h
+        r2 = pivot + (prev_h - prev_l)
+        s2 = pivot - (prev_h - prev_l)
+        
+        # Volume percentile (20-day window)
+        vol_pctile = np.percentile(v[max(0,i-20):i], 50) if i >= 20 else v[i]
+        avg_vol = np.mean(v[max(0,i-20):i]) if i >= 20 else v[i]
+        vol_rank = (v[i] / avg_vol) if avg_vol > 0 else 1.0
+        
+        # Trend filter (200-day MA)
+        in_uptrend = c[i] > df['sma_200'].iloc[i] if 'sma_200' in df.columns else True
+        
+        # BUY conditions (mean reversion to pivot)
+        if in_uptrend and c[i] < s1 and vol_rank < 0.5:
+            sig[i] = 1  # Fade S1 test on low volume
+            strength[i] = min(100, 40 + (s1 - c[i]) / s1 * 100 + (1 - vol_rank) * 20)
+        
+        # SELL conditions
+        elif c[i] > pivot and vol_rank > 0.75:
+            sig[i] = -1  # Pivot reclaimed on high volume
+            strength[i] = min(100, 50)
+            
+    return sig, strength
+
+
 # Registry: strategy_name → function
 SIGNAL_STRATEGIES = {
     'sma_10_50':    lambda df: signal_sma_cross(df, 10, 50),
@@ -385,6 +448,7 @@ SIGNAL_STRATEGIES = {
     'rsi_momentum': signal_rsi_momentum,
     'zscore_rev':   signal_zscore_reversion,
     'donchian_20':  lambda df: signal_donchian_breakout(df, 20),
+    'sneaky_pivot': signal_sneaky_pivot,  # Volume-absorption pivot fade
 }
 
 # =========================================================================

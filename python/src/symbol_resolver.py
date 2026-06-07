@@ -21,6 +21,7 @@ def resolve_for_yfinance(symbol: str, use_db_lookup: bool = True) -> str:
     """Resolve a ticker symbol for yfinance compatibility.
     
     Uses exchange_mapping table for proper ticker resolution.
+    Also converts TSX dot-notation to hyphen (e.g., AGF.B.TO → AGF-B.TO).
     
     Args:
         symbol: The symbol as stored in the database
@@ -43,22 +44,30 @@ def resolve_for_yfinance(symbol: str, use_db_lookup: bool = True) -> str:
                 """, (symbol,))
                 row = cur.fetchone()
                 if row and row.get('yahoo_ticker'):
-                    return row['yahoo_ticker']
+                    resolved = row['yahoo_ticker']
+                    # Still need to check for hyphen conversion
+                    return _convert_tsx_format(resolved)
         except Exception:
             pass
     
-    # Legacy conversions
-    if symbol.endswith('.UN') and '.TO' not in symbol:
-        return symbol.replace('.UN', '-UN.TO')
+    # Convert TSX format: dots to hyphens
+    return _convert_tsx_format(symbol)
+
+
+def _convert_tsx_format(symbol: str) -> str:
+    """Convert TSX dot-notation to hyphen-notation.
     
-    # TSX symbols already have .TO suffix - leave as-is
-    if '.TO' in symbol:
-        return symbol
-    
-    # US symbols - no suffix needed
-    if '.' in symbol and '.TO' not in symbol and '-UN.TO' not in symbol:
-        return symbol
-    
+    AGF.B.TO → AGF-B.TO
+    AW.UN.TO → AW-UN.TO
+    """
+    import re
+    # Pattern: letter(s) followed by .B.TO or .UN.TO or .U.TO etc
+    if '.B.TO' in symbol:
+        return symbol.replace('.B.TO', '-B.TO')
+    if '.UN.TO' in symbol:
+        return symbol.replace('.UN.TO', '-UN.TO')
+    if '.U.TO' in symbol:
+        return symbol.replace('.U.TO', '-U.TO')
     return symbol
 
 

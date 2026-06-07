@@ -16,6 +16,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import yfinance as yf
 from database import get_connection, log_monitoring_run
+from symbol_resolver import resolve_for_yfinance
 
 
 def get_symbols_to_check() -> List[Dict]:
@@ -32,6 +33,7 @@ def get_symbols_to_check() -> List[Dict]:
                 FROM watchlist_symbols ws
                 WHERE ws.is_active = 1
                 ORDER BY symbol
+                LIMIT 20
             """)
             return cur.fetchall()
     finally:
@@ -41,15 +43,20 @@ def get_symbols_to_check() -> List[Dict]:
 def check_symbol_status(symbol: str) -> Dict:
     """Check if symbol is still active via yfinance."""
     try:
-        resolved = symbol.replace('.UN', '-UN.TO') if '.UN' in symbol else symbol
+        resolved = resolve_for_yfinance(symbol)
         stock = yf.Ticker(resolved)
         info = stock.info
         
-        if 'error' in info or not info.get('symbol'):
-            return {'status': 'error', 'message': 'No data from yfinance'}
+        # Check for yfinance error response
+        if info.get('symbol') is None or info.get('longName') is None:
+            # Still might be valid for some symbols, check price history
+            hist = stock.history(period='5d')
+            if hist.empty or len(hist) == 0:
+                return {'status': 'error', 'message': 'No price history available'}
         
         return {
             'status': 'active',
+            'resolved': resolved,
             'name': info.get('longName', ''),
             'exchange': info.get('exchange', ''),
             'currency': info.get('currency', ''),

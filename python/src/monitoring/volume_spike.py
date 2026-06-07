@@ -64,7 +64,7 @@ def check_volume_spike(symbol: str, threshold: float = 2.0) -> Optional[Dict]:
             'avg_volume': int(avg_vol),
             'volume_ratio': round(vol_ratio, 2),
             'threshold': threshold,
-            'alert': vol_ratio >= threshold,
+            'alert': bool(vol_ratio >= threshold),
         }
     except Exception as e:
         return {

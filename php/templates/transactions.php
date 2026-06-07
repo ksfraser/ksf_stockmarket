@@ -232,11 +232,12 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                 <td style="font-size:0.82em;color:var(--text3);"><?php echo htmlspecialchars($t['notes'] ?? ''); ?></td>
                 <td class="c" style="font-size:0.75em;color:var(--text3);"><?php echo htmlspecialchars($t['source_file'] ?? 'manual'); ?></td>
                 <td class="c">
-                <?php 
+<?php
                 $srcFile = $t['source_file'] ?? '';
                 // Debug: show raw value to understand what's happening
                 error_log("Template debug: id={$t['id']}, source_file=" . var_export($srcFile, true));
-                $isManual = ($srcFile === 'manual_entry');
+                // Treat empty/null source_file as manual_entry for backwards compatibility
+                $isManual = ($srcFile === 'manual_entry' || $srcFile === '' || $srcFile === null);
                 $isImported = ($srcFile !== '' && $srcFile !== 'manual_entry');
                 ?>
                 <?php if ($isManual): ?>
@@ -245,10 +246,9 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                         <input type="hidden" name="txn_id" value="<?php echo $t['id']; ?>">
                         <button type="submit" style="background:none;border:none;color:#a44;cursor:pointer;font-size:0.9em;" title="Delete">&#x1F5D1;</button>
                     </form>
+                    <button type="button" onclick="openEditModal(<?php echo $t['id']; ?>, '<?php echo htmlspecialchars($t['trade_date'] ?? ''); ?>', <?php echo (float)($t['quantity'] ?? 0); ?>, <?php echo (float)($t['price'] ?? 0); ?>, <?php echo (float)($t['commission'] ?? 0); ?>, '<?php echo htmlspecialchars($t['notes'] ?? ''); ?>', '<?php echo htmlspecialchars($t['source_file'] ?? 'manual'); ?>')" style="background:none;border:none;color:#cc9900;cursor:pointer;font-size:0.9em;" title="Edit">&#x270F;&#xFE0F;</button>
                 <?php elseif ($isImported): ?>
                     <button type="button" onclick="openEditModal(<?php echo $t['id']; ?>, '<?php echo htmlspecialchars($t['trade_date'] ?? ''); ?>', <?php echo (float)($t['quantity'] ?? 0); ?>, <?php echo (float)($t['price'] ?? 0); ?>, <?php echo (float)($t['commission'] ?? 0); ?>, '<?php echo htmlspecialchars($t['notes'] ?? ''); ?>', '<?php echo htmlspecialchars($t['source_file'] ?? ''); ?>')" style="background:none;border:none;color:#cc9900;cursor:pointer;font-size:0.9em;" title="Edit">&#x270F;&#xFE0F;</button>
-                <?php else: ?>
-                    <span style="color:#a00;font-size:0.8em;" title="No action: src='<?php echo htmlspecialchars($srcFile); ?>'">EMPTY</span>
                 <?php endif; ?>
             </td>
             </tr>

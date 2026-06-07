@@ -1,135 +1,132 @@
 # Sneaky Pivot Strategy
-## Floor Pivot Points with Hidden Signal Enhancement
+## The Rumbers Intraday Scalping Method
 
-> **Status:** Proposed | **Category:** Mean Reversion/Trend Following Hybrid
+> **Source:** The Rumbers YouTube Channel | **Timeframe:** 15-minute | **Style:** Scalping/Mean Reversion
 
 ---
 
-## Overview
-
-The Sneaky Pivot Strategy combines classic floor trader pivot points with hidden volatility signals to identify potential reversal points that conventional traders miss.
-
 ## Core Concept
 
-Traditional pivot points are calculated from the previous period's high, low, and close:
+Based on The Rumbers' approach: Price trades between **Range High/Low** (previous day) and **Swing High/Low** (extended levels). The "sneaky" candle pattern signals reversals within these zones.
 
-```
-Pivot Point (PP) = (High + Low + Close) / 3
-Resistance 1 (R1) = (2 × PP) - Low
-Support 1 (S1) = (2 × PP) - High
-Resistance 2 (R2) = PP + (High - Low)
-Support 2 (S2) = PP - (High - Low)
-```
+---
 
-The "sneaky" twist: **Wait for price to close BEYOND the prior day's pivot range, then fade the move when it reverts toward the new pivot.**
+## Strategy Components
 
-## Strategy Rules
+### Key Levels
+| Level | Definition |
+|-------|------------|
+| **Range High** | Previous day's high |
+| **Range Low** | Previous day's low |
+| **Swing High** | Previous price extreme higher than Range High (any timeframe) |
+| **Swing Low** | Previous price extreme lower than Range Low (any timeframe) |
 
-### Entry (Long)
-1. Calculate daily pivots using prior day's HLC
-2. Wait for price to CLOSE below S1 (below pivot range)
-3. Look for reversal pattern:
-   - Next bar closes above S1
-   - Volume spike > 1.5× average (hidden confirmation)
-   - RSI(14) < 30 (oversold)
-4. Enter at market open or S1 retest
+### Price Zones
+- **Sell Zone:** Between Range High and Swing High
+- **Buy Zone:** Between Range Low and Swing Low
 
-### Exit (Long)
-1. Target: Pivot Point (PP) or R1
-2. Stop: Below recent swing low or 2× ATR
-3. Time-based: Exit after 3 days if neither hit
+---
 
-### Entry (Short) 
-1. Price closes above R1
-2. Next bar closes below R1
-3. Volume spike + RSI(14) > 70
-4. Enter short
+## Entry Patterns (First Hour)
 
-### Exit (Short)
-1. Target: PP or S1
-2. Stop: Above recent swing high or 2× ATR
+The strategy uses **3 consecutive 15-minute candles**:
 
-## Sneaky Enhancement
+### Bullish Setup (Buy Signal)
+| Candle | Pattern | Meaning |
+|--------|---------|---------|
+| **1st (Signal)** | Green Hammer | Reversal signal at Swing Low |
+| **2nd (Sneaky)** | Red Hammer | Confirms support holding |
+| **3rd** | Red upside-down hammer | Trigger for entry |
 
-The key enhancement that makes this "sneaky":
+### Bearish Setup (Sell Signal)
+| Candle | Pattern | Meaning |
+|--------|---------|---------|
+| **1st (Signal)** | Red shooting star/upside-down hammer | Reversal signal at Swing High |
+| **2nd (Sneaky)** | Green shooting star | Confirms resistance holding |
+| **3rd** | Green shooting star | Trigger for entry |
 
-### Volume-Absorption Threshold
-Monitor volume on the breakout bar. If volume is **below 1.2× average** despite the breakout, the move lacks conviction — fade it with higher confidence.
+---
 
-### Time-of-Day Filter
-Only trade during the snekiest hours:
-- **Long entries:** 10:00-11:30 EST (institutional sellers exhausted)
-- **Short entries:** 14:30-15:30 EST (institutional buyers exhausted)
+## Rules
 
-### NATR Confirmation
-Use the NATR(20) discovery from your correlation analysis:
-- Higher NATR (> 2%) → Stronger move, wider stops needed
-- Lower NATR (< 1%) → Mean reversion more likely, tighter stops
+### Entry
+1. **Wait for 9:30-10:30 EST** (first hour after open)
+2. **Identify Swing High/Low levels** from prior data
+3. **Mark Range High/Low** (previous day's levels)
+4. **Only trade if price enters one of the zones:**
+   - Price in Sell Zone → Look for BEARISH 3-candle pattern
+   - Price in Buy Zone → Look for BULLISH 3-candle pattern
+5. **Entry:** After completing the 3-candle sequence
 
-## Integration with Existing Pipeline
+### Exit
+1. **Target:** Opposite zone boundary (e.g., buy zone target = Range Low)
+2. **Stop:** Beyond Swing level
+3. **Time:** End of day (scalping strategy)
 
-Add to `trading_pipeline_v3.py`:
+---
+
+## Candlestick Definitions
+
+### Green Hammer
+- Small body near top of range
+- Long lower wick (2× body length)
+- Indicates buying pressure
+
+### Red Hammer (Sneaky)
+- Small red body near middle of range
+- Long lower wick
+- Shows sellers couldn't push lower
+
+### Red Upside-Down Hammer
+- Small red body
+- Long upper wick
+- Sellers still in control but weakening
+
+### Green Shooting Star
+- Small green body near top
+- Long upper wick
+- Indicates rejection of higher prices
+
+---
+
+## Implementation for Backtesting
 
 ```python
-def sneaky_pivot_signal(df: pd.DataFrame) -> pd.DataFrame:
-    """Sneaky pivot strategy with volume absorption."""
+def sneaky_pivot_intraday(df_15min, prev_day_high, prev_day_low):
+    """
+    df_15min: DataFrame with 15-min OHLCV data
+    prev_day_high/low: Previous day's range levels
+    Returns: Entry signals at zone reversals
+    """
+    # Calculate Swing levels from extended history
+    swing_high = df_15min['high'].max() if df_15min['high'].iloc[0] < prev_day_high else prev_day_high
+    swing_low = df_15min['low'].min() if df_15min['low'].iloc[0] > prev_day_low else prev_day_low
     
-    # Calculate prior day pivots
-    df['pivot'] = (df['high'].shift(1) + df['low'].shift(1) + df['close'].shift(1)) / 3
-    df['r1'] = (2 * df['pivot']) - df['low'].shift(1)
-    df['s1'] = (2 * df['pivot']) - df['high'].shift(1)
-    df['r2'] = df['pivot'] + (df['high'].shift(1) - df['low'].shift(1))
-    df['s2'] = df['pivot'] - (df['high'].shift(1) - df['low'].shift(1))
+    # Zone detection
+    in_sell_zone = (df_15min['high'] > prev_day_high) & (df_15min['low'] < swing_high)
+    in_buy_zone = (df_15min['high'] > swing_low) & (df_15min['low'] < prev_day_low)
     
-    # Volume absorption
-    df['vol_avg_20'] = df['volume'].rolling(20).mean()
-    df['vol_absorption'] = df['volume'] < 1.2 * df['vol_avg_20']
+    # Candlestick pattern detection
+    signal = detect_3_candle_pattern(df_15min)
     
-    # Hidden signal: Low volume breakout = sneaky entry
-    df['close_below_s1'] = df['close'] < df['s1']
-    df['sneaky_long'] = df['close_below_s1'] & df['vol_absorption'] & (df['rsi_14'] < 30)
-    
-    # Time filter (needs hourly data)
-    df['entry_hour'] = df.index.hour
-    df['sneaky_hours'] = df['entry_hour'].between(10, 11)
-    
-    df['signal'] = np.where(
-        df['sneaky_long'] & df['sneaky_hours'], 'BUY',
-        np.where(df['close'] > df['r1'] & df['vol_absorption'], 'SELL', 'HOLD')
-    )
-    
-    return df
+    return signal
 ```
 
-## Backtest Parameters
+---
 
-| Parameter | Value | Notes |
-|-----------|-------|-------|
-| Timeframe | Daily | Hourly for time filter |
-| Lookback | 20 days | For volume average |
-| Stop loss | 2× ATR(14) | Dynamic |
-| Take profit | PP level | Conservative |
-| Max hold | 3 days | Time decay |
+## Backtest Requirements
 
-## Expected Performance Characteristics
+1. **15-minute OHLCV data** (not daily)
+2. **Previous day's HLC** for Range levels
+3. **Extended history** for Swing High/Low detection
+4. **Market hours filter:** 9:30 AM - 4:00 PM EST
 
-Based on your STRATEGY_REFERENCE findings:
+---
 
-- **Type:** Mean reversion hybrid with trend confirmation
-- **Best for:** Range-bound, moderate-NATR stocks
-- **Avoid:** High-NATR breakout stocks (like MTY per your analysis)
-- **Correlation edge:** Pairs well with Bollinger MR (complementary timing)
+## Next Steps
 
-## Risk Considerations
-
-1. **Gap risk:** Overnight gaps can skip stops
-2. **False breakdown:** High-volume breakouts may continue (not sneaky)
-3. **End-of-day:** Avoid entries in last hour (slippage)
-
-## Implementation Status
-
-- [ ] Add pivot columns to `daily_indicators` table
-- [ ] Add strategy function to `trading_pipeline_v3.py`
-- [ ] Add to signal_weights correlation analysis
-- [ ] Backtest against 19-symbol universe
-- [ ] Add to combo strategies if Sharpe > 0.10
+- [ ] Create 15-minute data pipeline
+- [ ] Implement candle pattern detection
+- [ ] Add to backtesting engine
+- [ ] Test on your 19 symbols
+- [ ] Calculate win rate for 3-candle pattern

@@ -65,7 +65,7 @@ def _init_mysql():
         'port': int(os.environ.get('DB_PORT', 3306)),
         'user': os.environ.get('DB_USER', 'ksf_stockmarket'),
         'password': os.environ.get('DB_PASS', 'change_me'),
-        'database': os.environ.get('DB_NAME', 'ksf_stockmarket'),
+        'database': os.environ.get('DB_NAME', 'ksfraser_stock_market'),
         'charset': 'utf8mb4',
         'use_unicode': True,
         'autocommit': False,
@@ -115,11 +115,15 @@ class _SQLiteCompatCursor:
     def execute(self, sql, parameters=None):
         if isinstance(sql, str):
             sql = sql.replace('%s', '?')
+        if parameters is None:
+            return self._cursor.execute(sql)
         return self._cursor.execute(sql, parameters)
 
     def executemany(self, sql, parameters=None):
         if isinstance(sql, str):
             sql = sql.replace('%s', '?')
+        if parameters is None:
+            return self._cursor.executemany(sql)
         return self._cursor.executemany(sql, parameters)
 
     def __getattr__(self, name):
@@ -175,7 +179,7 @@ def get_active_symbols(conn=None) -> list:
     try:
         cursor.execute("""
             SELECT DISTINCT symbol FROM stockprices
-            WHERE price_date >= DATE('now', '-5 days')
+            WHERE price_date >= CURDATE() - INTERVAL 5 DAY
             ORDER BY symbol
         """)
         symbols = [row[0] for row in cursor.fetchall()]

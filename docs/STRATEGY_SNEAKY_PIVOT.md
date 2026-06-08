@@ -130,3 +130,24 @@ def sneaky_pivot_intraday(df_15min, prev_day_high, prev_day_low):
 - [ ] Add to backtesting engine
 - [ ] Test on your 19 symbols
 - [ ] Calculate win rate for 3-candle pattern
+
+---
+
+## TJR Framework Integration
+
+### TJR = Liquidity Sweep + Break of Structure + Order Block/FVG
+
+**Revelio Backtest Findings (10-year):**
+- ❌ Full TJR lost money
+- ❌ More filters made results worse
+- ✅ Order Blocks carried most profit
+- ❌ Fair Value Gaps lost most
+
+**TP Hit Rates:**
+| TP Level | R/R | Hit Rate |
+|----------|-----|----------|
+| TP1 | 1R | 50% |
+| TP2 | 2R | 25% |
+| TP3 | 3R | 17% |
+
+**Key Insight:** Max practical win is 2R; multiple partial exits recommended.

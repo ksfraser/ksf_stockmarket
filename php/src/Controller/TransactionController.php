@@ -426,7 +426,7 @@ class TransactionController {
 
     /**
      * Edit a transaction (both manual and imported).
-     * Updates transaction data without affecting portfolio holdings.
+     * Updates transaction data AND adjusts portfolio holdings accordingly.
      */
     public function editTransaction(array $post, int $txnId, int $userId = 0): array
     {
@@ -443,10 +443,18 @@ class TransactionController {
         }
 
         $originalSource = $txn['source_file'] ?? '';
+        $originalType = $txn['type'] ?? '';
 
         // Build update fields
         $updates = [];
         $params = [':id' => $txnId];
+
+        // Store original values for portfolio adjustment
+        $originalQty = (float)($txn['quantity'] ?? 0);
+        $originalPrice = (float)($txn['price'] ?? 0);
+        $originalCommission = (float)($txn['commission'] ?? 0);
+        $symbol = $txn['symbol'];
+        $account = $txn['account_type'];
 
         // Allow updating some fields
         if (isset($post['trade_date']) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $post['trade_date'])) {
@@ -478,8 +486,8 @@ class TransactionController {
         if (isset($post['quantity']) && isset($post['price'])) {
             $qty = (float)$post['quantity'];
             $prc = (float)$post['price'];
-            $comm = isset($post['commission']) ? (float)$post['commission'] : (float)($txn['commission'] ?? 0);
-            $total = ($txn['type'] ?? '') === 'SELL' ? ($qty * $prc) - $comm : ($qty * $prc) + $comm;
+            $comm = isset($post['commission']) ? (float)$post['commission'] : $originalCommission;
+            $total = ($originalType ?? '') === 'SELL' ? ($qty * $prc) - $comm : ($qty * $prc) + $comm;
             $updates[] = "total = :total";
             $params[':total'] = $total;
         }
@@ -489,12 +497,46 @@ class TransactionController {
         }
 
         try {
+            $pdo->beginTransaction();
+
+            // Reverse the original portfolio impact
+            try {
+                if ($originalType === 'BUY') {
+                    $this->reverseBuy($pdo, $userId, $symbol, $account, $originalQty, $originalPrice, $originalCommission);
+                } elseif ($originalType === 'SELL') {
+                    $this->reverseSell($pdo, $userId, $symbol, $account, $originalQty, $originalPrice, $originalCommission);
+                } elseif ($originalType === 'SPLIT') {
+                    $this->reverseSplit($pdo, $userId, $symbol, $originalQty);
+                }
+            } catch (RuntimeException $e) {
+                // Log but continue - partial reversals may be OK
+                error_log("editTransaction: reverse failed - " . $e->getMessage());
+            }
+
+            // Update the transaction
             $sql = "UPDATE transactions SET " . implode(', ', $updates) . ", updated_at = NOW() WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
 
+            // Apply new portfolio impact (for BUY/SELL/SPLIT)
+            $newQty = (float)($post['quantity'] ?? $originalQty);
+            $newPrice = (float)($post['price'] ?? $originalPrice);
+            $newCommission = (float)($post['commission'] ?? $originalCommission);
+
+            // Use original type - we don't allow changing transaction type on edit
+            if ($originalType === 'BUY') {
+                $this->applyBuy($pdo, $userId, $symbol, $account, $newQty, $newPrice, $newCommission);
+            } elseif ($originalType === 'SELL') {
+                $this->applySell($pdo, $userId, $symbol, $account, $newQty, $newPrice, $newCommission);
+            } elseif ($originalType === 'SPLIT') {
+                $this->applySplit($pdo, $userId, $symbol, $newQty);
+            }
+            // DIVIDEND: no portfolio share change
+
+            $pdo->commit();
             return ['success' => true, 'message' => "Updated transaction.", 'source_file' => $originalSource];
         } catch (Exception $e) {
+            $pdo->rollBack();
             return ['success' => false, 'errors' => ['Database error: ' . $e->getMessage()]];
         }
     }

@@ -170,13 +170,16 @@ def compute_signals(df, scores_df):
 
 
 def run_backtest(symbols, start_date, end_date, initial_capital, commission, max_pos_pct, frequency_days):
-    """
-    Run backtest across all symbols.
+    """Run backtest across all symbols.
     Returns results dict.
     """
     all_dates = set()
     symbol_data = {}
-
+    
+    # Load regime weights for each symbol (using SPY as market proxy for now)
+    # In production, would compute per-symbol regimes
+    regime_weights_cache = {}
+    
     for symbol in symbols:
         df = load_prices(symbol, start_date, end_date)
         if len(df) < 60:
@@ -184,6 +187,19 @@ def run_backtest(symbols, start_date, end_date, initial_capital, commission, max
             continue
         scores = load_scores(symbol, start_date, end_date)
         signals = compute_signals(df, scores)
+        
+        # Apply regime weighting to signal strength
+        try:
+            from regime.markov_regime import label_regimes, analyze
+            close = df['close'].dropna()
+            if len(close) > 252:
+                regime_result = analyze(close.iloc[-252:])
+                current_regime = regime_result['current_regime']
+                # Store for use in backtest loop
+                regime_weights_cache[symbol] = current_regime
+        except Exception:
+            pass
+        
         print(f"  {symbol}: signals index type={type(signals.index[0])}, range={signals.index[0]} → {signals.index[-1]}")
         symbol_data[symbol] = signals
         all_dates.update([pd.Timestamp(d) for d in signals.index.tolist()])

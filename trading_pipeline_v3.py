@@ -451,6 +451,13 @@ SIGNAL_STRATEGIES = {
     'sneaky_pivot': signal_sneaky_pivot,  # Volume-absorption pivot fade
 }
 
+# Regime-aware strategy weights (updated via monthly Layer 3)
+REGIME_WEIGHTS = {
+    'Bull': {'sma_10_50': 1.5, 'sma_20_50': 1.5, 'turtle_20': 1.3, '4week': 1.3},
+    'Bear': {'bollinger_mr': 1.5, 'rsi_momentum': 1.5, 'zscore_rev': 1.3},
+    'Sideways': {'bollinger_mr': 1.5, 'donchian_20': 1.3, 'sneaky_pivot': 1.4},
+}
+
 # =========================================================================
 # LAYER 2: RISK / MONEY MANAGEMENT
 # Applied uniformly to all signals regardless of source strategy.

@@ -70,7 +70,7 @@ if __name__ == '__main__':
     symbols = ['CM', 'CNR', 'MTY', 'RY', 'SPY', 'XIC']
     
     config = run_ai_rebalance_backtest(
-        symbols=symbols,
+        symbol_list=symbols,
         start_date='2020-01-01',
         end_date='2024-12-31'
     )

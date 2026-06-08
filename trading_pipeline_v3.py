@@ -731,7 +731,24 @@ def run_walkforward(config, conn=None):
         # ── STEP 2: Is it time to rebalance? ──
         days_since = (current_date - last_rebalance).days
         do_rebalance = days_since >= rebalance_days
-
+        
+        # ── STEP 2b: AI Rebalance Decision ──
+        # Only rebalance if allocation drift justifies transaction costs
+        if do_rebalance:
+            # Calculate current portfolio drift vs target allocations
+            current_prices = {s: float(symbol_data[s].loc[current_date, 'c']) 
+                            for s in symbol_data if current_date in symbol_data[s].index}
+            target_shares = {s: target_allocations.get(s, 0) * (cash + sum(
+                p['shares'] * current_prices.get(s, 0) for s in positions)) / current_prices.get(s, 1)
+                          for s in target_allocations if s in current_prices}
+            
+            current_shares = {s: positions[s]['shares'] for s in positions}
+            pv = cash + sum(positions[s]['shares'] * current_prices.get(s, 0) for s in positions)
+            
+            from strategies.ai_rebalance import ai_rebalance_score
+            ai_decision = ai_rebalance_score(current_shares, target_shares, current_prices, pv, commission)
+            do_rebalance = ai_decision['should_rebalance']  # Override: only rebalance if AI says yes
+        
         if do_rebalance:
             last_rebalance = current_date
 

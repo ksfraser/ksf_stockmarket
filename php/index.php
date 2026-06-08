@@ -283,6 +283,17 @@ switch ($action) {
         $pageTitle = 'Futures';
         $template = 'futures';
         break;
+    case 'risk':
+        require_once '/var/www/stockmarket-app/src/Controller/RiskController.php';
+        $ctrl = new RiskController();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data['gate_result'] = $ctrl->preTradeGate($_POST);
+        } else {
+            $data['audit'] = $ctrl->portfolioAudit($userId ?? 1);
+        }
+        $pageTitle = 'Risk Manager';
+        $template = 'risk';
+        break;
     default:
         $ctrl = new DashboardController();
         $data = array_merge($data, $ctrl->overview());

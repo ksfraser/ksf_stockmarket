@@ -162,12 +162,15 @@ class StockController {
 
         // Performance
         $perf = $this->calcPerformance($symbol);
+        
+        // Markov regime analysis
+        $regime = $this->getRegimeAnalysis($symbol);
 
         return compact(
             'symbol', 'latest', 'history', 'indicators', 'indHistory',
             'fundamentals', 'portfolio', 'dividendSafety', 'dividends',
             'analystRatings', 'analystTargets', 'news', 'optionsData',
-            'buffettScore', 'perf'
+            'buffettScore', 'perf', 'regime'
         );
         // Ensure template gets both naming conventions
         $result = compact(
@@ -592,5 +595,93 @@ class StockController {
             ORDER BY p.symbol
         ");
         return $stmt->fetchAll();
+    }
+    
+    /**
+     * Markov regime analysis — compute transition matrix from price data.
+     */
+    private function getRegimeAnalysis(string $symbol): array {
+        // Get 252 days of close prices
+        $stmt = $this->pdo->prepare("SELECT price_date, close FROM stockprices WHERE symbol = :sym ORDER BY price_date DESC LIMIT 252");
+        $stmt->execute([':sym' => $symbol]);
+        $rows = array_reverse($stmt->fetchAll());
+        
+        if (count($rows) < 252) {
+            return ['current_regime' => null, 'transition_matrix' => [], 'stationary_distribution' => []];
+        }
+        
+        // Compute regimes (20-day rolling return threshold 5%)
+        $closes = array_column($rows, 'close');
+        $regimes = [];
+        
+        for ($i = 20; $i < count($closes); $i++) {
+            $windowReturn = ($closes[$i] - $closes[$i - 20]) / $closes[$i - 20];
+            if ($windowReturn > 0.05) {
+                $regimes[] = 2; // Bull
+            } elseif ($windowReturn < -0.05) {
+                $regimes[] = 0; // Bear
+            } else {
+                $regimes[] = 1; // Sideways
+            }
+        }
+        
+        if (empty($regimes)) {
+            return ['current_regime' => null, 'transition_matrix' => [], 'stationary_distribution' => []];
+        }
+        
+        // Build 3x3 transition matrix
+        $matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+        for ($i = 1; $i < count($regimes); $i++) {
+            $from = $regimes[$i - 1];
+            $to = $regimes[$i];
+            $matrix[$from][$to]++;
+        }
+        
+        // Convert to probabilities
+        $transitionMatrix = [];
+        $stateLabels = ['Bear', 'Sideways', 'Bull'];
+        foreach ([0, 1, 2] as $from) {
+            $rowSum = array_sum($matrix[$from]);
+            if ($rowSum > 0) {
+                foreach ([0, 1, 2] as $to) {
+                    $transitionMatrix[$stateLabels[$from]][$stateLabels[$to]] = round($matrix[$from][$to] / $rowSum, 4);
+                }
+            }
+        }
+        
+        // Compute stationary distribution (eigendecomposition)
+        // For 3x3 matrix, use power iteration
+        $pi = [0.33, 0.33, 0.34]; // Initial guess
+        $P = $transitionMatrix;
+        
+        // Convert to numeric matrix for calculation
+        $Pnum = [
+            [(float)($P['Bear']['Bear'] ?? 0), (float)($P['Bear']['Sideways'] ?? 0), (float)($P['Bear']['Bull'] ?? 0)],
+            [(float)($P['Sideways']['Bear'] ?? 0), (float)($P['Sideways']['Sideways'] ?? 0), (float)($P['Sideways']['Bull'] ?? 0)],
+            [(float)($P['Bull']['Bear'] ?? 0), (float)($P['Bull']['Sideways'] ?? 0), (float)($P['Bull']['Bull'] ?? 0)]
+        ];
+        
+        // 50 iterations of P^n
+        for ($iter = 0; $iter < 50; $iter++) {
+            $newPi = [0, 0, 0];
+            foreach ([0, 1, 2] as $to) {
+                foreach ([0, 1, 2] as $from) {
+                    $newPi[$to] += $pi[$from] * $Pnum[$from][$to];
+                }
+            }
+            $pi = $newPi;
+        }
+        
+        $stationary = [
+            'Bear' => round($pi[0], 4),
+            'Sideways' => round($pi[1], 4),
+            'Bull' => round($pi[2], 4)
+        ];
+        
+        return [
+            'current_regime' => $stateLabels[end($regimes)],
+            'transition_matrix' => $transitionMatrix,
+            'stationary_distribution' => $stationary
+        ];
     }
 }

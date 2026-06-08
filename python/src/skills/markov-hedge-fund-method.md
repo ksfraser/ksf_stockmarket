@@ -6,60 +6,55 @@ description: |
   weights based on detected Bull/Bear/Sideways market regimes.
   
 homepage: https://github.com/jackson-video-resources/markov-hedge-fund-method
-tags: [markov, regime, transition-matrix, hmm, backtesting]
+tags: [markov, regime, transition-matrix, backtesting]
 ---
 
 # Markov Hedge Fund Method
 
 Dynamic strategy weighting based on market regime detection.
 
-## Core Functions
+## How It Works
 
-```python
-from regime.markov_regime import label_regimes, build_transition_matrix, stationary_distribution
+1. Labels each day as Bull/Bear/Sideways using 20-day rolling return (±5% threshold)
+2. Builds 3×3 transition matrix from state sequence
+3. Computes stationary distribution via power iteration
+4. Adjusts strategy weights in Layer 3 portfolio construction
 
-# Detect current regime: Bear(0) / Sideways(1) / Bull(2)
-regimes = label_regimes(price_series, window=20, threshold=0.05)
+## Integration
 
-# Build transition matrix
-P = build_transition_matrix(regimes)
+**PHP (StockController.php)**: `getRegimeAnalysis()` - computes regime directly from MariaDB
+**Python (trading_pipeline_v3.py)**: `REGIME_WEIGHTS` dict adjusts signal scoring
 
-# Forecast n-steps ahead
-P_n = nstep_forecast(P, n=5)
+### Regime-Based Strategy Weights
 
-# Get long-run distribution
-stationary = stationary_distribution(P)
-```
+| Regime | Strategies Boosted | Weight |
+|--------|-------------------|--------|
+| Bull | SMA cross, Turtle, 4week | 1.3-1.5 |
+| Bear | Bollinger MR, RSI, Z-score | 1.3-1.5 |
+| Sideways | Bollinger MR, Donchian, Sneaky Pivot | 1.4 |
 
-## Integration with trading_pipeline_v3
+## Displayed On Symbol Detail Page
 
-The `regime_weighted_strategy.py` module reads the current market regime and
-adjusts strategy weights dynamically:
+- Current regime badge (color-coded)
+- Stationary distribution (long-run regime mix)
+- 3×3 transition matrix table
 
-- **Bull market**: Momentum strategies (SMA cross, Turtle) get weight 1.5
-- **Bear market**: Mean reversion (BB, RSI) gets weight 1.5
-- **Sideways market**: Range-bound strategies (Donchian, Sneaky Pivot) get weight 1.4
-
-## Regime Detection Parameters
+## Parameters
 
 | Parameter | Default | Meaning |
 |-----------|---------|---------|
 | window | 20 | Rolling return window in days |
-| threshold | 0.05 | ±5% cutoff for Bull/Bear classification |
-| min_train | 252 | Min training rows before walk-forward |
+| threshold | 0.05 | ±5% for Bull/Bear classification |
+| iterations | 50 | For stationary distribution convergence |
 
-## CLI Usage
+## Python Module (regime/markov_regime.py)
 
-```bash
-python regime/markov_regime.py --ticker SPY --years 10
-python regime/regime_weighted_strategy.py  # Test regime-aware weighting
+```python
+from regime.markov_regime import label_regimes, build_transition_matrix
+
+# Detect regimes: 0=Bear, 1=Sideways, 2=Bull
+regimes = label_regimes(close_prices, window=20, threshold=0.05)
+
+# Build transition probability matrix
+P = build_transition_matrix(regimes)
 ```
-
-## Data Sources
-
-- Yahoo Finance via yfinance (no API key required)
-- Custom CSV with date/close columns
-
-## Dependencies
-
-numpy, pandas, yfinance, hmmlearn, scipy (optional: hmmlearn)

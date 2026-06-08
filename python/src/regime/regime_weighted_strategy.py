@@ -17,8 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 import pandas as pd
 from regime.markov_regime import (
-    label_regimes, build_transition_matrix, stationary_distribution,
-    SUPPORTED_ASSETS
+    label_regimes, build_transition_matrix, stationary_distribution
 )
 
 
@@ -84,7 +83,9 @@ def regime_aware_signal(df: pd.DataFrame, symbol: str = None) -> tuple:
     Apply regime-based signal weighting.
     
     Returns: (signal array, strength array) weighted by regime
+    Note: Requires SIGNAL_STRATEGIES to be passed in or imported separately.
     """
+    # Import delayed to avoid circular dependency
     from trading_pipeline_v3 import SIGNAL_STRATEGIES, compute_all_indicators
     
     if len(df) < 252:
@@ -93,7 +94,10 @@ def regime_aware_signal(df: pd.DataFrame, symbol: str = None) -> tuple:
         strength = np.ones(len(df)) * 50
         return sig, strength
     
-    df = compute_all_indicators(df)
+    try:
+        df = compute_all_indicators(df)
+    except Exception:
+        pass
     
     # Get current regime
     closes = df['c'].values.astype(float)
@@ -107,6 +111,9 @@ def regime_aware_signal(df: pd.DataFrame, symbol: str = None) -> tuple:
     sig = np.zeros(len(df))
     strength = np.zeros(len(df))
     
+    if 'SIGNAL_STRATEGIES' not in globals():
+        return sig, strength
+        
     for strat_name, strat_fn in SIGNAL_STRATEGIES.items():
         try:
             s, st = strat_fn(df)

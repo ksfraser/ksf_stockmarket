@@ -5,11 +5,11 @@
 $positions = $data['positions'] ?? [];
 ?>
 <div class="card">
-    <div class="card-header">💰 Stablecoin Yields</div>
+    <div class="card-header">Stablecoin Yields</div>
     <?php if (empty($positions)): ?>
         <p class="text-muted">No stablecoin positions tracked yet. Add positions via import or manual entry.</p>
     <?php else: ?>
-    <div class="overflow-x-auto">
+    <div style="overflow-x:auto;">
     <table>
         <thead>
             <tr>

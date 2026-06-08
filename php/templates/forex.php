@@ -5,11 +5,11 @@
 $pairs = $data['pairs'] ?? [];
 ?>
 <div class="card">
-    <div class="card-header">💱 Forex Pairs</div>
+    <div class="card-header">Forex Pairs</div>
     <?php if (empty($pairs)): ?>
         <p class="text-muted">No Forex pairs found in symbol_master. Import symbols like EUR.CAD, USD.CAD.</p>
     <?php else: ?>
-    <div class="overflow-x-auto">
+    <div style="overflow-x:auto;">
     <table>
         <thead>
             <tr>

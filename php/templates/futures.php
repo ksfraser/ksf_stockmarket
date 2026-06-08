@@ -5,11 +5,11 @@
 $futures = $data['futures'] ?? [];
 ?>
 <div class="card">
-    <div class="card-header">📊 Futures Contracts</div>
+    <div class="card-header">Futures Contracts</div>
     <?php if (empty($futures)): ?>
         <p class="text-muted">No futures contracts found in symbol_master. Import symbols like ES, NQ, CL, GC.</p>
     <?php else: ?>
-    <div class="overflow-x-auto">
+    <div style="overflow-x:auto;">
     <table>
         <thead>
             <tr>

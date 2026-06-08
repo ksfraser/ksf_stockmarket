@@ -52,3 +52,10 @@ portfolio.db
 group_vars/vault.yml
 .vault_pass
 php/vendor/
+
+# Migration scripts (temporary - not for git)
+migrate_*.py
+recreate_*.py
+test_*.py
+create_*.py
+*.db.migrated*

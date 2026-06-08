@@ -262,6 +262,27 @@ switch ($action) {
         $pageTitle = 'Alerts & Cron Status';
         $template = 'alerts_status';
         break;
+    case 'stablecoin':
+        require_once '/var/www/stockmarket-app/src/Service/StablecoinYieldTracker.php';
+        $tracker = new StablecoinYieldTracker();
+        $data['positions'] = $tracker->getPositions($userId ?? 1);
+        $pageTitle = 'Stablecoin Yields';
+        $template = 'stablecoin';
+        break;
+    case 'forex':
+        require_once '/var/www/stockmarket-app/src/Service/ForexTracker.php';
+        $tracker = new ForexTracker();
+        $data['pairs'] = $tracker->getForexPairs();
+        $pageTitle = 'Forex';
+        $template = 'forex';
+        break;
+    case 'futures':
+        require_once '/var/www/stockmarket-app/src/Service/FuturesTracker.php';
+        $tracker = new FuturesTracker();
+        $data['futures'] = $tracker->getFuturesSymbols();
+        $pageTitle = 'Futures';
+        $template = 'futures';
+        break;
     default:
         $ctrl = new DashboardController();
         $data = array_merge($data, $ctrl->overview());

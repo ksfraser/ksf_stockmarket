@@ -23,7 +23,13 @@ Usage:
   python3 strategy_pipeline.py --quick                  # Fast mode (fewer params)
 """
 
-import argparse, json, sqlite3, sys, os, itertools, random, time
+import sys
+import argparse
+import json
+import os
+import itertools
+import random
+import time
 import numpy as np
 import pandas as pd
 from datetime import date, timedelta
@@ -32,15 +38,16 @@ from pathlib import Path
 random.seed(42)
 np.random.seed(42)
 
-DB_PATH = Path("/home/ksf_stockmarket/ksf_stockmarket/analysis_results.db")
-RESULTS_TABLE = "strategy_pipeline_results"
+# Use modular database connector
+sys.path.insert(0, '/home/ksf_stockmarket/ksf_stockmarket/python')
+from db_connector import get_connection
 
 # =========================================================================
 # DATA LOADING (reused from run_backtest_v2.py)
 # =========================================================================
 
 def load_prices(symbol, start, end):
-    conn = sqlite3.connect(str(DB_PATH))
+    conn = get_connection()
     df = pd.read_sql_query("""
         SELECT price_date, day_open as open, day_high as high,
                day_low as low, day_close as close, volume
@@ -48,12 +55,12 @@ def load_prices(symbol, start, end):
         WHERE symbol = ? AND price_date BETWEEN ? AND ?
         ORDER BY price_date
     """, conn, params=(symbol, start, end), parse_dates=['price_date'])
-    conn.close()
+    # Note: get_connection() handles pooling, don't close
     if df.empty: return df
     df = df.set_index('price_date').sort_index()
-    for c in ['open', 'high', 'low', 'close', 'volume']:
-        if c in df.columns:
-            df[c] = pd.to_numeric(df[c], errors='coerce')
+    for col in ['open', 'high', 'low', 'close', 'volume']:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors='coerce')
     return df
 
 
@@ -685,13 +692,13 @@ def main():
     end_date = args.end
 
     # Get all symbols
-    conn = sqlite3.connect(str(DB_PATH))
+    conn = get_connection()
+    cursor = conn.cursor()
     if args.symbols:
         symbols = [s.strip() for s in args.symbols.split(',')]
     else:
-        symbols = [r[0] for r in conn.execute(
+        symbols = [r[0] for r in cursor.execute(
             "SELECT DISTINCT symbol FROM stockprices ORDER BY symbol").fetchall()]
-    conn.close()
 
     # Load data + compute indicators for all symbols (cache for reuse)
     symbol_data = {}
@@ -716,29 +723,29 @@ def main():
     print()
 
     # Create results table in DB
-    conn = sqlite3.connect(str(DB_PATH))
+# Create results table in DB (MySQL compatible)
     conn.execute(f"""
         CREATE TABLE IF NOT EXISTS {RESULTS_TABLE} (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            run_timestamp TEXT,
-            strategy TEXT,
-            combo_size INTEGER DEFAULT 0,
-            combo_names TEXT,
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            run_timestamp DATETIME,
+            strategy VARCHAR(50),
+            combo_size INT DEFAULT 0,
+            combo_names VARCHAR(255),
             params_json TEXT,
-            symbol TEXT,
-            initial_cash REAL,
-            final_value REAL,
-            total_pnl REAL,
-            pnl_pct REAL,
-            n_trades INTEGER,
-            win_rate REAL,
-            avg_win REAL,
-            avg_loss REAL,
-            expectancy REAL,
-            profit_factor REAL,
-            max_drawdown REAL,
-            sharpe REAL
-        )
+            symbol VARCHAR(20),
+            initial_cash DOUBLE,
+            final_value DOUBLE,
+            total_pnl DOUBLE,
+            pnl_pct DOUBLE,
+            n_trades INT,
+            win_rate DOUBLE,
+            avg_win DOUBLE,
+            avg_loss DOUBLE,
+            expectancy DOUBLE,
+            profit_factor DOUBLE,
+            max_drawdown DOUBLE,
+            sharpe DOUBLE
+        ) ENGINE=InnoDB
     """)
     conn.commit()
 
@@ -805,7 +812,7 @@ def main():
                         (run_timestamp, strategy, combo_size, combo_names, params_json, symbol,
                          initial_cash, final_value, total_pnl, pnl_pct, n_trades, win_rate,
                          avg_win, avg_loss, expectancy, profit_factor, max_drawdown, sharpe)
-                        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                     """, (run_ts, strat_name, 1, strat_name, json.dumps(params), sym,
                           params.get('initial_cash', 100000), result['final_value'],
                           result['total_pnl'], result['pnl_pct'], result['n_trades'],
@@ -860,7 +867,7 @@ def main():
                             (run_timestamp, strategy, combo_size, combo_names, params_json, symbol,
                              initial_cash, final_value, total_pnl, pnl_pct, n_trades, win_rate,
                              avg_win, avg_loss, expectancy, profit_factor, max_drawdown, sharpe)
-                            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                         """, (run_ts, 'combo', combo_size, combo_str,
                               json.dumps(consensus_params), sym,
                               100000, result['final_value'], result['total_pnl'],

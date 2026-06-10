@@ -243,4 +243,5 @@ $inactiveWatchlist = array_filter($watchlistSymbols, fn($s) => !$s['is_active'])
 <div style="display:flex;gap:12px;margin-top:24px;justify-content:center;">
     <a href="?action=overview" class="btn">&larr; Dashboard</a>
     <a href="?action=admin_symbols" class="btn">&#x1F4B0; Symbol Admin</a>
+    <a href="?action=admin_settings" class="btn">&#x1F6E0; Admin Settings</a>
 </div>

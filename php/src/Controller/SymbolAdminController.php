@@ -134,4 +134,53 @@ class SymbolAdminController
                 AND (sm.is_portfolio = 1 OR sm.is_watchlist = 1)";
         return $this->pdo->query($sql)->fetchAll();
     }
+
+    /**
+     * Add symbol to watchlist for tracking (without portfolio ownership).
+     */
+    public function addToWatchlist(array $data): bool
+    {
+        $sql = "INSERT INTO watchlist_symbols 
+                (symbol, list_type, monitor_volume, monitor_price, volume_spike_threshold, notes, is_active)
+                VALUES (:symbol, :list_type, :monitor_volume, :monitor_price, :volume_spike_threshold, :notes, 1)
+                ON DUPLICATE KEY UPDATE
+                    list_type = VALUES(list_type),
+                    monitor_volume = VALUES(monitor_volume),
+                    monitor_price = VALUES(monitor_price),
+                    volume_spike_threshold = VALUES(volume_spike_threshold),
+                    notes = VALUES(notes),
+                    is_active = 1";
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':symbol'               => $data['symbol'],
+            ':list_type'            => $data['list_type'] ?? 'watchlist',
+            ':monitor_volume'       => $data['monitor_volume'] ?? 1,
+            ':monitor_price'        => $data['monitor_price'] ?? 0,
+            ':volume_spike_threshold' => $data['volume_spike_threshold'] ?? 3.0,
+            ':notes'                => $data['notes'] ?? null,
+        ]);
+    }
+
+    /**
+     * Remove symbol from watchlist.
+     */
+    public function removeFromWatchlist(string $symbol): bool
+    {
+        $sql = "DELETE FROM watchlist_symbols WHERE symbol = ? AND list_type = 'watchlist'";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([$symbol]);
+    }
+
+    /**
+     * List all symbols in watchlist (for tracking).
+     */
+    public function listWatchlistSymbols(): array
+    {
+        $sql = "SELECT symbol, monitor_volume, monitor_price, volume_spike_threshold, notes, is_active, added_at
+                FROM watchlist_symbols 
+                WHERE list_type = 'watchlist'
+                ORDER BY added_at DESC";
+        return $this->pdo->query($sql)->fetchAll();
+    }
 }

@@ -1,0 +1,35 @@
+# Discord Alert Handler Configuration
+# Add to group_vars/vault.yml:
+#
+# alert_discord_webhook: "https://discord.com/api/webhooks/..."
+# discord_bot_token: "MTI..."  (for bot mode)
+# hermes_discord_channel_id: "1497324630212345957"  (monitoring channel)
+# stock_sell_alerts_channel: "1497324630212345957"  (your existing channel)
+
+---
+# Alert system config
+discord:
+  # Webhook URL for one-way alert notifications (app -> Discord -> Hermes monitors)
+  alert_webhook_url: "{{ vault_alert_discord_webhook }}"
+  
+  # Bot token for interactive analysis (Hermes responds to commands)
+  bot_token: "{{ vault_discord_bot_token }}"
+  
+  # Which channels to post alerts to
+  channels:
+    # Your existing stock-sell-alerts channel
+    stock_sell_alerts: 1497324628295811164
+    # New monitoring channel for alerts -> LLM analysis
+    llm_analysis: 1497324630212345957
+    # Alert responses (LLM/Hermes writes back here)
+    alerts_response: 1497324630212345957
+
+# Alert thresholds for detection
+alerts:
+  volume_spike_ratio: 3.0  # 3x average volume
+  volume_spike_critical: 5.0  # 5x triggers critical
+  gap_up_threshold: 0.02  # 2% gap up
+  natr_spike_threshold: 2.0  # 2x average NATR
+  oscillator_extreme:  # Overbought/oversold levels
+    rsi_overbought: 70
+    rsi_oversold: 30

@@ -58,27 +58,34 @@ Usage:
   python3 trading_pipeline_v3.py --emergency  # stop loss check only
 """
 
-import argparse, itertools, json, random, sqlite3, sys, os, time
-import datetime
+import sys
+import warnings
+import random
 import numpy as np
+import argparse
+import datetime
+import itertools
+import time
+import json
+import os
+warnings.filterwarnings('ignore', category=FutureWarning)
+
+# Use modular database connector
+sys.path.insert(0, '/home/ksf_stockmarket/ksf_stockmarket/python')
+from db_connector import get_connection
 import pandas as pd
 from datetime import date, timedelta
 from collections import defaultdict
-
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'analysis_results.db')
 
 random.seed(42)
 np.random.seed(42)
 
 # =========================================================================
 # UTILITY
-# ==========================================================================
+# =========================================================================
 
 def db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.execute("PRAGMA journal_mode=WAL")
-    conn.execute("PRAGMA synchronous=NORMAL")
-    return conn
+    return get_connection()
 
 def load_prices(symbol, start, end):
     conn = db()
@@ -89,7 +96,7 @@ def load_prices(symbol, start, end):
         WHERE symbol = ? AND price_date BETWEEN ? AND ?
         ORDER BY price_date
     """, conn, params=(symbol, start, end), parse_dates=['price_date'])
-    conn.close()
+    # Note: get_connection handles pooling, keep connection open
     if df.empty:
         return df
     df = df.set_index('price_date').sort_index()
@@ -100,12 +107,12 @@ def load_prices(symbol, start, end):
 def get_holding_period(df):
     """Days of price data available for each symbol."""
     conn = db()
-    rows = conn.execute("""
+    cursor = conn.cursor()
+    rows = cursor.execute("""
         SELECT symbol, MIN(price_date) as first_dt, MAX(price_date) as last_dt,
                COUNT(*) as n_days
         FROM stockprices GROUP BY symbol ORDER BY symbol
     """).fetchall()
-    conn.close()
     return {r[0]: {'first': r[1], 'last': r[2], 'n': r[3]} for r in rows}
 
 # =========================================================================
@@ -1124,7 +1131,8 @@ def main():
 
     # Create output table
     conn = db()
-    conn.execute(f"""
+    cursor = conn.cursor()
+    cursor.execute(f"""
         CREATE TABLE IF NOT EXISTS {args.output_table} (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             ts TEXT,

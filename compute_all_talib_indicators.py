@@ -11,16 +11,20 @@ After this run we'll have 80+ TA-Lib indicators per day per symbol,
 enabling the "which indicators are actually predictive" analysis.
 """
 
-import sqlite3
+import sys
 import time
+import warnings
 import numpy as np
 import pandas as pd
 
-import warnings
 warnings.filterwarnings('ignore', category=pd.errors.PerformanceWarning)
 
-DB_PATH = '/home/ksf_stockmarket/ksf_stockmarket/analysis_results.db'
-conn = sqlite3.connect(DB_PATH)
+# Use modular database connector (MariaDB or SQLite)
+sys.path.insert(0, '/home/ksf_stockmarket/ksf_stockmarket/python')
+from db_connector import get_connection
+
+conn = get_connection()
+cursor = conn.cursor()
 
 try:
     import talib
@@ -169,37 +173,18 @@ CDL_PATTERNS = [
 for cdl in CDL_PATTERNS:
     ALL_TA_INDICATORS[cdl] = {'func': getattr(talib, cdl), 'args': ['open', 'high', 'low', 'close'], 'kwargs': {}}
 
-# Remove the broken entry
-ALL_TA_INDICATORS.pop('ALL_TA_INDICicators_FIX', None)
-
 print(f"Total indicators to compute: {len(ALL_TA_INDICATORS)}")
-print(f"  Overlap studies: {sum(1 for k in ALL_TA_INDICATORS if any(k.startswith(p) for p in ['SMA','EMA','WMA','DEMA','TEMA','KAMA','TRIMA','BBANDS']))}")
-print(f"  Momentum: {sum(1 for k in ALL_TA_INDICATORS if any(k.startswith(p) for p in ['RSI','MOM','ROC','ROCP','ROCR','WILLR','CCI','MFI','MACD','STOCH','ADX','ADXR','APO','PPO','ULTOSC']))}")
-print(f"  Volume: {sum(1 for k in ALL_TA_INDICATORS if k in ['OBV','AD','ADOSC'])}")
-print(f"  Volatility: {sum(1 for k in ALL_TA_INDICATORS if any(k.startswith(p) for p in ['ATR','NATR','TRANGE']))}")
-print(f"  Statistical: {sum(1 for k in ALL_TA_INDICATORS if any(k.startswith(p) for p in ['LINEARREG','STDDEV','VAR','BETA','CORREL','TSF']))}")
-print(f"  Price transform: {sum(1 for k in ALL_TA_INDICATORS if k in ['AVGPRICE','MEDPRICE','TYPPRICE','WCLPRICE'])}")
-print(f"  Cycle: {sum(1 for k in ALL_TA_INDICATORS if k.startswith('HT_'))}")
-print(f"  Candlestick patterns: {sum(1 for k in ALL_TA_INDICATORS if k.startswith('CDL'))}")
 
-# ── Create wide table ──
-# Build column definitions
-cols = ['symbol TEXT', 'price_date TEXT']
-for name in sorted(ALL_TA_INDICATORS.keys()):
-    cols.append(f'"{name}" REAL')
-cols.append('PRIMARY KEY (symbol, price_date)')
-create_sql = f"CREATE TABLE IF NOT EXISTS ta_indicators ({', '.join(cols)})"
-conn.execute(create_sql)
-conn.execute("CREATE INDEX IF NOT EXISTS idx_ta_sym_date ON ta_indicators(symbol, price_date)")
-conn.commit()
-
-# ── Process each symbol ──
-symbols = [r[0] for r in conn.execute("""
+# ── Get symbols with sufficient data
+cursor.execute("""
     SELECT DISTINCT symbol FROM stockprices GROUP BY symbol HAVING COUNT(*) >= 200 ORDER BY symbol
-""").fetchall()]
-
+""")
+symbols = [r[0] for r in cursor.fetchall()]
 print(f"\nProcessing {len(symbols)} symbols...")
 t0 = time.time()
+
+# Process symbols into ta_indicators table
+out_dict_template = {}  # Will be populated on first iteration
 
 for si, sym in enumerate(symbols):
     df = pd.read_sql_query("""
@@ -220,7 +205,7 @@ for si, sym in enumerate(symbols):
     low = df['low'].values.astype(float)
     volume = df['volume'].values.astype(float)
 
-    # Build output dict (not DataFrame — avoid fragmentation)
+    # Build output dict
     out_dict = {}
     for ind_name, ind_cfg in ALL_TA_INDICATORS.items():
         try:
@@ -240,44 +225,67 @@ for si, sym in enumerate(symbols):
         except Exception:
             pass
 
-    # Build CREATE TABLE from actual output columns (first symbol only)
-    if out_dict and si == 0:
-        col_defs = ['symbol TEXT', 'price_date TEXT']
-        for col in sorted(out_dict.keys()):
-            col_defs.append(f'"{col}" REAL')
-        col_defs.append('PRIMARY KEY (symbol, price_date)')
-        conn.execute("DROP TABLE IF EXISTS ta_indicators")
-        conn.execute(f"CREATE TABLE ta_indicators ({', '.join(col_defs)})")
-        conn.execute("CREATE INDEX IF NOT EXISTS idx_ta_sym_date ON ta_indicators(symbol, price_date)")
-        conn.commit()
+    # On first symbol, check/update table structure
+    if si == 0 and out_dict:
+        # Check if table exists and has correct columns
+        try:
+            cursor.execute("SELECT COUNT(*) FROM ta_indicators LIMIT 1")
+            table_exists = True
+        except:
+            table_exists = False
 
-    # Write to SQLite
+        if not table_exists:
+            # Build and execute CREATE TABLE - use MySQL syntax
+            col_defs = ['`symbol` VARCHAR(20) NOT NULL', '`price_date` DATE NOT NULL']
+            for col in sorted(out_dict.keys()):
+                if col.endswith('_upper') or col.endswith('_lower') or col.endswith('_mid'):
+                    col_defs.append(f'`{col}` DOUBLE')
+                else:
+                    col_defs.append(f'`{col}` DOUBLE')
+            col_defs.append('PRIMARY KEY (`symbol`, `price_date`)')
+            create_sql = f"CREATE TABLE ta_indicators ({', '.join(col_defs)}) ENGINE=InnoDB"
+            cursor.execute(create_sql)
+            conn.commit()
+            print(f"  Created ta_indicators table with {len(out_dict)} indicator columns")
+
+    # Write to database (MySQL compatible)
     if out_dict:
         dates = df.index
-        vals = {'symbol': [sym] * len(dates), 'price_date': [str(d)[:10] for d in dates]}
-        vals.update(out_dict)
-        out_df = pd.DataFrame(vals)
-        cols_list = ['symbol', 'price_date'] + [c for c in out_df.columns if c not in ['symbol', 'price_date']]
-        conn.executemany(
-            f"INSERT OR REPLACE INTO ta_indicators ({','.join(cols_list)}) VALUES ({','.join(['?']*len(cols_list))})",
-            out_df[cols_list].values.tolist()
-        )
+        cols_list = ['symbol', 'price_date'] + [c for c in sorted(out_dict.keys())]
+
+        # Build insert SQL with %s placeholders for MySQL
+        placeholders = ', '.join(['%s'] * len(cols_list))
+        cols_str = ', '.join([f'`{c}`' for c in cols_list])
+        insert_sql = f"INSERT INTO ta_indicators ({cols_str}) VALUES ({placeholders}) ON DUPLICATE KEY UPDATE "
+        update_sql = ', '.join([f'`{c}` = VALUES(`{c}`)' for c in out_dict.keys()])
+
+        # Prepare data for executemany
+        batch_data = []
+        for i, date in enumerate(dates):
+            row = [sym, str(date)[:10]]
+            for col in sorted(out_dict.keys()):
+                row.append(out_dict[col][i] if hasattr(out_dict[col], '__getitem__') else out_dict[col])
+            batch_data.append(tuple(row))
+
+        cursor.executemany(insert_sql + update_sql, batch_data)
 
     if (si + 1) % 5 == 0:
         conn.commit()
         elapsed = time.time() - t0
-        n_cols = len(out_dict)
+        n_cols = len(out_dict) if 'out_dict' in dir() else 0
         print(f"  [{si+1}/{len(symbols)}] {elapsed:.0f}s — {sym} ({len(df)} rows x {n_cols} indicators)")
 
 conn.commit()
 
 # Final stats
-stats = conn.execute("""
-    SELECT COUNT(*) as total_rows, COUNT(DISTINCT symbol) as n_symbols,
-           (SELECT COUNT(*) FROM pragma_table_info('ta_indicators')) - 2 as n_indicators
-    FROM ta_indicators
-""").fetchone()
-print(f"\n✅ DONE: {stats[0]:,} rows, {stats[1]} symbols, {stats[2]} indicator columns")
+cursor.execute("SELECT COUNT(*) FROM ta_indicators")
+total_rows = cursor.fetchone()[0]
+cursor.execute("SELECT COUNT(DISTINCT symbol) FROM ta_indicators")
+n_symbols = cursor.fetchone()[0]
+cursor.execute("SHOW COLUMNS FROM ta_indicators")
+n_indicators = len(cursor.fetchall()) - 2  # minus symbol and price_date columns
+
+print(f"\n✅ DONE: {total_rows:,} rows, {n_symbols} symbols, {n_indicators} indicator columns")
 print(f"Time: {time.time()-t0:.0f}s")
 
 conn.close()

@@ -14,15 +14,18 @@ Usage:
   python3 indicator_correlation_study.py
 """
 
-import sqlite3
+import sys
 import numpy as np
 import pandas as pd
 
-DB_PATH = '/home/ksf_stockmarket/ksf_stockmarket/analysis_results.db'
+# Use modular database connector (MariaDB or SQLite)
+sys.path.insert(0, '/home/ksf_stockmarket/ksf_stockmarket/python')
+from db_connector import get_connection
 
-conn = sqlite3.connect(DB_PATH)
+conn = get_connection()
+cursor = conn.cursor()
 
-symbols = [r[0] for r in conn.execute("""
+symbols = [r[0] for r in cursor.execute("""
     SELECT symbol FROM evalsummary GROUP BY symbol HAVING COUNT(*) > 200 ORDER BY symbol
 """).fetchall()]
 
@@ -123,28 +126,35 @@ for ind_name in indicators:
         r = results[ind_name][horizon]
         print(f"  {'Signal → FwdRet':>16} {horizon:>3}d {r['n']:>7d} {r['correlation']:>7.4f} {r['hit_rate']:>5.1f}% {r['avg_ret_high']:>9.3f}% {r['avg_ret_low']:>9.3f}% {r['spread']:>+9.3f}%")
 
-# Save to DB
-conn.execute("""
+# Save to DB (MySQL compatible)
+cursor.execute("""
     CREATE TABLE IF NOT EXISTS indicator_correlation (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        indicator TEXT,
-        horizon_days INTEGER,
-        n_samples INTEGER,
-        correlation REAL,
-        hit_rate REAL,
-        avg_return_high REAL,
-        avg_return_low REAL,
-        spread REAL,
-        UNIQUE(indicator, horizon_days)
-    )
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        indicator VARCHAR(50),
+        horizon_days INT,
+        n_samples INT,
+        correlation DOUBLE,
+        hit_rate DOUBLE,
+        avg_return_high DOUBLE,
+        avg_return_low DOUBLE,
+        spread DOUBLE,
+        UNIQUE KEY uniq_ind_horizon (indicator, horizon_days)
+    ) ENGINE=InnoDB
 """)
 for ind_name, horizons in results.items():
     for horizon, r in horizons.items():
-        conn.execute("""
-            INSERT OR REPLACE INTO indicator_correlation
+        cursor.execute("""
+            INSERT INTO indicator_correlation
             (indicator, horizon_days, n_samples, correlation, hit_rate,
              avg_return_high, avg_return_low, spread)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE
+                n_samples = VALUES(n_samples),
+                correlation = VALUES(correlation),
+                hit_rate = VALUES(hit_rate),
+                avg_return_high = VALUES(avg_return_high),
+                avg_return_low = VALUES(avg_return_low),
+                spread = VALUES(spread)
         """, (ind_name, horizon, r['n'], r['correlation'], r['hit_rate'],
               r['avg_ret_high'], r['avg_ret_low'], r['spread']))
 conn.commit()

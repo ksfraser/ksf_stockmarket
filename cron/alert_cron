@@ -1,0 +1,13 @@
+# Cron jobs for async alert monitoring
+# Add to /etc/cron.d/stockmarket-alerts or similar
+
+# Alert monitor - polls queue every 2 minutes during market hours
+# Processes alerts and triggers LLM analysis
+*/2 9-16 * * 1-5 root /usr/bin/python3 /home/ksf_stockmarket/ksf_stockmarket/python/src/alerts/hermes_alert_monitor.py --once >> /var/log/stockmarket-alerts.log 2>&1
+
+# Detection triggers - run every 15 minutes
+# Writes alerts to queue, non-blocking
+*/15 9-16 * * 1-5 root /usr/bin/python3 /home/ksf_stockmarket/ksf_stockmarket/python/src/alerts/detection_triggers.py >> /var/log/stockmarket-alerts.log 2>&1
+
+# Weekend catchup - run once Saturday morning
+0 10 * * 6 root /usr/bin/python3 /home/ksf_stockmarket/ksf_stockmarket/python/src/alerts/hermes_alert_monitor.py --once --date "$(date -d 'yesterday' +%Y-%m-%d)" >> /var/log/stockmarket-alerts.log 2>&1

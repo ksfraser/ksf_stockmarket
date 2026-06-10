@@ -167,6 +167,76 @@ $mappings = $exchangeCtrl->listExchangeMappings();
     </form>
 </div>
 
+<!-- Watchlist Management Section -->
+<div class="card" style="margin-top:24px;">
+    <div class="card-header">&#128274; Watchlist Management (Track symbols without portfolio)</div>
+    
+    <?php if (!empty($_SESSION['flash_message'])): ?>
+        <div style="background:rgba(104,211,145,0.15);border:1px solid var(--green);color:var(--green);padding:12px;border-radius:var(--radius);margin-bottom:16px;font-size:0.9em;">
+            <?= htmlspecialchars($_SESSION['flash_message']) ?>
+        </div>
+        <?php unset($_SESSION['flash_message']); ?>
+    <?php endif; ?>
+
+    <!-- Existing watchlist symbols -->
+    <?php if (!empty($watchlistSymbols)): ?>
+    <table style="margin-bottom:20px;">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Monitor Volume</th>
+                <th>Monitor Price</th>
+                <th>Volume Threshold</th>
+                <th>Notes</th>
+                <th>Added</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($watchlistSymbols as $w): ?>
+            <tr>
+                <td><?= htmlspecialchars($w['symbol']) ?></td>
+                <td style="text-align:center;"><?= $w['monitor_volume'] ? '&#10003;' : '&#10007;' ?></td>
+                <td style="text-align:center;"><?= $w['monitor_price'] ? '&#10003;' : '&#10007;' ?></td>
+                <td style="text-align:center;"><?= htmlspecialchars($w['volume_spike_threshold']) ?>x</td>
+                <td><?= htmlspecialchars($w['notes'] ?? '—') ?></td>
+                <td style="font-size:0.85em"><?= date('Y-m-d', strtotime($w['added_at'])) ?></td>
+                <td>
+                    <form method="POST" action="?action=admin_symbols&subaction=remove_watchlist" style="display:inline" onsubmit="return confirm('Remove this symbol from watchlist?');">
+                        <input type="hidden" name="symbol" value="<?= htmlspecialchars($w['symbol']) ?>">
+                        <button type="submit" class="btn btn-sm" style="background:var(--red);font-size:0.8em;padding:4px 8px;">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php else: ?>
+        <p style="color:var(--text3);font-size:0.9em;margin-bottom:16px;">No symbols in watchlist. Add one below.</p>
+    <?php endif; ?>
+
+    <!-- Add to watchlist form -->
+    <h4 style="margin-top:16px; font-size:0.9em; color:var(--text2)">Add Symbol to Watchlist</h4>
+    <form method="POST" action="?action=admin_symbols&subaction=add_watchlist" style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr auto; gap:8px; align-items:end">
+        <div>
+            <label style="font-size:0.75em; color:var(--text3)">Symbol</label>
+            <input type="text" name="symbol" placeholder="e.g. AAPL" required style="width:100%">
+        </div>
+        <div>
+            <label style="font-size:0.75em; color:var(--text3)">Volume Threshold</label>
+            <input type="number" name="volume_spike_threshold" value="3.0" step="0.5" min="1" max="10" style="width:100%">
+        </div>
+        <div>
+            <label style="font-size:0.75em; color:var(--text3)">Notes</label>
+            <input type="text" name="notes" placeholder="Optional" style="width:100%">
+        </div>
+        <button type="submit" class="btn btn-sm">Add to Watchlist</button>
+    </form>
+    <p style="font-size:0.75em; color:var(--text3); margin-top:8px;">
+        &#128172; Symbols added here are tracked for volume/price alerts but are NOT part of your portfolio. Useful for monitoring stocks you're considering.
+    </p>
+</div>
+
 <script>
 function showDeactivate(symbol) {
     document.getElementById('deactivate-symbol').value = symbol;

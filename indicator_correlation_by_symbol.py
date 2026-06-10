@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 indicator_correlation_by_symbol.py
-===================================
+==================================
 Run indicator-to-returns correlation PER SYMBOL (not pooled).
 Also tests expanded candlestick patterns using TA-Lib if available,
 or falling back to manual computation of all 10 major patterns.
@@ -10,12 +10,16 @@ This answers: "Is the ATR/volatility finding consistent across all 19
 symbols, or driven by a few outliers?"
 """
 
-import sqlite3
+import sys
 import numpy as np
 import pandas as pd
 
-DB_PATH = '/home/ksf_stockmarket/ksf_stockmarket/analysis_results.db'
-conn = sqlite3.connect(DB_PATH)
+# Use modular database connector
+sys.path.insert(0, '/home/ksf_stockmarket/ksf_stockmarket/python')
+from db_connector import get_connection
+
+conn = get_connection()
+cursor = conn.cursor()
 
 symbols = [r[0] for r in conn.execute("""
     SELECT symbol FROM evalsummary GROUP BY symbol HAVING COUNT(*) > 200 ORDER BY symbol

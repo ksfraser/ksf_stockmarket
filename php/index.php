@@ -73,7 +73,7 @@ if ($action === 'register') {
 }
 
 // Routes requiring authentication (portfolio, transactions, personal data)
-$protectedRoutes = ['portfolio', 'transactions', 'detail', 'indicators', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders'];
+$protectedRoutes = ['portfolio', 'transactions', 'detail', 'indicators', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings'];
 if (in_array($action, $protectedRoutes, true) && !AuthController::checkSession()) {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header('Location: ?action=login');
@@ -129,6 +129,28 @@ switch ($action) {
         $pageTitle = 'Stop Orders';
         $template = 'stop_orders';
         break;
+    case 'broker_stops':
+        require_once '/var/www/stockmarket-app/src/Controller/BrokerStopController.php';
+        $ctrl = new BrokerStopController();
+        
+        // Handle form submissions
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $action = $_POST['action'] ?? '';
+            if ($action === 'place') {
+                $result = $ctrl->placeStop($_POST);
+                $data['message'] = $result['success'] ?? '';
+                $data['error'] = $result['error'] ?? '';
+            } elseif ($action === 'trigger' && !empty($_POST['stop_id'])) {
+                $result = $ctrl->markTriggered((int)$_POST['stop_id']);
+                $data['message'] = $result['success'] ?? '';
+                $data['error'] = $result['error'] ?? '';
+            }
+        }
+        
+        $data = array_merge($data, $ctrl->index($_GET['account'] ?? 'all'));
+        $pageTitle = 'Broker Stop Orders';
+        $template = 'broker_stops';
+        break;
     case 'admin_symbols':
         $ctrl = new SymbolAdminController();
         $subaction = $_GET['subaction'] ?? 'list';
@@ -147,9 +169,29 @@ switch ($action) {
             header('Location: ?action=admin_symbols');
             exit;
         }
+        if ($subaction === 'add_watchlist' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $ctrl->addToWatchlist($_POST);
+            $_SESSION['flash_message'] = 'Symbol added to watchlist.';
+            header('Location: ?action=admin_symbols');
+            exit;
+        }
+        if ($subaction === 'remove_watchlist' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $ctrl->removeFromWatchlist($_POST['symbol'] ?? '');
+            $_SESSION['flash_message'] = 'Symbol removed from watchlist.';
+            header('Location: ?action=admin_symbols');
+            exit;
+        }
         $data = array_merge($data, $ctrl->listSymbols($_GET['filter'] ?? 'all', $_GET['search'] ?? ''));
+        $data = array_merge($data, ['watchlistSymbols' => $ctrl->listWatchlistSymbols()]);
         $pageTitle = 'Symbol Admin';
         $template = 'admin_symbols';
+        break;
+    case 'admin_settings':
+        require_once '/var/www/stockmarket-app/src/Controller/AdminSettingsController.php';
+        $ctrl = new AdminSettingsController();
+        $data = array_merge($data, $ctrl->index());
+        $pageTitle = 'Admin Settings';
+        $template = 'admin_settings';
         break;
     case 'indicators':
         $ctrl = new StockController();
@@ -226,12 +268,18 @@ switch ($action) {
         $pageTitle = 'Money & Risk Management';
         $template = 'strategy_money';
         break;
-    case 'strategy_timing':
+case 'strategy_timing':
         $registry = \App\Strategy\StrategyFactory::create();
         $ctrl = new StrategyController($registry);
         $data = array_merge($data, $ctrl->timing());
         $pageTitle = 'Timing & Technical Strategies';
         $template = 'strategy_timing';
+        break;
+    case 'screener':
+        $ctrl = new StockController();
+        $data = array_merge($data, $ctrl->screener($_GET['preset'] ?? 'dividend_stocks'));
+        $pageTitle = 'Stock Screener - TradingView';
+        $template = 'screener';
         break;
     case 'upload':
         require_once '/var/www/stockmarket-app/src/Controller/DocumentUploadController.php';

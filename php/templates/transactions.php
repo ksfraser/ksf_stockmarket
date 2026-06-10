@@ -234,21 +234,17 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                 <td class="c">
 <?php
                 $srcFile = $t['source_file'] ?? '';
-                // Debug: show raw value to understand what's happening
-                error_log("Template debug: id={$t['id']}, source_file=" . var_export($srcFile, true));
                 // Treat empty/null source_file as manual_entry for backwards compatibility
                 $isManual = ($srcFile === 'manual_entry' || $srcFile === '' || $srcFile === null);
-                $isImported = ($srcFile !== '' && $srcFile !== 'manual_entry');
                 ?>
+                <!-- Edit button for ALL transactions -->
+                <button type="button" onclick="openEditModal(<?php echo $t['id']; ?>, '<?php echo htmlspecialchars($t['trade_date'] ?? ''); ?>', <?php echo (float)($t['quantity'] ?? 0); ?>, <?php echo (float)($t['price'] ?? 0); ?>, <?php echo (float)($t['commission'] ?? 0); ?>, '<?php echo htmlspecialchars($t['notes'] ?? ''); ?>', '<?php echo htmlspecialchars($t['type'] ?? ''); ?>', '<?php echo htmlspecialchars($srcFile ?: 'manual'); ?>')" style="background:none;border:none;color:#cc9900;cursor:pointer;font-size:0.9em;" title="Edit">&#x270F;&#xFE0F;</button>
                 <?php if ($isManual): ?>
                     <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this transaction? This will reverse its effect on your portfolio.');">
                         <input type="hidden" name="action" value="delete">
                         <input type="hidden" name="txn_id" value="<?php echo $t['id']; ?>">
                         <button type="submit" style="background:none;border:none;color:#a44;cursor:pointer;font-size:0.9em;" title="Delete">&#x1F5D1;</button>
                     </form>
-                    <button type="button" onclick="openEditModal(<?php echo $t['id']; ?>, '<?php echo htmlspecialchars($t['trade_date'] ?? ''); ?>', <?php echo (float)($t['quantity'] ?? 0); ?>, <?php echo (float)($t['price'] ?? 0); ?>, <?php echo (float)($t['commission'] ?? 0); ?>, '<?php echo htmlspecialchars($t['notes'] ?? ''); ?>', '<?php echo htmlspecialchars($t['source_file'] ?? 'manual'); ?>')" style="background:none;border:none;color:#cc9900;cursor:pointer;font-size:0.9em;" title="Edit">&#x270F;&#xFE0F;</button>
-                <?php elseif ($isImported): ?>
-                    <button type="button" onclick="openEditModal(<?php echo $t['id']; ?>, '<?php echo htmlspecialchars($t['trade_date'] ?? ''); ?>', <?php echo (float)($t['quantity'] ?? 0); ?>, <?php echo (float)($t['price'] ?? 0); ?>, <?php echo (float)($t['commission'] ?? 0); ?>, '<?php echo htmlspecialchars($t['notes'] ?? ''); ?>', '<?php echo htmlspecialchars($t['source_file'] ?? ''); ?>')" style="background:none;border:none;color:#cc9900;cursor:pointer;font-size:0.9em;" title="Edit">&#x270F;&#xFE0F;</button>
                 <?php endif; ?>
             </td>
             </tr>
@@ -301,14 +297,14 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
 </div>
 
 <script>
-function openEditModal(txnId, tradeDate, quantity, price, commission, notes, sourceFile) {
+function openEditModal(txnId, tradeDate, quantity, price, commission, notes, txnType, sourceFile) {
     document.getElementById('edit_txn_id').value = txnId;
     document.getElementById('edit_trade_date').value = tradeDate;
     document.getElementById('edit_quantity').value = quantity;
     document.getElementById('edit_price').value = price;
-    document.getElementById('edit_commission').value = commission;
+    document.getElementById('edit_commission').value = commission || '';
     document.getElementById('edit_notes').value = notes;
-    document.getElementById('edit_source_file').textContent = 'Source: ' + sourceFile;
+    document.getElementById('edit_source_file').textContent = 'Source: ' + sourceFile + ' | Type: ' + txnType;
     document.getElementById('editModal').style.display = 'flex';
 }
 function closeEditModal() {

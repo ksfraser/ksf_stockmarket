@@ -537,6 +537,7 @@ class StockController {
                 'shares' => $h['shares'],
                 'cost_basis' => $h['cost_basis'],
                 'current_price' => $currentPrice,
+                'price_date' => $h['price_date'],
                 'market_value' => $h['shares'] * $currentPrice,
                 'trailing_stop_pct' => $trailingStopPct,
                 'trailing_stop_price' => $trailingStopPrice,
@@ -545,7 +546,7 @@ class StockController {
                 'atr_14' => $atr14,
                 'atr_multiplier' => $atrMultiplier,
                 'atr_stop_price' => $atrStopPrice,
-                'effective_stop_price' => $effectiveStopPrice,
+                'effective_stop_price' => max($effectiveStopPrice, $atrStopPrice ?: 0),
                 'stop_status' => $stopStatus,
                 'strategy' => $h['strategy'] ?? 'Trailing Stop',
             ];
@@ -580,10 +581,11 @@ class StockController {
                    AVG(p.stop_loss_pct) as stop_loss_pct,
                    p.strategy,
                    AVG(p.atr_multiplier) as atr_multiplier,
-                   latest.close as current_price
+                   latest.close as current_price,
+                   latest.price_date as price_date
             FROM portfolio p
             LEFT JOIN (
-                SELECT sp1.symbol, sp1.close
+                SELECT sp1.symbol, sp1.close, sp1.price_date
                 FROM stockprices sp1
                 INNER JOIN (
                     SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol
@@ -682,6 +684,48 @@ class StockController {
             'current_regime' => $stateLabels[end($regimes)],
             'transition_matrix' => $transitionMatrix,
             'stationary_distribution' => $stationary
+        ];
+    }
+    
+    /**
+     * GET /?action=screener — Display TradingView screener results.
+     */
+    public function screener(string $preset = 'dividend_stocks'): array {
+        // Available presets with markets
+        $presets = [
+            'dividend_stocks' => ['label' => 'Dividend Stocks (Yield >3%)', 'market' => 'america'],
+            'quality_compounder' => ['label' => 'Quality Compunders', 'market' => 'america'],
+            'value_stocks' => ['label' => 'Value Stocks (P/E <15)', 'market' => 'america'],
+            'canadian_dividends' => ['label' => 'Canadian Dividends (Yield >3%)', 'market' => 'canada'],
+        ];
+        
+        if (!isset($presets[$preset])) {
+            $preset = 'dividend_stocks';
+        }
+        
+        $market = $presets[$preset]['market'];
+        
+        // Get latest results from DB
+        $stmt = $this->pdo->prepare("
+            SELECT symbol, data, run_at, market
+            FROM tradingview_screener_results 
+            WHERE preset_name = :preset AND market = :market
+            ORDER BY symbol
+            LIMIT 100
+        ");
+        $stmt->execute([':preset' => $preset, ':market' => $market]);
+        $results = $stmt->fetchAll();
+        
+        // Decode JSON data
+        foreach ($results as &$r) {
+            $r['metrics'] = json_decode($r['data'], true) ?: [];
+        }
+        
+        return [
+            'preset_name' => $preset,
+            'preset_label' => $presets[$preset]['label'],
+            'presets' => $presets,
+            'screener_results' => $results,
         ];
     }
 }

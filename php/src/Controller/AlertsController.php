@@ -32,8 +32,11 @@ class AlertsController
         $summary = $this->computeSummary($jobs);
         $volumeSnapshots = $this->getVolumeSnapshotInfo($jobs);
         $priceAlerts = $this->getPriceAlertInfo($jobs);
-
+        
         $watchlistSymbols = $this->loadWatchlistSymbols();
+        $alertQueueCounts = $this->getAlertQueueCounts();
+        $filter = $_GET['filter'] ?? '';
+        $recentAlerts = $this->getRecentAlerts($filter === 'portfolio' ? 'portfolio' : null);
 
         return [
             'pageTitle'       => 'Alerts & Cron Status',
@@ -43,6 +46,9 @@ class AlertsController
             'volumeSnapshots' => $volumeSnapshots,
             'priceAlerts'     => $priceAlerts,
             'watchlistSymbols'=> $watchlistSymbols,
+            'alertCounts'     => $alertQueueCounts,
+            'recentAlerts'    => $recentAlerts,
+            'filter'          => $filter,
         ];
     }
 
@@ -179,6 +185,62 @@ class AlertsController
                 FROM watchlist_symbols
                 ORDER BY list_type, symbol
             ");
+            return $stmt->fetchAll();
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get alert_queue counts by status from MariaDB.
+     */
+    private function getAlertQueueCounts(): array
+    {
+        try {
+            $pdo = Database::get();
+            $stmt = $pdo->query("
+                SELECT status, COUNT(*) as cnt 
+                FROM alert_queue 
+                GROUP BY status
+            ");
+            $counts = ['pending' => 0, 'completed' => 0, 'failed' => 0];
+            foreach ($stmt->fetchAll() as $row) {
+                $counts[$row['status']] = (int)$row['cnt'];
+            }
+            return $counts;
+        } catch (Exception $e) {
+            return ['pending' => 0, 'completed' => 0, 'failed' => 0];
+        }
+    }
+
+    /**
+     * Get recent triggered alerts from MariaDB (last 7 days).
+     * Can filter by portfolio symbols if provided.
+     */
+    private function getRecentAlerts(?string $portfolioFilter = null): array
+    {
+        try {
+            $pdo = Database::get();
+            
+            $sql = "
+                SELECT id, symbol, alert_type, severity, payload, status, created_at, completed_at
+                FROM alert_queue 
+                WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+            ";
+            
+            // Optional filter by portfolio symbols
+            if ($portfolioFilter === 'portfolio') {
+                $sql = "
+                    SELECT aq.id, aq.symbol, aq.alert_type, aq.severity, aq.payload, aq.status, aq.created_at, aq.completed_at
+                    FROM alert_queue aq
+                    INNER JOIN portfolio_holdings ph ON aq.symbol = ph.symbol
+                    WHERE aq.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+                ";
+            }
+            
+            $sql .= " ORDER BY created_at DESC LIMIT 100";
+            
+            $stmt = $pdo->query($sql);
             return $stmt->fetchAll();
         } catch (Exception $e) {
             return [];

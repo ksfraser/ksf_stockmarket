@@ -27,11 +27,11 @@ logger = logging.getLogger(__name__)
 
 def process_pending_alert(conn, cursor, alert_row) -> bool:
     """
-    Process a single alert - call LLM and write response.
+    Process a single alert - call LLM only if needed, with fallback to basic alert.
     """
     alert_id = alert_row['id']
     symbol = alert_row['symbol']
-    alert_type = alert_row['alert_type']  # Fixed: use alert_type column
+    alert_type = alert_row['alert_type']
     payload = json.loads(alert_row['payload'])
     
     # Get triggered_at timestamp from payload (when alert originally occurred)
@@ -65,7 +65,22 @@ def process_pending_alert(conn, cursor, alert_row) -> bool:
         logger.info(f"Processed alert {alert_id} for {symbol}")
         return True
     
-    return False
+    # LLM failed - send basic alert as fallback
+    logger.warning(f"LLM call failed for alert {alert_id}, sending basic alert")
+    
+    # Update alert status to completed even without LLM (we still notified)
+    cursor.execute("""
+        UPDATE alert_queue 
+        SET status = 'completed', completed_at = NOW()
+        WHERE id = %s
+    """, (alert_id,))
+    
+    conn.commit()
+    
+    # Send basic alert without LLM analysis
+    send_discord_response(symbol, alert_type, None, triggered_at, payload)
+    
+    return True
 
 
 def build_llm_prompt(alert_type: str, symbol: str, payload: dict) -> str:
@@ -139,12 +154,24 @@ def infer_action(response: str) -> str:
     return 'hold'
 
 
-def send_discord_response(symbol: str, alert_type: str, response: str, triggered_at: str = None):
-    """Send analysis to Discord channel."""
+def send_discord_response(symbol: str, alert_type: str, response: str, triggered_at: str = None, payload: dict = None):
+    """Send analysis to Discord channel. Falls back to basic alert if no LLM response."""
     try:
         from hermes_tools import send_message
         ts_info = f"\n\n> Triggered: {triggered_at}" if triggered_at else ""
-        message = f"**{symbol} - {alert_type.replace('_', ' ').title()} Analysis**{ts_info}\n\n{response}"
+        
+        if response:
+            # LLM analysis available
+            message = f"**{symbol} - {alert_type.replace('_', ' ').title()} Analysis**{ts_info}\n\n{response}"
+        else:
+            # Basic fallback alert - show payload data
+            details = ""
+            if payload:
+                for k, v in payload.items():
+                    if k != 'triggered_at':
+                        details += f"\n{k}: {v}"
+            message = f"**{symbol} - {alert_type.replace('_', ' ').title()} Alert**{ts_info}{details}\n\n*LLM analysis unavailable*"
+        
         send_message(target='discord:#stock-sell-alerts', message=message)
     except Exception as e:
         logger.error(f"Discord send failed: {e}")

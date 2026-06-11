@@ -1,13 +1,11 @@
 """
-db/sqlite_adapter.py — SQLite adapter for local testing and backtesting.
+db/sqlite_adapter.py — SQLite adapter for local testing (DEPRECATED)
 
-Usage:
-    adapter = SQLiteConnection('/tmp/test.db')
-    with adapter as conn:
-        rows = conn.fetchall("SELECT * FROM stockprices WHERE symbol = ?", ('RY',))
+Note: MariaDB is now the primary database. For MariaDB connections, use:
+  python/src/database.py or python/db/mysql_adapter.py
 
-Note: SQLite uses ? placeholders, MySQL uses %s. The adapter handles this
-transparently — always use %s in SQL, the adapter converts.
+This file is kept for potential local testing scenarios but should not be used
+in production. Always use MariaDB backend (ksfraser_stock_market) for live data.
 """
 import sqlite3
 import re
@@ -16,7 +14,7 @@ from db.adapter import DBConnection
 
 
 class SQLiteConnection(DBConnection):
-    """SQLite adapter — for testing, backtesting, and local dev."""
+    """SQLite adapter — for testing and local dev only. MariaDB preferred."""
 
     def __init__(self, db_path: str):
         self._db_path = db_path

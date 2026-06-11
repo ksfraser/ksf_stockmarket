@@ -301,12 +301,12 @@ class DBConnection(ABC):
 ```
 
 **Implementations:**
-- `MySQLAdapter` — pymysql, connects to ksfraser.ca
-- `SQLiteAdapter` — sqlite3, for local testing
+- `MySQLAdapter` — pymysql, connects to ksfraser.ca (PRIMARY)
+- `SQLiteAdapter` — sqlite3, DEPRECATED (kept for testing only; all production data uses MariaDB)
 
-**Factory:** `Database.from_config('config.yaml')` picks adapter based on `db.engine` key
+**Factory:** `Database.from_config('config.yaml')` uses MariaDB by default.
 
-**Tests:** 18 unit tests passing (SQLite adapter), `tests/unit/test_db_adapter.py`
+**Tests:** Tests use MariaDB connection to ksfraser_stock_market.
 
 ---
 

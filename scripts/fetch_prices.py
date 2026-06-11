@@ -1,25 +1,14 @@
 #!/usr/bin/env python3
 """
-fetch_prices.py — Pull historical prices from yfinance into SQLite
-===================================================================
-Fetches OHLCV data for all portfolio symbols back to 2013.
-Writes directly to the dev SQLite DB so analysis/backtesting can run
-without MariaDB.
+fetch_prices.py — LEGACY SCRIPT (SUPPRESSED - USE python/fetch_prices.py WITH MARIADB)
 
-Usage:
-  python3 fetch_prices.py                    # Fetch all 20 symbols
-  python3 fetch_prices.py --symbols RY.TO,TD.TO  # Specific symbols
-  python3 fetch_prices.py --start 2010-01-01     # Custom start date
+This script was replaced by python/fetch_prices.py which writes to MariaDB.
+See python/fetch_prices.py for the active version that uses ksfraser_stock_market DB.
 """
-
-import argparse
-import sqlite3
+# DEPRECATED - See python/fetch_prices.py for MariaDB version
 import sys
-import time
-import os
-from datetime import date, datetime
-
-DB_PATH = os.path.join(os.path.dirname(__file__), '..', 'analysis_results.db')
+print("This script is deprecated. Use python/fetch_prices.py instead.", file=sys.stderr)
+sys.exit(0)
 
 # Portfolio symbols (from migrate)
 PORTFOLIO_SYMBOLS = [

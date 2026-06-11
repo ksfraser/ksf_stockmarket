@@ -18,7 +18,7 @@ Usage:
 
 Database:
     Reads seg_funds table for fund list, writes to seg_fund_prices.
-    Uses db_connector.py for DB connection (supports MariaDB/SQLite).
+    Uses MariaDB (ksfraser_stock_market) via db/mysql_adapter.py.
 """
 
 import argparse

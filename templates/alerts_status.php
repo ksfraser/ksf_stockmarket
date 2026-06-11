@@ -1,0 +1,341 @@
+<?php
+/**
+ * Alerts & Cron Status dashboard.
+ *
+ * Data:
+ *   $jobs       — array of cron job info
+ *   $summary    — counts by status (cron jobs)
+ *   $volumeSnapshots — volume snapshot jobs
+ *   $priceAlerts     — price alert jobs
+ *   $alertCounts     — alert_queue counts (pending, completed, failed)
+ *   $recentAlerts    — triggered alerts from last 7 days
+ */
+$jobs       = $data['jobs'] ?? [];
+$summary    = $data['summary'] ?? [];
+$volumeSnapshots = $data['volumeSnapshots'] ?? [];
+$priceAlerts = $data['priceAlerts'] ?? [];
+$alertCounts = $data['alertCounts'] ?? [];
+$recentAlerts = $data['recentAlerts'] ?? [];
+
+function statusBadge(string $status): array
+{
+    return match ($status) {
+        'ok'        => ['green',  '&#x2705; OK'],
+        'error'     => ['red',    '&#x274C; Error'],
+        'paused'    => ['yellow', '&#x23F8; Paused'],
+        'scheduled' => ['accent', '&#x23F0; Scheduled'],
+        default     => ['blue',   '&#x2022; Never Run'],
+    };
+}
+?>
+
+<div class="card" style="margin-bottom:24px;">
+    <div class="card-header">&#x1F4E3; Alerts &amp; Cron Job Status</div>
+    <p style="margin-bottom:16px;">
+        Monitoring all Hermes cron jobs that track your investments.
+        Volume snapshots run 4× daily during market hours (Mon–Fri).
+        Price alerts check every 15 minutes.
+    </p>
+
+    <!-- Summary Cards -->
+    <div class="stats-grid" style="margin-bottom:20px;">
+        <div class="stat-card" style="background:rgba(0,0,0,0.15);">
+            <div style="font-size:0.7em;color:var(--text3);text-transform:uppercase;">Total Jobs</div>
+            <div style="font-size:1.8em;font-weight:700;"><?= (int)($summary['total'] ?? 0) ?></div>
+        </div>
+        <div class="stat-card" style="background:rgba(104,211,145,0.1);">
+            <div style="font-size:0.7em;color:var(--green);text-transform:uppercase;">OK</div>
+            <div style="font-size:1.8em;font-weight:700;color:var(--green);"><?= (int)($summary['ok'] ?? 0) ?></div>
+        </div>
+        <div class="stat-card" style="background:rgba(252,129,129,0.1);">
+            <div style="font-size:0.7em;color:var(--red);text-transform:uppercase;">Errors</div>
+            <div style="font-size:1.8em;font-weight:700;color:var(--red);"><?= (int)($summary['errors'] ?? 0) ?></div>
+        </div>
+        <div class="stat-card" style="background:rgba(246,224,94,0.1);">
+            <div style="font-size:0.7em;color:var(--yellow);text-transform:uppercase;">Paused</div>
+            <div style="font-size:1.8em;font-weight:700;color:var(--yellow);"><?= (int)($summary['paused'] ?? 0) ?></div>
+        </div>
+        <div class="stat-card" style="background:rgba(99,179,237,0.1);">
+            <div style="font-size:0.7em;color:var(--accent);text-transform:uppercase;">Scheduled</div>
+            <div style="font-size:1.8em;font-weight:700;color:var(--accent);"><?= (int)($summary['scheduled'] ?? 0) ?></div>
+        </div>
+    </div>
+    
+    <!-- Alert Queue Counts -->
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;">
+        <div style="padding:8px 16px;background:rgba(99,179,237,0.1);border-radius:8px;">
+            <span style="font-size:0.7em;color:var(--text3);text-transform:uppercase;">Pending</span>
+            <strong style="margin-left:6px;color:var(--accent);"><?= (int)($alertCounts['pending'] ?? 0) ?></strong>
+        </div>
+        <div style="padding:8px 16px;background:rgba(104,211,145,0.1);border-radius:8px;">
+            <span style="font-size:0.7em;color:var(--text3);text-transform:uppercase;">Completed</span>
+            <strong style="margin-left:6px;color:var(--green);"><?= (int)($alertCounts['completed'] ?? 0) ?></strong>
+        </div>
+        <div style="padding:8px 16px;background:rgba(252,129,129,0.1);border-radius:8px;">
+            <span style="font-size:0.7em;color:var(--text3);text-transform:uppercase;">Failed</span>
+            <strong style="margin-left:6px;color:var(--red);"><?= (int)($alertCounts['failed'] ?? 0) ?></strong>
+        </div>
+    </div>
+</div>
+
+<!-- Volume Snapshot Schedule -->
+<?php if (!empty($volumeSnapshots)): ?>
+<h2 style="color:var(--orange);margin:20px 0 12px;border-bottom:1px solid rgba(237,137,54,0.3);padding-bottom:8px;">
+    &#x1F4CA; Volume Snapshots (4× Daily)
+</h2>
+<p style="font-size:0.85em;color:var(--text3);margin-bottom:12px;">
+    Mon–Fri: 10:30 AM, 12:00 PM, 3:00 PM, 3:45 PM — Checks intraday volume spikes (2× average threshold).
+    Symbols monitored: RY, CM, CNR, BPF.UN, SRV.UN, CDZ, PZA, WJX, MTY, TFII, RUS, PDC, FEZ, IEV, SPEU, MX, RGLD, UL.
+</p>
+<?php foreach ($volumeSnapshots as $job):
+    [$color, $badge] = statusBadge($job['last_status']);
+?>
+<div class="card" style="margin-bottom:10px;border-left:3px solid var(--orange);">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span style="background:rgba(<?= $color === 'green' ? '104,211,145' : ($color === 'red' ? '252,129,129' : '99,179,237') ?>,0.2);color:var(--<?= $color ?>);padding:2px 10px;border-radius:12px;font-size:0.75em;">
+            <?= $badge ?>
+        </span>
+        <strong><?= htmlspecialchars($job['name']) ?></strong>
+        <span style="margin-left:auto;font-size:0.75em;color:var(--text3);">
+            Schedule: <code><?= htmlspecialchars($job['schedule']) ?></code>
+        </span>
+    </div>
+    <div style="display:flex;gap:20px;margin-top:8px;font-size:0.8em;color:var(--text3);">
+        <span>Last run: <strong><?= htmlspecialchars($job['last_run']) ?></strong><?php if (!empty($job['last_run_at'])): ?><?php
+            $age = time() - strtotime($job['last_run_at']);
+            $staleClass = $age > 86400 ? 'red' : ($age > 3600 ? 'yellow' : 'green');
+            $ageStr = $age < 60 ? $age . 's ago' : ($age < 3600 ? floor($age/60) . 'm ago' : ($age < 86400 ? floor($age/3600) . 'h ago' : floor($age/86400) . 'd ago'));
+        ?><span style="color:var(--<?= $staleClass ?>);font-size:0.9em;"> (<?= $ageStr ?>)</span><?php endif; ?></span>
+        <span>Next run: <strong><?= htmlspecialchars($job['next_run']) ?></strong></span>
+        <?php if ($job['last_error']): ?>
+            <span style="color:var(--red);">Error: <?= htmlspecialchars($job['last_error']) ?></span>
+        <?php endif; ?>
+    </div>
+</div>
+<?php endforeach; ?>
+<?php endif; ?>
+
+<!-- Price Alerts -->
+<?php if (!empty($priceAlerts)): ?>
+<h2 style="color:var(--green);margin:20px 0 12px;border-bottom:1px solid rgba(104,211,145,0.3);padding-bottom:8px;">
+    &#x1F4B0; Price Alerts
+</h2>
+<?php foreach ($priceAlerts as $job):
+    [$color, $badge] = statusBadge($job['last_status']);
+?>
+<div class="card" style="margin-bottom:10px;border-left:3px solid var(--green);">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span style="background:rgba(<?= $color === 'green' ? '104,211,145' : ($color === 'red' ? '252,129,129' : '99,179,237') ?>,0.2);color:var(--<?= $color ?>);padding:2px 10px;border-radius:12px;font-size:0.75em;">
+            <?= $badge ?>
+        </span>
+        <strong><?= htmlspecialchars($job['name']) ?></strong>
+        <span style="margin-left:auto;font-size:0.75em;color:var(--text3);">
+            <code><?= htmlspecialchars($job['schedule']) ?></code>
+        </span>
+    </div>
+    <div style="display:flex;gap:20px;margin-top:8px;font-size:0.8em;color:var(--text3);">
+        <span>Last: <strong><?= htmlspecialchars($job['last_run']) ?></strong><?php if (!empty($job['last_run_at'])): ?><?php
+            $age = time() - strtotime($job['last_run_at']);
+            $staleClass = $age > 86400 ? 'red' : ($age > 3600 ? 'yellow' : 'green');
+            $ageStr = $age < 60 ? $age . 's ago' : ($age < 3600 ? floor($age/60) . 'm ago' : ($age < 86400 ? floor($age/3600) . 'h ago' : floor($age/86400) . 'd ago'));
+        ?><span style="color:var(--<?= $staleClass ?>);font-size:0.9em;"> (<?= $ageStr ?>)</span><?php endif; ?></span>
+        <span>Next: <strong><?= htmlspecialchars($job['next_run']) ?></strong></span>
+    </div>
+</div>
+<?php endforeach; ?>
+<?php endif; ?>
+
+<!-- Alert Filters -->
+<div style="margin-bottom:12px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+    <form method="GET" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <input type="hidden" name="action" value="alerts_status">
+        
+        <label style="font-size:0.8em;color:var(--text3);">
+            <input type="radio" name="filter" value="" onchange="this.form.submit()" <?= (!isset($_GET['filter']) || $_GET['filter'] === '') ? 'checked' : '' ?>> All Alerts
+        </label>
+        <label style="font-size:0.8em;color:var(--text3);">
+            <input type="radio" name="filter" value="portfolio" onchange="this.form.submit()" <?= (($_GET['filter'] ?? '') === 'portfolio') ? 'checked' : '' ?>> Portfolio Only
+        </label>
+        
+        <select name="severity" onchange="this.form.submit()" style="background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.1);color:var(--text2);padding:4px 8px;border-radius:4px;font-size:0.8em;">
+            <option value="">All Severities</option>
+            <option value="critical" <?= (($_GET['severity'] ?? '') === 'critical') ? 'selected' : '' ?>>Critical</option>
+            <option value="high" <?= (($_GET['severity'] ?? '') === 'high') ? 'selected' : '' ?>>High</option>
+            <option value="medium" <?= (($_GET['severity'] ?? '') === 'medium') ? 'selected' : '' ?>>Medium</option>
+            <option value="low" <?= (($_GET['severity'] ?? '') === 'low') ? 'selected' : '' ?>>Low</option>
+        </select>
+        
+        <input type="text" name="symbol" placeholder="Symbol filter (e.g., RY)" value="<?= htmlspecialchars($_GET['symbol'] ?? '') ?>" style="background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.1);color:var(--text2);padding:4px 8px;border-radius:4px;font-size:0.8em;width:120px;">
+        <button type="submit" style="background:var(--accent);color:white;border:none;padding:4px 12px;border-radius:4px;font-size:0.8em;cursor:pointer;">Filter</button>
+        <?php if (($_GET['filter'] ?? '') || ($_GET['severity'] ?? '') || ($_GET['symbol'] ?? '')): ?>
+            <a href="?action=alerts_status" style="font-size:0.75em;color:var(--text3);text-decoration:none;margin-left:8px;">Clear</a>
+        <?php endif; ?>
+    </form>
+</div>
+
+<!-- Recent Triggered Alerts -->
+<h2 style="color:var(--green);margin:24px 0 12px;border-bottom:1px solid rgba(104,211,145,0.3);padding-bottom:8px;">
+    &#x1F6A8; Recent Triggered Alerts (Last 7 Days)
+</h2>
+
+<?php if (empty($recentAlerts)): ?>
+<div class="card">
+    <p style="color:var(--text3);text-align:center;padding:20px;">No alerts triggered in the last 7 days.</p>
+</div>
+<?php else: ?>
+<div style="overflow-x:auto;">
+<table style="width:100%;border-collapse:collapse;font-size:0.82em;">
+    <thead>
+        <tr style="background:rgba(0,0,0,0.2);">
+            <th style="padding:8px 12px;text-align:left;">Symbol</th>
+            <th style="padding:8px 12px;text-align:left;">Type</th>
+            <th style="padding:8px 12px;text-align:left;">Severity</th>
+            <th style="padding:8px 12px;text-align:left;">Triggered</th>
+            <th style="padding:8px 12px;text-align:left;">Status</th>
+            <th style="padding:8px 12px;text-align:left;">Details</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($recentAlerts as $alert): ?>
+        <?php 
+        $severityColors = ['low' => 'green', 'medium' => 'yellow', 'high' => 'orange', 'critical' => 'red'];
+        $sevColor = $severityColors[$alert['severity']] ?? 'text2';
+        $payload = json_decode($alert['payload'], true);
+        $details = '';
+        if ($payload) {
+            $details = json_encode($payload);
+        }
+        ?>
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+            <td style="padding:8px 12px;"><strong><?= htmlspecialchars($alert['symbol']) ?></strong></td>
+            <td style="padding:8px 12px;color:var(--text2);"><?= htmlspecialchars(str_replace('_', ' ', ucwords($alert['alert_type'], '_'))) ?></td>
+            <td style="padding:8px 12px;"><span style="color:var(--<?= $sevColor ?>);text-transform:uppercase;"><?= $alert['severity'] ?></span></td>
+            <td style="padding:8px 12px;color:var(--text3);"><?= htmlspecialchars($alert['created_at']) ?></td>
+            <td style="padding:8px 12px;color:var(--accent);"><?= htmlspecialchars($alert['status']) ?></td>
+            <td style="padding:8px 12px;color:var(--text3);font-size:0.75em;max-width:300px;"><?= htmlspecialchars($details) ?></td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+<?php endif; ?>
+
+<!-- All Jobs Table -->
+<h2 style="color:var(--accent);margin:24px 0 12px;border-bottom:1px solid rgba(99,179,237,0.3);padding-bottom:8px;">
+    &#x23F0; All Cron Jobs
+</h2>
+
+<?php if (empty($jobs)): ?>
+<div class="card">
+    <p style="color:var(--text3);text-align:center;padding:20px;">No cron jobs found.</p>
+</div>
+<?php else: ?>
+<div style="overflow-x:auto;">
+<table style="width:100%;border-collapse:collapse;font-size:0.82em;">
+    <thead>
+        <tr style="background:rgba(0,0,0,0.2);">
+            <th style="padding:8px 12px;text-align:left;">Status</th>
+            <th style="padding:8px 12px;text-align:left;">Job Name</th>
+            <th style="padding:8px 12px;text-align:left;">Schedule</th>
+            <th style="padding:8px 12px;text-align:left;">Last Run</th>
+            <th style="padding:8px 12px;text-align:left;">Next Run</th>
+            <th style="padding:8px 12px;text-align:left;">Deliver</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($jobs as $job):
+        [$color, $badge] = statusBadge($job['last_status']);
+        $rowBg = $job['last_status'] === 'error' ? 'rgba(252,129,129,0.05)' : '';
+    ?>
+    <tr style="border-bottom:1px solid rgba(255,255,255,0.04);background:<?= $rowBg ?>;">
+        <td style="padding:8px 12px;">
+            <span style="color:var(--<?= $color ?>);"><?= $badge ?></span>
+        </td>
+        <td style="padding:8px 12px;">
+            <strong><?= htmlspecialchars($job['name']) ?></strong>
+            <?php if ($job['prompt']): ?>
+            <div style="font-size:0.8em;color:var(--text3);margin-top:2px;"><?= htmlspecialchars($job['prompt']) ?></div>
+            <?php endif; ?>
+        </td>
+        <td style="padding:8px 12px;"><code style="font-size:0.85em;"><?= htmlspecialchars($job['schedule']) ?></code></td>
+        <td style="padding:8px 12px;color:var(--text2);"><?= htmlspecialchars($job['last_run']) ?><?php if (!empty($job['last_run_at'])): ?><?php
+            $age = time() - strtotime($job['last_run_at']);
+            $staleClass = $age > 86400 ? 'red' : ($age > 3600 ? 'yellow' : 'green');
+            $ageStr = $age < 60 ? $age . 's ago' : ($age < 3600 ? floor($age/60) . 'm ago' : ($age < 86400 ? floor($age/3600) . 'h ago' : floor($age/86400) . 'd ago'));
+        ?><br><span style="color:var(--<?= $staleClass ?>);font-size:0.8em;"><?= $ageStr ?></span><?php endif; ?></td>
+        <td style="padding:8px 12px;color:var(--text2);"><?= htmlspecialchars($job['next_run']) ?></td>
+        <td style="padding:8px 12px;color:var(--text3);"><?= htmlspecialchars($job['deliver']) ?></td>
+    </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
+</div>
+<?php endif; ?>
+
+<!-- Watchlist Symbols (DB-driven) -->
+<?php
+$watchlistSymbols = $data['watchlistSymbols'] ?? [];
+$portfolioSymbols = array_filter($watchlistSymbols, fn($s) => $s['list_type'] === 'portfolio' && $s['is_active']);
+$watchlistOnly = array_filter($watchlistSymbols, fn($s) => $s['list_type'] === 'watchlist' && $s['is_active']);
+$inactiveWatchlist = array_filter($watchlistSymbols, fn($s) => !$s['is_active']);
+?>
+
+<?php if (!empty($watchlistSymbols)): ?>
+<div class="card" style="margin-top:24px;border-color:var(--green);">
+    <div class="card-header">&#x1F4CB; Volume Spike Watchlist (DB-Driven)</div>
+    <p style="font-size:0.85em;color:var(--text3);margin-bottom:12px;">
+        These symbols are monitored by the volume spike checker. Add/remove symbols in the
+        <code>watchlist_symbols</code> table — changes take effect immediately (no script edits needed).
+    </p>
+    <div class="grid-2">
+        <div>
+            <h4 style="color:var(--accent);margin-bottom:8px;">Portfolio (<?= count($portfolioSymbols) ?>)</h4>
+            <div style="font-family:monospace;font-size:0.85em;color:var(--text2);">
+                <?php foreach ($portfolioSymbols as $s): ?>
+                    <div style="padding:2px 0;">
+                        <?= htmlspecialchars($s['symbol']) ?>
+                        <?php if ($s['volume_spike_threshold'] != 2.0): ?>
+                            <span style="color:var(--text3);font-size:0.8em;">(<?= $s['volume_spike_threshold'] ?>×)</span>
+                        <?php endif; ?>
+                        <?php if ($s['notes']): ?>
+                            <span style="color:var(--text3);font-size:0.8em;">— <?= htmlspecialchars($s['notes']) ?></span>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <div>
+            <h4 style="color:var(--orange);margin-bottom:8px;">Watchlist (<?= count($watchlistOnly) ?>)</h4>
+            <div style="font-family:monospace;font-size:0.85em;color:var(--text2);">
+                <?php foreach ($watchlistOnly as $s): ?>
+                    <div style="padding:2px 0;">
+                        <?= htmlspecialchars($s['symbol']) ?>
+                        <?php if ($s['volume_spike_threshold'] != 2.0): ?>
+                            <span style="color:var(--text3);font-size:0.8em;">(<?= $s['volume_spike_threshold'] ?>×)</span>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if (!empty($inactiveWatchlist)): ?>
+<div class="card" style="margin-top:12px;border-color:var(--yellow);">
+    <div class="card-header">&#x26A0;&#xFE0F; Inactive Watchlist Symbols</div>
+    <p style="font-size:0.85em;color:var(--text2);">
+        These symbols are in the watchlist but marked <strong>is_active = 0</strong> — excluded from monitoring:
+    </p>
+    <div style="font-family:monospace;font-size:0.85em;color:var(--text3);margin-top:8px;">
+        <?php foreach ($inactiveWatchlist as $s): ?>
+            <span style="margin-right:12px;"><?= htmlspecialchars($s['symbol']) ?> (<?= $s['list_type'] ?>)</span>
+        <?php endforeach; ?>
+    </div>
+</div>
+<?php endif; ?>
+
+<div style="display:flex;gap:12px;margin-top:24px;justify-content:center;">
+    <a href="?action=overview" class="btn">&larr; Dashboard</a>
+    <a href="?action=admin_symbols" class="btn">&#x1F4B0; Symbol Admin</a>
+</div>

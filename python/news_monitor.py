@@ -100,52 +100,53 @@ def clean_html(text):
 
 def save_news_to_db(news_items, category="stocks", conn=None):
     """Save news items to MariaDB news_feeds table."""
+    need_close = False
     if not conn:
+        need_close = True
         conn = pymysql.connect(
             host=os.environ.get('DB_HOST', 'localhost'),
             user=os.environ.get('DB_USER', 'ksfraser_stockmarket'),
             password=os.environ.get('DB_PASSWORD', ''),
             database=os.environ.get('DB_NAME', 'ksfraser_stock_market'),
             charset='utf8mb4',
-            cursorclass=pymysql.cursors.DictCursor
+            cursorclass=pymysql.cursors.DictCursor,
+            autocommit=True
         )
     
-    cur = conn.cursor()
-    
-    cur.execute("""
-        CREATE TABLE IF NOT EXISTS news_feeds (
-            id BIGINT AUTO_INCREMENT PRIMARY KEY,
-            source VARCHAR(100),
-            title VARCHAR(500),
-            url TEXT,
-            summary TEXT,
-            published DATETIME,
-            category VARCHAR(20),
-            symbol_filter VARCHAR(20),
-            run_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            INDEX idx_category (category),
-            INDEX idx_published (published),
-            INDEX idx_symbol (symbol_filter)
-        )
-    """)
-    
-    for item in news_items:
+    with conn.cursor() as cur:
         cur.execute("""
-            INSERT INTO news_feeds (source, title, url, summary, published, category, symbol_filter)
-            VALUES (%s, %s, %s, %s, %s, %s, %s)
-        """, (
-            item['source'],
-            item['title'],
-            item['url'],
-            item['summary'],
-            item['published'],
-            category,
-            item.get('symbol_filter')
-        ))
+            CREATE TABLE IF NOT EXISTS news_feeds (
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                source VARCHAR(100),
+                title VARCHAR(500),
+                url TEXT,
+                summary TEXT,
+                published DATETIME,
+                category VARCHAR(20),
+                symbol_filter VARCHAR(20),
+                run_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                INDEX idx_category (category),
+                INDEX idx_published (published),
+                INDEX idx_symbol (symbol_filter)
+            )
+        """)
+        
+        for item in news_items:
+            cur.execute("""
+                INSERT INTO news_feeds (source, title, url, summary, published, category, symbol_filter)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, (
+                item['source'],
+                item['title'],
+                item['url'],
+                item['summary'],
+                item['published'],
+                category,
+                item.get('symbol_filter')
+            ))
     
-    conn.commit()
-    cur.close()
-    conn.close()
+    if need_close:
+        conn.close()
     
     return len(news_items)
 
@@ -159,14 +160,14 @@ def main():
         password=mysql_pass,
         database='ksfraser_stock_market',
         charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
+        cursorclass=pymysql.cursors.DictCursor,
+        autocommit=True
     )
     
     try:
         # Clear old news (keep last 7 days)
-        cur = conn.cursor()
-        cur.execute("DELETE FROM news_feeds WHERE run_at < DATE_SUB(NOW(), INTERVAL 7 DAY)")
-        conn.commit()
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM news_feeds WHERE run_at < DATE_SUB(NOW(), INTERVAL 7 DAY)")
         
         total_saved = 0
         for category in ["crypto", "stocks"]:

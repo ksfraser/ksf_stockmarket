@@ -10,7 +10,7 @@ Usage:
 """
 import pymysql, yfinance as yf, pandas as pd
 import sys, os, time, argparse
-from datetime import date
+from datetime import date, timedelta
 from config_loader import Config
 
 # Credentials loaded from Ansible Vault via config_loader
@@ -37,8 +37,10 @@ def get_pending_symbols(c, existing):
     return sorted(all_syms - existing)
 
 
-def fetch_symbol(sym, start='2014-01-01', end='2025-05-30'):
-    """Fetch 10 years of daily OHLCV from yfinance. Returns DataFrame or None."""
+def fetch_symbol(sym, start='2014-01-01', end=None):
+    """Fetch daily OHLCV from yfinance. Returns DataFrame or None."""
+    if end is None:
+        end = (date.today() + timedelta(days=1)).isoformat()
     try:
         hist = yf.Ticker(sym).history(start=start, end=end, auto_adjust=False)
         if hist.empty or len(hist) < 50:

@@ -67,6 +67,7 @@ $portfolioSummary = $data['portfolio_summary'] ?? null;
             <tr>
                 <th>Symbol</th>
                 <th class="r">Price</th>
+                <th class="c">Date</th>
                 <th class="r">Shares</th>
                 <th class="r">Cost</th>
                 <th class="r">RSI</th>
@@ -87,6 +88,7 @@ $portfolioSummary = $data['portfolio_summary'] ?? null;
             <tr>
                 <td><strong><a href="?action=detail&symbol=<?php echo $r['symbol']; ?>"><?php echo $r['symbol']; ?></a></strong></td>
                 <td class="r">$<?php echo number_format($r['current_price'] ?? 0, 2); ?></td>
+                <td class="c"><?php echo $r['price_date'] ? date('M j', strtotime($r['price_date'])) : '—'; ?></td>
                 <td class="r"><?php echo number_format($r['shares'], 2); ?></td>
                 <td class="r">$<?php echo number_format($r['cost_basis'], 2); ?></td>
                 <td class="r"><?php echo $r['rsi'] ? number_format($r['rsi'], 1) : '—'; ?></td>

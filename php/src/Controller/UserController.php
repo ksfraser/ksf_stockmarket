@@ -174,13 +174,13 @@ class UserController {
                 FROM stockprices sp1
                 INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol) sp2
                     ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
-            ) latest ON p.symbol = latest.symbol
+            ) latest ON COALESCE(p.price_symbol, p.symbol) = latest.symbol
             LEFT JOIN (
                 SELECT i1.symbol, i1.data
                 FROM indicators_json i1
                 INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM indicators_json GROUP BY symbol) i2
                     ON i1.symbol = i2.symbol AND i1.price_date = i2.max_date
-            ) ind ON p.symbol = ind.symbol
+            ) ind ON COALESCE(p.price_symbol, p.symbol) = ind.symbol
             WHERE p.user_id = :uid AND p.shares > 0
             ORDER BY p.symbol
         ";
@@ -246,7 +246,7 @@ class UserController {
             $stmt = $pdo->prepare("
                 SELECT DISTINCT f.symbol, f.earnings_date, f.eps_estimate, f.revenue_estimate
                 FROM fundamentals f
-                INNER JOIN portfolio p ON f.symbol = p.symbol AND p.user_id = :uid AND p.shares > 0
+                INNER JOIN portfolio p ON f.symbol = COALESCE(p.price_symbol, p.symbol) AND p.user_id = :uid AND p.shares > 0
                 INNER JOIN (
                     SELECT symbol, MAX(fetch_date) as max_date FROM fundamentals GROUP BY symbol
                 ) latest ON f.symbol = latest.symbol AND f.fetch_date = latest.max_date
@@ -269,7 +269,7 @@ class UserController {
             $stmt = $pdo->prepare("
                 SELECT DISTINCT f.symbol, f.dividend_rate, f.ex_dividend_date, f.dividend_yield
                 FROM fundamentals f
-                INNER JOIN portfolio p ON f.symbol = p.symbol AND p.user_id = :uid AND p.shares > 0
+                INNER JOIN portfolio p ON f.symbol = COALESCE(p.price_symbol, p.symbol) AND p.user_id = :uid AND p.shares > 0
                 INNER JOIN (
                     SELECT symbol, MAX(fetch_date) as max_date FROM fundamentals GROUP BY symbol
                 ) latest ON f.symbol = latest.symbol AND f.fetch_date = latest.max_date
@@ -295,17 +295,12 @@ class UserController {
                    prev.close as prev_close,
                    CASE WHEN prev.close > 0 THEN ((latest.close - prev.close) / prev.close) * 100 ELSE 0 END as change_pct
             FROM portfolio p
-            LEFT JOIN exchange_mapping em ON em.yahoo_ticker IN (
-                CONCAT(p.symbol, '.TO'),
-                CONCAT(REPLACE(p.symbol, '.', '-'), '.TO'),
-                CONCAT(p.symbol, '-UN.TO')
-            )
             LEFT JOIN (
                 SELECT sp1.symbol, sp1.close, sp1.price_date
                 FROM stockprices sp1
                 INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol) sp2
                     ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
-            ) latest ON latest.symbol IN (p.symbol, CONCAT(p.symbol, '.TO'), REPLACE(CONCAT(p.symbol, '.TO'), '.', '-'))
+            ) latest ON p.price_symbol = latest.symbol
             LEFT JOIN (
                 SELECT sp3.symbol, sp3.close
                 FROM stockprices sp3
@@ -315,7 +310,7 @@ class UserController {
                     WHERE price_date < (SELECT MAX(price_date) FROM stockprices sp4 WHERE sp4.symbol = stockprices.symbol)
                     GROUP BY symbol
                 ) sp4 ON sp3.symbol = sp4.symbol AND sp3.price_date = sp4.max_date
-            ) prev ON prev.symbol IN (p.symbol, CONCAT(p.symbol, '.TO'), REPLACE(CONCAT(p.symbol, '.TO'), '.', '-'))
+            ) prev ON p.price_symbol = prev.symbol
             WHERE p.user_id = :uid AND p.shares > 0
             ORDER BY change_pct DESC
         ";
@@ -341,16 +336,16 @@ class UserController {
         $totalSymbols = $stmt->fetchColumn();
 
         $stmt = $pdo->prepare("
-            SELECT COUNT(DISTINCT p.symbol) FROM portfolio p
-            INNER JOIN stockprices sp ON p.symbol = sp.symbol
+            SELECT COUNT(DISTINCT COALESCE(p.price_symbol, p.symbol)) FROM portfolio p
+            LEFT JOIN stockprices sp ON COALESCE(p.price_symbol, p.symbol) = sp.symbol
             WHERE p.user_id = :uid AND p.shares > 0
         ");
         $stmt->execute([':uid' => $userId]);
         $withPrices = $stmt->fetchColumn();
 
         $stmt = $pdo->prepare("
-            SELECT COUNT(DISTINCT p.symbol) FROM portfolio p
-            INNER JOIN indicators_json ij ON p.symbol = ij.symbol
+            SELECT COUNT(DISTINCT COALESCE(p.price_symbol, p.symbol)) FROM portfolio p
+            LEFT JOIN indicators_json ij ON COALESCE(p.price_symbol, p.symbol) = ij.symbol
             WHERE p.user_id = :uid AND p.shares > 0
         ");
         $stmt->execute([':uid' => $userId]);
@@ -358,7 +353,7 @@ class UserController {
 
         $stmt = $pdo->prepare("
             SELECT COUNT(*) FROM stockprices sp
-            INNER JOIN portfolio p ON sp.symbol = p.symbol
+            LEFT JOIN portfolio p ON COALESCE(p.price_symbol, p.symbol) = sp.symbol
             WHERE p.user_id = :uid AND p.shares > 0
         ");
         $stmt->execute([':uid' => $userId]);
@@ -378,14 +373,15 @@ class UserController {
     private function getPortfolioSummary(PDO $pdo, int $userId): ?array {
         $stmt = $pdo->prepare("
             SELECT p.symbol, p.shares, p.cost_basis, p.account_type,
-                   latest.close as current_price
+                   latest.close as current_price,
+                   latest.price_date
             FROM portfolio p
             LEFT JOIN (
                 SELECT sp1.symbol, sp1.close, sp1.price_date
                 FROM stockprices sp1
                 INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol) sp2
                     ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
-            ) latest ON p.symbol = latest.symbol
+            ) latest ON COALESCE(p.price_symbol, p.symbol) = latest.symbol
             WHERE p.user_id = :uid AND p.shares > 0
             ORDER BY p.symbol
         ");

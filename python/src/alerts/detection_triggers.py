@@ -193,12 +193,58 @@ def check_gap_opening(cursor, symbol: str, date: str) -> Optional[Dict]:
     return None
 
 
+def _same_day_alert_exists(cursor, alert_type: str, symbol: str) -> bool:
+    """Check whether the same symbol already has an alert of this type today."""
+    try:
+        cursor.execute(
+            """
+            SELECT COUNT(*) FROM alert_queue
+            WHERE symbol = %s
+              AND alert_type = %s
+              AND DATE(created_at) = CURDATE()
+              AND status != 'failed'
+            """,
+            (symbol, alert_type),
+        )
+        count = int(cursor.fetchone()[0])
+        return count > 0
+    except Exception:
+        return False
+
+
+def _oscillator_intraday_exception(payload: Dict) -> bool:
+    """Return True when an oscillator_extreme deserves a same-day second alert."""
+    extreme = ((payload or {}).get('payload') or {}).get('extreme')
+    rsi = ((payload or {}).get('payload') or {}).get('rsi_20d')
+    if rsi is None:
+        return False
+    try:
+        return abs(float(rsi) - 70.0) < 5.0 or abs(float(rsi) - 30.0) < 5.0
+    except (TypeError, ValueError):
+        return False
+
+
 def write_alert_to_queue(conn, alert: Dict) -> bool:
     """
     Write alert to MariaDB alert_queue table.
     Uses SQL schema from sql/alert_system.sql
+    Applies daily dedup for volume_spike and oscillator_extremes.
     """
     cursor = conn.cursor()
+    alert_type = alert['type']
+    symbol = alert['symbol']
+    if alert_type in ('volume_spike', 'oscillator_extreme', 'oscillator_extremes'):
+        if alert_type == 'oscillator_extreme':
+            if not _oscillator_intraday_exception(alert) and _same_day_alert_exists(cursor, 'oscillator_extreme', symbol):
+                logger.info(f"Skip same-day oscillator duplicate for {symbol}")
+                return False
+            if _same_day_alert_exists(cursor, 'oscillator_extreme', symbol):
+                if not _oscillator_intraday_exception(alert):
+                    logger.info(f"Skip same-day oscillator duplicate for {symbol}")
+                    return False
+        elif alert_type == 'volume_spike' and _same_day_alert_exists(cursor, 'volume_spike', symbol):
+            logger.info(f"Skip same-day volume duplicate for {symbol}")
+            return False
     try:
         cursor.execute("""
             INSERT INTO alert_queue 

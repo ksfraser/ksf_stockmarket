@@ -291,11 +291,12 @@ class UserController {
         $sql = "
             SELECT p.symbol,
                    latest.close as current_price,
+                   latest.price_date as price_date,
                    prev.close as prev_close,
                    CASE WHEN prev.close > 0 THEN ((latest.close - prev.close) / prev.close) * 100 ELSE 0 END as change_pct
             FROM portfolio p
             LEFT JOIN (
-                SELECT sp1.symbol, sp1.close
+                SELECT sp1.symbol, sp1.close, sp1.price_date
                 FROM stockprices sp1
                 INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol) sp2
                     ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
@@ -375,7 +376,7 @@ class UserController {
                    latest.close as current_price
             FROM portfolio p
             LEFT JOIN (
-                SELECT sp1.symbol, sp1.close
+                SELECT sp1.symbol, sp1.close, sp1.price_date
                 FROM stockprices sp1
                 INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol) sp2
                     ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date

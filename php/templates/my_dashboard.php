@@ -152,12 +152,13 @@ $portfolioSummary = $data['portfolio_summary'] ?? null;
             <p class="text-muted">No gainers today.</p>
         <?php else: ?>
         <table>
-            <thead><tr><th>Symbol</th><th class="r">Price</th><th class="r">Change</th></tr></thead>
+            <thead><tr><th>Symbol</th><th class="r">Price</th><th class="c">Date</th><th class="r">Change</th></tr></thead>
             <tbody>
             <?php foreach ($movers['gainers'] as $m): ?>
-                <tr>
+                    <tr>
                     <td><a href="?action=detail&symbol=<?php echo $m['symbol']; ?>"><?php echo $m['symbol']; ?></a></td>
                     <td class="r">$<?php echo number_format($m['current_price'] ?? 0, 2); ?></td>
+                    <td class="c"><?php echo $m['price_date'] ? date('M j', strtotime($m['price_date'])) : '—'; ?></td>
                     <td class="r green">+<?php echo number_format($m['change_pct'], 2); ?>%</td>
                 </tr>
             <?php endforeach; ?>
@@ -171,12 +172,13 @@ $portfolioSummary = $data['portfolio_summary'] ?? null;
             <p class="text-muted">No losers today.</p>
         <?php else: ?>
         <table>
-            <thead><tr><th>Symbol</th><th class="r">Price</th><th class="r">Change</th></tr></thead>
+            <thead><tr><th>Symbol</th><th class="r">Price</th><th class="c">Date</th><th class="r">Change</th></tr></thead>
             <tbody>
             <?php foreach ($movers['losers'] as $m): ?>
                 <tr>
                     <td><a href="?action=detail&symbol=<?php echo $m['symbol']; ?>"><?php echo $m['symbol']; ?></a></td>
                     <td class="r">$<?php echo number_format($m['current_price'] ?? 0, 2); ?></td>
+                    <td class="c"><?php echo $m['price_date'] ? date('M j', strtotime($m['price_date'])) : '—'; ?></td>
                     <td class="r red"><?php echo number_format($m['change_pct'], 2); ?>%</td>
                 </tr>
             <?php endforeach; ?>

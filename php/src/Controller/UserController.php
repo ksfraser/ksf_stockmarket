@@ -295,12 +295,17 @@ class UserController {
                    prev.close as prev_close,
                    CASE WHEN prev.close > 0 THEN ((latest.close - prev.close) / prev.close) * 100 ELSE 0 END as change_pct
             FROM portfolio p
+            LEFT JOIN exchange_mapping em ON em.yahoo_ticker IN (
+                CONCAT(p.symbol, '.TO'),
+                CONCAT(REPLACE(p.symbol, '.', '-'), '.TO'),
+                CONCAT(p.symbol, '-UN.TO')
+            )
             LEFT JOIN (
                 SELECT sp1.symbol, sp1.close, sp1.price_date
                 FROM stockprices sp1
                 INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol) sp2
                     ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
-            ) latest ON p.symbol = latest.symbol
+            ) latest ON latest.symbol IN (p.symbol, CONCAT(p.symbol, '.TO'), REPLACE(CONCAT(p.symbol, '.TO'), '.', '-'))
             LEFT JOIN (
                 SELECT sp3.symbol, sp3.close
                 FROM stockprices sp3
@@ -310,7 +315,7 @@ class UserController {
                     WHERE price_date < (SELECT MAX(price_date) FROM stockprices sp4 WHERE sp4.symbol = stockprices.symbol)
                     GROUP BY symbol
                 ) sp4 ON sp3.symbol = sp4.symbol AND sp3.price_date = sp4.max_date
-            ) prev ON p.symbol = prev.symbol
+            ) prev ON prev.symbol IN (p.symbol, CONCAT(p.symbol, '.TO'), REPLACE(CONCAT(p.symbol, '.TO'), '.', '-'))
             WHERE p.user_id = :uid AND p.shares > 0
             ORDER BY change_pct DESC
         ";

@@ -311,15 +311,30 @@ class UserController {
                     GROUP BY symbol
                 ) sp4 ON sp3.symbol = sp4.symbol AND sp3.price_date = sp4.max_date
             ) prev ON p.price_symbol = prev.symbol
-            WHERE p.user_id = :uid AND p.shares > 0
-            ORDER BY change_pct DESC
+            WHERE p.user_id = :uid AND p.shares > 0 AND latest.price_date IS NOT NULL
+            ORDER BY latest.price_date DESC,
+                     CASE WHEN ((latest.close - prev.close) / prev.close) * 100 > 0
+                          THEN ((latest.close - prev.close) / prev.close) * 100
+                          ELSE 0 END DESC
         ";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([':uid' => $userId]);
         $rows = $stmt->fetchAll();
 
-        $gainers = array_filter($rows, fn($r) => ($r['change_pct'] ?? 0) > 0);
-        $losers = array_filter($rows, fn($r) => ($r['change_pct'] ?? 0) < 0);
+        // Filter: only consider symbols from the most recent price date
+        $latestDate = null;
+        $recentRows = [];
+        foreach ($rows as $r) {
+            if ($latestDate === null) {
+                $latestDate = $r['price_date'];
+            }
+            if ($r['price_date'] === $latestDate) {
+                $recentRows[] = $r;
+            }
+        }
+
+        $gainers = array_filter($recentRows, fn($r) => ($r['change_pct'] ?? 0) > 0);
+        $losers = array_filter($recentRows, fn($r) => ($r['change_pct'] ?? 0) < 0);
 
         return [
             'gainers' => array_slice($gainers, 0, 5),

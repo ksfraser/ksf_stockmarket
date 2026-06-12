@@ -257,9 +257,9 @@ class TransactionController {
         try {
             $pdo->beginTransaction();
 
-            // Get the transaction to delete
-            $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id");
-            $stmt->execute([':id' => $txnId]);
+            // Get the transaction to delete (verify ownership)
+            $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id AND user_id = :uid");
+            $stmt->execute([':id' => $txnId, ':uid' => $this->currentUser['id']]);
             $txn = $stmt->fetch();
 
             if (!$txn) {
@@ -433,9 +433,9 @@ class TransactionController {
         $pdo = Database::get();
         $errors = [];
 
-        // Get the transaction
-        $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id");
-        $stmt->execute([':id' => $txnId]);
+        // Get the transaction (verify ownership)
+        $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id AND user_id = :uid");
+        $stmt->execute([':id' => $txnId, ':uid' => $this->currentUser['id']]);
         $txn = $stmt->fetch();
 
         if (!$txn) {

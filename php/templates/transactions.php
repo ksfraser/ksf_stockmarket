@@ -42,6 +42,15 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
             <input type="text" name="symbol" value="<?php echo htmlspecialchars($txnForm['symbol'] ?? ''); ?>" placeholder="RY.TO" required style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
         </div>
         <div>
+            <label style="font-size:0.8em;color:var(--text3);">Exchange</label>
+            <select name="exchange" style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
+                <option value="">Auto-detect</option>
+                <option value="TSX" <?php echo ($txnForm['exchange'] ?? '') === 'TSX' ? 'selected' : ''; ?>>TSX (.TO suffix)</option>
+                <option value="NASDAQ" <?php echo ($txnForm['exchange'] ?? '') === 'NASDAQ' ? 'selected' : ''; ?>>NASDAQ (no suffix)</option>
+                <option value="NYSE" <?php echo ($txnForm['exchange'] ?? '') === 'NYSE' ? 'selected' : ''; ?>>NYSE (no suffix)</option>
+            </select>
+        </div>
+        <div>
             <label style="font-size:0.8em;color:var(--text3);">Type</label>
             <select name="type" required style="width:100%;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
                 <option value="BUY" <?php echo ($txnForm['type'] ?? '') === 'BUY' ? 'selected' : ''; ?>>BUY</option>
@@ -230,20 +239,26 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                 <td class="r">$<?php echo number_format($t['total'] ?? 0, 2); ?></td>
                 <td class="r">$<?php echo number_format($t['commission'] ?? 0, 2); ?></td>
                 <td style="font-size:0.82em;color:var(--text3);"><?php echo htmlspecialchars($t['notes'] ?? ''); ?></td>
-                <td class="c" style="font-size:0.75em;color:var(--text3);"><?php echo htmlspecialchars($t['source_file'] ?? 'manual'); ?></td>
-                <td class="c">
-<?php
+                <td class="c" style="font-size:0.75em;color:var(--text3);">
+                <?php 
                 $srcFile = $t['source_file'] ?? '';
-                // Treat empty/null source_file as manual_entry for backwards compatibility
-                $isManual = ($srcFile === 'manual_entry' || $srcFile === '' || $srcFile === null);
+                if ($srcFile === 'manual_entry') echo 'Manual';
+                elseif ($srcFile === '') echo 'Legacy';
+                else echo 'Imported';
                 ?>
-                <!-- Edit button for ALL transactions -->
-                <button type="button" onclick="openEditModal(<?php echo $t['id']; ?>, '<?php echo htmlspecialchars($t['trade_date'] ?? ''); ?>', <?php echo (float)($t['quantity'] ?? 0); ?>, <?php echo (float)($t['price'] ?? 0); ?>, <?php echo (float)($t['commission'] ?? 0); ?>, '<?php echo htmlspecialchars($t['notes'] ?? ''); ?>', '<?php echo htmlspecialchars($t['type'] ?? ''); ?>', '<?php echo htmlspecialchars($srcFile ?: 'manual'); ?>')" style="background:none;border:none;color:#cc9900;cursor:pointer;font-size:0.9em;" title="Edit">&#x270F;&#xFE0F;</button>
+            </td>
+            <td class="c">
+                <?php
+                // Allow edit for ALL transactions
+                // Allow delete for manual_entry OR empty/null source_file (legacy manual entries)
+                $isManual = ($srcFile === 'manual_entry' || $srcFile === '');
+                ?>
+                <button type="button" onclick="openEditModal(<?php echo $t['id']; ?>, '<?php echo htmlspecialchars($t['trade_date'] ?? ''); ?>', <?php echo (float)($t['quantity'] ?? 0); ?>, <?php echo (float)($t['price'] ?? 0); ?>, <?php echo (float)($t['commission'] ?? 0); ?>, '<?php echo htmlspecialchars($t['notes'] ?? ''); ?>', '<?php echo htmlspecialchars($t['type'] ?? ''); ?>', '<?php echo htmlspecialchars($srcFile ?: 'manual'); ?>')" style="background:none;border:none;color:#cc9900;cursor:pointer;font-size:0.9em;" title="Edit">&#x270F;&#xFE0F; Edit</button>
                 <?php if ($isManual): ?>
                     <form method="POST" style="display:inline;" onsubmit="return confirm('Delete this transaction? This will reverse its effect on your portfolio.');">
                         <input type="hidden" name="action" value="delete">
                         <input type="hidden" name="txn_id" value="<?php echo $t['id']; ?>">
-                        <button type="submit" style="background:none;border:none;color:#a44;cursor:pointer;font-size:0.9em;" title="Delete">&#x1F5D1;</button>
+                        <button type="submit" style="background:none;border:none;color:#a44;cursor:pointer;font-size:0.9em;" title="Delete">&#x1F5D1; Delete</button>
                     </form>
                 <?php endif; ?>
             </td>

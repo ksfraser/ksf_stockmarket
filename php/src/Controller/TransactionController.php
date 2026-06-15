@@ -250,6 +250,7 @@ class TransactionController {
      * Delete a manual transaction (only those with source_file = 'manual_entry').
      * Reverses the portfolio impact for BUY/SELL/SPLIT transactions.
      */
+    /** Delete a manual transaction (new or legacy schema). */
     public function deleteTransaction(int $txnId, int $userId): array
     {
         $pdo = Database::get();
@@ -257,67 +258,77 @@ class TransactionController {
         try {
             $pdo->beginTransaction();
 
-            // Get the transaction to delete (verify ownership)
-            $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id AND user_id = :uid");
-            $stmt->execute([':id' => $txnId, ':uid' => $this->currentUser['id']]);
-            $txn = $stmt->fetch();
+            $user = (new User())->findById($userId);
+            if (!$user) {
+                $pdo->rollBack();
+                return ['success' => false, 'errors' => ['User not found.']];
+            }
+
+            $legacyQuery = $pdo->prepare("SHOW TABLES LIKE 'transaction'");
+            $legacyQuery->execute();
+            $hasLegacy = (bool) $legacyQuery->fetchColumn();
+            $modernQuery = $pdo->prepare("SHOW TABLES LIKE 'transactions'");
+            $modernQuery->execute();
+            $hasModern = (bool) $modernQuery->fetchColumn();
+            $usedLegacy = true;
+
+            if ($hasModern) {
+                $sel = $pdo->prepare("SELECT * FROM transactions WHERE id = :id");
+                $sel->execute([':id' => $txnId]);
+                $txn = $sel->fetch();
+                if ($txn) {
+                    $usedLegacy = false;
+                }
+            }
+
+            if ($usedLegacy && $hasLegacy) {
+                $sel = $pdo->prepare("SELECT * FROM transaction WHERE sequence = :seq AND username = :uname LIMIT 1");
+                $sel->execute([':seq' => $txnId, ':uname' => $user['username']]);
+                $txn = $sel->fetch();
+            } else {
+                $txn = false;
+            }
 
             if (!$txn) {
                 $pdo->rollBack();
                 return ['success' => false, 'errors' => ['Transaction not found or access denied.']];
             }
 
-            // Only allow deletion of manually added transactions (source_file = 'manual_entry' for manual entries)
-            // Note: legacy empty/null source_file treated as manual for backwards compatibility
-            $sourceFile = $txn['source_file'] ?? '';
-            
-            // Imported transactions have source_file set to a filename (e.g., 'upload', 'statement.csv')
-            // Only block deletion if source_file is clearly an import (non-empty and not 'manual_entry')
-            $isImport = ($sourceFile !== '' && $sourceFile !== 'manual_entry');
-            
-            error_log("deleteTransaction check: srcFile='$sourceFile', isImport=" . ($isImport ? 'yes' : 'no'));
-            
-            // Allow deletion for manual_entry or empty/null (legacy) - block for actual imports
-            if ($isImport) {
-                $pdo->rollBack();
-                return ['success' => false, 'errors' => ['Only manually added transactions can be deleted. Imported transactions must be edited to correct errors.']];
+            $type = $txn['transactiontype'] ?? $txn['type'] ?? '';
+            $type = strtoupper((string) $type);
+            $symbol = strtoupper((string) ($txn['stocksymbol'] ?? $txn['symbol'] ?? ''));
+            $account = strtoupper((string) ($txn['account'] ?? $txn['account_type'] ?? ''));
+            $quantity = (float) ($txn['numbershares'] ?? $txn['quantity'] ?? 0);
+            $price = (float) ($txn['dollar'] ?? $txn['price'] ?? 0);
+            $commission = (float) ($txn['commission'] ?? 0);
+
+            if ($type === 'BUY') {
+                $this->reverseBuy($pdo, $userId, $symbol, $account, $quantity, $price, $commission);
+            } elseif ($type === 'SELL') {
+                $this->reverseSell($pdo, $userId, $symbol, $account, $quantity, $price, $commission);
+            } elseif ($type === 'SPLIT') {
+                $this->reverseSplit($pdo, $userId, $symbol, $quantity);
             }
 
-            $symbol = $txn['symbol'];
-            $account = $txn['account_type'];
-            $type = $txn['type'];
-            $quantity = (float) $txn['quantity'];
-
-            // Reverse portfolio impact
-            error_log("deleteTransaction: txnId=$txnId, type=$type, symbol=$symbol, qty=$quantity, userId=$userId");
-            try {
-                if ($type === 'BUY') {
-                    $this->reverseBuy($pdo, $userId, $symbol, $account, $quantity, (float) $txn['price'], (float) $txn['commission']);
-                } elseif ($type === 'SELL') {
-                    $this->reverseSell($pdo, $userId, $symbol, $account, $quantity, (float) $txn['price'], (float) $txn['commission']);
-                } elseif ($type === 'SPLIT') {
-                    $this->reverseSplit($pdo, $userId, $symbol, $quantity);
-                }
-            } catch (RuntimeException $e) {
-                $pdo->rollBack();
-                error_log("deleteTransaction: reverse failed - " . $e->getMessage());
-                return ['success' => false, 'errors' => ['Cannot delete: ' . $e->getMessage()]];
+            if (!$usedLegacy) {
+                $del = $pdo->prepare("DELETE FROM transactions WHERE id = :id");
+                $del->execute([':id' => $txnId]);
+            } else {
+                $del = $pdo->prepare("DELETE FROM transaction WHERE sequence = :seq AND username = :uname LIMIT 1");
+                $del->execute([':seq' => $txnId, ':uname' => $user['username']]);
             }
 
-            // Delete the transaction
-            $del = $pdo->prepare("DELETE FROM transactions WHERE id = :id");
-            $delResult = $del->execute([':id' => $txnId]);
-            
-            if (!$delResult || $del->rowCount() === 0) {
+            if (($del->rowCount() ?? 0) === 0) {
                 $pdo->rollBack();
-                return ['success' => false, 'errors' => ['Transaction could not be deleted (may have been deleted already or access denied).']];
+                return ['success' => false, 'errors' => ['Transaction could not be deleted.']];
             }
 
             $pdo->commit();
             return ['success' => true, 'message' => "Deleted {$type} transaction for {$symbol}."];
         } catch (Exception $e) {
-            $pdo->rollBack();
-            error_log("deleteTransaction error: " . $e->getMessage() . " for txn_id=$txnId");
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
             return ['success' => false, 'errors' => ['Database error: ' . $e->getMessage()]];
         }
     }

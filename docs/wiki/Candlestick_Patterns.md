@@ -1,6 +1,7 @@
+[[Category: ksf_stockmarket]]
 = Candlestick Patterns =
 
-'''Note from our research:''' Candlestick patterns have ~50% hit rate on daily timeframes — no better than coin flip. They may be useful for 1-day predictions but are statistically insignificant at 3+ day horizons. Our backtests (372K runs) confirm: CDL patterns are essentially noise. Use only as one input within an ensemble, never standalone.
+[[ Candlestick patterns]] have ~50% hit rate on daily timeframes — no better than coin flip. They may be useful for 1-day predictions but are statistically insignificant at 3+ day horizons. Our backtests (372K runs) confirm: CDL patterns are essentially noise. Use only as one input within an ensemble, never standalone.
 
 ''Source: Our backtest results; academic Efficient Market Hypothesis''
 

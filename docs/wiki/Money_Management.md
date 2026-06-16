@@ -1,3 +1,4 @@
+[[Category: ksf_stockmarket]]
 = Money & Risk Management =
 
 This page documents money management and risk strategies — the most important part of the investment platform. A mediocre strategy with excellent money management outperforms a great strategy with poor risk management.
@@ -48,13 +49,13 @@ Four-sleeve model prevents any single strategy from destroying the portfolio:
 {| class="wikitable"
 ! Sleeve !! Allocation !! Strategy !! Hold Period
 |-
-| '''Core''' || 40% || Buffett Quality, Everlasting, Aristocrats || 5+ years
+|| '''Core''' || 40% || Buffett Quality, Everlasting, Aristocrats || 5+ years
 |-
-| '''Tactical''' || 30% || Ensemble, CANSLIM, Momentum || 1-6 months
+|| '''Tactical''' || 30% || Ensemble, CANSLIM, Momentum || 1-6 months
 |-
-| '''Income''' || 20% || Dividend Aristocrats, Safety Screen || 1-3 years
+|| '''Income''' || 20% || Dividend Aristocrats, Safety Screen || 1-3 years
 |-
-| '''Satellite''' || 10% || Rule Breakers, Deep Value, Options || 3-12 months
+|| '''Satellite''' || 10% || Rule Breakers, Deep Value, Options || 3-12 months
 |}
 
 * Each sleeve has independent strategy and risk parameters
@@ -93,22 +94,24 @@ ATR (Average True Range) self-adjusts: widens in high-volatility stocks, tighten
 {| class="wikitable"
 ! Method || Max Risk || Notes
 |-
-| Fixed Fractional || 1-2% of portfolio || Baseline — never exceed
+|| Fixed Fractional || 1-2% of portfolio || Baseline — never exceed
 |-
-| Half-Kelly || Variable || Use if MORE conservative than 1-2%
+|| Half-Kelly || Variable || Use if MORE conservative than 1-2%
 |-
-| Maximum || 2% of portfolio || Hard cap regardless of calculation
+|| Maximum || 2% of portfolio || Hard cap regardless of calculation
 |}
 
 == Position Sizing Formula ==
 
 <div style="background:#f5f5f5;padding:15px;font-family:monospace;">
-Position Size = (Portfolio × Risk%) / (Entry − Stop)<br><br>
+Position Size = (Portfolio × Risk%) / (Entry − Stop)<br>
+
 Example:<br>
 Portfolio: $384,000<br>
 Risk: 1% = $3,840<br>
 Entry: $50.00<br>
-Stop: $46.00 (ATR-based, below support)<br><br>
+Stop: $46.00 (ATR-based, below support)<br>
+
 Position Size = $3,840 / ($50 − $46) = 960 shares<br>
 Dollar amount: 960 × $50 = $48,000 (12.5% of portfolio)
 </div>

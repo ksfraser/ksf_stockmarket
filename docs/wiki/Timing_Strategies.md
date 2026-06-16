@@ -1,3 +1,4 @@
+[[Category: ksf_stockmarket]]
 = Timing & Technical Strategies =
 
 This page documents technical timing strategies — entry and exit signals used across all portfolio sleeves. These are applied ''after'' stock selection strategies have identified candidates.

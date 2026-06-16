@@ -1,3 +1,4 @@
+[[Category: ksf_stockmarket]]
 = Oscillators & Technical Indicators =
 
 This page provides reference documentation for all technical indicators used by the Investment Agent platform, including their construction, interpretation, and known limitations based on our 372,000+ backtest results.

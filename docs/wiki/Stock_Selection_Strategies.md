@@ -1,3 +1,4 @@
+[[Category: ksf_stockmarket]]
 = Stock Selection Strategies =
 
 This page documents all stock selection strategies used by the Investment Agent platform. For technical timing strategies, see [[Timing Strategies]]. For money and risk management, see [[Money Management]].

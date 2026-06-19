@@ -1,0 +1,241 @@
+#!/usr/bin/env python3
+"""
+Ingest TradingView screener results into stockmarket core tables.
+
+Reads latest tradingview_screener_results, upserts symbols into
+symbol_master, and triggers price/indicator updates for changed symbols.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import subprocess
+import sys
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, Iterable, List, Set, Tuple
+
+import pymysql
+
+TRADING_VIEW_TABLE = "tradingview_screener_results"
+SYMBOL_MASTER_TABLE = "symbol_master"
+STOCK_PRICES_TABLE = "stockprices"
+# Use actual MySQL table from compute_all_talib_indicators.py
+TECH_TABLE = "ta_indicators"
+
+BASE_CONFIG = {
+    "host": "ksfraser.ca",
+    "port": 3306,
+    "user": "ksfraser_stockmarket",
+    "password": os.environ.get("DB_PASSWORD", "Zaqwsx9sm1@"),
+    "database": "ksfraser_stock_market",
+    "charset": "utf8mb4",
+    "cursorclass": pymysql.cursors.DictCursor,
+}
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+FETCH_PRICES_SCRIPT = REPO_ROOT / "python" / "fetch_prices.py"
+
+
+def _connect():
+    return pymysql.connect(**BASE_CONFIG)
+
+
+def _latest_run(conn) -> Dict:
+    """
+    Because the screener inserts in micro-batches, find the latest logical
+    run by expanding 10 minutes back from the newest run_at. Return the
+    time window so callers can collect every row in that batch.
+    """
+    with conn.cursor() as cur:
+        cur.execute(
+            f"SELECT MAX(run_at) AS max_run FROM {TRADING_VIEW_TABLE}"
+        )
+        row = cur.fetchone()
+        max_run = row.get("max_run") if isinstance(row, dict) else (row[0] if row else None)
+        if not max_run:
+            return {}
+        cur.execute(
+            f"""
+            SELECT MIN(run_at) AS window_start, MAX(run_at) AS window_end,
+                   COUNT(*) AS row_count
+            FROM {TRADING_VIEW_TABLE}
+            WHERE run_at >= %s AND run_at <= %s
+            """,
+            (max_run, max_run),
+        )
+        window = cur.fetchone()
+        if not window:
+            return {}
+        start = (window.get("window_start") if isinstance(window, dict) else window[0]) or max_run
+        end = (window.get("window_end") if isinstance(window, dict) else window[1]) or max_run
+        return {"window_start": start, "window_end": end, "row_count": window.get("row_count") if isinstance(window, dict) else window[2]}
+
+
+def _results_for_run(conn, window_start, window_end) -> List[Dict]:
+    """Return all rows whose run_at falls within the latest batch window."""
+    with conn.cursor() as cur:
+        cur.execute(
+            f"SELECT symbol, data FROM {TRADING_VIEW_TABLE} "
+            "WHERE run_at >= %s AND run_at <= %s",
+            (window_start, window_end),
+        )
+        rows = cur.fetchall()
+        results = []
+        for row in rows:
+            payload = row.get("data")
+            if isinstance(payload, str):
+                payload = json.loads(payload)
+            results.append({"symbol": row.get("symbol"), "payload": payload or {}})
+        return results
+
+
+def _existing_symbols(conn) -> Set[str]:
+    with conn.cursor() as cur:
+        cur.execute(f"SELECT symbol FROM {SYMBOL_MASTER_TABLE}")
+        return {row["symbol"] for row in cur.fetchall()}
+
+
+def _upsert_symbol_master(conn, items: Iterable[Tuple[str, Dict]]) -> int:
+    now = datetime.now().isoformat()
+    updated = 0
+    with conn.cursor() as cur:
+        for symbol, payload in items:
+            cur.execute(
+                f"""
+                INSERT INTO {SYMBOL_MASTER_TABLE} (symbol, name, exchange, sector, industry, last_updated)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                  name = VALUES(name),
+                  sector = VALUES(sector),
+                  industry = VALUES(industry),
+                  last_updated = VALUES(last_updated)
+                """,
+                (
+                    symbol,
+                    payload.get("name"),
+                    payload.get("exchange"),
+                    payload.get("sector"),
+                    payload.get("industry"),
+                    now,
+                ),
+            )
+            updated += cur.rowcount
+    conn.commit()
+    return updated
+
+
+def _pending_price_symbols(
+    conn, candidates: Iterable[str]
+) -> Tuple[List[str], Dict[str, str]]:
+    """Return symbols needing price sync and their sources.
+
+    A symbol is pending when:
+      * stockprices is missing the latest expected date, or
+      * technical_indicators is older than the latest price date, or
+      * the symbol is new to stockprices.
+    """
+    today = datetime.now().date().isoformat()
+    need_price: List[str] = []
+    source_map: Dict[str, str] = {}
+    with conn.cursor() as cur:
+        for sym in candidates:
+            cur.execute(
+                f"SELECT MAX(price_date) AS price_date FROM {STOCK_PRICES_TABLE} WHERE symbol = %s",
+                (sym,),
+            )
+            price_row = cur.fetchone()
+            latest_price = price_row.get("price_date") if price_row else None
+
+            if latest_price == today:
+                continue
+
+            cur.execute(
+                f"SELECT MAX(price_date) AS indicator_date FROM ta_indicators WHERE symbol = %s",
+                (sym,),
+            )
+            indicator_row = cur.fetchone()
+            latest_indicator = indicator_row.get("indicator_date") if indicator_row else None
+
+            if latest_price != latest_indicator:
+                need_price.append(sym)
+                source_map[sym] = "screener" if latest_price is None else "stale-price"
+    return need_price, source_map
+
+
+def _trigger_price_sync(symbols: List[str]) -> bool:
+    if not symbols:
+        return True
+    if not FETCH_PRICES_SCRIPT.exists():
+        return False
+
+    # Call with limited max and optional start-from; batch up to avoid excessive runtime.
+    sym_arg = ",".join(symbols[:50])
+    cmd = [
+        sys.executable,
+        str(FETCH_PRICES_SCRIPT),
+        "--start-from",
+        symbols[0],
+        "--max",
+        str(min(len(symbols), 50)),
+    ]
+    try:
+        proc = subprocess.run(
+            cmd,
+            cwd=str(REPO_ROOT),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=1800,
+        )
+        return proc.returncode == 0
+    except Exception as exc:
+        print(f"Price sync failed: {exc}")
+        return False
+
+
+def main() -> int:
+    print(f"[{datetime.now().isoformat()}] Screener ingestion start")
+
+    conn = _connect()
+    try:
+        latest = _latest_run(conn)
+        if not latest:
+            print("No screener results found")
+            return 0
+
+        print(f"Latest run window: {latest.get('window_start')} → {latest.get('window_end')} ({latest.get('row_count')} rows)")
+        rows = _results_for_run(conn, latest.get("window_start"), latest.get("window_end"))
+        print(f"Loaded {len(rows)} screener rows")
+
+        candidates = {r["symbol"]: r["payload"] for r in rows if r.get("symbol")}
+        if not candidates:
+            print("No valid candidate symbols")
+            return 0
+
+        updated_symbols = _upsert_symbol_master(conn, list(candidates.items()))
+        print(f"Symbol master updated: {updated_symbols} rows affected")
+
+        pending, source_map = _pending_price_symbols(conn, candidates.keys())
+        if not pending:
+            print("Price/indicators already up to date")
+            return 0
+
+        print(f"Triggering price sync for {len(pending)} symbols")
+        ok = _trigger_price_sync(pending)
+        if ok:
+            print("Price sync completed")
+        else:
+            print("Price sync completed with warnings")
+    except Exception as exc:
+        print(f"Ingestion error: {exc}")
+        return 1
+    finally:
+        conn.close()
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

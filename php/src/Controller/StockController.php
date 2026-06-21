@@ -81,6 +81,23 @@ class StockController {
         $stmt->execute([':sym' => $symbol]);
         $latest = $stmt->fetch();
 
+        // If no price, try .TO suffix for Canadian symbols
+        if (!$latest && preg_match('/^[A-Z]/', $symbol)) {
+            $altSym = $symbol . '.TO';
+            $stmt = $this->pdo->prepare("
+                SELECT sp.*, sm.name, sm.exchange, sm.sector, sm.industry
+                FROM stockprices sp
+                LEFT JOIN symbol_master sm ON sp.symbol = sm.symbol
+                WHERE sp.symbol = :sym
+                ORDER BY sp.price_date DESC LIMIT 1
+            ");
+            $stmt->execute([':sym' => $altSym]);
+            $latest = $stmt->fetch();
+            if ($latest) {
+                $symbol = $altSym;
+            }
+        }
+
         if (!$latest) {
             return ['error' => 'Symbol not found', 'symbol' => $symbol];
         }
@@ -95,21 +112,37 @@ class StockController {
         $stmt->execute([':sym' => $symbol]);
         $history = array_reverse($stmt->fetchAll());
 
-        // Indicators: latest + 60 days for charts — try .TO suffix for Canadian symbols
+        // Indicators: latest + 60 days for charts — check both symbol formats
         $indHistory = [];
         $indicators = [];
+
+        // Check if this is a TSX symbol (has .TO variant) and which has more data
+        $hasTO = str_ends_with($symbol, '.TO');
+        $baseSym = $hasTO ? substr($symbol, 0, -3) : $symbol;
+        $altSym = $hasTO ? null : $symbol . '.TO';
+
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM indicators_json WHERE symbol = :sym");
+        $stmt->execute([':sym' => $symbol]);
+        $mainCount = $stmt->fetchColumn();
+
+        $altCount = 0;
+        if ($altSym) {
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM indicators_json WHERE symbol = :sym");
+            $stmt->execute([':sym' => $altSym]);
+            $altCount = $stmt->fetchColumn();
+        }
+
+        // Prefer the format with more data
+        $preferredSym = ($altCount > $mainCount && $altSym) ? $altSym : $symbol;
+
         $indSql = "SELECT price_date, data FROM indicators_json WHERE symbol = :sym ORDER BY price_date DESC LIMIT 60";
         $stmt = $this->pdo->prepare($indSql);
-        $stmt->execute([':sym' => $symbol]);
+        $stmt->execute([':sym' => $preferredSym]);
         $indRows = array_reverse($stmt->fetchAll());
-        
-        // If no indicators, try .TO suffix
-        if (empty($indRows) && preg_match('/^[A-Z]/', $symbol)) {
-            $stmt = $this->pdo->prepare($indSql);
-            $stmt->execute([':sym' => $symbol . '.TO']);
-            $indRows = array_reverse($stmt->fetchAll());
-        }
-        
+
+        // Update symbol for consistency (use the format we're querying)
+        $symbol = $preferredSym;
+
         foreach ($indRows as $i => $row) {
             $d = json_decode($row['data'], true);
             $d['price_date'] = $row['price_date'];
@@ -139,6 +172,11 @@ class StockController {
         $fctrl = new FundamentalsController();
         $dividendSafety = $fctrl->getDividendSafety($symbol);
         $dividends = $fctrl->getDividends($symbol);
+
+        // Calculate current dividend yield (annual dividend / current price)
+        $closePrice = $latest['close'] ?? 0;
+        $annualDivPerShare = $fundamentals['dividend_rate'] ?? 0;
+        $fundamentals['current_div_yield'] = $closePrice > 0 ? ($annualDivPerShare / $closePrice) * 100 : null;
 
         // Analyst data (tables may not exist yet — graceful fallback)
         $analystRatings = $this->getTableData('analyst_ratings', $symbol, 'date DESC', 20);

@@ -91,7 +91,7 @@ class Database:
         if engine == 'mysql':
             from db.mysql_adapter import MySQLAdapter
             return cls(MySQLAdapter(
-                host=db_cfg.get('host', 'localhost'),
+                host=db_cfg.get('host', 'ksfraser.ca'),
                 user=db_cfg.get('user', ''),
                 password=db_cfg.get('password', ''),
                 database=db_cfg.get('database', ''),

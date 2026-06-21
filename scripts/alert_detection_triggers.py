@@ -9,21 +9,55 @@ import json
 import os
 import uuid
 from datetime import datetime
+from typing import Any, Dict
 
 import pandas as pd
 import numpy as np
-import yfinance as yf
 import pymysql
+import yfinance as yf
 import ta
 
-# Database connection
+
+def _find_config() -> str:
+    for candidate in [
+        os.path.join(os.path.dirname(__file__), '..', 'config.yaml'),
+        os.path.join(os.path.dirname(__file__), '..', '..', 'config.yaml'),
+        os.environ.get('KFSF_CONFIG', ''),
+    ]:
+        if candidate and os.path.isfile(candidate):
+            return candidate
+    return os.environ.get('KFSF_CONFIG', 'config.yaml')
+
+
+def _secrets() -> Dict[str, Any]:
+    try:
+        from python.config_loader import Config
+    except Exception:
+        try:
+            from config_loader import Config
+        except Exception:
+            return {}
+    cfg = Config(_find_config())
+    return dict(getattr(cfg, 'secrets', {}) or {})
+
+
 MYSQL = {
-    'host': 'ksfraser.ca',
-    'user': 'ksfraser_stockmarket',
-    'password': os.environ.get('MYSQL_PASSWORD', 'Zaqwsx9sm1@'),
-    'database': 'ksfraser_stock_market',
+    'host': os.environ.get('DB_HOST', 'ksfraser.ca'),
+    'user': os.environ.get('DB_USER', 'ksfraser_stockmarket'),
+    'password': (
+        _secrets().get('db_password')
+        or _secrets().get('db_pass')
+        or os.environ.get('DB_PASSWORD')
+        or os.environ.get('MYSQL_PASSWORD')
+        or os.environ.get('DB_PASS', '')
+    ),
+    'database': os.environ.get('DB_NAME', 'ksfraser_stock_market'),
     'charset': 'utf8mb4',
 }
+if not MYSQL['password']:
+    raise RuntimeError(
+        "MariaDB password is not set. Provide DB_PASSWORD/DB_PASS in env, or store db_password in Ansible Vault/config.yaml."
+    )
 
 # Known ticker sets for TSX/NYSE disambiguation
 KNOWN_TSX = {
@@ -287,6 +321,8 @@ def write_alert_to_db(alert: dict) -> bool:
         cur = conn.cursor()
         
         alert_id = f"{alert['symbol']}_{alert['alert_type']}_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        payload = dict(alert.get('payload', {}) or {})
+        payload['triggered_at'] = datetime.now().isoformat()
         
         cur.execute("""
             INSERT INTO alert_queue (id, alert_type, symbol, severity, payload, status, request_llm_analysis)
@@ -300,9 +336,9 @@ def write_alert_to_db(alert: dict) -> bool:
             alert['alert_type'],
             alert['symbol'],
             alert['severity'],
-            json.dumps(alert['payload'], default=str),
+            json.dumps(payload, default=str),
             'pending',
-            1 if alert['alert_type'] == 'natr_spike' else 0  # Only LLM needed for volatility analysis
+            1  # All alert types should be queued for LLM analysis
         ))
         
         conn.commit()

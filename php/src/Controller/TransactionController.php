@@ -250,57 +250,27 @@ class TransactionController {
      * Delete a manual transaction (only those with source_file = 'manual_entry').
      * Reverses the portfolio impact for BUY/SELL/SPLIT transactions.
      */
-    /** Delete a manual transaction (new or legacy schema). */
     public function deleteTransaction(int $txnId, int $userId): array
     {
         $pdo = Database::get();
 
         try {
-            $pdo->beginTransaction();
-
-            $user = (new User())->findById($userId);
-            if (!$user) {
-                $pdo->rollBack();
-                return ['success' => false, 'errors' => ['User not found.']];
-            }
-
-            $legacyQuery = $pdo->prepare("SHOW TABLES LIKE 'transaction'");
-            $legacyQuery->execute();
-            $hasLegacy = (bool) $legacyQuery->fetchColumn();
-            $modernQuery = $pdo->prepare("SHOW TABLES LIKE 'transactions'");
-            $modernQuery->execute();
-            $hasModern = (bool) $modernQuery->fetchColumn();
-            $usedLegacy = true;
-
-            if ($hasModern) {
-                $sel = $pdo->prepare("SELECT * FROM transactions WHERE id = :id");
-                $sel->execute([':id' => $txnId]);
-                $txn = $sel->fetch();
-                if ($txn) {
-                    $usedLegacy = false;
-                }
-            }
-
-            if ($usedLegacy && $hasLegacy) {
-                $sel = $pdo->prepare("SELECT * FROM transaction WHERE sequence = :seq AND username = :uname LIMIT 1");
-                $sel->execute([':seq' => $txnId, ':uname' => $user['username']]);
-                $txn = $sel->fetch();
-            } else {
-                $txn = false;
-            }
+            $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id AND is_deleted = 0");
+            $stmt->execute([':id' => $txnId]);
+            $txn = $stmt->fetch();
 
             if (!$txn) {
-                $pdo->rollBack();
                 return ['success' => false, 'errors' => ['Transaction not found or access denied.']];
             }
 
-            $type = $txn['transactiontype'] ?? $txn['type'] ?? '';
-            $type = strtoupper((string) $type);
-            $symbol = strtoupper((string) ($txn['stocksymbol'] ?? $txn['symbol'] ?? ''));
-            $account = strtoupper((string) ($txn['account'] ?? $txn['account_type'] ?? ''));
-            $quantity = (float) ($txn['numbershares'] ?? $txn['quantity'] ?? 0);
-            $price = (float) ($txn['dollar'] ?? $txn['price'] ?? 0);
+            $type = strtoupper((string) ($txn['type'] ?? ''));
+            $symbol = strtoupper((string) ($txn['symbol'] ?? ''));
+            $account = strtoupper((string) ($txn['account_type'] ?? ''));
+            $quantity = (float) ($txn['quantity'] ?? 0);
+            $price = (float) ($txn['price'] ?? 0);
             $commission = (float) ($txn['commission'] ?? 0);
+
+            $pdo->beginTransaction();
 
             if ($type === 'BUY') {
                 $this->reverseBuy($pdo, $userId, $symbol, $account, $quantity, $price, $commission);
@@ -310,18 +280,8 @@ class TransactionController {
                 $this->reverseSplit($pdo, $userId, $symbol, $quantity);
             }
 
-            if (!$usedLegacy) {
-                $del = $pdo->prepare("DELETE FROM transactions WHERE id = :id");
-                $del->execute([':id' => $txnId]);
-            } else {
-                $del = $pdo->prepare("DELETE FROM transaction WHERE sequence = :seq AND username = :uname LIMIT 1");
-                $del->execute([':seq' => $txnId, ':uname' => $user['username']]);
-            }
-
-            if (($del->rowCount() ?? 0) === 0) {
-                $pdo->rollBack();
-                return ['success' => false, 'errors' => ['Transaction could not be deleted.']];
-            }
+            $upd = $pdo->prepare("UPDATE transactions SET is_deleted = 1, updated_at = NOW() WHERE id = :id");
+            $upd->execute([':id' => $txnId]);
 
             $pdo->commit();
             return ['success' => true, 'message' => "Deleted {$type} transaction for {$symbol}."];

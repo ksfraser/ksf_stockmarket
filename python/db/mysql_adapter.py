@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Optional
 from db.adapter import DBConnection
 
 MYSQL_DEFAULTS = dict(
-    host='localhost',
+    host='ksfraser.ca',
     user='',
     password='',
     database='',

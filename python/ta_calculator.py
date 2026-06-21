@@ -710,6 +710,17 @@ def run_all_symbols(symbols: Optional[List[str]] = None):
                 # Update daily_tier2 (summary)
                 update_daily_tier2(conn, symbol, today, df, results)
 
+                try:
+                    event_conn = get_connection()
+                    publisher = EventPublisher(event_conn)
+                    publisher.publish(
+                        "indicators_calculated",
+                        {"symbol": symbol},
+                    )
+                    event_conn.close()
+                except Exception:
+                    logger.exception("Failed to publish indicators_calculated for %s", symbol)
+
                 success += 1
 
             if (i + 1) % 100 == 0:

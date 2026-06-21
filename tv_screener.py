@@ -5,11 +5,12 @@ Fetches stock screening results directly from TradingView public API.
 Designed for cron job integration.
 """
 
-import pymysql.cursors
 import urllib.request
 import json
 import os
 from datetime import datetime
+
+from python.db_connector import get_connection
 
 API_BASE = "https://scanner.tradingview.com"
 
@@ -116,16 +117,7 @@ def save_screening_results(results: list, preset_name: str, conn, market: str = 
 
 def main():
     """Run all screens and save results."""
-    mysql_pass = os.environ.get('DB_PASSWORD', 'Zaqwsx9sm1@')
-    conn = pymysql.connect(
-        host='ksfraser.ca',
-        user='ksfraser_stockmarket',
-        password=mysql_pass,
-        database='ksfraser_stock_market',
-        charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
-    )
-    
+    conn = get_connection()
     try:
         screens = [
             ("dividend_stocks", "Dividend Stocks (Yield >3%)", "america"),
@@ -157,7 +149,6 @@ def main():
                 
     finally:
         conn.close()
-
 
 if __name__ == "__main__":
     main()

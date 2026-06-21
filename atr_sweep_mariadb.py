@@ -26,12 +26,23 @@ DB_CONFIG = {
     'user': os.environ.get('DB_USER', 'ksfraser_stockmarket'),
     'password': os.environ.get('DB_PASS', 'Zaqwsx9sm1@'),
     'database': os.environ.get('DB_NAME', 'ksfraser_stock_market'),
-    'charset': 'utf8mb4'
+    'charset': 'utf8mb4',
+    'autocommit': True,
+    'connection_timeout': 60,
+    'pool_name': 'ksf_atr_sweep',
+    'pool_size': 3,
 }
 
+_POOL = mysql.connector.pooling.MySQLConnectionPool(
+    pool_name=DB_CONFIG['pool_name'],
+    pool_size=DB_CONFIG['pool_size'],
+    **{k: v for k, v in DB_CONFIG.items() if k not in ('pool_name', 'pool_size')}
+)
+
+
 def get_connection():
-    """Get MariaDB connection."""
-    return mysql.connector.connect(**DB_CONFIG)
+    """Get pooled MariaDB connection."""
+    return _POOL.get_connection()
 
 def fetch_price_data(symbol: str, start: str, end: str) -> pd.DataFrame:
     """Fetch OHLCV data for a symbol."""
@@ -92,13 +103,15 @@ def run_backtest(df: pd.DataFrame, stop_factor: float = 2.0, trailing_pct: float
     trailing_stop = 0
     cash = initial_capital
     trades = []
+    highest_high = None
     
     for i in range(20, len(df)):
         curr = df.iloc[i]
         
-        # Update trailing stop (highest high - trailing_pct of price)
-        if position > 0:
-            new_trailing_stop = curr['c'] * (1 - trailing_pct)
+        # Update trailing stop (working copy: highest high since entry - trailing_pct)
+        if position > 0 and highest_high is not None:
+            highest_high = max(highest_high, curr['h'])
+            new_trailing_stop = highest_high * (1 - trailing_pct)
             if new_trailing_stop > trailing_stop:
                 trailing_stop = new_trailing_stop
             
@@ -109,6 +122,7 @@ def run_backtest(df: pd.DataFrame, stop_factor: float = 2.0, trailing_pct: float
                 trades.append({'type': 'TRAILING', 'price': trailing_stop, 'pnl': pnl})
                 position = 0
                 trailing_stop = 0
+                highest_high = None
                 continue
             
             # Check ATR stop hit
@@ -118,6 +132,7 @@ def run_backtest(df: pd.DataFrame, stop_factor: float = 2.0, trailing_pct: float
                 trades.append({'type': 'ATR_STOP', 'price': stop_price, 'pnl': pnl})
                 position = 0
                 trailing_stop = 0
+                highest_high = None
                 continue
         
         # Simple entry: price > SMA200 (long bias)
@@ -133,7 +148,8 @@ def run_backtest(df: pd.DataFrame, stop_factor: float = 2.0, trailing_pct: float
                 position = size_dollar / curr['c']
                 entry_price = curr['c']
                 stop_price = curr['c'] - stop_factor * curr['atr']
-                trailing_stop = entry_price * (1 - trailing_pct)
+                highest_high = curr['h']
+                trailing_stop = highest_high * (1 - trailing_pct)
                 cash -= entry_price * position + 9.95
                 trades.append({'type': 'ENTRY', 'price': entry_price, 'pnl': 0})
         
@@ -144,6 +160,7 @@ def run_backtest(df: pd.DataFrame, stop_factor: float = 2.0, trailing_pct: float
             trades.append({'type': 'EXIT', 'price': curr['c'], 'pnl': pnl})
             position = 0
             trailing_stop = 0
+            highest_high = None
     
     final_value = cash + position * df['c'].iloc[-1]
     pnl = final_value - initial_capital

@@ -12,6 +12,7 @@ import pymysql, yfinance as yf, pandas as pd
 import sys, os, time, argparse
 from datetime import date, timedelta
 from config_loader import Config
+from python.src.events.publisher import EventPublisher
 
 # Credentials loaded from Ansible Vault via config_loader
 _cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config.yaml')
@@ -118,6 +119,14 @@ def main():
         # Rate limit: max ~100/hour
         time.sleep(1.5)
 
+        publisher = EventPublisher(conn)
+        try:
+            publisher.publish(
+                'prices_loaded',
+                {'symbol': sym},
+            )
+        except Exception:
+            pass
         # Batch update symbol_master
         c.execute("UPDATE symbol_master SET data_start=%s, last_updated=CURRENT_TIMESTAMP WHERE symbol=%s",
                   (hist.index[0].date().isoformat(), sym))

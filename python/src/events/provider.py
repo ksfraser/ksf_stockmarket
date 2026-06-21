@@ -9,11 +9,11 @@ if TYPE_CHECKING:
     from .publisher import EventPublisher
 
 
-def get_event_repository(db):  # -> EventRepository
+def get_event_repository(db):  # returns EventRepository
     from .repository import EventRepository
     return EventRepository(db)
 
 
-def get_event_publisher(db):  # -> EventPublisher
+def get_event_publisher(db):  # returns EventPublisher
     from .publisher import EventPublisher
     return EventPublisher(db)

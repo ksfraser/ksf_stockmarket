@@ -26,20 +26,21 @@ class EventPublisher:
 
     def publish(self, event_type: str, payload: dict[str, Any]) -> str:
         event_id = str(uuid4())
-        self.db.execute(
-            "INSERT INTO event_queue "
-            "(event_id, event_type, payload, occurred_at, status, attempts, last_error) "
-            "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-            (
-                event_id,
-                event_type,
-                _json_safe(payload),
-                datetime.now().isoformat(),
-                "pending",
-                0,
-                None,
-            ),
-        )
+        with self.db.cursor() as cur:
+            cur.execute(
+                "INSERT INTO event_queue "
+                "(event_id, event_type, payload, occurred_at, status, attempts, last_error) "
+                "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                (
+                    event_id,
+                    event_type,
+                    _json_safe(payload),
+                    datetime.now().isoformat(),
+                    "pending",
+                    0,
+                    None,
+                ),
+            )
         logger.info("Published event %s of type %s", event_id, event_type)
         return event_id
 
@@ -79,10 +80,4 @@ class EventPublisher:
         )
 
 
-_JSON_SAFE_TYPES = (str, int, float, bool, list, dict, type(None))
 
-
-def _json_safe(value: Any) -> str:
-    if isinstance(value, (dict, list)):
-        return str(value)
-    return str(value)

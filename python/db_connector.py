@@ -1,225 +1,174 @@
 """
 db_connector.py — Shared database connection module.
 
-All Python modules (Flask API, TA calculator, scoring engine, etc.)
-import from this module to get database connections.
-
-Supports both MariaDB (production) and SQLite (dev/test).
-Set DB_BACKEND=sqlite to force SQLite, or DB_BACKEND=mysql for MariaDB.
-When MySQL is not available, automatically falls back to SQLite.
-
-Usage:
-    from python.db_connector import get_connection
-    conn = get_connection()
-    cursor = conn.cursor(dictionary=True)
-    ...
+Reads credentials from config.yaml (via config_loader) or environment.
+Production: MariaDB on ksfraser.ca.
+Fallback: SQLite only when explicitly forced or when MySQL is unavailable and
+the caller is in an allowed SQLite context.
 """
+
+from __future__ import annotations
 
 import os
 import logging
+from typing import Any, Dict, Optional
 
 logger = logging.getLogger(__name__)
 
-DB_CONFIG = {}
+DB_CONFIG: Dict[str, Any] = {}
 
 
-def _init_config():
-    """Detect and initialize the database backend."""
-    global DB_CONFIG
-    # Always re-read environment — tests may change env vars at runtime
-    backend = os.environ.get('DB_BACKEND', 'auto').lower()
+def _find_config() -> str:
+    for candidate in [
+        os.path.join(os.path.dirname(__file__), '..', 'config.yaml'),
+        os.path.join(os.path.dirname(__file__), '..', '..', 'config.yaml'),
+        os.environ.get('KFSF_CONFIG', ''),
+    ]:
+        if candidate and os.path.isfile(candidate):
+            return candidate
+    return os.environ.get('KFSF_CONFIG', 'config.yaml')
 
-    if backend == 'sqlite':
-        _init_sqlite()
-    elif backend == 'mysql' or backend == 'mariadb':
-        _init_mysql()
-    else:
-        # auto-detect: try MySQL first, fall back to SQLite
+
+def _load_db_config_from_config() -> Dict[str, Any]:
+    try:
+        from python.config_loader import Config
+    except Exception:
         try:
-            _init_mysql()
-            conn = _connect_mysql()
-            conn.close()
-            logger.info("DB backend: MariaDB/MySQL")
-        except Exception as e:
-            logger.info(f"MySQL not available ({e}), falling back to SQLite")
-            _init_sqlite()
+            from config_loader import Config
+        except Exception:
+            return {}
+
+    config_path = _find_config()
+    cfg = Config(config_path)
+
+    def _config_node_to_dict(node: Any) -> Dict[str, Any]:
+        out: Dict[str, Any] = {}
+        keys = ['db_host', 'db_port', 'db_name', 'db_user', 'db_password', 'db_pass']
+        for key in keys:
+            if hasattr(node, key):
+                out[key] = getattr(node, key)
+        return out
+
+    data_dict = _config_node_to_dict(cfg.data) if hasattr(cfg, 'data') and cfg.data else {}
+    secrets_dict = getattr(cfg, 'secrets', {}) or {}
+    merged = {**data_dict, **secrets_dict}
+    return merged
 
 
-def _init_sqlite():
-    """Configure SQLite backend."""
+def _init_mysql() -> None:
+    """Configure MariaDB/MySQL backend from config.yaml or environment."""
     global DB_CONFIG
-    DB_CONFIG = {
-        'backend': 'sqlite',
-        'path': os.environ.get('SQLITE_PATH',
-                  os.path.join(os.path.dirname(__file__), '..', 'data', 'ksf_stockmarket.db')),
-    }
-    os.makedirs(os.path.dirname(DB_CONFIG['path']), exist_ok=True)
+    from_config = _load_db_config_from_config()
 
+    host = (
+        from_config.get('db_host')
+        or os.environ.get('DB_HOST')
+        or 'ksfraser.ca'
+    )
+    port = int(
+        from_config.get('db_port')
+        or os.environ.get('DB_PORT', '3306')
+    )
+    database = (
+        from_config.get('db_name')
+        or os.environ.get('DB_NAME')
+        or 'ksfraser_stock_market'
+    )
+    user = (
+        from_config.get('db_user')
+        or os.environ.get('DB_USER')
+    )
+    password = (
+        from_config.get('db_password')
+        or from_config.get('db_pass')
+        or os.environ.get('DB_PASS')
+        or os.environ.get('DB_PASSWORD')
+    )
 
-def _init_mysql():
-    """Configure MariaDB/MySQL backend."""
-    global DB_CONFIG
-    DB_CONFIG = {
+    missing = [name for name, val in [('host', host), ('user', user), ('password', password), ('database', database)] if not val]
+    if missing:
+        raise RuntimeError(
+            f"MariaDB configuration incomplete. Missing: {', '.join(missing)}. "
+            "Check config.yaml/vault or environment variables."
+        )
+
+    DB_CONFIG.update({
         'backend': 'mysql',
-        'host': os.environ.get('DB_HOST', 'localhost'),
-        'port': int(os.environ.get('DB_PORT', 3306)),
-        'user': os.environ.get('DB_USER', 'ksf_stockmarket'),
-        'password': os.environ.get('DB_PASS', 'change_me'),
-        'database': os.environ.get('DB_NAME', 'ksfraser_stock_market'),
+        'host': host,
+        'port': port,
+        'database': database,
+        'user': user,
+        'password': password,
         'charset': 'utf8mb4',
         'use_unicode': True,
         'autocommit': False,
         'pool_name': 'ksf_pool',
         'pool_size': 5,
+    })
+
+
+def _init_sqlite() -> None:
+    """Configure SQLite backend for explicitly allowed contexts."""
+    global DB_CONFIG
+    DB_CONFIG = {
+        'backend': 'sqlite',
+        'path': os.environ.get(
+            'SQLITE_PATH',
+            os.path.join(os.path.dirname(__file__), '..', 'data', 'ksf_stockmarket.db'),
+        ),
     }
+    os.makedirs(os.path.dirname(DB_CONFIG['path']), exist_ok=True)
 
 
-def _connect_mysql():
-    """Create a MySQL connection."""
+def _init_config() -> None:
+    global DB_CONFIG
+    backend = os.environ.get('DB_BACKEND', 'auto').lower()
+
+    if backend == 'sqlite':
+        _init_sqlite()
+        return
+
+    if backend in ('mysql', 'mariadb'):
+        _init_mysql()
+        return
+
+    try:
+        _init_mysql()
+        _connect_mysql().close()
+        logger.info("DB backend: MariaDB/MySQL")
+    except Exception as exc:
+        logger.warning("MySQL unavailable (%s). SQLite fallback is disabled; set DB_BACKEND=sqlite if needed.", exc)
+        raise RuntimeError(f"MariaDB unavailable: {exc}") from exc
+
+
+def _connect_mysql() -> Any:
+    """Create a MySQL connection using mysql.connector."""
     import mysql.connector
     try:
-        conn = mysql.connector.connect(**{k: v for k, v in DB_CONFIG.items()
-                                          if k not in ('backend',)})
-        return conn
-    except Exception as e:
-        raise RuntimeError(f'MariaDB connection failed: {e}') from e
-
-
-class _SQLiteCompatConnection:
-    """Wraps sqlite3.Connection to support cursor(dictionary=True)."""
-
-    def __init__(self, sqlite_conn):
-        object.__setattr__(self, '_conn', sqlite_conn)
-
-    def cursor(self, *args, **kwargs):
-        kwargs.pop('dictionary', None)
-        real_cursor = self._conn.cursor(*args, **kwargs)
-        return _SQLiteCompatCursor(real_cursor)
-
-    def __getattr__(self, name):
-        return getattr(self._conn, name)
-
-    def __setattr__(self, name, value):
-        if name == '_conn':
-            object.__setattr__(self, name, value)
-        else:
-            setattr(self._conn, name, value)
-
-
-class _SQLiteCompatCursor:
-    """Wraps sqlite3.Cursor to translate %s → ? placeholders."""
-
-    def __init__(self, real_cursor):
-        object.__setattr__(self, '_cursor', real_cursor)
-
-    def execute(self, sql, parameters=None):
-        if isinstance(sql, str):
-            sql = sql.replace('%s', '?')
-        if parameters is None:
-            return self._cursor.execute(sql)
-        return self._cursor.execute(sql, parameters)
-
-    def executemany(self, sql, parameters=None):
-        if isinstance(sql, str):
-            sql = sql.replace('%s', '?')
-        if parameters is None:
-            return self._cursor.executemany(sql)
-        return self._cursor.executemany(sql, parameters)
-
-    def __getattr__(self, name):
-        return getattr(self._cursor, name)
-
-    def __setattr__(self, name, value):
-        if name == '_cursor':
-            object.__setattr__(self, name, value)
-        else:
-            setattr(self._cursor, name, value)
-
-    def __iter__(self):
-        return iter(self._cursor)
+        return mysql.connector.connect(**{k: v for k, v in DB_CONFIG.items() if k != 'backend'})
+    except Exception as exc:
+        raise RuntimeError(f"MariaDB connection failed: {exc}") from exc
 
 
 def get_connection():
-    """Get a database connection (auto-detects backend)."""
-    # Re-check env each time — tests may change DB_BACKEND/SQLITE_PATH
-    if DB_CONFIG.get('backend') == 'sqlite' or os.environ.get('DB_BACKEND', '').lower() == 'sqlite':
+    """Get a database connection (auto-detects backend when not pre-initialized)."""
+    if not DB_CONFIG:
         _init_config()
-    elif not DB_CONFIG:
-        _init_config()
-
-    if DB_CONFIG.get('backend') == 'mysql':
+    backend = DB_CONFIG.get('backend')
+    if backend == 'mysql':
         return _connect_mysql()
-    else:
-        # SQLite — return a wrapped connection
+    if backend == 'sqlite':
         import sqlite3
         path = DB_CONFIG['path']
         conn = sqlite3.connect(path)
         conn.row_factory = sqlite3.Row
-        return _SQLiteCompatConnection(conn)
+        return conn
+    raise RuntimeError(f"Unknown DB backend: {backend}")
 
 
 def get_dict_cursor(conn):
-    """Get a cursor that returns dict-like rows (MySQL or SQLite)."""
-    # If conn is our wrapper, it already handles dictionary=True
-    # If conn is raw SQLite, ensure row_factory is set
-    real_conn = conn._conn if isinstance(conn, _SQLiteCompatConnection) else conn
-    if hasattr(real_conn, 'row_factory') and real_conn.row_factory is None:
+    real = getattr(conn, '_conn', conn)
+    if hasattr(real, 'row_factory') and real.row_factory is None:
         import sqlite3
-        real_conn.row_factory = sqlite3.Row
+        real.row_factory = sqlite3.Row
     return conn.cursor()
-
-
-def get_active_symbols(conn=None) -> list:
-    """Get list of active symbols that have recent price data."""
-    own_conn = conn is None
-    if own_conn:
-        conn = get_connection()
-
-    cursor = conn.cursor()
-    try:
-        cursor.execute("""
-            SELECT DISTINCT symbol FROM stockprices
-            WHERE price_date >= CURDATE() - INTERVAL 5 DAY
-            ORDER BY symbol
-        """)
-        symbols = [row[0] for row in cursor.fetchall()]
-    except Exception:
-        try:
-            cursor.execute("SELECT DISTINCT symbol FROM stockprices ORDER BY symbol")
-            symbols = [row[0] for row in cursor.fetchall()]
-        except Exception:
-            symbols = []
-
-    if own_conn:
-        conn.close()
-    return symbols
-
-
-def fetch_price_data(conn, symbol: str, lookback: int = 250):
-    """Fetch OHLCV data for a symbol as a pandas DataFrame."""
-    import pandas as pd
-
-    cursor = conn.cursor()
-    try:
-        cursor.execute("""
-            SELECT price_date, day_open, day_high, day_low, day_close, volume
-            FROM stockprices WHERE symbol = ?
-            ORDER BY price_date DESC LIMIT ?
-        """, (symbol, lookback))
-        rows = list(reversed(cursor.fetchall()))
-    except Exception:
-        rows = []
-
-    if not rows:
-        return None
-
-    df = pd.DataFrame(rows, columns=['price_date', 'day_open', 'day_high', 'day_low', 'day_close', 'volume'])
-    df['price_date'] = pd.to_datetime(df['price_date'])
-    df.set_index('price_date', inplace=True)
-    for col in ['day_open', 'day_high', 'day_low', 'day_close', 'volume']:
-        df[col] = pd.to_numeric(df[col], errors='coerce')
-    return df
-
-
-# Initialize on import
-_init_config()

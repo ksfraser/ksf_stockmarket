@@ -1,42 +1,64 @@
 #!/usr/bin/env python3
 """
 Database connection module for ksf_stockmarket monitoring.
-Uses environment variables for configuration (injected via Ansible Vault).
+Uses config.yaml/vault via config_loader; falls back to environment variables.
 """
+from __future__ import annotations
 
 import os
 import pymysql
 from typing import Dict, Optional, Any
 
 
+def _find_config() -> str:
+    for candidate in [
+        os.path.join(os.path.dirname(__file__), '..', '..', 'config.yaml'),
+        os.path.join(os.path.dirname(__file__), '..', 'config.yaml'),
+        os.environ.get('KFSF_CONFIG', ''),
+    ]:
+        if candidate and os.path.isfile(candidate):
+            return candidate
+    return os.environ.get('KFSF_CONFIG', 'config.yaml')
+
+
+def _secrets() -> Dict[str, Any]:
+    try:
+        from python.config_loader import Config
+    except Exception:
+        try:
+            from config_loader import Config
+        except Exception:
+            return {}
+    cfg = Config(_find_config())
+    return dict(getattr(cfg, 'secrets', {}) or {})
+
+
 def get_connection() -> pymysql.connections.Connection:
-    """
-    Get a MariaDB connection using environment variables.
-    Falls back to defaults for local development.
-    """
+    secrets = _secrets()
+    password = (
+        secrets.get('db_password')
+        or secrets.get('db_pass')
+        or os.environ.get('DB_PASSWORD')
+        or os.environ.get('DB_PASS', '')
+    )
     config = {
-        'host': os.environ.get('DB_HOST', 'localhost'),
+        'host': os.environ.get('DB_HOST', 'ksfraser.ca'),
         'port': int(os.environ.get('DB_PORT', '3306')),
         'user': os.environ.get('DB_USER', 'ksfraser_stockmarket'),
-        'password': os.environ.get('DB_PASSWORD', ''),
+        'password': password,
         'database': os.environ.get('DB_NAME', 'ksfraser_stock_market'),
         'charset': 'utf8mb4',
         'cursorclass': pymysql.cursors.DictCursor,
         'autocommit': True,
     }
+    if not password:
+        raise RuntimeError(
+            "MariaDB password is not set. Provide DB_PASSWORD/DB_PASS in env, or store db_password in Ansible Vault/config.yaml."
+        )
     return pymysql.connect(**config)
 
 
 def get_monitored_symbols(list_type: Optional[str] = None) -> list:
-    """
-    Fetch active symbols to monitor from watchlist_symbols table.
-    
-    Args:
-        list_type: 'portfolio', 'watchlist', or None for all
-        
-    Returns:
-        List of dicts: {symbol, volume_spike_threshold, list_type, notes}
-    """
     conn = get_connection()
     try:
         with conn.cursor() as cur:
@@ -56,38 +78,48 @@ def get_monitored_symbols(list_type: Optional[str] = None) -> list:
         conn.close()
 
 
-def log_monitoring_run(job_name: str, status: str, symbol_count: int = 0, 
-                        alert_count: int = 0, details: Optional[Dict] = None) -> int:
-    """
-    Log a monitoring run to the monitoring_runs table.
-    
-    Returns:
-        The inserted run ID
-    """
+def log_monitoring_run(
+    job_name: str,
+    status: str,
+    symbol_count: int = 0,
+    alert_count: int = 0,
+    details: Optional[Dict] = None,
+) -> int:
     import json
     conn = get_connection()
     try:
         with conn.cursor() as cur:
-            cur.execute("""
+            cur.execute(
+                """
                 INSERT INTO monitoring_runs (job_name, status, symbol_count, alert_count, details)
                 VALUES (%s, %s, %s, %s, %s)
-            """, (job_name, status, symbol_count, alert_count, 
-                  json.dumps(details) if details else None))
+                """,
+                (
+                    job_name,
+                    status,
+                    symbol_count,
+                    alert_count,
+                    json.dumps(details) if details else None,
+                ),
+            )
             return conn.insert_id()
     finally:
         conn.close()
 
 
-def update_monitoring_run(run_id: int, status: str, alert_count: Optional[int] = None,
-                          details: Optional[Dict] = None) -> None:
-    """Update a monitoring run record."""
+def update_monitoring_run(
+    run_id: int,
+    status: str,
+    alert_count: Optional[int] = None,
+    details: Optional[Dict] = None,
+) -> None:
     import json
     conn = get_connection()
     try:
         with conn.cursor() as cur:
             updates = ["completed_at = NOW()"]
             params = [run_id]
-            
+
             if status:
                 updates.append("status = %s")
                 params.append(status)
@@ -97,16 +129,13 @@ def update_monitoring_run(run_id: int, status: str, alert_count: Optional[int] =
             if details:
                 updates.append("details = %s")
                 params.append(json.dumps(details))
-                
-            params = params + [status]  # Final params
-            cur.execute(f"UPDATE monitoring_runs SET {', '.join(updates)} WHERE id = %s", 
-                       [run_id])
+            params.append(run_id)
+            cur.execute(f"UPDATE monitoring_runs SET {', '.join(updates)} WHERE id = %s", params)
     finally:
         conn.close()
 
 
 if __name__ == '__main__':
-    # Test connection
     try:
         conn = get_connection()
         cur = conn.cursor()

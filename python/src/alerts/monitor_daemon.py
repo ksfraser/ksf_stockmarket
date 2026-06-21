@@ -75,7 +75,8 @@ def build_prompt(alert_type: str, symbol: str, payload: dict) -> str:
         "volume_spike": f"""{symbol} unusual volume: {payload.get("ratio", "N/A")}x average. Brief analysis: What does this indicate? Any action needed?""",
         "natr_spike": f"""{symbol} volatility spike (NATR {payload.get("ratio", "N/A")}x avg). From research, NATR is the only predictive indicator (r=0.16@20d). Regime assessment?""",
         "oscillator_extreme": f"""{symbol} RSI {payload.get("rsi_20d")} ({payload.get("extreme")}). Oscillators = regime filters, not direction. Brief assessment?""",
-        "gap_up": f"""{symbol} gap up {payload.get("gap_pct", "N/A")}%. Catalysts and trade setup?"""
+        "gap_up": f"""{symbol} gap up {payload.get("gap_pct", "N/A")}%. {payload.get("implication", "")} Catalysts and trade setup?""",
+        "gap_down": f"""{symbol} gap down {payload.get("gap_pct", "N/A")}%. {payload.get("implication", "")} Risk management action?""",
     }
     return prompts.get(alert_type, f"Analyze {symbol} alert: {alert_type}")
 
@@ -119,39 +120,48 @@ def process_alert(conn, alert_row):
 
 def monitor_once():
     """Process all pending alerts once."""
+    llm = template = 0
     try:
         conn = get_connection()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
-        
+
         cursor.execute("""
-            SELECT * FROM alert_queue 
+            SELECT * FROM alert_queue
             WHERE status = 'pending' AND request_llm_analysis = 1
             ORDER BY created_at ASC LIMIT 10
         """)
-        
+
         alerts = cursor.fetchall()
-        
+
         for alert in alerts:
-            process_alert(conn, alert)
-            
+            if process_alert(conn, alert):
+                llm += 1
+            else:
+                template += 1
+
         conn.close()
-        logger.info(f"Processed {len(alerts)} alerts")
-        
+        logger.info("Processed %d alerts", len(alerts))
     except Exception as e:
-        logger.error(f"Monitor error: {e}")
+        logger.error("Monitor error: %s", e)
+
+    total = llm + template
+    return {"processed": total, "llm": llm, "template": template}
 
 
 def monitor_daemon(interval: int = 120):
     """Run continuous monitoring loop."""
-    logger.info(f"Starting daemon, polling every {interval}s")
+    logger.info("Starting daemon, polling every %ds", interval)
     while True:
-        monitor_once()
+        result = monitor_once()
+        logger.info("Processed %d alerts (LLM: %d, template: %d)", result.get("processed", 0), result.get("llm", 0), result.get("template", 0))
         time.sleep(interval)
 
 
 if __name__ == "__main__":
     import sys
+
     if "--daemon" in sys.argv:
         monitor_daemon()
     else:
-        monitor_once()
+        result = monitor_once()
+        print(json.dumps({"output": f"Processed {result['processed']} alerts (LLM: {result['llm']}, template: {result['template']})", "exit_code": 0}))

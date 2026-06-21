@@ -131,7 +131,7 @@ def compute_for_symbol(symbol, rows):
         out['ht_sine_leadsine'] = [None]*n
 
     # Oscillators
-    for p, nm in [(7,'rsi_7'),(14,'rsi_14'),(21,'rsi_21')]:
+    for p, nm in [(3,'rsi_3'),(7,'rsi_7'),(14,'rsi_14'),(21,'rsi_21')]:
         try:
             r = talib.RSI(c, timeperiod=p)
             out[nm] = [safe(x) for x in r]
@@ -192,7 +192,7 @@ def compute_for_symbol(symbol, rows):
     # Moving averages
     ma_map = {'sma':talib.SMA,'ema':talib.EMA,'wma':talib.WMA,'tema':talib.TEMA,'dema':talib.DEMA,'trima':talib.TRIMA}
     for prefix, func in ma_map.items():
-        for p in [5,10,20,50,100,200]:
+        for p in [5,8,10,20,50,100,200]:
             if prefix in ('tema','dema','trima') and p == 200:
                 continue
             try:
@@ -264,6 +264,16 @@ def compute_for_symbol(symbol, rows):
         r = talib.ADOSC(h, l, c, v.astype(float), fastperiod=3, slowperiod=10)
         out['adosc'] = [safe(x) for x in r]
     except: out['adosc'] = [None]*n
+
+    # VWAP (Volume-Weighted Average Price) - cumulative per session
+    # Calculates running VWAP: sum(typical_price * volume) / sum(volume)
+    try:
+        tp = (h + l + c) / 3  # Typical price
+        cum_tp_vol = np.cumsum(tp * v)
+        cum_vol = np.cumsum(v)
+        vwap = np.where(cum_vol > 0, cum_tp_vol / cum_vol, np.nan)
+        out['vwap'] = [safe(x) for x in vwap]
+    except: out['vwap'] = [None]*n
 
     # Build output rows (only from index 200 onward)
     results = []

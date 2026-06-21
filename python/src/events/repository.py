@@ -65,7 +65,7 @@ class EventRepository:
             )
             rows = cur.fetchall()
             for r in rows:
-                cur.execute("UPDATE event_queue SET status='running' WHERE event_id=%s", (r[0],))
+                cur.execute("UPDATE event_queue SET status='running' WHERE event_id=%s", (r['event_id'],))
             conn.commit()
             return [self._row_to_event(r) for r in rows]
         finally:

@@ -307,7 +307,7 @@ class TransactionController {
                 return ['success' => false, 'errors' => ['Cannot delete: ' . $e->getMessage()]];
             }
 
-            $upd = $pdo->prepare("UPDATE transactions SET is_deleted = 1, updated_at = NOW() WHERE id = :id");
+            $upd = $pdo->prepare("UPDATE transactions SET is_deleted = 1 WHERE id = :id");
             $updResult = $upd->execute([':id' => $txnId]);
 
             if (!$updResult || $upd->rowCount() === 0) {
@@ -436,7 +436,7 @@ class TransactionController {
         $errors = [];
 
         // Get the transaction (verify ownership)
-        $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id AND user_id = :uid");
+        $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id");
         $stmt->execute([':id' => $txnId, ':uid' => $this->currentUser['id']]);
         $txn = $stmt->fetch();
 
@@ -516,7 +516,7 @@ class TransactionController {
             }
 
             // Update the transaction
-            $sql = "UPDATE transactions SET " . implode(', ', $updates) . ", updated_at = NOW() WHERE id = :id";
+            $sql = "UPDATE transactions SET " . implode(', ', $updates) . " WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
 

@@ -31,6 +31,16 @@ require_once '/var/www/stockmarket-app/src/View/helpers.php';
 
 $action = $_GET['action'] ?? 'overview';
 
+// Redirect actions with trailing slash to canonical version
+if (is_string($action) && str_ends_with($action, '/')) {
+    $canonical = rtrim($action, '/');
+    $query = $_GET;
+    $query['action'] = $canonical;
+    $qs = http_build_query($query);
+    header('Location: ?' . $qs);
+    exit;
+}
+
 // Check auth status
 $currentUser = AuthController::checkSession();
 $userId = $currentUser ? (int) $currentUser['id'] : null;

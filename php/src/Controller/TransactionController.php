@@ -48,9 +48,9 @@ class TransactionController {
 
         $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-        $sql = "SELECT t.* FROM transactions t {$whereSql} ORDER BY t.trade_date DESC, t.id DESC LIMIT 500";
+        $sql = "SELECT t.* FROM transactions t WHERE t.user_id = :uid {$whereSql} ORDER BY t.trade_date DESC, t.id DESC LIMIT 500";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
+        $stmt->execute([':uid' => $userId] + $params);
         $transactions = $stmt->fetchAll();
 
         $summSql = "SELECT
@@ -60,9 +60,9 @@ class TransactionController {
                     SUM(CASE WHEN t.type = 'DIVIDEND' THEN t.total ELSE 0 END) as total_dividends,
                     SUM(CASE WHEN t.type = 'BUY' THEN t.total ELSE 0 END) as total_buys,
                     SUM(CASE WHEN t.type = 'SELL' THEN t.total ELSE 0 END) as total_sells
-                    FROM transactions t {$whereSql}";
+                    FROM transactions t WHERE t.user_id = :uid {$whereSql}";
         $stmt2 = $pdo->prepare($summSql);
-        $stmt2->execute($params);
+        $stmt2->execute([':uid' => $userId] + $params);
         $summary = $stmt2->fetch();
 
         // Get filter options
@@ -145,11 +145,11 @@ class TransactionController {
 
             // Insert transaction
             $stmt = $pdo->prepare("
-                INSERT INTO transactions (symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, created_at)
-                VALUES (:sym, :td, :type, :qty, :prc, :tot, :comm, :acct, :notes, 'manual_entry', NOW())
+                INSERT INTO transactions (user_id, symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, created_at)
+                VALUES (:uid, :sym, :td, :type, :qty, :prc, :tot, :comm, :acct, :notes, 'manual_entry', NOW())
             ");
             $stmt->execute([
-                ':sym' => $symbol, ':td' => $tradeDate, ':type' => $type,
+                ':uid' => $userId, ':sym' => $symbol, ':td' => $tradeDate, ':type' => $type,
                 ':qty' => $quantity, ':prc' => $price, ':tot' => $total,
                 ':comm' => $commission, ':acct' => $accountType, ':notes' => $notes,
             ]);
@@ -436,7 +436,7 @@ class TransactionController {
         $errors = [];
 
         // Get the transaction (verify ownership)
-        $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id");
+        $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id AND user_id = :uid");
         $stmt->execute([':id' => $txnId, ':uid' => $this->currentUser['id']]);
         $txn = $stmt->fetch();
 

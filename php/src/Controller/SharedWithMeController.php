@@ -122,7 +122,7 @@ class SharedWithMeController {
             SELECT t.id, t.symbol, t.trade_date, t.type, t.quantity, t.price, t.total, t.commission,
                    t.account_type, t.notes, t.source_file, t.created_at
             FROM transactions t
-            WHERE t.user_id = :uid
+            WHERE t.user_id = :uid AND t.is_deleted = 0
             ORDER BY t.trade_date DESC
             LIMIT :lim
         ");

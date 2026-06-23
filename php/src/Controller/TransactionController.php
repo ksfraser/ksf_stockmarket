@@ -48,9 +48,9 @@ class TransactionController {
 
         $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-        $sql = "SELECT t.* FROM transactions t {$whereSql} ORDER BY t.trade_date DESC, t.id DESC LIMIT 500";
+        $sql = "SELECT t.* FROM transactions t WHERE t.user_id = :uid {$whereSql} ORDER BY t.trade_date DESC, t.id DESC LIMIT 500";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
+        $stmt->execute([':uid' => $this->currentUser['id']] + $params);
         $transactions = $stmt->fetchAll();
 
         $summSql = "SELECT
@@ -60,9 +60,9 @@ class TransactionController {
                     SUM(CASE WHEN t.type = 'DIVIDEND' THEN t.total ELSE 0 END) as total_dividends,
                     SUM(CASE WHEN t.type = 'BUY' THEN t.total ELSE 0 END) as total_buys,
                     SUM(CASE WHEN t.type = 'SELL' THEN t.total ELSE 0 END) as total_sells
-                    FROM transactions t {$whereSql}";
+                    FROM transactions t WHERE t.user_id = :uid {$whereSql}";
         $stmt2 = $pdo->prepare($summSql);
-        $stmt2->execute($params);
+        $stmt2->execute([':uid' => $this->currentUser['id']] + $params);
         $summary = $stmt2->fetch();
 
         // Get filter options
@@ -92,6 +92,7 @@ class TransactionController {
 
         // Validate required fields
         $symbol = strtoupper(trim($post['symbol'] ?? ''));
+        $exchange = strtoupper(trim($post['exchange'] ?? ''));
         $type   = strtoupper(trim($post['type'] ?? ''));
         $tradeDate = $post['trade_date'] ?? date('Y-m-d');
         $accountType = strtoupper(trim($post['account_type'] ?? ''));
@@ -100,6 +101,24 @@ class TransactionController {
         $total    = isset($post['total'])    ? (float) $post['total']    : 0;
         $commission = isset($post['commission']) ? (float) $post['commission'] : 0;
         $notes    = trim($post['notes'] ?? '');
+
+        // Normalize symbol based on exchange
+        if ($exchange === 'TSX' && !str_ends_with($symbol, '.TO')) {
+            $symbol = $symbol . '.TO';
+        }
+        // For NASDAQ/NYSE, ensure no .TO suffix
+        if (($exchange === 'NASDAQ' || $exchange === 'NYSE') && str_ends_with($symbol, '.TO')) {
+            $symbol = substr($symbol, 0, -3);
+        }
+        // Auto-detect: check symbol_master for exchange, default to .TO for short symbols
+        if ($exchange === '' && !str_ends_with($symbol, '.TO')) {
+            $stmt = $pdo->prepare("SELECT exchange FROM symbol_master WHERE symbol = :sym OR symbol = CONCAT(:sym, '.TO') LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $row = $stmt->fetch();
+            if ($row && $row['exchange'] === 'TSX') {
+                $symbol = $symbol . '.TO';
+            }
+        }
 
         if (strlen($symbol) < 1 || strlen($symbol) > 20) $errors[] = 'Symbol is required (1-20 chars).';
         if (!in_array($type, ['BUY', 'SELL', 'DIVIDEND', 'SPLIT'], true)) $errors[] = 'Type must be BUY, SELL, DIVIDEND, or SPLIT.';
@@ -126,11 +145,11 @@ class TransactionController {
 
             // Insert transaction
             $stmt = $pdo->prepare("
-                INSERT INTO transactions (symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, created_at)
-                VALUES (:sym, :td, :type, :qty, :prc, :tot, :comm, :acct, :notes, 'manual_entry', NOW())
+                INSERT INTO transactions (user_id, symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, created_at)
+                VALUES (:uid, :sym, :td, :type, :qty, :prc, :tot, :comm, :acct, :notes, 'manual_entry', NOW())
             ");
             $stmt->execute([
-                ':sym' => $symbol, ':td' => $tradeDate, ':type' => $type,
+                ':uid' => $userId, ':sym' => $symbol, ':td' => $tradeDate, ':type' => $type,
                 ':qty' => $quantity, ':prc' => $price, ':tot' => $total,
                 ':comm' => $commission, ':acct' => $accountType, ':notes' => $notes,
             ]);
@@ -255,40 +274,52 @@ class TransactionController {
         $pdo = Database::get();
 
         try {
-            $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id AND is_deleted = 0");
+            $pdo->beginTransaction();
+
+            // Get the transaction to delete
+            $stmt = $pdo->prepare("SELECT * FROM transactions WHERE id = :id");
             $stmt->execute([':id' => $txnId]);
             $txn = $stmt->fetch();
-
+ 
             if (!$txn) {
+                $pdo->rollBack();
                 return ['success' => false, 'errors' => ['Transaction not found or access denied.']];
             }
-
+ 
             $type = strtoupper((string) ($txn['type'] ?? ''));
             $symbol = strtoupper((string) ($txn['symbol'] ?? ''));
             $account = strtoupper((string) ($txn['account_type'] ?? ''));
             $quantity = (float) ($txn['quantity'] ?? 0);
             $price = (float) ($txn['price'] ?? 0);
             $commission = (float) ($txn['commission'] ?? 0);
-
-            $pdo->beginTransaction();
-
-            if ($type === 'BUY') {
-                $this->reverseBuy($pdo, $userId, $symbol, $account, $quantity, $price, $commission);
-            } elseif ($type === 'SELL') {
-                $this->reverseSell($pdo, $userId, $symbol, $account, $quantity, $price, $commission);
-            } elseif ($type === 'SPLIT') {
-                $this->reverseSplit($pdo, $userId, $symbol, $quantity);
+            error_log("deleteTransaction: txnId=$txnId, type=$type, symbol=$symbol, qty=$quantity, userId=$userId");
+            try {
+                if ($type === 'BUY') {
+                    $this->reverseBuy($pdo, $userId, $symbol, $account, $quantity, $price, $commission);
+                } elseif ($type === 'SELL') {
+                    $this->reverseSell($pdo, $userId, $symbol, $account, $quantity, $price, $commission);
+                } elseif ($type === 'SPLIT') {
+                    $this->reverseSplit($pdo, $userId, $symbol, $quantity);
+                }
+            } catch (RuntimeException $e) {
+                $pdo->rollBack();
+                error_log("deleteTransaction: reverse failed - " . $e->getMessage());
+                return ['success' => false, 'errors' => ['Cannot delete: ' . $e->getMessage()]];
             }
 
-            $upd = $pdo->prepare("UPDATE transactions SET is_deleted = 1, updated_at = NOW() WHERE id = :id");
-            $upd->execute([':id' => $txnId]);
+            $upd = $pdo->prepare("UPDATE transactions SET is_deleted = 1 WHERE id = :id");
+            $updResult = $upd->execute([':id' => $txnId]);
+
+            if (!$updResult || $upd->rowCount() === 0) {
+                $pdo->rollBack();
+                return ['success' => false, 'errors' => ['Transaction could not be deleted (may have been deleted already or access denied).']];
+            }
 
             $pdo->commit();
             return ['success' => true, 'message' => "Deleted {$type} transaction for {$symbol}."];
         } catch (Exception $e) {
-            if ($pdo->inTransaction()) {
-                $pdo->rollBack();
-            }
+            $pdo->rollBack();
+            error_log("deleteTransaction error: " . $e->getMessage() . " for txn_id=$txnId");
             return ['success' => false, 'errors' => ['Database error: ' . $e->getMessage()]];
         }
     }
@@ -485,7 +516,7 @@ class TransactionController {
             }
 
             // Update the transaction
-            $sql = "UPDATE transactions SET " . implode(', ', $updates) . ", updated_at = NOW() WHERE id = :id";
+            $sql = "UPDATE transactions SET " . implode(', ', $updates) . " WHERE id = :id";
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
 
@@ -529,9 +560,11 @@ class TransactionController {
                     SUM(CASE WHEN type = 'SELL' THEN quantity ELSE 0 END) as total_sold
                 FROM transactions
                 WHERE type IN ('BUY','SELL')
+                  AND user_id = :uid
                 GROUP BY symbol, account_type
             ";
-            $txnRows = $pdo->query($txnSql)->fetchAll();
+            $txnRows = $pdo->prepare($txnSql);
+            $txnRows->execute([':uid' => $userId]);
             $expected = [];
             foreach ($txnRows as $r) {
                 $key = $r['symbol'] . '|' . $r['account_type'];

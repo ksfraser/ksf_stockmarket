@@ -13,7 +13,7 @@ $presetLabel = $data['preset_label'] ?? 'Dividend Stocks';
     <div class="card-header">📊 TradingView Stock Screener</div>
     
     <div style="margin-bottom: 16px;">
-        <form method="GET" action="?action=screener" style="display:inline-block;">
+        <form method="GET" action="/stockmarket/?action=screener" style="display:inline-block;">
             <select name="preset" onchange="this.form.submit()" style="padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
                 <?php foreach ($presets as $key => $info): ?>
                     <option value="<?php echo $key; ?>" <?php echo $presetName === $key ? 'selected' : ''; ?>><?php echo htmlspecialchars($info['label']); ?></option>
@@ -68,7 +68,7 @@ $presetLabel = $data['preset_label'] ?? 'Dividend Stocks';
         
         <p style="margin-top:12px;font-size:0.85em;color:var(--text3);">
             Showing <?php echo count($results); ?> results for <?php echo htmlspecialchars($presetLabel); ?>.
-            <a href="?action=screener&preset=<?php echo $presetName; ?>" style="color:var(--accent);">Refresh</a>
+            <a href="/stockmarket/?action=screener&preset=<?php echo $presetName; ?>" style="color:var(--accent);">Refresh</a>
         </p>
     <?php endif; ?>
 </div>

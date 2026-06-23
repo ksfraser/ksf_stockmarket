@@ -31,6 +31,16 @@ require_once '/var/www/stockmarket-app/src/View/helpers.php';
 
 $action = $_GET['action'] ?? 'overview';
 
+// Redirect actions with trailing slash to canonical version
+if (is_string($action) && str_ends_with($action, '/')) {
+    $canonical = rtrim($action, '/');
+    $query = $_GET;
+    $query['action'] = $canonical;
+    $qs = http_build_query($query);
+    header('Location: ?' . $qs);
+    exit;
+}
+
 // Check auth status
 $currentUser = AuthController::checkSession();
 $userId = $currentUser ? (int) $currentUser['id'] : null;
@@ -73,7 +83,7 @@ if ($action === 'register') {
 }
 
 // Routes requiring authentication (portfolio, transactions, personal data)
-$protectedRoutes = ['portfolio', 'transactions', 'detail', 'indicators', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings'];
+$protectedRoutes = ['portfolio', 'transactions', 'detail', 'indicators', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings', 'shared_with_me'];
 if (in_array($action, $protectedRoutes, true) && !AuthController::checkSession()) {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header('Location: ?action=login');
@@ -341,6 +351,38 @@ case 'strategy_timing':
         }
         $pageTitle = 'Risk Manager';
         $template = 'risk';
+        break;
+    case 'seg_funds':
+        require_once '/var/www/html/stockmarket/src/Controller/SegFundsController.php';
+        $ctrl = new SegFundsController();
+        $data = array_merge($data, $ctrl->listFunds(
+            $_GET['carrier'] ?? '',
+            $_GET['category'] ?? '',
+            $_GET['series'] ?? '',
+            $_GET['search'] ?? '',
+            $_GET['sort'] ?? 'fund_name',
+            $_GET['dir'] ?? 'ASC'
+        ));
+        $pageTitle = 'Segregated Funds';
+        $template = 'seg_funds';
+        break;
+    case 'seg_fund_detail':
+        require_once '/var/www/html/stockmarket/src/Controller/SegFundsController.php';
+        $ctrl = new SegFundsController();
+        $data = array_merge($data, $ctrl->detail((int)($_GET['id'] ?? 0)));
+        $pageTitle = 'Fund Detail';
+        $template = 'seg_fund_detail';
+        break;
+    case 'shared_with_me':
+        if (!$userId) {
+            header('Location: ?action=login');
+            exit;
+        }
+        require_once '/var/www/stockmarket-app/src/Controller/SharedWithMeController.php';
+        $ctrl = new SharedWithMeController();
+        $data = array_merge($data, $ctrl->index());
+        $pageTitle = 'Shared with Me';
+        $template = 'shared_with_me';
         break;
     default:
         $ctrl = new DashboardController();

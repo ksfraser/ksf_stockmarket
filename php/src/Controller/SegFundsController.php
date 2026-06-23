@@ -33,8 +33,9 @@ class SegFundsController {
             $params[':series'] = $series;
         }
         if ($search) {
-            $where[] = '(fund_name LIKE :search OR carrier LIKE :search)';
-            $params[':search'] = '%' . $search . '%';
+            $where[] = '(fund_name LIKE :search1 OR carrier LIKE :search2)';
+            $params[':search1'] = '%' . $search . '%';
+            $params[':search2'] = '%' . $search . '%';
         }
 
         $whereSql = 'WHERE ' . implode(' AND ', $where);

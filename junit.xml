@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="/home/ksf_stockmarket/ksf_stockmarket/phpunit.xml" tests="9" assertions="14" errors="0" failures="0" skipped="0" time="0.034937">
-    <testsuite name="Unit" tests="9" assertions="14" errors="0" failures="0" skipped="0" time="0.034937">
-      <testsuite name="Ksf\StockMarket\Tests\Unit\AppTest" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" tests="5" assertions="7" errors="0" failures="0" skipped="0" time="0.027110">
-        <testcase name="testGetInstanceReturnsSingleton" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="62" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="1" time="0.006541"/>
-        <testcase name="testBootstrapLoadsConfig" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="70" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="2" time="0.015402"/>
-        <testcase name="testGetReturnsDefaultForMissingKey" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="79" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="2" time="0.001969"/>
-        <testcase name="testRootDirReturnsProjectRoot" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="88" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="1" time="0.001617"/>
-        <testcase name="testBootstrapIsIdempotent" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="97" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="1" time="0.001581"/>
-      </testsuite>
-      <testsuite name="Ksf\StockMarket\Tests\Unit\ValidationTest" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" tests="4" assertions="7" errors="0" failures="0" skipped="0" time="0.007828">
-        <testcase name="testNegativeSharesRejected" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" line="19" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="1" time="0.002678"/>
-        <testcase name="testNegativeCostRejected" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" line="30" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="1" time="0.000679"/>
-        <testcase name="testZeroValuesAccepted" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" line="40" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="4" time="0.003769"/>
-        <testcase name="testSymbolNormalization" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" line="52" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="1" time="0.000701"/>
-      </testsuite>
+  <testsuite name="CLI Arguments" tests="16" assertions="18" errors="0" failures="0" skipped="5" time="0.032405">
+    <testsuite name="Ksf\StockMarket\Tests\Integration\PortfolioIntegrationTest" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Integration/PortfolioIntegrationTest.php" tests="5" assertions="0" errors="0" failures="0" skipped="5" time="0.000000">
+      <testcase name="testGetPositionsReturnsArray" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Integration/PortfolioIntegrationTest.php" line="44" class="Ksf\StockMarket\Tests\Integration\PortfolioIntegrationTest" classname="Ksf.StockMarket.Tests.Integration.PortfolioIntegrationTest" assertions="0" time="0.000000">
+        <skipped/>
+      </testcase>
+      <testcase name="testSetAndGetPosition" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Integration/PortfolioIntegrationTest.php" line="52" class="Ksf\StockMarket\Tests\Integration\PortfolioIntegrationTest" classname="Ksf.StockMarket.Tests.Integration.PortfolioIntegrationTest" assertions="0" time="0.000000">
+        <skipped/>
+      </testcase>
+      <testcase name="testRemovePosition" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Integration/PortfolioIntegrationTest.php" line="67" class="Ksf\StockMarket\Tests\Integration\PortfolioIntegrationTest" classname="Ksf.StockMarket.Tests.Integration.PortfolioIntegrationTest" assertions="0" time="0.000000">
+        <skipped/>
+      </testcase>
+      <testcase name="testSetPositionRejectsNegativeShares" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Integration/PortfolioIntegrationTest.php" line="80" class="Ksf\StockMarket\Tests\Integration\PortfolioIntegrationTest" classname="Ksf.StockMarket.Tests.Integration.PortfolioIntegrationTest" assertions="0" time="0.000000">
+        <skipped/>
+      </testcase>
+      <testcase name="testSetPositionRejectsNegativeCost" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Integration/PortfolioIntegrationTest.php" line="90" class="Ksf\StockMarket\Tests\Integration\PortfolioIntegrationTest" classname="Ksf.StockMarket.Tests.Integration.PortfolioIntegrationTest" assertions="0" time="0.000000">
+        <skipped/>
+      </testcase>
+    </testsuite>
+    <testsuite name="Ksf\StockMarket\Tests\Unit\AppTest" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" tests="5" assertions="7" errors="0" failures="0" skipped="0" time="0.027419">
+      <testcase name="testGetInstanceReturnsSingleton" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="62" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="1" time="0.003848"/>
+      <testcase name="testBootstrapLoadsConfig" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="70" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="2" time="0.018160"/>
+      <testcase name="testGetReturnsDefaultForMissingKey" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="79" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="2" time="0.002194"/>
+      <testcase name="testRootDirReturnsProjectRoot" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="88" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="1" time="0.001636"/>
+      <testcase name="testBootstrapIsIdempotent" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="97" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="1" time="0.001582"/>
+    </testsuite>
+    <testsuite name="StockControllerTest" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" tests="2" assertions="4" errors="0" failures="0" skipped="0" time="0.001188">
+      <testcase name="test_controller_class_exists_and_is_loadable" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" line="9" class="StockControllerTest" classname="StockControllerTest" assertions="1" time="0.000811"/>
+      <testcase name="test_controller_has_new_methods_and_properties" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" line="14" class="StockControllerTest" classname="StockControllerTest" assertions="3" time="0.000377"/>
+    </testsuite>
+    <testsuite name="Ksf\StockMarket\Tests\Unit\ValidationTest" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" tests="4" assertions="7" errors="0" failures="0" skipped="0" time="0.003798">
+      <testcase name="testNegativeSharesRejected" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" line="19" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="1" time="0.000798"/>
+      <testcase name="testNegativeCostRejected" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" line="30" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="1" time="0.000362"/>
+      <testcase name="testZeroValuesAccepted" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" line="40" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="4" time="0.002291"/>
+      <testcase name="testSymbolNormalization" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" line="52" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="1" time="0.000346"/>
     </testsuite>
   </testsuite>
 </testsuites>

@@ -25,7 +25,7 @@ class BrokerStopController {
             $params[':acct'] = $account_filter;
         }
         
-        $stmt = $this->pdo->query("
+        $sql = "
             SELECT bs.*, latest.close as current_price
             FROM broker_stop_orders bs
             LEFT JOIN (
@@ -37,8 +37,8 @@ class BrokerStopController {
             ) latest ON bs.symbol = latest.symbol
             WHERE " . implode(' AND ', $where) . "
             ORDER BY placed_at DESC
-        ");
-        
+        ";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         $stops = $stmt->fetchAll();
         

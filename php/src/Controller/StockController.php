@@ -282,7 +282,7 @@ class StockController {
     /**
      * GET /?action=portfolio — Portfolio holdings.
      */
-    public function portfolio(string $account_filter = 'all'): array {
+    public function portfolio(string $account_filter = 'all', int $user_id = 0): array {
         // Build account filter
         $where = '';
         if ($account_filter !== 'all') {
@@ -292,11 +292,18 @@ class StockController {
         // Aggregate across accounts: each symbol appears once with total shares & weighted cost basis
         $accountJoin = '';
         $accountWhere = '';
+        $userCondition = '';
+        $params = [];
         if ($account_filter !== 'all') {
             $af = $this->pdo->quote($account_filter);
             $accountWhere = "WHERE p.account_type = $af";
         }
-        $stmt = $this->pdo->query("
+        if ($user_id > 0) {
+            $userCondition = $accountWhere ? "AND p.user_id = :uid" : "WHERE p.user_id = :uid";
+            $params[':uid'] = $user_id;
+        }
+
+        $sql = "
             SELECT p.symbol,
                    GROUP_CONCAT(DISTINCT p.account_type ORDER BY p.account_type) as accounts,
                    SUM(p.shares) as shares,
@@ -316,11 +323,13 @@ class StockController {
                 INNER JOIN (
                     SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol
                 ) sp2 ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
-            ) latest ON p.symbol = latest.symbol
-            {$accountWhere}
+            ) latest ON COALESCE(p.price_symbol, p.symbol) = latest.symbol
+            $userCondition
             GROUP BY p.symbol
             ORDER BY p.symbol
-        ");
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
         $holdings = $stmt->fetchAll();
 
         $fctrl = new FundamentalsController();

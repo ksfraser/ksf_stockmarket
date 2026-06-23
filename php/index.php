@@ -177,7 +177,7 @@ switch ($action) {
         break;
     case 'portfolio':
         $ctrl = new StockController();
-        $data = array_merge($data, $ctrl->portfolio($_GET['account'] ?? 'all'));
+        $data = array_merge($data, $ctrl->portfolio($_GET['account'] ?? 'all', $currentUser['id']));
         $pageTitle = 'Portfolio';
         $template = 'portfolio';
         break;

@@ -1,59 +1,53 @@
-"""Repository for advisor_accounts and advisor_runs."""
+"""Repository for advisor lookups via regular users table.
+
+Advisors are regular users with role='advisor'. Their strategy is stored
+in user_settings (setting_key='advisor_strategy'). No advisor_accounts
+table is used.
+"""
 
 from __future__ import annotations
 
 import logging
-from datetime import date
+from datetime import date, datetime
 from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
 class AdvisorRepository:
-    def __init__(self, db: Any, table_prefix: str = "") -> None:
+    def __init__(self, db: Any) -> None:
         self.db = db
-        self.table_prefix = table_prefix
-
-    def _t(self, name: str) -> str:
-        return f"{self.table_prefix}{name}"
 
     def get_active_advisors(self) -> list[dict[str, Any]]:
+        sql = """
+            SELECT u.id, u.username AS slug, u.display_name,
+                   COALESCE(us.setting_value, 'buffett_quality') AS strategy
+            FROM users u
+            LEFT JOIN user_settings us ON us.user_id = u.id AND us.setting_key = 'advisor_strategy'
+            WHERE u.role = 'advisor' AND u.is_active = 1
+            ORDER BY u.id
+        """
         with self.db.cursor() as cur:
-            cur.execute(
-                f"SELECT a.id, a.user_id, a.slug, a.strategy, u.username "
-                f"FROM {self._t('advisor_accounts')} a "
-                "JOIN users u ON u.id = a.user_id "
-                "WHERE a.is_active = 1"
-            )
-            return cur.fetchall()
+            cur.execute(sql)
+            rows = cur.fetchall()
+        return [dict(r) for r in rows]
 
-    def get_advisor_by_slug(self, slug: str) -> dict[str, Any] | None:
+    def run_exists(self, user_id: int, run_date: date) -> bool:
         with self.db.cursor() as cur:
             cur.execute(
-                f"SELECT a.id, a.user_id, a.slug, a.strategy, u.username "
-                f"FROM {self._t('advisor_accounts')} a "
-                "JOIN users u ON u.id = a.user_id "
-                "WHERE a.slug = %s AND a.is_active = 1",
-                (slug,),
-            )
-            return cur.fetchone()
-
-    def run_exists(self, advisor_id: int, run_date: date) -> bool:
-        with self.db.cursor() as cur:
-            cur.execute(
-                f"SELECT id FROM {self._t('advisor_runs')} WHERE advisor_id = %s AND run_date = %s",
-                (advisor_id, run_date),
+                "SELECT id FROM advisor_runs WHERE user_id = %s AND run_date = %s LIMIT 1",
+                (user_id, run_date),
             )
             return cur.fetchone() is not None
 
-    def create_run(self, advisor_id: int, run_date: date) -> int:
+    def create_run(self, user_id: int, run_date: date) -> int:
         with self.db.cursor() as cur:
             cur.execute(
-                f"INSERT INTO {self._t('advisor_runs')} (advisor_id, run_date, status) "
-                "VALUES (%s, %s, 'running')",
-                (advisor_id, run_date),
+                "INSERT INTO advisor_runs (user_id, run_date, status) VALUES (%s, %s, 'running')",
+                (user_id, run_date),
             )
-            return cur.lastrowid
+            self.db.commit()
+            return int(cur.lastrowid)
 
     def update_run(
         self,
@@ -82,11 +76,12 @@ class AdvisorRepository:
         if error_message is not None:
             sets.append("error_message = %s")
             params.append(error_message)
-        if status in {"completed", "failed", "skipped"}:
+        if status == "completed":
             sets.append("finished_at = NOW()")
         params.append(run_id)
         with self.db.cursor() as cur:
             cur.execute(
-                f"UPDATE {self._t('advisor_runs')} SET {', '.join(sets)} WHERE id = %s",
+                f"UPDATE advisor_runs SET {', '.join(sets)} WHERE id = %s",
                 params,
             )
+            self.db.commit()

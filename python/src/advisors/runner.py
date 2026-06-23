@@ -63,21 +63,10 @@ def run_advisor(
     run_date: date,
     dry_run: bool = False,
 ) -> None:
-    import json as _json
     slug = advisor["slug"]
-    strategy_name = advisor["strategy"]
-
-    profile_raw = advisor.get("profile_json") or "{}"
-    if isinstance(profile_raw, str):
-        try:
-            profile = _json.loads(profile_raw)
-        except Exception:
-            profile = {}
-    else:
-        profile = profile_raw or {}
-
-    max_positions = int(profile.get("max_positions") or advisor.get("max_positions") or 20)
-    schedule = profile.get("schedule") or advisor.get("schedule") or "daily"
+    strategy_name = advisor.get("strategy") or "buffett_quality"
+    schedule = advisor.get("schedule") or "daily"
+    max_positions = int(advisor.get("max_positions") or 20)
 
     strategy_cls = _STRATEGY_MAP.get(strategy_name)
     if strategy_cls is None:
@@ -91,12 +80,12 @@ def run_advisor(
         logger.info("Advisor %s is not eligible on %s (%s schedule)", slug, run_date, schedule)
         return
 
-    advisor_id = advisor["id"]
-    if repo.run_exists(advisor_id, run_date):
+    user_id = int(advisor["id"])
+    if repo.run_exists(user_id, run_date):
         logger.info("Advisor %s already has a run for %s; skipping", slug, run_date)
         return
 
-    run_id = repo.create_run(advisor_id, run_date)
+    run_id = repo.create_run(user_id, run_date)
     instance.on_run_start(run_date)
 
     try:
@@ -110,7 +99,7 @@ def run_advisor(
     if not dry_run:
         for sig in signals:
             try:
-                _persist_trade(db, advisor["user_id"], sig, run_date)
+                _persist_trade(db, sig, run_date)
                 trades_executed += 1
             except Exception:
                 logger.exception("Failed to persist trade for %s", sig.symbol)
@@ -127,7 +116,6 @@ def run_advisor(
 
 def _persist_trade(
     db: pymysql.connections.Connection,
-    user_id: int,
     sig: Signal,
     trade_date: date,
 ) -> None:

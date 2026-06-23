@@ -6,11 +6,10 @@
  *   php scripts/bootstrap_advisors.php
  *   php scripts/bootstrap_advisors.php --slug=warren-buffet --reset
  *
- * Each advisor:
- *   - gets a normal user record
- *   - gets an advisor_accounts row
- *   - gets portfolio_visibilities set to public
- *   - starts with 100,000 CAD deposited on 2025-01-02
+ * Advisors are regular users:
+ *   - role is promoted to 'advisor'
+ *   - strategy and schedule live in user_settings
+ *   - portfolios and transactions remain in standard shared tables
  */
 
 if (PHP_SAPI !== 'cli') {
@@ -53,33 +52,28 @@ function findOrCreateUser(PDO $pdo, string $slug): int {
         return (int) $row['id'];
     }
     $email = $slug . '@example.com';
-    $hash = password_hash('change-me', PASSWORD_DEFAULT);
+    $hash = password_hash('changeme', PASSWORD_DEFAULT);
     $ins = $pdo->prepare(
-        'INSERT INTO users (username, email, password_hash, role) VALUES (:u, :e, :h, :r)'
+        'INSERT INTO users (username, email, password_hash, display_name, role, is_active) '
+        . 'VALUES (:u, :e, :h, :d, "advisor", 1)'
     );
-    $ins->execute([':u' => $slug, ':e' => $email, ':h' => $hash, ':r' => 'trader']);
+    $ins->execute([':u' => $slug, ':e' => $email, ':h' => $hash, ':d' => ucwords(str_replace('-', ' ', $slug))]);
     return (int) $pdo->lastInsertId();
 }
 
-function findOrCreateAdvisor(PDO $pdo, int $userId, string $slug, string $strategy = 'buffett_quality', string $schedule = 'daily'): int {
-    $stmt = $pdo->prepare('SELECT id FROM advisor_accounts WHERE user_id = :uid LIMIT 1');
-    $stmt->execute([':uid' => $userId]);
-    $row = $stmt->fetch();
-    if ($row) {
-        // Ensure slug and strategy are up to date on re-runs.
-        $upd = $pdo->prepare(
-            'UPDATE advisor_accounts SET slug = :s, strategy = :st, is_active = 1 WHERE id = :id'
-        );
-        $upd->execute([':s' => $slug, ':st' => $strategy, ':id' => $row['id']]);
-        return (int) $row['id'];
-    }
-    $ins = $pdo->prepare(
-        'INSERT INTO advisor_accounts (user_id, slug, strategy, display_name, profile_json, is_active) VALUES (:uid, :s, :st, :dn, :pj, 1)'
+function ensureAdvisorSettings(PDO $pdo, int $userId, string $strategy, string $schedule = 'daily'): void {
+    $stmt = $pdo->prepare(
+        'INSERT INTO user_settings (user_id, setting_key, setting_value, updated_at) '
+        . 'VALUES (:uid, "advisor_strategy", :st, NOW()) '
+        . 'ON DUPLICATE KEY UPDATE setting_value = :st, updated_at = NOW()'
     );
-    $displayName = ucwords(str_replace('-', ' ', $slug));
-        $profileJson = json_encode(['schedule' => $schedule]);
-        $ins->execute([':uid' => $userId, ':s' => $slug, ':st' => $strategy, ':dn' => $displayName, ':pj' => $profileJson]);
-    return (int) $pdo->lastInsertId();
+    $stmt->execute([':uid' => $userId, ':st' => $strategy]);
+    $stmt2 = $pdo->prepare(
+        'INSERT INTO user_settings (user_id, setting_key, setting_value, updated_at) '
+        . 'VALUES (:uid, "advisor_schedule", :sc, NOW()) '
+        . 'ON DUPLICATE KEY UPDATE setting_value = :sc, updated_at = NOW()'
+    );
+    $stmt2->execute([':uid' => $userId, ':sc' => $schedule]);
 }
 
 function ensureInitialPortfolio(PDO $pdo, int $userId, int $advisorId): void {
@@ -92,8 +86,8 @@ function ensureInitialPortfolio(PDO $pdo, int $userId, int $advisorId): void {
         return;
     }
     $ins = $pdo->prepare(
-        'INSERT INTO portfolio (user_id, symbol, shares, cost_basis, cost_basis_total, account_type, strategy, notes, entry_date)
-         VALUES (:uid, :sym, :sh, :cb, :cbt, :acct, :strat, :n, :ed)'
+        'INSERT INTO portfolio (user_id, symbol, shares, cost_basis, cost_basis_total, account_type, strategy, notes, entry_date) '
+        . 'VALUES (:uid, :sym, :sh, :cb, :cbt, :acct, :strat, :n, :ed)'
     );
     $ins->execute([
         ':uid' => $userId,
@@ -109,22 +103,18 @@ function ensureInitialPortfolio(PDO $pdo, int $userId, int $advisorId): void {
 }
 
 function ensurePublicVisibilities(PDO $pdo, int $userId): void {
-    // Best-effort: mark all portfolio lines public if the table exists.
     try {
         $stmt = $pdo->query("SELECT id FROM portfolio_visibilities LIMIT 1");
         if (!$stmt) {
             return;
         }
     } catch (Throwable $e) {
-        // Table doesn't exist yet; skip.
         return;
     }
     $pdo->prepare(
-        'INSERT INTO portfolio_visibilities (user_id, symbol, account_type, is_public)
-         SELECT :uid, symbol, account_type, 1
-         FROM portfolio
-         WHERE user_id = :uid
-         ON DUPLICATE KEY UPDATE is_public = 1'
+        'INSERT INTO portfolio_visibilities (user_id, symbol, account_type, is_public) '
+        . 'SELECT :uid, symbol, account_type, 1 FROM portfolio WHERE user_id = :uid '
+        . 'ON DUPLICATE KEY UPDATE is_public = 1'
     )->execute([':uid' => $userId]);
 }
 
@@ -132,9 +122,8 @@ function ensurePublicVisibilities(PDO $pdo, int $userId): void {
 // Determine which slugs to process
 // ---------------------------------------------------------------------------
 if ($slug) {
-    $slugs = [$slug];
+    $slugs = ['warren-buffet' => 'buffett_quality'];
 } else {
-    // Default advisors if none specified.
     $slugs = [
         'warren-buffet' => 'buffett_quality',
         'dividend-growth' => 'dividend_growth',
@@ -144,22 +133,21 @@ if ($slug) {
 
 foreach ($slugs as $name => $strategy) {
     if (!is_string($name)) {
-        // Single --slug was passed without a strategy alias.
         $name = (string) $slugs;
         $strategy = 'buffett_quality';
     }
 
     if ($reset) {
-        $del = $pdo->prepare('DELETE FROM advisor_runs WHERE advisor_id = (SELECT id FROM advisor_accounts WHERE slug = :s)');
+        $del = $pdo->prepare('DELETE FROM advisor_runs WHERE user_id = (SELECT id FROM users WHERE username = :s)');
         $del->execute([':s' => $name]);
     }
 
     $userId = findOrCreateUser($pdo, $name);
-    $advisorId = findOrCreateAdvisor($pdo, $userId, $name, $strategy);
-    ensureInitialPortfolio($pdo, $userId, $advisorId);
+    ensureAdvisorSettings($pdo, $userId, $strategy);
+    ensureInitialPortfolio($pdo, $userId, (int) $userId);
     ensurePublicVisibilities($pdo, $userId);
 
-    printf("Advisor '%s' ready (user_id=%d, advisor_id=%d)\n", $name, $userId, $advisorId);
+    printf("Advisor '%s' ready (user_id=%d, strategy=%s)\n", $name, $userId, $strategy);
 }
 
 echo "Done.\n";

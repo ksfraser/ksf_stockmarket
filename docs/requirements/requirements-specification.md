@@ -73,6 +73,7 @@ The system shall generate:
 | FR-3.3 | Buffett value investing screen                       | High     |
 | FR-3.4 | ETF screener (Sharpe, return, MER, correlation)     | High     |
 | FR-3.5 | Seg fund screener (MER, guarantee, returns)         | High     |
+| FR-3.6 | Screener preset changes update results without full-page reload (AJAX) | Medium |
 
 ### FR-4: Backtesting
 | ID     | Requirement                                          | Priority |

@@ -231,6 +231,30 @@ The existing recipe needs these additions:
 | GET    | /api/data/prices/{symbol}  | ?from=&to=                | { prices: [...] }  |
 | POST   | /api/data/import           | symbols[], source         | { import_log }     |
 | GET    | /api/health                | —                         | { status: "ok" }   |
+| GET    | api_screener               | ?preset=                  | HTML fragment      |
+
+## 7.1 Screener AJAX Flow (Sequence)
+
+The Screener page no longer performs full-page reloads on preset changes.
+
+**Participants**: Browser → Front Controller (`index.php`) → `StockController::screener()` → Database (`tradingview_screener_results`) → Browser DOM update
+
+**Flow**:
+1. User selects a preset in `#screener-preset`
+2. Browser fires `fetch()` to `?action=api_screener&preset=X`
+3. Front controller invokes `StockController::screener(preset)`
+4. Controller queries latest `tradingview_screener_results` rows for that preset
+5. Controller renders inline HTML (table + summary line)
+6. Front controller returns HTML fragment (no layout)
+7. Browser replaces `#screener-results` innerHTML
+
+## 7.2 Routing Overview
+
+```
+?action=screener           → StockController::screener()
+?action=api_screener       → inline API fragment (StockController::screener())
+?action=screener/          → redirect ?action=screener (canonical trailing-slash)
+```
 
 ## 8. Security Model
 

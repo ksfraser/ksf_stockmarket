@@ -17,3 +17,4 @@ docs/
 | Version | Date       | Author      | Changes           |
 |---------|------------|-------------|-------------------|
 | 1.0.0   | 2026-05-25 | OWL         | Initial BABOK documentation |
+| 1.1.0   | 2026-06-23 | OWL         | Added screener AJAX endpoint docs; FR-3.6; architecture/uml diagrams | 

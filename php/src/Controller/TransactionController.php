@@ -50,7 +50,7 @@ class TransactionController {
 
         $sql = "SELECT t.* FROM transactions t WHERE t.user_id = :uid {$whereSql} ORDER BY t.trade_date DESC, t.id DESC LIMIT 500";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([':uid' => $userId] + $params);
+        $stmt->execute([':uid' => $this->currentUser['id']] + $params);
         $transactions = $stmt->fetchAll();
 
         $summSql = "SELECT
@@ -62,7 +62,7 @@ class TransactionController {
                     SUM(CASE WHEN t.type = 'SELL' THEN t.total ELSE 0 END) as total_sells
                     FROM transactions t WHERE t.user_id = :uid {$whereSql}";
         $stmt2 = $pdo->prepare($summSql);
-        $stmt2->execute([':uid' => $userId] + $params);
+        $stmt2->execute([':uid' => $this->currentUser['id']] + $params);
         $summary = $stmt2->fetch();
 
         // Get filter options
@@ -560,9 +560,11 @@ class TransactionController {
                     SUM(CASE WHEN type = 'SELL' THEN quantity ELSE 0 END) as total_sold
                 FROM transactions
                 WHERE type IN ('BUY','SELL')
+                  AND user_id = :uid
                 GROUP BY symbol, account_type
             ";
-            $txnRows = $pdo->query($txnSql)->fetchAll();
+            $txnRows = $pdo->prepare($txnSql);
+            $txnRows->execute([':uid' => $userId]);
             $expected = [];
             foreach ($txnRows as $r) {
                 $key = $r['symbol'] . '|' . $r['account_type'];

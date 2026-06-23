@@ -342,6 +342,27 @@ case 'strategy_timing':
         $pageTitle = 'Risk Manager';
         $template = 'risk';
         break;
+    case 'seg_funds':
+        require_once '/var/www/html/stockmarket/src/Controller/SegFundsController.php';
+        $ctrl = new SegFundsController();
+        $data = array_merge($data, $ctrl->listFunds(
+            $_GET['carrier'] ?? '',
+            $_GET['category'] ?? '',
+            $_GET['series'] ?? '',
+            $_GET['search'] ?? '',
+            $_GET['sort'] ?? 'fund_name',
+            $_GET['dir'] ?? 'ASC'
+        ));
+        $pageTitle = 'Segregated Funds';
+        $template = 'seg_funds';
+        break;
+    case 'seg_fund_detail':
+        require_once '/var/www/html/stockmarket/src/Controller/SegFundsController.php';
+        $ctrl = new SegFundsController();
+        $data = array_merge($data, $ctrl->detail((int)($_GET['id'] ?? 0)));
+        $pageTitle = 'Fund Detail';
+        $template = 'seg_fund_detail';
+        break;
     case 'shared_with_me':
         if (!$userId) {
             header('Location: ?action=login');

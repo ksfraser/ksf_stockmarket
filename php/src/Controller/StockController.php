@@ -21,8 +21,9 @@ class StockController {
         $params = [];
 
         if ($search) {
-            $where[] = "(sp.symbol LIKE :search OR sm.name LIKE :search)";
-            $params[':search'] = '%' . $search . '%';
+            $where[] = "(sp.symbol LIKE :search1 OR sm.name LIKE :search2)";
+            $params[':search1'] = '%' . $search . '%';
+            $params[':search2'] = '%' . $search . '%';
         }
         if ($exchange) {
             $where[] = "sm.exchange = :exchange";

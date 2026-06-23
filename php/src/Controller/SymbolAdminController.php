@@ -30,8 +30,9 @@ class SymbolAdminController
         }
 
         if ($search) {
-            $where[] = '(sm.symbol LIKE :search OR sm.name LIKE :search)';
-            $params[':search'] = '%' . $search . '%';
+            $where[] = '(sm.symbol LIKE :search1 OR sm.name LIKE :search2)';
+            $params[':search1'] = '%' . $search . '%';
+            $params[':search2'] = '%' . $search . '%';
         }
 
         $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';

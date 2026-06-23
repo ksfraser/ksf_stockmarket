@@ -73,7 +73,7 @@ if ($action === 'register') {
 }
 
 // Routes requiring authentication (portfolio, transactions, personal data)
-$protectedRoutes = ['portfolio', 'transactions', 'detail', 'indicators', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings'];
+$protectedRoutes = ['portfolio', 'transactions', 'detail', 'indicators', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings', 'shared_with_me'];
 if (in_array($action, $protectedRoutes, true) && !AuthController::checkSession()) {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header('Location: ?action=login');
@@ -341,6 +341,17 @@ case 'strategy_timing':
         }
         $pageTitle = 'Risk Manager';
         $template = 'risk';
+        break;
+    case 'shared_with_me':
+        if (!$userId) {
+            header('Location: ?action=login');
+            exit;
+        }
+        require_once '/var/www/stockmarket-app/src/Controller/SharedWithMeController.php';
+        $ctrl = new SharedWithMeController();
+        $data = array_merge($data, $ctrl->index());
+        $pageTitle = 'Shared with Me';
+        $template = 'shared_with_me';
         break;
     default:
         $ctrl = new DashboardController();

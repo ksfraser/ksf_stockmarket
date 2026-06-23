@@ -89,6 +89,55 @@ $user = $data['user'] ?? [];
         </form>
     </div>
 
+    <!-- Sharing Settings -->
+    <div class="card">
+        <div class="card-header">&#128279; Sharing Settings</div>
+        <p class="muted">Share your portfolios and transactions with others. Advisor accounts are globally visible to all users and cannot be changed here.</p>
+
+        <form method="POST" action="?action=settings">
+            <?php $isAdvisor = (($user['role'] ?? '') === 'advisor'); ?>
+            <div style="margin-bottom:14px;">
+                <label style="display:flex;align-items:center;gap:8px;font-size:0.85em;color:var(--text3);cursor:pointer;">
+                    <input type="checkbox" name="share_global" value="1" <?php echo ($settings['share_global'] ?? '0') === '1' ? 'checked' : ''; ?> <?php echo $isAdvisor ? 'checked disabled' : ''; ?>>
+                    <?php echo $isAdvisor ? 'Globally shared (advisor default — locked)' : 'Make my data visible to everyone'; ?>
+                </label>
+            </div>
+
+            <div style="margin-bottom:14px;">
+                <label style="display:block;font-size:0.85em;color:var(--text3);margin-bottom:4px;">Share scope</label>
+                <select name="share_scope" style="width:100%;" <?php echo $isAdvisor ? 'disabled' : ''; ?>>
+                    <option value="global" <?php echo ($settings['share_scope'] ?? 'global') === 'global' ? 'selected' : ''; ?>>Everyone</option>
+                    <option value="selected" <?php echo ($settings['share_scope'] ?? '') === 'selected' ? 'selected' : ''; ?>>Only designated users</option>
+                </select>
+            </div>
+
+            <div style="margin-bottom:14px;">
+                <label style="display:block;font-size:0.85em;color:var(--text3);margin-bottom:4px;">Designated users</label>
+                <select name="shared_user_ids[]" multiple style="width:100%;height:120px;" <?php echo $isAdvisor ? 'disabled' : ''; ?>>
+                    <?php foreach ($all_users as $u): ?>
+                        <option value="<?php echo (int)$u['id']; ?>">
+                            <?php echo htmlspecialchars(($u['role'] === 'advisor' ? 'ADVISOR ' : '') . $u['username']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <small class="muted">Hold Ctrl/Cmd to select multiple.</small>
+            </div>
+
+            <button type="submit" class="btn" style="width:100%;">Save Sharing Settings</button>
+        </form>
+
+        <?php if (!empty($shared_with_me)): ?>
+            <div style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.1);">
+                <strong>Users who share with you:</strong>
+                <ul style="list-style:none; padding:0; margin:8px 0 0 0;">
+                    <?php foreach ($shared_with_me as $u): ?>
+                        <li><?php echo htmlspecialchars(($u['role'] === 'advisor' ? 'ADVISOR ' : '') . $u['username']); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+    </div>
+
     <!-- Password Change -->
     <div class="card">
         <div class="card-header">&#x1F511; Change Password</div>

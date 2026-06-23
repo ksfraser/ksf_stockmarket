@@ -87,6 +87,52 @@ class UserController {
                 }
             }
 
+            // Save sharing settings
+            $shareGlobal = isset($_POST['share_global']) ? 1 : 0;
+            $stmt = $pdo->prepare("
+                INSERT INTO user_settings (user_id, setting_key, setting_value)
+                VALUES (:uid, 'share_global', :val)
+                ON DUPLICATE KEY UPDATE setting_value = :val2
+            ");
+            $stmt->execute([':uid' => $userId, ':val' => (string)$shareGlobal, ':val2' => (string)$shareGlobal]);
+
+            $shareScope = in_array($_POST['share_scope'] ?? 'global', ['global','selected'], true) ? $_POST['share_scope'] : 'global';
+            $stmt = $pdo->prepare("
+                INSERT INTO user_settings (user_id, setting_key, setting_value)
+                VALUES (:uid, 'share_scope', :val)
+                ON DUPLICATE KEY UPDATE setting_value = :val2
+            ");
+            $stmt->execute([':uid' => $userId, ':val' => $shareScope, ':val2' => $shareScope]);
+
+            // Sync visibility + designated shares
+            if ($shareGlobal) {
+                $pdo->prepare("
+                    INSERT INTO portfolio_visibilities (user_id, is_public) VALUES (:uid, 1)
+                    ON DUPLICATE KEY UPDATE is_public = 1
+                ")->execute([':uid' => $userId]);
+            } else {
+                $pdo->prepare("
+                    INSERT INTO portfolio_visibilities (user_id, is_public) VALUES (:uid, 0)
+                    ON DUPLICATE KEY UPDATE is_public = 0
+                ")->execute([':uid' => $userId]);
+            }
+
+            // Designated users
+            $pdo->prepare("DELETE FROM portfolio_share_users WHERE user_id = :uid")->execute([':uid' => $userId]);
+            if ($shareScope === 'selected' && !empty($_POST['shared_user_ids'])) {
+                $ids = array_unique(array_map('intval', $_POST['shared_user_ids']));
+                $stmt = $pdo->prepare("
+                    INSERT INTO portfolio_share_users (user_id, shared_with_user_id) VALUES (:uid, :sid)
+                ");
+                foreach ($ids as $sid) {
+                    if ($sid > 0 && $sid !== $userId) {
+                        $stmt->execute([':uid' => $userId, ':sid' => $sid]);
+                    }
+                }
+            }
+
+            $message = 'Sharing settings saved.';
+
             // Handle password change
             $currentPw = $_POST['current_password'] ?? '';
             $newPw = $_POST['new_password'] ?? '';
@@ -122,6 +168,25 @@ class UserController {
 
         $settings = $this->getSettings($userId);
 
+        $allUsers = [];
+        try {
+            $stmt = $pdo->query("SELECT id, username, display_name, role FROM users WHERE is_active = 1 AND id != :me ORDER BY role DESC, username ASC");
+            $stmt->execute([':me' => $userId]);
+            $allUsers = $stmt->fetchAll();
+        } catch (Exception $e) {}
+
+        $sharedWithMe = [];
+        try {
+            $stmt = $pdo->prepare("
+                SELECT u.id, u.username, u.display_name, u.role
+                FROM portfolio_share_users psu
+                JOIN users u ON u.id = psu.shared_with_user_id
+                WHERE psu.user_id = :me
+            ");
+            $stmt->execute([':me' => $userId]);
+            $sharedWithMe = $stmt->fetchAll();
+        } catch (Exception $e) {}
+
         return [
             'pageTitle' => 'My Settings',
             'template' => 'settings',
@@ -129,6 +194,8 @@ class UserController {
             'message' => $message,
             'error' => $error,
             'user' => $this->currentUser,
+            'all_users' => $allUsers,
+            'shared_with_me' => $sharedWithMe,
         ];
     }
 

@@ -39,6 +39,7 @@
         <a href="?action=stop_orders" class="<?php echo active_class('stop_orders', $action); ?>">Stop Orders</a>
         <a href="?action=broker_stops" class="<?php echo active_class('broker_stops', $action); ?>">Broker Stops</a>
         <a href="?action=transactions" class="<?php echo active_class('transactions', $action); ?>">Transactions</a>
+        <a href="?action=shared_with_me" class="<?php echo active_class('shared_with_me', $action); ?>">Shared with Me</a>
         <a href="?action=alerts_status" class="<?php echo active_class('alerts_status', $action); ?>">&#x1F4E3; Alerts</a>
         <a href="?action=upload" class="<?php echo active_class('upload', $action); ?>">&#x1F4E4; Upload</a>
         <a href="?action=export" class="<?php echo active_class('export', $action); ?>">&#x1F4BE; Export</a>

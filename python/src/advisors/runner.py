@@ -121,15 +121,27 @@ def _persist_trade(
 ) -> None:
     with db.cursor() as cur:
         cur.execute(
+            "SELECT close FROM stockprices WHERE symbol = %s AND price_date <= %s ORDER BY price_date DESC LIMIT 1",
+            (sig.symbol, trade_date),
+        )
+        row = cur.fetchone()
+        price = float(row[0]) if row else 0.0
+        commission = 9.99 if price > 0 else 0.0
+        total = price - commission
+        notes = f"Advisor {sig.symbol} action={sig.action} weight={sig.weight:.2f} rank={sig.meta.get('rank', '')} confidence={sig.confidence:.2f}"
+        cur.execute(
             """
             INSERT INTO transactions
                 (symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, created_at)
-            VALUES (%s, %s, 'BUY', 1, 0, 0, 0, 'MARGIN', %s, 'advisor', NOW())
+            VALUES (%s, %s, 'BUY', 1, %s, %s, %s, 'MARGIN', %s, 'advisor', NOW())
             """,
             (
                 sig.symbol,
                 trade_date,
-                f"Advisor {sig.symbol} action={sig.action} weight={sig.weight:.2f} rank={sig.meta.get('rank', '')} confidence={sig.confidence:.2f}",
+                price,
+                total,
+                commission,
+                notes,
             ),
         )
     db.commit()

@@ -53,6 +53,54 @@ if ($action === 'api_chart' && isset($_GET['symbol'])) {
     exit;
 }
 
+if ($action === 'api_screener') {
+    $ctrl = new StockController();
+    $d = $ctrl->screener($_GET['preset'] ?? 'dividend_stocks');
+    $presetLabel = $d['preset_label'] ?? 'Screener';
+    $results = $d['screener_results'] ?? [];
+    if (empty($results)) {
+        echo '<p class="text-muted">No screener results found. Cron job runs daily at 6:30 AM.</p>';
+        exit;
+    }
+    ?>
+    <p style="margin-top:12px;font-size:0.85em;color:var(--text3);">
+        Showing <?php echo count($results); ?> results for <?php echo htmlspecialchars($presetLabel); ?>.
+        <a href="?action=screener&preset=<?php echo urlencode($d['preset_name'] ?? 'dividend_stocks'); ?>" style="color:var(--accent);">Refresh</a>
+    </p>
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Symbol</th><th>Name</th><th class="r">Price</th><th class="r">Change %</th>
+                    <th class="r">1Y Perf</th><th class="r">Yield %</th><th class="r">P/E</th>
+                    <th class="r">ROE %</th><th class="r">Gross Margin %</th><th>Sector</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($results as $r): $m = $r['metrics'] ?? []; ?>
+                <tr>
+                    <td><a href="?action=detail&symbol=<?php echo urlencode(str_replace(['NASDAQ:','NYSE:','TSE:','TSX:','NEO:'], '', $r['symbol'])); ?>">
+                        <?php echo htmlspecialchars($r['symbol']); ?></a></td>
+                    <td><?php echo htmlspecialchars($m['name'] ?? ''); ?></td>
+                    <td class="r">$<?php echo number_format($m['close'] ?? 0, 2); ?></td>
+                    <td class="r" style="color:<?php echo ($m['change'] ?? 0) >= 0 ? 'var(--green)' : 'var(--red)'; ?>">
+                        <?php echo number_format($m['change'] ?? 0, 2); ?>
+                    </td>
+                    <td class="r"><?php echo number_format($m['Perf.Y'] ?? 0, 1); ?>%</td>
+                    <td class="r"><?php echo ($d['preset_name'] ?? '') === 'dividend_stocks' ? number_format($m['dividends_yield_current'] ?? 0, 2) . '%' : '-'; ?></td>
+                    <td class="r"><?php echo number_format($m['price_earnings_ttm'] ?? 0, 1); ?></td>
+                    <td class="r"><?php echo number_format($m['return_on_equity'] ?? 0, 1); ?>%</td>
+                    <td class="r"><?php echo number_format($m['gross_margin_ttm'] ?? 0, 1); ?>%</td>
+                    <td><?php echo htmlspecialchars($m['sector'] ?? ''); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php
+    exit;
+}
+
 // Auth routes (no login required)
 if ($action === 'login') {
     $ctrl = new AuthController();

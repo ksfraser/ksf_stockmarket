@@ -753,12 +753,45 @@ class StockController {
             exit;
         }
 
+        $fullHistory = isset($_GET['full_history']) && $_GET['full_history'] == '1';
+        $startDate = null;
+
+        if (!$fullHistory) {
+            try {
+                $stmt = $this->pdo->prepare("SELECT MAX(price_date) as last_date FROM stockprices WHERE symbol = :sym");
+                $stmt->execute([':sym' => $symbol]);
+                $lastDate = $stmt->fetchColumn();
+                if ($lastDate) {
+                    $last = new DateTime($lastDate);
+                    $now = new DateTime();
+                    $diff = $now->diff($last);
+                    $daysSince = (int)$diff->format('%a');
+                    if ($daysSince < 1) {
+                        $daysSince = 1;
+                    }
+                    $startDate = (new DateTime("-$daysSince days"))->format('Y-m-d');
+                    $_SESSION['flash_message'] = "Refreshing last {$daysSince} day(s) of data for {$symbol} (since {$lastDate}).";
+                } else {
+                    $fullHistory = true;
+                    $_SESSION['flash_message'] = "No existing data found. Fetching full history for {$symbol}.";
+                }
+            } catch (Exception $e) {
+                $fullHistory = true;
+            }
+        }
+
         $cmd = [
             PHP_BINARY,
             $script,
-            '--start-from', $symbol,
-            '--max', '1',
+            '--symbols', $symbol,
         ];
+
+        if ($fullHistory) {
+            $cmd[] = '--full-history';
+        } elseif ($daysSince > 0) {
+            $cmd[] = '--days';
+            $cmd[] = (string)$daysSince;
+        }
 
         try {
             $proc = proc_open(
@@ -779,7 +812,7 @@ class StockController {
                 fclose($pipes[2]);
                 $rc = proc_close($proc);
                 if ($rc === 0) {
-                    $_SESSION['flash_message'] = "Price refresh queued for {$symbol}.";
+                    // flash already set above
                 } else {
                     $_SESSION['flash_error'] = "Price refresh failed for {$symbol}: " . substr($stderr ?: $stdout, 0, 200);
                 }

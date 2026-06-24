@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-fetch_prices.py — Download OHLCV price data from yfinance for all 404 symbols.
+fetch_prices.py — Download OHLCV price data from yfinance for symbols.
 
 Respects 500MB disk budget by fetching incrementally and inserting into
-partitioned MySQL stockprices table. Skips symbols already in DB.
+partitioned MySQL stockprices table. Skips symbols already in DB unless
+explicitly requested with --symbols or --full-history.
 
 Usage:
-    python3 fetch_prices.py [--max 100] [--start-from SYMBOL]
+    python3 fetch_prices.py [--max 100] [--start-from SYMBOL] [--days N] [--full-history] [--symbols A,B]
 """
 import pymysql, yfinance as yf, pandas as pd
 import sys, os, time, argparse
@@ -81,25 +82,49 @@ def main():
     parser.add_argument('--max', type=int, default=None, help='Max symbols to fetch')
     parser.add_argument('--start-from', default=None, help='Start from this symbol')
     parser.add_argument('--verbose', action='store_true')
+    parser.add_argument('--full-history', action='store_true', help='Fetch full history from 2014-01-01')
+    parser.add_argument('--days', type=int, default=None, help='Fetch only last N days')
+    parser.add_argument('--symbols', default=None, help='Comma-separated symbols to force fetch')
     args = parser.parse_args()
 
     conn = pymysql.connect(**MYSQL)
     c = conn.cursor()
 
-    existing = get_existing_symbols(c)
-    print(f"Already have price data for: {len(existing)} symbols")
+    custom_symbols = None
+    if args.symbols:
+        custom_symbols = [s.strip() for s in args.symbols.split(',') if s.strip()]
+        if not custom_symbols:
+            custom_symbols = None
 
-    pending = get_pending_symbols(c, existing)
-    if args.start_from:
-        pending = [s for s in pending if s >= args.start_from]
-    if args.max:
-        pending = pending[:args.max]
+    if custom_symbols:
+        pending = custom_symbols
+        print(f"Force-fetching specified symbols: {len(pending)}")
+    else:
+        existing = get_existing_symbols(c)
+        print(f"Already have price data for: {len(existing)} symbols")
+
+        pending = get_pending_symbols(c, existing)
+        if args.start_from:
+            pending = [s for s in pending if s >= args.start_from]
+        if args.max:
+            pending = pending[:args.max]
 
     print(f"Fetching: {len(pending)} symbols")
 
+    # Determine date range
+    if args.full_history:
+        default_start = '2014-01-01'
+        print("Mode: FULL HISTORY (2014-01-01 -> today)")
+    elif args.days and args.days > 0:
+        default_start = (date.today() - timedelta(days=args.days)).isoformat()
+        print(f"Mode: LAST {args.days} DAYS ({default_start} -> today)")
+    else:
+        default_start = '2014-01-01'
+        print("Mode: FULL HISTORY (default)")
+
     ok, fail, total_rows = 0, 0, 0
     for i, sym in enumerate(pending):
-        hist = fetch_symbol(sym)
+        hist = fetch_symbol(sym, start=default_start)
         if hist is None:
             fail += 1
             if args.verbose:

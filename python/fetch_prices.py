@@ -15,17 +15,48 @@ from datetime import date, timedelta
 from config_loader import Config
 from python.src.events.publisher import EventPublisher
 
-# Credentials loaded from Ansible Vault via config_loader
+# Credentials loaded from Ansible Vault via config_loader, fallback to .env
 _cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config.yaml')
-_cfg = Config(_cfg_path) if os.path.exists(_cfg_path) else Config()
-MYSQL = dict(
-    host=_cfg.data.db_host,
-    user=_cfg.data.db_user,
-    password=_cfg.db_password,
-    database=_cfg.data.db_name,
-    charset='utf8mb4',
-    cursorclass=pymysql.cursors.DictCursor
-)
+_cfg = None
+try:
+    _cfg = Config(_cfg_path) if os.path.exists(_cfg_path) else Config()
+except FileNotFoundError:
+    _cfg = None
+
+def _load_env_db():
+    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '.env')
+    if not os.path.exists(env_path):
+        return None
+    vals = {}
+    with open(env_path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue
+            if '=' in line:
+                k, v = line.split('=', 1)
+                vals[k.strip()] = v.strip().strip('"').strip("'")
+    return vals
+
+if _cfg is not None:
+    MYSQL = dict(
+        host=_cfg.data.db_host,
+        user=_cfg.data.db_user,
+        password=_cfg.db_password,
+        database=_cfg.data.db_name,
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    )
+else:
+    _env = _load_env_db() or {}
+    MYSQL = dict(
+        host=_env.get('DB_HOST', 'localhost'),
+        user=_env.get('DB_USER', ''),
+        password=_env.get('DB_PASS', ''),
+        database=_env.get('DB_NAME', ''),
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor
+    )
 
 
 def get_existing_symbols(c):

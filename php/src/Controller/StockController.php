@@ -727,14 +727,48 @@ class StockController {
             'Sideways' => round($pi[1], 4),
             'Bull' => round($pi[2], 4)
         ];
-        
         return [
             'current_regime' => $stateLabels[end($regimes)],
             'transition_matrix' => $transitionMatrix,
             'stationary_distribution' => $stationary
         ];
     }
-    
+
+    private function runPythonRefresh(string $symbol, ?bool $fullHistory, ?int $days): void
+    {
+        $workerUrl = rtrim((string) ($_ENV['PYTHON_WORKER_URL'] ?? ''), '/');
+        if ($workerUrl === '') {
+            throw new RuntimeException('PYTHON_WORKER_URL is not configured for Python update.');
+        }
+
+        $payload = [
+            'symbol' => $symbol,
+            'full_history' => $fullHistory ? 1 : 0,
+            'days' => $days,
+        ];
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $workerUrl . '/worker/refresh_prices',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+            CURLOPT_TIMEOUT => 90,
+        ]);
+        $raw = curl_exec($ch);
+        if ($raw === false) {
+            $err = curl_error($ch);
+            curl_close($ch);
+            throw new RuntimeException('Python worker request failed: ' . $err);
+        }
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($code < 200 || $code >= 300) {
+            throw new RuntimeException('Python worker responded with status ' . $code . ': ' . substr((string) $raw, 0, 200));
+        }
+    }
+
     /**
      * GET /?action=refresh_price&symbol=SU.TO — Trigger price refresh for one symbol.
      */
@@ -820,7 +854,8 @@ class StockController {
                 $_SESSION['flash_error'] = 'Could not start price refresh process.';
             }
         } catch (Exception $e) {
-            $_SESSION['flash_error'] = 'Price refresh error: ' . $e->getMessage();
+            $this->runPythonRefresh($symbol, $fullHistory, $daysSince > 0 ? $daysSince : null);
+            $_SESSION['flash_message'] = "Updated last " . ($daysSince > 0 ? $daysSince . ' day(s)' : 'window') . " of data for {$symbol}.";
         }
 
         header('Location: ?action=detail&symbol=' . urlencode($symbol));

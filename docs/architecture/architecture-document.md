@@ -286,3 +286,26 @@ The legacy PHP application runs alongside the new code during migration:
 4. Phase 4: UI — port controllers to front controller pattern
 5. Phase 5: FA integration — new module
 6. Phase 6: Reporting + data migration
+
+## 9. Optional Python Worker Fallback
+
+### 9.1 Problem
+When the stockmarket app runs in a container, the PHP process cannot `proc_open()` a local Python interpreter. To preserve the existing bare-metal behaviour while supporting containerized deployments, controllers now use a curl-fallback to a FastAPI worker.
+
+### 9.2 Worker Endpoint
+`POST /worker/refresh_prices` accepts:
+- `symbol` — single ticker to fetch/update
+- `full_history` — boolean; bypass day calc
+- `days` — optional day window
+
+The worker shells out to `fetch_prices.py` and returns HTTP status.
+
+### 9.3 Configuration
+| Variable | Purpose | Default |
+|----------|---------|---------|
+| `PYTHON_WORKER_URL` | URL of FastAPI worker | unset (bare metal uses `proc_open`) |
+| `WORKER_PORT` | Worker container port | `8000` |
+| `STOCKMARKET_PYTHON_DIR` | Host path mounted into the worker container | `/home/ksf_stockmarket/ksf_stockmarket/python` |
+
+### 9.4 Container Deployment (optional)
+`ksf_Infrastructure` defines an optional service `stockmarket-python-worker` on profile `stockmarket`. Enable via Ansible with `enable_stockmarket_python_worker=true` or via Podman Compose with `--profile stockmarket`.

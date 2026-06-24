@@ -103,12 +103,21 @@ composer install
 # Apache serves from /var/www/html/stockmarket/ (rsync from workspace)
 ```
 
+### Environment variables
+- `PYTHON_WORKER_URL` — optional URL of the FastAPI worker. If unset, PHP controllers fall back to `proc_open()` locally.
+- `PYTHON_WORKER_TIMEOUT` — curl timeout in seconds (default 300).
+
 ### Python
 ```bash
 cd /home/ksf_stockmarket/ksf_stockmarket
 pip install -r python/requirements.txt
 pip install -e .
 pytest tests/  # 18 DB adapter tests pass
+```
+
+Optional worker:
+```bash
+PYTHON_WORKER_URL=http://stockmarket-python-worker:8000 uvicorn worker_app:app --app-dir python
 ```
 
 ### Sync to Web Root

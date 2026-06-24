@@ -197,13 +197,37 @@ class AdminSettingsController {
                 if ($rc === 0) {
                     $_SESSION['flash_message'] = 'Full price refresh queued. This may take a while.';
                 } else {
-                    $_SESSION['flash_error'] = 'Price refresh failed: ' . substr($stderr ?: $stdout, 0, 300);
+                    throw new RuntimeException('Price refresh failed: ' . substr($stderr ?: $stdout, 0, 300));
                 }
             } else {
                 $_SESSION['flash_error'] = 'Could not start price refresh process.';
             }
         } catch (Exception $e) {
-            $_SESSION['flash_error'] = 'Price refresh error: ' . $e->getMessage();
+            $workerUrl = rtrim((string) ($_ENV['PYTHON_WORKER_URL'] ?? ''), '/');
+            if ($workerUrl === '') {
+                $_SESSION['flash_error'] = 'Full price refresh failed: ' . $e->getMessage();
+            } else {
+                try {
+                    $ch = curl_init();
+                    curl_setopt_array($ch, [
+                        CURLOPT_URL => $workerUrl . '/worker/refresh_prices',
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_POST => true,
+                        CURLOPT_POSTFIELDS => json_encode(['full_history' => 1]),
+                        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+                        CURLOPT_TIMEOUT => 30,
+                    ]);
+                    $raw = curl_exec($ch);
+                    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    $err = curl_error($ch);
+                    curl_close($ch);
+                    if ($err || $code < 200 || $code >= 300) {
+                        throw new RuntimeException('Python worker request failed: ' . ($err ?: ('HTTP ' . $code)));
+                    }
+                } catch (Exception $ce) {
+                    $_SESSION['flash_error'] = 'Full price refresh failed: ' . $ce->getMessage();
+                }
+            }
         }
 
         header('Location: ?action=admin_settings');

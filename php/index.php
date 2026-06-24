@@ -131,7 +131,7 @@ if ($action === 'register') {
 }
 
 // Routes requiring authentication (portfolio, transactions, personal data)
-$protectedRoutes = ['portfolio', 'transactions', 'detail', 'indicators', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings', 'shared_with_me'];
+$protectedRoutes = ['portfolio', 'transactions', 'detail', 'indicators', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings', 'shared_with_me', 'refresh_price', 'refresh_all_prices'];
 if (in_array($action, $protectedRoutes, true) && !AuthController::checkSession()) {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header('Location: ?action=login');
@@ -174,6 +174,17 @@ switch ($action) {
         $data = array_merge($data, $ctrl->detail($_GET['symbol'] ?? ''));
         $pageTitle = htmlspecialchars($_GET['symbol'] ?? '') . ' - Detail';
         $template = 'detail';
+        break;
+    case 'refresh_price':
+        $ctrl = new StockController();
+        $sym = $_GET['symbol'] ?? '';
+        if ($sym) {
+            $data = array_merge($data, $ctrl->refreshPrice($sym));
+        } else {
+            header('Location: ?action=overview');
+            exit;
+        }
+        // refreshPrice handles its own redirect + exit
         break;
     case 'portfolio':
         $ctrl = new StockController();
@@ -250,6 +261,12 @@ switch ($action) {
         $data = array_merge($data, $ctrl->index());
         $pageTitle = 'Admin Settings';
         $template = 'admin_settings';
+        break;
+    case 'refresh_all_prices':
+        require_once '/var/www/stockmarket-app/src/Controller/AdminSettingsController.php';
+        $ctrl = new AdminSettingsController();
+        $data = array_merge($data, $ctrl->refreshAllPrices());
+        // refreshAllPrices handles its own redirect + exit
         break;
     case 'indicators':
         $ctrl = new StockController();

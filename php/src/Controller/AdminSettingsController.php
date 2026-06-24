@@ -159,4 +159,54 @@ class AdminSettingsController {
             return '';
         }
     }
+
+    /**
+     * GET /?action=refresh_all_prices — Admin-triggered full price sync.
+     */
+    public function refreshAllPrices(): void {
+        $script = __DIR__ . '/../../../../python/fetch_prices.py';
+        if (!file_exists($script)) {
+            $_SESSION['flash_error'] = 'Price fetcher not found.';
+            header('Location: ?action=admin_settings');
+            exit;
+        }
+
+        $cmd = [
+            PHP_BINARY,
+            $script,
+        ];
+
+        try {
+            $proc = proc_open(
+                $cmd,
+                [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']],
+                $pipes,
+                dirname($script),
+                null,
+                ['bypass_shell' => true]
+            );
+            if (is_resource($proc)) {
+                fclose($pipes[0]);
+                stream_set_blocking($pipes[1], false);
+                stream_set_blocking($pipes[2], false);
+                $stdout = stream_get_contents($pipes[1]);
+                $stderr = stream_get_contents($pipes[2]);
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                $rc = proc_close($proc);
+                if ($rc === 0) {
+                    $_SESSION['flash_message'] = 'Full price refresh queued. This may take a while.';
+                } else {
+                    $_SESSION['flash_error'] = 'Price refresh failed: ' . substr($stderr ?: $stdout, 0, 300);
+                }
+            } else {
+                $_SESSION['flash_error'] = 'Could not start price refresh process.';
+            }
+        } catch (Exception $e) {
+            $_SESSION['flash_error'] = 'Price refresh error: ' . $e->getMessage();
+        }
+
+        header('Location: ?action=admin_settings');
+        exit;
+    }
 }

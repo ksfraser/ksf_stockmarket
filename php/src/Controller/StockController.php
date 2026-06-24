@@ -736,6 +736,65 @@ class StockController {
     }
     
     /**
+     * GET /?action=refresh_price&symbol=SU.TO — Trigger price refresh for one symbol.
+     */
+    public function refreshPrice(string $symbol): array {
+        $symbol = strtoupper(trim($symbol));
+        if (!preg_match('/^[A-Z][A-Z0-9\.\-]*$/', $symbol)) {
+            $_SESSION['flash_error'] = 'Invalid symbol.';
+            header('Location: ?action=overview');
+            exit;
+        }
+
+        $script = __DIR__ . '/../../../../python/fetch_prices.py';
+        if (!file_exists($script)) {
+            $_SESSION['flash_error'] = 'Price fetcher not found.';
+            header('Location: ?action=detail&symbol=' . urlencode($symbol));
+            exit;
+        }
+
+        $cmd = [
+            PHP_BINARY,
+            $script,
+            '--start-from', $symbol,
+            '--max', '1',
+        ];
+
+        try {
+            $proc = proc_open(
+                $cmd,
+                [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']],
+                $pipes,
+                dirname($script),
+                null,
+                ['bypass_shell' => true]
+            );
+            if (is_resource($proc)) {
+                fclose($pipes[0]);
+                stream_set_blocking($pipes[1], false);
+                stream_set_blocking($pipes[2], false);
+                $stdout = stream_get_contents($pipes[1]);
+                $stderr = stream_get_contents($pipes[2]);
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                $rc = proc_close($proc);
+                if ($rc === 0) {
+                    $_SESSION['flash_message'] = "Price refresh queued for {$symbol}.";
+                } else {
+                    $_SESSION['flash_error'] = "Price refresh failed for {$symbol}: " . substr($stderr ?: $stdout, 0, 200);
+                }
+            } else {
+                $_SESSION['flash_error'] = 'Could not start price refresh process.';
+            }
+        } catch (Exception $e) {
+            $_SESSION['flash_error'] = 'Price refresh error: ' . $e->getMessage();
+        }
+
+        header('Location: ?action=detail&symbol=' . urlencode($symbol));
+        exit;
+    }
+
+    /**
      * GET /?action=screener — Display TradingView screener results.
      */
     public function screener(string $preset = 'dividend_stocks'): array {

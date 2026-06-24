@@ -22,6 +22,17 @@ $error = $data['error'] ?? '';
         </div>
     <?php endif; ?>
 
+    <div style="margin-bottom:20px; padding:12px; background:var(--bg2); border:1px solid var(--border); border-radius:var(--radius);">
+        <strong>Data Pipeline</strong>
+        <span style="color:var(--text3); font-size:0.85em; margin-left:8px;">Trigger manual price sync from yfinance</span>
+        <br>
+        <a href="?action=refresh_all_prices" 
+           onclick="return confirm('Refresh ALL symbol prices from yfinance? This can take a long time and will hit rate limits. Consider using the per-symbol refresh on detail pages instead.')"
+           style="display:inline-block; margin-top:8px; background:var(--accent); color:#fff; padding:8px 16px; border-radius:4px; text-decoration:none; font-size:0.9em;">
+            ↻ Refresh All Prices
+        </a>
+    </div>
+
     <form method="POST" action="?action=admin_settings">
         <div style="margin-bottom:16px;">
             <label style="display:block;font-size:0.85em;color:var(--text3);margin-bottom:4px;">

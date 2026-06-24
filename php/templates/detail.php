@@ -128,12 +128,19 @@ window.currentPrice = <?= (float)$close ?>;
                 <?= htmlspecialchars($fundamentals['exchange'] ?? $latest['exchange'] ?? '') ?>
             </div>
         </div>
-        <div style="text-align:right;">
-            <div style="font-size:1.8em; font-weight:700;">$<?= number_format($close, 2) ?></div>
-            <div class="<?= $changeClass ?>" style="font-size:1.1em;">
-                <?= $changeSign ?>$<?= number_format($close - $prevClose, 2) ?> (<?= $changeSign ?><?= number_format($changePct, 2) ?>%)
+        <div style="display:flex; align-items:center; gap:12px;">
+            <a href="?action=refresh_price&symbol=<?= urlencode($sym) ?>" 
+               onclick="return confirm('Refresh price data for <?= htmlspecialchars($sym) ?>? This will re-fetch from yfinance and may take a moment.')"
+               style="background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:4px;text-decoration:none;font-size:0.85em;cursor:pointer;">
+                ↻ Refresh Price
+            </a>
+            <div style="text-align:right;">
+                <div style="font-size:1.8em; font-weight:700;">$<?= number_format($close, 2) ?></div>
+                <div class="<?= $changeClass ?>" style="font-size:1.1em;">
+                    <?= $changeSign ?>$<?= number_format($close - $prevClose, 2) ?> (<?= $changeSign ?><?= number_format($changePct, 2) ?>%)
+                </div>
+                <div style="font-size:0.8em; color:var(--text3);">Vol: <?= number_format($latest['volume'] ?? 0) ?> • As of <?= $latest['price_date'] ?? 'N/A' ?></div>
             </div>
-            <div style="font-size:0.8em; color:var(--text3);">Vol: <?= number_format($latest['volume'] ?? 0) ?> • As of <?= $latest['price_date'] ?? 'N/A' ?></div>
         </div>
     </div>
 </div>

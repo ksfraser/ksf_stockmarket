@@ -107,6 +107,9 @@ def get_existing_symbols(c):
 def get_pending_symbols(c, existing):
     c.execute("SELECT symbol FROM symbol_master WHERE is_active = 1 ORDER BY symbol")
     all_syms = set(r['symbol'] for r in c.fetchall())
+    # Skip synthetic / manually-maintained symbols
+    skip = {"BOND_AVG.TO"}
+    all_syms -= skip
     return sorted(all_syms - existing)
 
 
@@ -126,25 +129,47 @@ def fetch_symbol(sym, start='2014-01-01', end=None):
 
 def insert_prices(c, sym, hist):
     """Insert OHLCV rows into stockprices. Skip existing."""
+    if not hasattr(insert_prices, '_conn'):
+        raise RuntimeError('insert_prices requires conn attribute set by caller')
     rows = []
     for idx, row in hist.iterrows():
         d = idx.strftime('%Y-%m-%d')
-        rows.append((
-            sym, d,
-            float(row['Open']) if pd.notna(row['Open']) else None,
-            float(row['High']) if pd.notna(row['High']) else None,
-            float(row['Low']) if pd.notna(row['Low']) else None,
-            float(row['Close']),
-            int(row['Volume']) if pd.notna(row['Volume']) else None,
-            float(row['Close']) if 'Adj Close' in row and pd.isna(row.get('Adj Close')) else float(row['Adj Close']) if 'Adj Close' in row and pd.notna(row.get('Adj Close')) else float(row['Close']),
-            float(row.get('Dividends', 0)) if pd.notna(row.get('Dividends', 0)) else 0,
-            float(row.get('Stock Splits', 1)) if pd.notna(row.get('Stock Splits', 1)) else 1,
-        ))
+        rows.append(
+            (
+                sym,
+                d,
+                float(row['Open']) if pd.notna(row['Open']) else None,
+                float(row['High']) if pd.notna(row['High']) else None,
+                float(row['Low']) if pd.notna(row['Low']) else None,
+                float(row['Close']),
+                int(row['Volume']) if pd.notna(row['Volume']) else None,
+                float(row['Close'])
+                if 'Adj Close' in row and pd.isna(row.get('Adj Close'))
+                else float(row['Adj Close'])
+                if 'Adj Close' in row and pd.notna(row.get('Adj Close'))
+                else float(row['Close']),
+                float(row.get('Dividends', 0))
+                if pd.notna(row.get('Dividends', 0))
+                else 0,
+                float(row.get('Stock Splits', 1))
+                if pd.notna(row.get('Stock Splits', 1))
+                else 1,
+            )
+        )
     if not rows:
         return 0
-    c.executemany(
-        "INSERT IGNORE INTO stockprices (symbol,price_date,open,high,low,close,volume,adj_close,dividend,split_ratio) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-        rows)
+    try:
+        c.executemany(
+            'INSERT IGNORE INTO stockprices (symbol,price_date,open,high,low,close,volume,adj_close,dividend,split_ratio) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
+            rows,
+        )
+    except pymysql.err.InterfaceError:
+        insert_prices._conn.ping(reconnect=True)
+        c = insert_prices._conn.cursor()
+        c.executemany(
+            'INSERT IGNORE INTO stockprices (symbol,price_date,open,high,low,close,volume,adj_close,dividend,split_ratio) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
+            rows,
+        )
     return len(rows)
 
 
@@ -153,13 +178,14 @@ def main():
     parser.add_argument('--max', type=int, default=None, help='Max symbols to fetch')
     parser.add_argument('--start-from', default=None, help='Start from this symbol')
     parser.add_argument('--verbose', action='store_true')
-    parser.add_argument('--full-history', action='store_true', help='Fetch full history from 2014-01-01')
+    parser.add_argument('--full-history', help='Fetch full history from 2014-01-01')
     parser.add_argument('--days', type=int, default=None, help='Fetch only last N days')
     parser.add_argument('--symbols', default=None, help='Comma-separated symbols to force fetch')
     args = parser.parse_args()
 
     conn = pymysql.connect(**MYSQL)
     c = conn.cursor()
+    insert_prices._conn = conn
 
     custom_symbols = None
     if args.symbols:

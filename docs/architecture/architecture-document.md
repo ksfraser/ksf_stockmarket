@@ -7,7 +7,9 @@ KSF Stock Market Analysis is a hybrid PHP + Python application for:
 - Technical and fundamental analysis
 - Strategy backtesting
 - Seg fund screening
-- FrontAccounting integration
+- Screener-driven universe building (US + Canadian dividends, value, quality compounders, low-cost index funds)
+- Symbol master synchronization with screener data
+- AI advisor runs (sector, balanced fund, bond basket strategies)
 
 ## 2. Architecture Pattern
 
@@ -152,6 +154,7 @@ See `database-comparison.md` for detailed column-level comparison.
 | TA Library      | Candlestick patterns, indicators, Turtle system     |
 | Strategies      | Motley Fool, Buffett, Combined screening            |
 | Data Import     | CSV ingestion, yfinance integration                 |
+| Screener        | TradingView integration, upsert results, name lookup from symbol_master |
 | Reports         | HTML/PDF report generation                          |
 
 ### Database Layer
@@ -164,7 +167,9 @@ See `database-comparison.md` for detailed column-level comparison.
 | Signal Weights    | signal_weights (per-symbol, evolving)               |
 | Backtesting       | backtest_runs, backtest_trades                      |
 | Users & RBAC      | users, roles, watchlists, watchlist_symbols         |
+| Advisors          | user_settings (strategy, sector, equity, bond_basket), advisor_runs, advisor_signals |
 | Alerts            | alerts, alerts_raised                               |
+| Screener          | tradingview_screener_results (preset_name+market+symbol unique), symbol_master |
 | FA Integration    | fa_transfers                                        |
 | Operations        | data_import_log                                     |
 

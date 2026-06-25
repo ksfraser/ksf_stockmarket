@@ -331,12 +331,17 @@ class StockController {
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
         $holdings = $stmt->fetchAll();
+        error_log("PORTFOLIO SQL returned " . count($holdings) . " rows for user_id " . ($user_id ?: 'all'));
+        foreach ($holdings as $i => $h) {
+            error_log("  row $i: symbol={$h['symbol']} shares={$h['shares']}");
+        }
 
         $fctrl = new FundamentalsController();
 
         $totalCost = 0;
         $totalValue = 0;
         foreach ($holdings as &$h) {
+            error_log("PORTFOLIO loop: symbol={$h['symbol']} shares={$h['shares']}");
             $symbol = $h['symbol'];
             $currentPrice = $h['current_price'] ?? 0;
             $costTotal = $h['shares'] * $h['cost_basis'];
@@ -412,6 +417,11 @@ class StockController {
 
             $totalCost += $costTotal;
             $totalValue += $currentValue;
+        }
+
+        error_log("PORTFOLIO after loop: " . count($holdings) . " holdings");
+        foreach ($holdings as $i => $h) {
+            error_log("  after row $i: symbol={$h['symbol']} shares={$h['shares']}");
         }
 
         $totalPnl = $totalValue - $totalCost;
@@ -727,48 +737,14 @@ class StockController {
             'Sideways' => round($pi[1], 4),
             'Bull' => round($pi[2], 4)
         ];
+        
         return [
             'current_regime' => $stateLabels[end($regimes)],
             'transition_matrix' => $transitionMatrix,
             'stationary_distribution' => $stationary
         ];
     }
-
-    private function runPythonRefresh(string $symbol, ?bool $fullHistory, ?int $days): void
-    {
-        $workerUrl = rtrim((string) ($_ENV['PYTHON_WORKER_URL'] ?? ''), '/');
-        if ($workerUrl === '') {
-            throw new RuntimeException('PYTHON_WORKER_URL is not configured for Python update.');
-        }
-
-        $payload = [
-            'symbol' => $symbol,
-            'full_history' => $fullHistory ? 1 : 0,
-            'days' => $days,
-        ];
-
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => $workerUrl . '/worker/refresh_prices',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-            CURLOPT_TIMEOUT => 90,
-        ]);
-        $raw = curl_exec($ch);
-        if ($raw === false) {
-            $err = curl_error($ch);
-            curl_close($ch);
-            throw new RuntimeException('Python worker request failed: ' . $err);
-        }
-        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        if ($code < 200 || $code >= 300) {
-            throw new RuntimeException('Python worker responded with status ' . $code . ': ' . substr((string) $raw, 0, 200));
-        }
-    }
-
+    
     /**
      * GET /?action=refresh_price&symbol=SU.TO — Trigger price refresh for one symbol.
      */
@@ -780,7 +756,7 @@ class StockController {
             exit;
         }
 
-        $script = __DIR__ . '/../../../python/fetch_prices.py';
+        $script = __DIR__ . '/../../../../python/fetch_prices.py';
         if (!file_exists($script)) {
             $_SESSION['flash_error'] = 'Price fetcher not found.';
             header('Location: ?action=detail&symbol=' . urlencode($symbol));
@@ -854,8 +830,7 @@ class StockController {
                 $_SESSION['flash_error'] = 'Could not start price refresh process.';
             }
         } catch (Exception $e) {
-            $this->runPythonRefresh($symbol, $fullHistory, $daysSince > 0 ? $daysSince : null);
-            $_SESSION['flash_message'] = "Updated last " . ($daysSince > 0 ? $daysSince . ' day(s)' : 'window') . " of data for {$symbol}.";
+            $_SESSION['flash_error'] = 'Price refresh error: ' . $e->getMessage();
         }
 
         header('Location: ?action=detail&symbol=' . urlencode($symbol));
@@ -865,14 +840,13 @@ class StockController {
     /**
      * GET /?action=screener — Display TradingView screener results.
      */
-    public function screener(string $preset = 'dividend_stocks', ?string $sort = null, ?string $sector = null): array {
+    public function screener(string $preset = 'dividend_stocks'): array {
         // Available presets with markets
         $presets = [
             'dividend_stocks' => ['label' => 'Dividend Stocks (Yield >3%)', 'market' => 'america'],
             'quality_compounder' => ['label' => 'Quality Compunders', 'market' => 'america'],
             'value_stocks' => ['label' => 'Value Stocks (P/E <15)', 'market' => 'america'],
             'canadian_dividends' => ['label' => 'Canadian Dividends (Yield >3%)', 'market' => 'canada'],
-            'low_cost_index_funds' => ['label' => 'Low-Cost Index Funds', 'market' => 'canada'],
         ];
         
         if (!isset($presets[$preset])) {
@@ -896,71 +870,12 @@ class StockController {
         foreach ($results as &$r) {
             $r['metrics'] = json_decode($r['data'], true) ?: [];
         }
-
-        // Override name from symbol_master when available
-        $symbols = [];
-        foreach ($results as $r) {
-            $symbols[] = $r['symbol'];
-        }
-        if ($symbols) {
-            $in = implode(',', array_fill(0, count($symbols), '?'));
-            $stmt2 = $this->pdo->prepare("SELECT symbol, name FROM symbol_master WHERE symbol IN ($in)");
-            $stmt2->execute($symbols);
-            $names = [];
-            while ($row = $stmt2->fetch(PDO::FETCH_ASSOC)) {
-                $names[$row['symbol']] = $row['name'];
-            }
-            foreach ($results as &$r) {
-                $sym = $r['symbol'];
-                if (!empty($names[$sym])) {
-                    $r['metrics']['name'] = $names[$sym];
-                }
-            }
-            unset($r);
-        }
-        
-        // Client-side sector filter
-        if ($sector !== null && $sector !== '') {
-            $results = array_values(array_filter($results, function($r) use ($sector) {
-                $m = $r['metrics'] ?? [];
-                return ($m['sector'] ?? '') === $sector;
-            }));
-        }
-        
-        // Client-side sort
-        $allowedSort = [
-            'symbol' => fn($a,$b)=>strcmp($a['symbol'],$b['symbol']),
-            'name' => fn($a,$b)=>strcmp($a['metrics']['name']??'',$b['metrics']['name']??''),
-            'close' => fn($a,$b)=>($a['metrics']['close']??0)<=>($b['metrics']['close']??0),
-            'change' => fn($a,$b)=>($a['metrics']['change']??0)<=>($b['metrics']['change']??0),
-            'Perf.Y' => fn($a,$b)=>($a['metrics']['Perf.Y']??0)<=>($b['metrics']['Perf.Y']??0),
-            'dividends_yield_current' => fn($a,$b)=>($a['metrics']['dividends_yield_current']??0)<=>($b['metrics']['dividends_yield_current']??0),
-            'price_earnings_ttm' => fn($a,$b)=>($a['metrics']['price_earnings_ttm']??0)<=>($b['metrics']['price_earnings_ttm']??0),
-            'sector' => fn($a,$b)=>strcmp($a['metrics']['sector']??'',$b['metrics']['sector']??''),
-        ];
-        
-        if ($sort !== null && isset($allowedSort[$sort])) {
-            usort($results, $allowedSort[$sort]);
-        }
-        
-        // Build unique sector list for filter dropdown
-        $sectors = [];
-        foreach ($results as $r) {
-            $sec = $r['metrics']['sector'] ?? '';
-            if ($sec !== '' && !in_array($sec, $sectors, true)) {
-                $sectors[] = $sec;
-            }
-        }
-        sort($sectors);
         
         return [
             'preset_name' => $preset,
             'preset_label' => $presets[$preset]['label'],
             'presets' => $presets,
             'screener_results' => $results,
-            'sectors' => $sectors,
-            'current_sector' => $sector ?? '',
-            'current_sort' => $sort ?? '',
         ];
     }
 }

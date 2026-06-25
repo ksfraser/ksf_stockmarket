@@ -17,7 +17,7 @@
 - TFSA room: $7K/yr, RRSP room: ~$6K/yr
 - Transition income may decline (part-time) — creates RRSP deregistration opportunity
 - 23 portfolio holdings across RRSP, TFSA, MARGIN accounts (~$137K book, ~$384K market)
-- 404 symbols tracked in `symbol_master`, 49 with price data (May 2025)
+- Dynamic universe via `symbol_master` (265+ active symbols Jun-2026), populated from screener data and manual curation
 
 ---
 
@@ -273,7 +273,7 @@ final_weight(symbol) =
 |---|---|---|
 | `stockprices` | OHLCV daily prices | symbol, price_date, close, volume |
 | `indicators_json` | 142 TA indicators per row | symbol, price_date, data (JSON) |
-| `symbol_master` | 404-symbol universe | symbol, name, exchange, sector, is_active |
+| `symbol_master` | Symbol universe | symbol, name, exchange, sector, is_active |
 | `portfolio` | 23 current positions | symbol, account_type, shares, cost_basis, trailing_stop_pct, atr_multiplier |
 | `users` | Authentication | username, password_hash, role, is_active |
 | `user_settings` | Per-user preferences | user_id, setting_key, setting_value |

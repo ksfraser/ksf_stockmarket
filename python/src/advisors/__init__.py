@@ -6,6 +6,9 @@ from advisors.strategies import (
     BuffettQualityStrategy,
     DividendGrowthStrategy,
     MomentumStrategy,
+    SectorStrategy,
+    BondBasketStrategy,
+    BalancedFundStrategy,
 )
 
 __all__ = [
@@ -14,4 +17,7 @@ __all__ = [
     "BuffettQualityStrategy",
     "DividendGrowthStrategy",
     "MomentumStrategy",
+    "SectorStrategy",
+    "BondBasketStrategy",
+    "BalancedFundStrategy",
 ]

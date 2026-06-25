@@ -131,7 +131,6 @@ def save_screening_results(results: list, preset_name: str, conn, market: str = 
         INSERT INTO tradingview_screener_results (preset_name, market, symbol, data, run_at)
         VALUES (%s, %s, %s, %s, NOW())
         ON DUPLICATE KEY UPDATE
-            data = VALUES(data),
             run_at = VALUES(run_at)
     """
     rows_inserted = 0
@@ -141,10 +140,149 @@ def save_screening_results(results: list, preset_name: str, conn, market: str = 
             continue
         payload = dict(row)
         payload["symbol"] = sym
+        # Merge with existing JSON to avoid overwriting non-null old values with nulls
+        cur.execute(
+            "SELECT data FROM tradingview_screener_results WHERE preset_name=%s AND market=%s AND symbol=%s",
+            (preset_name, market, sym),
+        )
+        existing = cur.fetchone()
+        if existing and existing[0]:
+            merged = json.loads(existing[0])
+            for k, v in payload.items():
+                if v is not None:
+                    merged[k] = v
+                # else: keep existing non-null value
+            payload = merged
         cur.execute(upsert_sql, (preset_name, market, sym, json.dumps(payload)))
         rows_inserted += 1
+
+        # Auto-insert new symbols into symbol_master
+        try:
+            if sym.endswith(".TO") or sym.endswith(".UN.TO"):
+                exchange = "TSX"
+                geography = "CA"
+            else:
+                exchange = "NASDAQ"
+                geography = "US"
+            cur.execute(
+                """
+                INSERT IGNORE INTO symbol_master
+                    (symbol, name, exchange, geography, sector, is_active, last_updated)
+                VALUES (%s, %s, %s, %s, %s, 1, NOW())
+                """,
+                (
+                    sym,
+                    payload.get("name") or "",
+                    exchange,
+                    geography,
+                    payload.get("sector") or "",
+                ),
+            )
+        except Exception as e:
+            print(f"  Warning: symbol_master insert failed for {sym}: {e}")
     conn.commit()
     print(f"Upserted {rows_inserted} results for '{preset_name}' ({market})")
+
+
+def build_index_fund_screener_results(conn) -> None:
+    """Upsert curated low-cost Canadian index ETFs as a screener preset."""
+    cur = conn.cursor()
+    from build_index_fund_screener import LOW_COST_ETF_SYMBOLS, SYMBOL_SECTOR_MAP
+    placeholders = ",".join(["%s"] * len(LOW_COST_ETF_SYMBOLS))
+    cur.execute(
+        f"""
+        SELECT symbol, close, price_date
+        FROM stockprices
+        WHERE symbol IN ({placeholders})
+        ORDER BY symbol, price_date DESC
+        """,
+        LOW_COST_ETF_SYMBOLS,
+    )
+    rows = cur.fetchall()
+    price_map: dict[str, dict] = {}
+    for r in rows:
+        sym = r[0]
+        if sym not in price_map:
+            price_map[sym] = {
+                "close": float(r[1]),
+                "price_date": r[2].isoformat() if hasattr(r[2], "isoformat") else str(r[2]),
+            }
+
+    now = datetime.now().isoformat()
+    upserted = 0
+    for sym in LOW_COST_ETF_SYMBOLS:
+        px = price_map.get(sym, {})
+        payload = {
+            "symbol": sym,
+            "name": sym,
+            "close": px.get("close"),
+            "change": None,
+            "Perf.Y": None,
+            "RSI": None,
+            "SMA50": None,
+            "SMA200": None,
+            "return_on_equity": None,
+            "price_earnings_ttm": None,
+            "price_book_fq": None,
+            "dividends_yield_current": None,
+            "market_cap_basic": None,
+            "volume": None,
+            "gross_margin_ttm": None,
+            "return_on_invested_capital": None,
+            "free_cash_flow_fy": None,
+            "debt_to_equity": None,
+            "sector": SYMBOL_SECTOR_MAP.get(sym, "Miscellaneous"),
+        }
+        cur.execute(
+            """
+            INSERT INTO tradingview_screener_results
+                (preset_name, market, symbol, data, run_at)
+            VALUES (%s, %s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE
+                data = VALUES(data),
+                run_at = VALUES(run_at)
+            """,
+            ("low_cost_index_funds", "canada", sym, json.dumps(payload), now),
+        )
+        upserted += 1
+    conn.commit()
+    print(f"Upserted {upserted} rows for low_cost_index_funds preset")
+
+
+def update_bond_average_from_db(conn) -> None:
+    """Refresh synthetic BOND_AVG.TO price from representative Canadian bond ETFs."""
+    from update_bond_average import BOND_BASKET, AVERAGE_SYMBOL
+    cur = conn.cursor()
+    placeholders = ",".join(["%s"] * len(BOND_BASKET))
+    cur.execute(
+        f"""
+        SELECT s1.symbol, s1.close
+        FROM stockprices s1
+        JOIN (
+            SELECT symbol, MAX(price_date) AS max_date
+            FROM stockprices
+            WHERE symbol IN ({placeholders})
+              AND price_date <= CURDATE() - INTERVAL 1 DAY
+            GROUP BY symbol
+        ) s2 ON s1.symbol = s2.symbol AND s1.price_date = s2.max_date
+        """,
+        BOND_BASKET,
+    )
+    prices = {r[0]: float(r[1]) for r in cur.fetchall()}
+    if not prices:
+        print("  No bond prices available")
+        return
+    avg = sum(prices.values()) / len(prices)
+    cur.execute(
+        """
+        INSERT INTO stockprices (symbol, price_date, open, high, low, close, volume)
+        VALUES (%s, CURDATE() - INTERVAL 1 DAY, %s, %s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE close = VALUES(close), open = VALUES(open), high = VALUES(high), low = VALUES(low)
+        """,
+        (AVERAGE_SYMBOL, avg, avg, avg, avg, 0),
+    )
+    conn.commit()
+    print(f"Updated {AVERAGE_SYMBOL} = {avg:.4f}")
 
 
 def main():
@@ -178,7 +316,13 @@ def main():
                         print(f"    {symbol}: {name[:30]:30} ${close:.2f}")
             else:
                 print(f"  No results (API error or no matches)")
-                
+        
+        print("\nBuilding low-cost index fund screener preset...")
+        build_index_fund_screener_results(conn)
+        
+        print("\nUpdating bond average (BOND_AVG.TO)...")
+        update_bond_average_from_db(conn)
+        
     finally:
         conn.close()
 

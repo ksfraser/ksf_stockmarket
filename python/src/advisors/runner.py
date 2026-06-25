@@ -21,6 +21,9 @@ from advisors import (
     BuffettQualityStrategy,
     DividendGrowthStrategy,
     MomentumStrategy,
+    SectorStrategy,
+    BondBasketStrategy,
+    BalancedFundStrategy,
 )
 from advisors.base import AdvisorBase, Signal
 from advisors.repository import AdvisorRepository
@@ -31,6 +34,9 @@ _STRATEGY_MAP: dict[str, type[AdvisorBase]] = {
     "buffett_quality": BuffettQualityStrategy,
     "dividend_growth": DividendGrowthStrategy,
     "momentum": MomentumStrategy,
+    "sector": SectorStrategy,
+    "bond_basket": BondBasketStrategy,
+    "balanced_fund": BalancedFundStrategy,
 }
 
 
@@ -73,7 +79,15 @@ def run_advisor(
         logger.error("Unknown strategy '%s' for advisor %s", strategy_name, slug)
         return
 
-    instance: AdvisorBase = strategy_cls(db, config={"schedule": schedule})
+    config = {"schedule": schedule}
+    if advisor.get("sector"):
+        config["sector"] = advisor["sector"]
+    if advisor.get("equity"):
+        config["equity"] = advisor["equity"]
+    if advisor.get("bond_basket"):
+        config["bond_basket"] = advisor["bond_basket"]
+
+    instance: AdvisorBase = strategy_cls(db, config=config)
     instance.slug = slug
 
     if not instance.should_run_today(run_date):

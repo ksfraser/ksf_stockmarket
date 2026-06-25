@@ -195,3 +195,177 @@ class MomentumStrategy(AdvisorBase):
             return 0.0
         momentum = (rows[-1] - rows[0]) / rows[0] * 100.0
         return max(momentum, 0.0)
+
+
+# ------------------------------------------------------------------
+# Sector / balanced / bond strategies
+# ------------------------------------------------------------------
+
+# Maps screener sector names -> low-cost TSX ETF symbol where available.
+# ETFs are the preferred pick; unknown sectors fall back to stock screening.
+SECTOR_ETF_MAP: dict[str, str | None] = {
+    "Finance": "XFN.TO",
+    "Energy Minerals": "XEG.TO",
+    "Electronic Technology": "XIT.TO",
+    "Technology Services": "XIT.TO",
+    "Health Technology": "XIC.TO",  # broad proxy; no dedicated health-tech ETF in universe yet
+    "Non-Energy Minerals": "XMA.TO",
+    "Real Estate": "XRE.TO",
+    # Broad proxies for sectors without a pure ETF:
+    "Industrial Services": "XIC.TO",
+    "Producer Manufacturing": "XIC.TO",
+    "Process Industries": "XIC.TO",
+    "Transportation": "XIC.TO",
+    "Retail Trade": "XIC.TO",
+    "Consumer Non-Durables": "XIC.TO",
+    "Consumer Durables": "XIC.TO",
+    "Health Services": "XIC.TO",
+    "Communication Services": "XIC.TO",
+    "Miscellaneous": "XIC.TO",
+    # US-only sectors handled via same broad proxies or skipped
+    "Distribution Services": "XIC.TO",
+    "Commercial Services": "XIC.TO",
+    "Consumer Services": "XIC.TO",
+    "Utilities": "XIC.TO",
+}
+
+_SCREENER_TO_FUNDAMENTALS: dict[str, str | None] = {
+    "Finance": "Financial Services",
+    "Energy Minerals": "Energy",
+    "Electronic Technology": "Technology",
+    "Technology Services": "Technology",
+    "Health Technology": "Healthcare",
+    "Health Services": "Healthcare",
+    "Non-Energy Minerals": "Basic Materials",
+    "Process Industries": "Industrials",
+    "Producer Manufacturing": "Industrials",
+    "Industrial Services": "Industrials",
+    "Retail Trade": "Consumer Cyclical",
+    "Consumer Non-Durables": "Consumer Defensive",
+    "Consumer Durables": "Consumer Cyclical",
+    "Transportation": "Industrials",
+    "Utilities": "Utilities",
+    "Real Estate": "Real Estate",
+    "Communication Services": "Communication Services",
+    "Miscellaneous": None,
+    "Distribution Services": "Industrials",
+    "Commercial Services": "Industrials",
+    "Consumer Services": "Consumer Cyclical",
+}
+
+
+class SectorStrategy(AdvisorBase):
+    name = "Sector"
+    slug = "sector"
+
+    def select_universe(self, run_date: date) -> list[str]:
+        sector = self.config.get("sector", "")
+        if not sector:
+            return []
+        symbols: list[str] = []
+        etf = SECTOR_ETF_MAP.get(sector)
+        if etf:
+            symbols.append(etf)
+        fund_sector = _SCREENER_TO_FUNDAMENTALS.get(sector)
+        if fund_sector:
+            start = run_date - timedelta(days=365)
+            with self.db.cursor() as cur:
+                cur.execute(
+                    f"""
+                    SELECT DISTINCT f.symbol
+                    FROM {self._t('fundamentals')} f
+                    LEFT JOIN {self._t('stockprices')} p
+                      ON p.symbol = f.symbol AND p.price_date <= %s
+                    WHERE f.sector = %s
+                      AND f.fetch_date >= %s
+                      AND p.symbol IS NOT NULL
+                    ORDER BY f.symbol
+                    LIMIT 40
+                    """,
+                    (run_date, fund_sector, start),
+                )
+                symbols.extend(r["symbol"] for r in cur.fetchall())
+        seen: set[str] = set()
+        deduped: list[str] = []
+        for s in symbols:
+            if s not in seen:
+                seen.add(s)
+                deduped.append(s)
+        return deduped
+
+    def score(self, symbol: str, run_date: date) -> float:
+        sector = self.config.get("sector", "")
+        etf = SECTOR_ETF_MAP.get(sector)
+        if symbol == etf:
+            return 100.0
+        start = run_date - timedelta(days=365)
+        with self.db.cursor() as cur:
+            cur.execute(
+                f"""
+                SELECT market_cap FROM {self._t('fundamentals')}
+                WHERE symbol = %s AND fetch_date >= %s
+                ORDER BY fetch_date DESC LIMIT 1
+                """,
+                (symbol, start),
+            )
+            row = cur.fetchone()
+            mc = float(row["market_cap"] or 0)
+        return mc if mc > 0 else 0.1
+
+
+class BondBasketStrategy(AdvisorBase):
+    name = "Bond Basket"
+    slug = "bond_basket"
+
+    def select_universe(self, run_date: date) -> list[str]:
+        return ["TBIL.TO", "ZGB.TO", "HMP.TO", "ZAG.TO"]
+
+    def score(self, symbol: str, run_date: date) -> float:
+        return 1.0
+
+
+class BalancedFundStrategy(AdvisorBase):
+    name = "Balanced Fund"
+    slug = "balanced_fund"
+
+    def select_universe(self, run_date: date) -> list[str]:
+        equity = self.config.get("equity", "XIC.TO")
+        basket = BondBasketStrategy(
+            self.db, config={"table_prefix": self.table_prefix}
+        )
+        bond_symbols = basket.select_universe(run_date)
+        return [equity] + bond_symbols
+
+    def score(self, symbol: str, run_date: date) -> float:
+        equity = self.config.get("equity", "XIC.TO")
+        return 100.0 if symbol == equity else 1.0
+
+    def generate_signals(self, run_date: date, max_positions: int = 20) -> list[Signal]:
+        equity = self.config.get("equity", "XIC.TO")
+        basket = BondBasketStrategy(
+            self.db, config={"table_prefix": self.table_prefix}
+        )
+        bond_symbols = basket.select_universe(run_date)
+        if not bond_symbols:
+            return []
+        weight_per_bond = 0.4 / len(bond_symbols)
+        signals: list[Signal] = [
+            Signal(
+                symbol=equity,
+                action="BUY",
+                weight=0.6,
+                reason="equity 60%",
+                confidence=0.8,
+            )
+        ]
+        for sym in bond_symbols:
+            signals.append(
+                Signal(
+                    symbol=sym,
+                    action="BUY",
+                    weight=weight_per_bond,
+                    reason="bond basket 40%",
+                    confidence=0.7,
+                )
+            )
+        return signals

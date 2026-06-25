@@ -21,9 +21,15 @@ class AdvisorRepository:
     def get_active_advisors(self) -> list[dict[str, Any]]:
         sql = """
             SELECT u.id, u.username AS slug, u.display_name,
-                   COALESCE(us.setting_value, 'buffett_quality') AS strategy
+                   COALESCE(us.setting_value, 'buffett_quality') AS strategy,
+                   COALESCE(sector.setting_value, '') AS sector,
+                   COALESCE(equity.setting_value, '') AS equity,
+                   COALESCE(bonds.setting_value, '') AS bond_basket
             FROM users u
             LEFT JOIN user_settings us ON us.user_id = u.id AND us.setting_key = 'advisor_strategy'
+            LEFT JOIN user_settings sector ON sector.user_id = u.id AND sector.setting_key = 'advisor_sector'
+            LEFT JOIN user_settings equity ON equity.user_id = u.id AND equity.setting_key = 'advisor_equity'
+            LEFT JOIN user_settings bonds ON bonds.user_id = u.id AND bonds.setting_key = 'advisor_bonds'
             WHERE u.role = 'advisor' AND u.is_active = 1
             ORDER BY u.id
         """

@@ -175,7 +175,7 @@ window.currentPrice = <?= (float)$close ?>;
         <div class="stat-label">Beta</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value"><?= $fundamentals['roe'] ? number_format($fundamentals['roe'] * 100, 1) . '%' : '—' ?></div>
+        <div class="stat-value"><?= $fundamentals['roe'] ? number_format($fundamentals['roe'], 1) . '%' : '—' ?></div>
         <div class="stat-label">ROE</div>
     </div>
     <div class="stat-card">
@@ -183,7 +183,7 @@ window.currentPrice = <?= (float)$close ?>;
         <div class="stat-label">D/E Ratio</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value"><?= $fundamentals['profit_margin'] ? number_format($fundamentals['profit_margin'] * 100, 1) . '%' : '—' ?></div>
+        <div class="stat-value"><?= $fundamentals['profit_margin'] ? number_format($fundamentals['profit_margin'], 1) . '%' : '—' ?></div>
         <div class="stat-label">Profit Margin</div>
     </div>
 </div>
@@ -309,7 +309,7 @@ window.currentPrice = <?= (float)$close ?>;
         <div>
             <h4>Dividend Safety Score: <span style="color:<?= ($dividendSafety['score'] ?? 0) >= 80 ? 'var(--green)' : (($dividendSafety['score'] ?? 0) >= 60 ? 'var(--yellow)' : 'var(--red)') ?>"><?= $dividendSafety['score'] ?? 'N/A' ?></span> <span style="font-size:0.8em; color:var(--text3)">(<?= $dividendSafety['rating'] ?? 'N/A' ?>)</span></h4>
             <table style="width:100%; font-size:0.9em;">
-                <tr><td class="text-muted">Payout Ratio</td><td class="r"><?= $fundamentals['payout_ratio'] ? number_format($fundamentals['payout_ratio'] * 100, 1) . '%' : '—' ?></td></tr>
+                <tr><td class="text-muted">Payout Ratio</td><td class="r"><?= $fundamentals['payout_ratio'] ? number_format($fundamentals['payout_ratio'], 1) . '%' : '—' ?></td></tr>
                 <tr><td class="text-muted">FCF Coverage</td><td class="r"><?= $dividendSafety['fcf_coverage'] ?? '—' ?></td></tr>
                 <tr><td class="text-muted">D/E Ratio</td><td class="r"><?= $dividendSafety['debt_equity'] ?? '—' ?></td></tr>
                 <tr><td class="text-muted">Revenue Growth</td><td class="r"><?= $dividendSafety['revenue_growth'] ?? '—' ?></td></tr>
@@ -394,7 +394,7 @@ window.currentPrice = <?= (float)$close ?>;
             <div class="stat-label">Put/Call Ratio</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value"><?= isset($optionsData['implied_volatility']) ? number_format($optionsData['implied_volatility'] * 100, 1) . '%' : '—' ?></div>
+            <div class="stat-value"><?= isset($optionsData['implied_volatility']) ? number_format($optionsData['implied_volatility'], 1) . '%' : '—' ?></div>
             <div class="stat-label">Implied Volatility</div>
         </div>
     </div>
@@ -450,10 +450,10 @@ window.currentPrice = <?= (float)$close ?>;
         <div><span class="text-muted">Free Cash Flow</span><br><strong><?= fmt_large_num($fundamentals['free_cash_flow'] ?? null) ?></strong></div>
         <div><span class="text-muted">Operating CF</span><br><strong><?= fmt_large_num($fundamentals['operating_cash_flow'] ?? null) ?></strong></div>
         <div><span class="text-muted">Revenue</span><br><strong><?= fmt_large_num($fundamentals['total_revenue'] ?? null) ?></strong></div>
-        <div><span class="text-muted">Revenue Growth</span><br><strong style="color:<?= ($fundamentals['revenue_growth'] ?? 0) > 0 ? 'var(--green)' : 'var(--red)' ?>"><?= $fundamentals['revenue_growth'] ? number_format($fundamentals['revenue_growth'] * 100, 1) . '%' : '—' ?></strong></div>
-        <div><span class="text-muted">Gross Margin</span><br><strong><?= $fundamentals['gross_margin'] ? number_format($fundamentals['gross_margin'] * 100, 1) . '%' : '—' ?></strong></div>
-        <div><span class="text-muted">Operating Margin</span><br><strong><?= $fundamentals['operating_margin'] ? number_format($fundamentals['operating_margin'] * 100, 1) . '%' : '—' ?></strong></div>
-        <div><span class="text-muted">ROA</span><br><strong><?= $fundamentals['roa'] ? number_format($fundamentals['roa'] * 100, 1) . '%' : '—' ?></strong></div>
+        <div><span class="text-muted">Revenue Growth</span><br><strong style="color:<?= ($fundamentals['revenue_growth'] ?? 0) > 0 ? 'var(--green)' : 'var(--red)' ?>"><?= $fundamentals['revenue_growth'] ? number_format($fundamentals['revenue_growth'], 1) . '%' : '—' ?></strong></div>
+        <div><span class="text-muted">Gross Margin</span><br><strong><?= $fundamentals['gross_margin'] ? number_format($fundamentals['gross_margin'], 1) . '%' : '—' ?></strong></div>
+        <div><span class="text-muted">Operating Margin</span><br><strong><?= $fundamentals['operating_margin'] ? number_format($fundamentals['operating_margin'], 1) . '%' : '—' ?></strong></div>
+        <div><span class="text-muted">ROA</span><br><strong><?= $fundamentals['roa'] ? number_format($fundamentals['roa'], 1) . '%' : '—' ?></strong></div>
     </div>
 </div>
 

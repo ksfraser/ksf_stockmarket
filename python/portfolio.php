@@ -98,7 +98,7 @@ $SAFETY_TOOLTIP = "Dividend Safety Score (0-100): Based on payout ratio, " .
             $allocPct = $totalValue > 0 ? ($currentValue / $totalValue) * 100 : 0;
             $costAllocPct = $totalCost > 0 ? ($costTotal / $totalCost) * 100 : 0;
             $pe = $h['pe'] ?? null;
-            $divYield = $h['div_yield'] !== null ? $h['div_yield'] * 100 : null;
+            $divYield = $h['div_yield'] !== null ? $h['div_yield'] : null;
             $costBasisDivYield = $h['cost_basis_div_yield'] ?? null;
             $safety = $h['dividend_safety']['score'] ?? null;
             $safetyRating = $h['dividend_safety']['rating'] ?? null;

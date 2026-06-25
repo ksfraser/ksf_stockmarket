@@ -258,7 +258,7 @@ $atrData = json_encode(array_map(function($d) {
             <div class="ind-item" style="margin-bottom:8px">
                 <div class="ind-name">Revenue Growth</div>
                 <div class="ind-value" style="color:<?= ($f['revenue_growth'] ?? 0) >= 0 ? 'var(--green)' : 'var(--red)' ?>">
-                    <?= $f['revenue_growth'] !== null ? (($f['revenue_growth'] >= 0 ? '+' : '') . fmt_pct($f['revenue_growth'] * 100)) : 'N/A' ?>
+                    <?= $f['revenue_growth'] !== null ? (($f['revenue_growth'] >= 0 ? '+' : '') . fmt_pct($f['revenue_growth'])) : 'N/A' ?>
                 </div>
             </div>
         </div>
@@ -284,13 +284,13 @@ $atrData = json_encode(array_map(function($d) {
             <div class="ind-item" style="margin-bottom:8px">
                 <div class="ind-name">ROE</div>
                 <div class="ind-value" style="color:<?= ($f['roe'] ?? 0) >= 0.15 ? 'var(--green)' : 'var(--text)' ?>">
-                    <?= $f['roe'] !== null ? fmt_pct($f['roe'] * 100) : 'N/A' ?>
+                    <?= $f['roe'] !== null ? fmt_pct($f['roe']) : 'N/A' ?>
                 </div>
             </div>
             <div class="ind-item" style="margin-bottom:8px">
                 <div class="ind-name">ROA</div>
                 <div class="ind-value" style="color:<?= ($f['roa'] ?? 0) >= 0.05 ? 'var(--green)' : 'var(--text)' ?>">
-                    <?= $f['roa'] !== null ? fmt_pct($f['roa'] * 100) : 'N/A' ?>
+                    <?= $f['roa'] !== null ? fmt_pct($f['roa']) : 'N/A' ?>
                 </div>
             </div>
             <div class="ind-item" style="margin-bottom:8px">
@@ -306,9 +306,9 @@ $atrData = json_encode(array_map(function($d) {
         </div>
     </div>
     <div style="margin-top:16px; color:var(--text3); font-size:0.85em">
-        Margins: Gross <?= $f['gross_margin'] !== null ? fmt_pct($f['gross_margin'] * 100) : 'N/A' ?> |
-        Operating <?= $f['operating_margin'] !== null ? fmt_pct($f['operating_margin'] * 100) : 'N/A' ?> |
-        Profit <?= $f['profit_margin'] !== null ? fmt_pct($f['profit_margin'] * 100) : 'N/A' ?> |
+        Margins: Gross <?= $f['gross_margin'] !== null ? fmt_pct($f['gross_margin']) : 'N/A' ?> |
+        Operating <?= $f['operating_margin'] !== null ? fmt_pct($f['operating_margin']) : 'N/A' ?> |
+        Profit <?= $f['profit_margin'] !== null ? fmt_pct($f['profit_margin']) : 'N/A' ?> |
         Beta: <?= $f['beta'] !== null ? number_format($f['beta'], 2) : 'N/A' ?> |
         EPS (TTM): <?= $f['trailing_eps'] !== null ? '$' . number_format($f['trailing_eps'], 2) : 'N/A' ?>
     </div>

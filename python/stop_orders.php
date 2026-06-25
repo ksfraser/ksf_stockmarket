@@ -84,9 +84,9 @@ foreach ($orders as $o) {
                 <td class="r">$<?= number_format($o['current_price'], 2) ?></td>
                 <td style="font-size:0.75em; color:var(--text3);"><?= htmlspecialchars($o['price_date'] ?? '—') ?><?= !empty($o['price_date']) ? ' ' . date('H:i', strtotime($o['price_date'])) : '' ?></td>
                 <td class="r">$<?= number_format($o['market_value'], 2) ?></td>
-                <td class="r"><?= number_format($o['trailing_stop_pct'] * 100, 1) ?>%</td>
+                <td class="r"><?= number_format($o['trailing_stop_pct'], 1) ?>%</td>
                 <td class="r">$<?= number_format($o['trailing_stop_price'], 2) ?></td>
-                <td class="r"><?= number_format($o['stop_loss_pct'] * 100, 1) ?>%</td>
+                <td class="r"><?= number_format($o['stop_loss_pct'], 1) ?>%</td>
                 <td class="r">$<?= number_format($o['stop_loss_price'], 2) ?></td>
                 <td class="r"><?= $o['atr_14'] ? '$' . number_format($o['atr_14'], 2) : '—' ?></td>
                 <td class="r"><?= number_format($o['atr_multiplier'], 1) ?>×</td>

@@ -129,10 +129,10 @@ $SAFETY_TOOLTIP = "Dividend Safety Score (0-100): Based on payout ratio, " .
                 <td style="font-size:0.82em; white-space:nowrap">
                     <div><strong><?= htmlspecialchars($strategy) ?></strong></div>
                     <div style="color:var(--text3)">
-                        Trail: <?= number_format($h['trailing_stop_pct'] * 100, 1) ?>% ($<?= number_format($trailingStop, 2) ?>)
+                        Trail: <?= number_format($h['trailing_stop_pct'], 1) ?>% ($<?= number_format($trailingStop, 2) ?>)
                     </div>
                     <div style="color:var(--text3)">
-                        Stop: <?= number_format($h['stop_loss_pct'] * 100, 1) ?>% ($<?= number_format($stopLoss, 2) ?>)
+                        Stop: <?= number_format($h['stop_loss_pct'], 1) ?>% ($<?= number_format($stopLoss, 2) ?>)
                     </div>
                     <?php if ($atr14): ?>
                     <div style="color:var(--text3)">

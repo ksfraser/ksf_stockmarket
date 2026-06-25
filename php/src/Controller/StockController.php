@@ -205,20 +205,17 @@ class StockController {
         // Markov regime analysis
         $regime = $this->getRegimeAnalysis($symbol);
 
-        return compact(
+        $result = compact(
             'symbol', 'latest', 'history', 'indicators', 'indHistory',
             'fundamentals', 'portfolio', 'dividendSafety', 'dividends',
             'analystRatings', 'analystTargets', 'news', 'optionsData',
             'buffettScore', 'perf', 'regime'
         );
-        // Ensure template gets both naming conventions
-        $result = compact(
-            'symbol', 'latest', 'history', 'indicators', 'indHistory',
-            'fundamentals', 'portfolio', 'dividendSafety', 'dividends',
-            'analystRatings', 'analystTargets', 'news', 'optionsData',
-            'buffettScore', 'perf'
-        );
+        $result['analyst_ratings'] = $result['analystRatings'];
         $result['analyst_targets'] = $result['analystTargets'];
+        $result['buffett_score'] = $result['buffettScore'];
+        $result['options'] = $result['optionsData'];
+        $result['ind_history'] = $result['indHistory'];
         return $result;
     }
 

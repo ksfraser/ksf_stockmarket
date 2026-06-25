@@ -202,7 +202,9 @@ window.currentPrice = <?= (float)$close ?>;
             <?php if ($consensusPrice): ?>🎯 Consensus: $<?= number_format($consensusPrice, 2) ?><?php endif; ?>
         </div>
     </div>
-    <div id="priceChart" style="height:400px; width:100%;"></div>
+    <div class="chart-container chart-lg">
+        <canvas id="priceChart"></canvas>
+    </div>
     <!-- Legend for chart overlays -->
     <div style="display:flex; gap:16px; padding:8px 12px; font-size:0.8em; color:var(--text3); flex-wrap:wrap;">
         <span><span style="color:#4CAF50">━━</span> Price</span>
@@ -221,15 +223,21 @@ window.currentPrice = <?= (float)$close ?>;
     <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
         <div>
             <div style="font-size:0.9em; font-weight:600; margin-bottom:4px;">RSI (14)</div>
-            <div id="rsiChart" style="height:180px;"></div>
+            <div class="chart-container" style="height:180px;">
+                <canvas id="rsiChart"></canvas>
+            </div>
         </div>
         <div>
             <div style="font-size:0.9em; font-weight:600; margin-bottom:4px;">MACD (12,26,9)</div>
-            <div id="macdChart" style="height:180px;"></div>
+            <div class="chart-container" style="height:180px;">
+                <canvas id="macdChart"></canvas>
+            </div>
         </div>
         <div>
             <div style="font-size:0.9em; font-weight:600; margin-bottom:4px;">Stochastic (14,3,3)</div>
-            <div id="stochChart" style="height:180px;"></div>
+            <div class="chart-container" style="height:180px;">
+                <canvas id="stochChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -238,11 +246,11 @@ window.currentPrice = <?= (float)$close ?>;
 <div class="card" style="margin-top:12px;">
     <div class="card-header">Volatility (ATR) & Bollinger Bands</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-        <div>
-            <div id="atrChart" style="height:200px;"></div>
+        <div class="chart-container" style="height:200px;">
+            <canvas id="atrChart"></canvas>
         </div>
-        <div>
-            <div id="bbChart" style="height:200px;"></div>
+        <div class="chart-container" style="height:200px;">
+            <canvas id="bbChart"></canvas>
         </div>
     </div>
 </div>

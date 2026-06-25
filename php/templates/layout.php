@@ -80,10 +80,10 @@ if (file_exists($tplFile)) {
 </div>
 
 <?php
+require __DIR__ . '/js.php';
 if (in_array($action ?? '', ['detail', 'indicators'])) {
     echo '<script src="/stockmarket/js/enhanced_charts.js?v=3"></script>';
 }
-require __DIR__ . '/js.php';
 ?>
 </body>
 </html>

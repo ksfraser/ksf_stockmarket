@@ -774,20 +774,20 @@ class StockController {
      */
     public function refreshPrice(string $symbol): array {
         $symbol = strtoupper(trim($symbol));
-        if (!preg_match('/^[A-Z][A-Z0-9\.\-]*$/', $symbol)) {
+        if (!preg_match('/^[A-Z][A-Z0-9\\.\\-]*$/', $symbol)) {
             $_SESSION['flash_error'] = 'Invalid symbol.';
-            header('Location: ?action=overview');
+            header('Location: /stockmarket/?action=overview');
             exit;
         }
 
         $script = __DIR__ . '/../../../python/fetch_prices.py';
         if (!file_exists($script)) {
             $_SESSION['flash_error'] = 'Price fetcher not found.';
-            header('Location: ?action=detail&symbol=' . urlencode($symbol));
+            header('Location: /stockmarket/?action=detail&symbol=' . urlencode($symbol));
             exit;
         }
 
-        $fullHistory = isset($_GET['full_history']) && $_GET['full_history'] == '1';
+        $fullHistory = isset($_REQUEST['full_history']) && $_REQUEST['full_history'] == '1';
         $startDate = null;
 
         if (!$fullHistory) {
@@ -858,7 +858,19 @@ class StockController {
             $_SESSION['flash_message'] = "Updated last " . ($daysSince > 0 ? $daysSince . ' day(s)' : 'window') . " of data for {$symbol}.";
         }
 
-        header('Location: ?action=detail&symbol=' . urlencode($symbol));
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+        if ($isAjax) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => empty($_SESSION['flash_error']),
+                'message' => $_SESSION['flash_message'] ?? '',
+                'error' => $_SESSION['flash_error'] ?? '',
+                'symbol' => $symbol,
+            ]);
+            exit;
+        }
+
+        header('Location: /stockmarket/?action=detail&symbol=' . urlencode($symbol));
         exit;
     }
 

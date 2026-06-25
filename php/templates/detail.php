@@ -129,7 +129,8 @@ window.currentPrice = <?= (float)$close ?>;
             </div>
         </div>
         <div style="display:flex; align-items:center; gap:12px;">
-            <form method="GET" action="?action=refresh_price" style="display:flex; align-items:center; gap:8px;"
+            <form method="POST" action="?action=refresh_price" style="display:flex; align-items:center; gap:8px;"
+                  id="refreshPriceForm"
                   onsubmit="return confirm('Refresh price data for <?= htmlspecialchars($sym) ?>? This will re-fetch from yfinance and may take a moment.');">
                 <input type="hidden" name="symbol" value="<?= htmlspecialchars($sym) ?>">
                 <button type="submit" 
@@ -471,3 +472,40 @@ function fmt_large_num($val) {
     return number_format($val, 0);
 }
 ?>
+
+<script>
+(function() {
+    var form = document.getElementById('refreshPriceForm');
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var btn = form.querySelector('button[type="submit"]');
+        var originalText = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = '⏳ Refreshing…';
+
+        var fd = new FormData(form);
+        fetch('?action=refresh_price', {
+            method: 'POST',
+            body: fd,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.error || 'Refresh failed.');
+            }
+        })
+        .catch(function(err) {
+            alert('Request failed: ' + err.message);
+        })
+        .finally(function() {
+            btn.disabled = false;
+            btn.textContent = originalText;
+        });
+    });
+})();
+</script>

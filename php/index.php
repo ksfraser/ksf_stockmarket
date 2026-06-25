@@ -212,7 +212,7 @@ switch ($action) {
         break;
     case 'refresh_price':
         $ctrl = new StockController();
-        $sym = $_GET['symbol'] ?? '';
+        $sym = $_REQUEST['symbol'] ?? '';
         if ($sym) {
             $data = array_merge($data, $ctrl->refreshPrice($sym));
         } else {

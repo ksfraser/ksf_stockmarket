@@ -107,7 +107,7 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
         <tbody>
         <?php foreach ($discrepancies as $d): ?>
             <tr>
-                <td><strong><?php echo htmlspecialchars($d['symbol']); ?></strong></td>
+                <td><strong><a href="?action=detail&symbol=<?php echo urlencode($d['symbol']); ?>" style="color:var(--text);text-decoration:none;"><?php echo htmlspecialchars($d['symbol']); ?></a></strong></td>
                 <td><?php echo htmlspecialchars($d['account']); ?></td>
                 <td class="r"><?php echo number_format($d['expected'], 2); ?></td>
                 <td class="r"><?php echo number_format($d['actual'], 2); ?></td>
@@ -232,7 +232,7 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
             <tr>
                 <td><?php echo htmlspecialchars($t['trade_date'] ?? ''); ?></td>
                 <td class="<?php echo $rowClass; ?>"><?php echo htmlspecialchars($t['type'] ?? ''); ?></td>
-                <td><a href="?action=detail&symbol=<?php echo htmlspecialchars($t['symbol'] ?? ''); ?>"><?php echo htmlspecialchars($t['symbol'] ?? ''); ?></a></td>
+                <td><a href="?action=detail&symbol=<?php echo urlencode($t['symbol'] ?? ''); ?>"><?php echo htmlspecialchars($t['symbol'] ?? ''); ?></a></td>
                 <td class="c"><?php echo htmlspecialchars($t['account_type'] ?? ''); ?></td>
                 <td class="r"><?php echo number_format($t['quantity'] ?? 0, 4); ?></td>
                 <td class="r">$<?php echo number_format($t['price'] ?? 0, 4); ?></td>

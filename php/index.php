@@ -85,7 +85,12 @@ if ($action === 'api_screener') {
         }
         return '<a href="' . htmlspecialchars($url) . '" style="color:var(--text);text-decoration:none;">' . htmlspecialchars($label) . $arrow . '</a>';
     }
-    ?>
+    ?><select id="screener-sector-temp" style="display:none">
+        <option value="">All Sectors</option>
+        <?php foreach ($sectors as $sec): ?>
+            <option value="<?php echo htmlspecialchars($sec); ?>" <?php echo $currentSector === $sec ? 'selected' : ''; ?>><?php echo htmlspecialchars($sec); ?></option>
+        <?php endforeach; ?>
+    </select>
     <p style="margin-top:12px;font-size:0.85em;color:var(--text3);">
         Showing <?php echo count($results); ?> results for <?php echo htmlspecialchars($presetLabel); ?>.
         <a href="?action=screener&preset=<?php echo urlencode($d['preset_name'] ?? 'dividend_stocks'); ?>" style="color:var(--accent);">Refresh</a>

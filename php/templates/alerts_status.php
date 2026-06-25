@@ -198,7 +198,7 @@ $inactiveWatchlist = array_filter($watchlistSymbols, fn($s) => !$s['is_active'])
             <div style="font-family:monospace;font-size:0.85em;color:var(--text2);">
                 <?php foreach ($portfolioSymbols as $s): ?>
                     <div style="padding:2px 0;">
-                        <?= htmlspecialchars($s['symbol']) ?>
+                        <a href="?action=detail&symbol=<?= urlencode($s['symbol']) ?>"><?= htmlspecialchars($s['symbol']) ?></a>
                         <?php if ($s['volume_spike_threshold'] != 2.0): ?>
                             <span style="color:var(--text3);font-size:0.8em;">(<?= $s['volume_spike_threshold'] ?>×)</span>
                         <?php endif; ?>
@@ -214,7 +214,7 @@ $inactiveWatchlist = array_filter($watchlistSymbols, fn($s) => !$s['is_active'])
             <div style="font-family:monospace;font-size:0.85em;color:var(--text2);">
                 <?php foreach ($watchlistOnly as $s): ?>
                     <div style="padding:2px 0;">
-                        <?= htmlspecialchars($s['symbol']) ?>
+                        <a href="?action=detail&symbol=<?= urlencode($s['symbol']) ?>"><?= htmlspecialchars($s['symbol']) ?></a>
                         <?php if ($s['volume_spike_threshold'] != 2.0): ?>
                             <span style="color:var(--text3);font-size:0.8em;">(<?= $s['volume_spike_threshold'] ?>×)</span>
                         <?php endif; ?>
@@ -234,7 +234,7 @@ $inactiveWatchlist = array_filter($watchlistSymbols, fn($s) => !$s['is_active'])
     </p>
     <div style="font-family:monospace;font-size:0.85em;color:var(--text3);margin-top:8px;">
         <?php foreach ($inactiveWatchlist as $s): ?>
-            <span style="margin-right:12px;"><?= htmlspecialchars($s['symbol']) ?> (<?= $s['list_type'] ?>)</span>
+            <span style="margin-right:12px;"><a href="?action=detail&symbol=<?= urlencode($s['symbol']) ?>"><?= htmlspecialchars($s['symbol']) ?></a> (<?= $s['list_type'] ?>)</span>
         <?php endforeach; ?>
     </div>
 </div>

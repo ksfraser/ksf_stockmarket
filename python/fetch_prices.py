@@ -9,7 +9,7 @@ explicitly requested with --symbols or --full-history.
 Usage:
     python3 fetch_prices.py [--max 100] [--start-from SYMBOL] [--days N] [--full-history] [--symbols A,B]
 """
-import pymysql, yfinance as yf, pandas as pd
+import pymysql, yfinance as yf, pandas as pd, re
 import sys, os, time, argparse
 from datetime import date, timedelta
 from pathlib import Path
@@ -113,6 +113,20 @@ def get_pending_symbols(c, existing):
     return sorted(all_syms - existing)
 
 
+def is_yfinance_resolvable(sym: str) -> bool:
+    """Return False for tickers yfinance consistently cannot resolve."""
+    if sym.startswith('AMEX:') or sym.startswith('OTC:') or sym.startswith('NYSE:') or sym.startswith('NASDAQ:'):
+        return False
+    if '/' in sym:
+        return False
+    # Common ETF series suffix patterns on TSX that trip up yfinance
+    if re.search(r'\.[A-Z]\.TO$', sym):
+        return False
+    if re.search(r'/PD\.TO$|/PB\.TO$|/PE\.TO$|/PF\.TO$|/PG\.TO$|/PH\.TO$|/PI\.TO$|/PJ\.TO$|/PK\.TO$|/PL\.TO$|/PM\.TO$|/PN\.TO$|/PO\.TO$|/PQ\.TO$|/PS\.TO$|/PT\.TO$', sym):
+        return False
+    return True
+
+
 def fetch_symbol(sym, start='2014-01-01', end=None):
     """Fetch daily OHLCV from yfinance. Returns DataFrame or None."""
     if end is None:
@@ -207,8 +221,14 @@ def main():
             pending = get_pending_symbols(c, existing)
         if args.start_from:
             pending = [s for s in pending if s >= args.start_from]
-        if args.max:
-            pending = pending[:args.max]
+
+    skipped = [s for s in pending if not is_yfinance_resolvable(s)]
+    if skipped:
+        print(f"Skipping {len(skipped)} known-bad patterns (AMEX:/OTC:/slash/series)")
+    pending = [s for s in pending if is_yfinance_resolvable(s)]
+
+    if args.max:
+        pending = pending[:args.max]
 
     print(f"Fetching: {len(pending)} symbols")
 

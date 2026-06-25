@@ -47,7 +47,7 @@ $totalPnlPct = $portfolioData['total_pnl_pct'] ?? 0;
         <?php foreach ($rows as $r): ?>
             <?php $pnlClass = ($r['pnl'] ?? 0) >= 0 ? 'positive' : 'negative'; ?>
             <tr>
-                <td><?php echo htmlspecialchars($r['symbol']); ?></td>
+                <td><a href="?action=detail&symbol=<?php echo urlencode($r['symbol']); ?>"><?php echo htmlspecialchars($r['symbol']); ?></a></td>
                 <td><?php echo htmlspecialchars($r['account_type'] ?? ''); ?></td>
                 <td><?php echo htmlspecialchars($r['shares'] ?? 0); ?></td>
                 <td>$<?php echo number_format($r['cost_basis'] ?? 0, 4); ?></td>

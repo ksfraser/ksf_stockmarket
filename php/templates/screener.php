@@ -137,6 +137,13 @@ function screenerSortLink(string $field, string $label, string $preset, string $
         })
         .then(function(res) { return res.text(); })
         .then(function(html) {
+            // Rebuild sector dropdown from the hidden temp select in the response
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const temp = doc.getElementById('screener-sector-temp');
+            if (temp && sectorSelect) {
+                sectorSelect.innerHTML = temp.innerHTML;
+            }
             target.innerHTML = html;
         })
         .catch(function(err) {

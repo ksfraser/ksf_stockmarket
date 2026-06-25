@@ -28,7 +28,7 @@ $tab = $GLOBALS['tab'] ?? 'portfolio';
         <?php foreach ($transactions as $t): ?>
             <tr>
                 <td><?php echo htmlspecialchars($t['trade_date']); ?></td>
-                <td><?php echo htmlspecialchars($t['symbol']); ?></td>
+                <td><a href="?action=detail&symbol=<?php echo urlencode($t['symbol']); ?>"><?php echo htmlspecialchars($t['symbol']); ?></a></td>
                 <td><?php echo htmlspecialchars($t['type']); ?></td>
                 <td><?php echo htmlspecialchars($t['quantity']); ?></td>
                 <td>$<?php echo number_format($t['price'] ?? 0, 2); ?></td>

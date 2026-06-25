@@ -67,7 +67,7 @@ $total_all      = $data['total_all']      ?? 0;
         <tbody>
         <?php foreach ($symbols as $s): ?>
             <tr>
-                <td><strong><?= htmlspecialchars($s['symbol']) ?></strong></td>
+                <td><strong><a href="?action=detail&symbol=<?= urlencode($s['symbol']) ?>" style="color:var(--text);text-decoration:none;"><?= htmlspecialchars($s['symbol']) ?></a></strong></td>
                 <td><?= $s['name'] ? htmlspecialchars($s['name']) : '<span class="text-muted">—</span>' ?></td>
                 <td><?= $s['exchange'] ? htmlspecialchars($s['exchange']) : '<span class="text-muted">—</span>' ?></td>
                 <td><?= $s['sector'] ? htmlspecialchars($s['sector']) : '<span class="text-muted">—</span>' ?></td>
@@ -124,7 +124,7 @@ $mappings = $exchangeCtrl->listExchangeMappings();
         <tbody>
         <?php foreach ($mappings as $m): ?>
             <tr>
-                <td><strong><?= htmlspecialchars($m['symbol']) ?></strong></td>
+                <td><strong><a href="?action=detail&symbol=<?= urlencode($m['symbol']) ?>" style="color:var(--text);text-decoration:none;"><?= htmlspecialchars($m['symbol']) ?></a></strong></td>
                 <td><?= $m['exchange'] ? htmlspecialchars($m['exchange']) : '<span class="text-muted">—</span>' ?></td>
                 <td><?= htmlspecialchars($m['data_source']) ?></td>
                 <td><?= htmlspecialchars($m['yahoo_ticker'] ?? $m['symbol']) ?></td>
@@ -204,7 +204,7 @@ $mappings = $exchangeCtrl->listExchangeMappings();
         <tbody>
         <?php foreach ($watchlistSymbols as $w): ?>
             <tr>
-                <td><?= htmlspecialchars($w['symbol']) ?></td>
+                <td><a href="?action=detail&symbol=<?= urlencode($w['symbol']) ?>"><?= htmlspecialchars($w['symbol']) ?></a></td>
                 <td style="text-align:center;"><?= $w['monitor_volume'] ? '&#10003;' : '&#10007;' ?></td>
                 <td style="text-align:center;"><?= $w['monitor_price'] ? '&#10003;' : '&#10007;' ?></td>
                 <td style="text-align:center;"><?= htmlspecialchars($w['volume_spike_threshold']) ?>x</td>

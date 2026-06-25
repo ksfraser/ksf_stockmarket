@@ -20,6 +20,7 @@ $skipped  = $data['skipped'] ?? 0;
         <h4 style="margin:0 0 8px 0;font-size:0.9em;color:var(--text2);">Single Row</h4>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
             <input type="text" name="single_symbol" placeholder="Symbol (e.g. AAMI.TO)" required
+                   value="<?= htmlspecialchars($_GET['symbol'] ?? '') ?>"
                    style="width:120px;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">
             <input type="date" name="single_date" required
                    style="width:140px;padding:6px 10px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:4px;">

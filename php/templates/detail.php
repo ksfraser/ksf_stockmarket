@@ -141,6 +141,9 @@ window.currentPrice = <?= (float)$close ?>;
                     Full history
                 </label>
             </form>
+            <a href="?action=manual_ohlcv&symbol=<?= urlencode($sym) ?>" class="btn" title="Add OHLCV data manually or via CSV">
+                &#x1F4CB; Add Data
+            </a>
             <div style="text-align:right;">
                 <div style="font-size:1.8em; font-weight:700;">$<?= number_format($close, 2) ?></div>
                 <div class="<?= $changeClass ?>" style="font-size:1.1em;">

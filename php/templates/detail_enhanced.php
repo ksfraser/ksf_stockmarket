@@ -153,7 +153,7 @@ window.currentPrice = <?= (float)$close ?>;
         <div class="stat-label">Forward P/E</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value"><?= !empty($fundamentals['dividend_yield']) ? number_format($fundamentals['dividend_yield'] * 100, 2) . '%' : '—' ?></div>
+        <div class="stat-value"><?= !empty($fundamentals['dividend_yield']) ? number_format($fundamentals['dividend_yield'], 2) . '%' : '—' ?></div>
         <div class="stat-label">Div Yield</div>
     </div>
     <div class="stat-card">

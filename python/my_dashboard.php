@@ -137,7 +137,7 @@ $portfolioSummary = $data['portfolio_summary'] ?? null;
                     <td><a href="?action=detail&symbol=<?php echo $d['symbol']; ?>"><?php echo $d['symbol']; ?></a></td>
                     <td class="c"><?php echo date('M j', strtotime($d['ex_dividend_date'])); ?></td>
                     <td class="r">$<?php echo number_format($d['dividend_rate'] ?? 0, 3); ?></td>
-                    <td class="r"><?php echo $d['dividend_yield'] ? number_format($d['dividend_yield'] * 100, 2) . '%' : '—'; ?></td>
+                    <td class="r"><?php echo $d['dividend_yield'] ? number_format($d['dividend_yield'], 2) . '%' : '—'; ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

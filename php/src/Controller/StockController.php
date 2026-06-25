@@ -188,8 +188,16 @@ class StockController {
             }
         }
 
-        // News
-        $news = $this->getTableData('symbol_news', $symbol, 'date DESC', 10);
+        // News — use news_feeds table populated by news_monitor.py
+        $news = [];
+        try {
+            $sql = "SELECT title, url, source, published AS date, summary FROM news_feeds WHERE symbol_filter = :sym ORDER BY published DESC LIMIT 10";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':sym' => $symbol]);
+            $news = $stmt->fetchAll();
+        } catch (\Exception $e) {
+            $news = [];
+        }
 
         // Options snapshot
         $opts = $this->getTableData('options_snapshot', $symbol, 'fetch_date DESC', 1);

@@ -166,27 +166,27 @@ window.currentPrice = <?= (float)$close ?>;
         <div class="stat-label">P/E (TTM)</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value"><?= $fundamentals['forward_pe'] ? number_format($fundamentals['forward_pe'], 1) : '—' ?></div>
+        <div class="stat-value"><?= !empty($fundamentals['forward_pe']) ? number_format($fundamentals['forward_pe'], 1) : '—' ?></div>
         <div class="stat-label">Forward P/E</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value"><?= $fundamentals['dividend_yield'] ? number_format($fundamentals['dividend_yield'] * 100, 2) . '%' : '—' ?></div>
+        <div class="stat-value"><?= !empty($fundamentals['dividend_yield']) ? number_format($fundamentals['dividend_yield'] * 100, 2) . '%' : '—' ?></div>
         <div class="stat-label">Div Yield</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value"><?= $fundamentals['beta'] ? number_format($fundamentals['beta'], 2) : '—' ?></div>
+        <div class="stat-value"><?= !empty($fundamentals['beta']) ? number_format($fundamentals['beta'], 2) : '—' ?></div>
         <div class="stat-label">Beta</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value"><?= $fundamentals['roe'] ? number_format($fundamentals['roe'] * 100, 1) . '%' : '—' ?></div>
+        <div class="stat-value"><?= !empty($fundamentals['roe']) ? number_format($fundamentals['roe'] * 100, 1) . '%' : '—' ?></div>
         <div class="stat-label">ROE</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value"><?= $fundamentals['debt_to_equity'] ? number_format($fundamentals['debt_to_equity'], 1) : '—' ?></div>
+        <div class="stat-value"><?= !empty($fundamentals['debt_to_equity']) ? number_format($fundamentals['debt_to_equity'], 1) : '—' ?></div>
         <div class="stat-label">D/E Ratio</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value"><?= $fundamentals['profit_margin'] ? number_format($fundamentals['profit_margin'] * 100, 1) . '%' : '—' ?></div>
+        <div class="stat-value"><?= !empty($fundamentals['profit_margin']) ? number_format($fundamentals['profit_margin'] * 100, 1) . '%' : '—' ?></div>
         <div class="stat-label">Profit Margin</div>
     </div>
 </div>
@@ -312,12 +312,12 @@ window.currentPrice = <?= (float)$close ?>;
         <div>
             <h4>Dividend Safety Score: <span style="color:<?= ($dividendSafety['score'] ?? 0) >= 80 ? 'var(--green)' : (($dividendSafety['score'] ?? 0) >= 60 ? 'var(--yellow)' : 'var(--red)') ?>"><?= $dividendSafety['score'] ?? 'N/A' ?></span> <span style="font-size:0.8em; color:var(--text3)">(<?= $dividendSafety['rating'] ?? 'N/A' ?>)</span></h4>
             <table style="width:100%; font-size:0.9em;">
-                <tr><td class="text-muted">Payout Ratio</td><td class="r"><?= $fundamentals['payout_ratio'] ? number_format($fundamentals['payout_ratio'] * 100, 1) . '%' : '—' ?></td></tr>
+                <tr><td class="text-muted">Payout Ratio</td><td class="r"><?= !empty($fundamentals['payout_ratio']) ? number_format($fundamentals['payout_ratio'] * 100, 1) . '%' : '—' ?></td></tr>
                 <tr><td class="text-muted">FCF Coverage</td><td class="r"><?= $dividendSafety['fcf_coverage'] ?? '—' ?></td></tr>
                 <tr><td class="text-muted">D/E Ratio</td><td class="r"><?= $dividendSafety['debt_equity'] ?? '—' ?></td></tr>
                 <tr><td class="text-muted">Revenue Growth</td><td class="r"><?= $dividendSafety['revenue_growth'] ?? '—' ?></td></tr>
                 <tr><td class="text-muted">Annual Dividend</td><td class="r">$<?= number_format($fundamentals['dividend_rate'] ?? 0, 2) ?></td></tr>
-                <tr><td class="text-muted">5Y Avg Yield</td><td class="r"><?= $fundamentals['five_year_div_yield'] ? number_format($fundamentals['five_year_div_yield'], 2) . '%' : '—' ?></td></tr>
+                <tr><td class="text-muted">5Y Avg Yield</td><td class="r"><?= !empty($fundamentals['five_year_div_yield']) ? number_format($fundamentals['five_year_div_yield'], 2) . '%' : '—' ?></td></tr>
             </table>
         </div>
         <div>
@@ -445,18 +445,18 @@ window.currentPrice = <?= (float)$close ?>;
 <div class="card" style="margin-top:12px;">
     <div class="card-header">Fundamentals Deep Dive</div>
     <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; font-size:0.9em;">
-        <div><span class="text-muted">Forward EPS</span><br><strong><?= $fundamentals['forward_eps'] ? '$' . number_format($fundamentals['forward_eps'], 2) : '—' ?></strong></div>
-        <div><span class="text-muted">PEG Ratio</span><br><strong><?= $fundamentals['peg_ratio'] ? number_format($fundamentals['peg_ratio'], 2) : '—' ?></strong></div>
-        <div><span class="text-muted">Price/Book</span><br><strong><?= $fundamentals['price_to_book'] ? number_format($fundamentals['price_to_book'], 2) : '—' ?></strong></div>
-        <div><span class="text-muted">Price/Sales</span><br><strong><?= $fundamentals['price_to_sales'] ? number_format($fundamentals['price_to_sales'], 2) : '—' ?></strong></div>
-        <div><span class="text-muted">Book Value</span><br><strong><?= $fundamentals['book_value'] ? '$' . number_format($fundamentals['book_value'], 2) : '—' ?></strong></div>
+        <div><span class="text-muted">Forward EPS</span><br><strong><?= !empty($fundamentals['forward_eps']) ? '$' . number_format($fundamentals['forward_eps'], 2) : '—' ?></strong></div>
+        <div><span class="text-muted">PEG Ratio</span><br><strong><?= !empty($fundamentals['peg_ratio']) ? number_format($fundamentals['peg_ratio'], 2) : '—' ?></strong></div>
+        <div><span class="text-muted">Price/Book</span><br><strong><?= !empty($fundamentals['price_to_book']) ? number_format($fundamentals['price_to_book'], 2) : '—' ?></strong></div>
+        <div><span class="text-muted">Price/Sales</span><br><strong><?= !empty($fundamentals['price_to_sales']) ? number_format($fundamentals['price_to_sales'], 2) : '—' ?></strong></div>
+        <div><span class="text-muted">Book Value</span><br><strong><?= !empty($fundamentals['book_value']) ? '$' . number_format($fundamentals['book_value'], 2) : '—' ?></strong></div>
         <div><span class="text-muted">Free Cash Flow</span><br><strong><?= fmt_large_num($fundamentals['free_cash_flow'] ?? null) ?></strong></div>
         <div><span class="text-muted">Operating CF</span><br><strong><?= fmt_large_num($fundamentals['operating_cash_flow'] ?? null) ?></strong></div>
         <div><span class="text-muted">Revenue</span><br><strong><?= fmt_large_num($fundamentals['total_revenue'] ?? null) ?></strong></div>
-        <div><span class="text-muted">Revenue Growth</span><br><strong style="color:<?= ($fundamentals['revenue_growth'] ?? 0) > 0 ? 'var(--green)' : 'var(--red)' ?>"><?= $fundamentals['revenue_growth'] ? number_format($fundamentals['revenue_growth'] * 100, 1) . '%' : '—' ?></strong></div>
-        <div><span class="text-muted">Gross Margin</span><br><strong><?= $fundamentals['gross_margin'] ? number_format($fundamentals['gross_margin'] * 100, 1) . '%' : '—' ?></strong></div>
-        <div><span class="text-muted">Operating Margin</span><br><strong><?= $fundamentals['operating_margin'] ? number_format($fundamentals['operating_margin'] * 100, 1) . '%' : '—' ?></strong></div>
-        <div><span class="text-muted">ROA</span><br><strong><?= $fundamentals['roa'] ? number_format($fundamentals['roa'] * 100, 1) . '%' : '—' ?></strong></div>
+        <div><span class="text-muted">Revenue Growth</span><br><strong style="color:<?= ($fundamentals['revenue_growth'] ?? 0) > 0 ? 'var(--green)' : 'var(--red)' ?>"><?= !empty($fundamentals['revenue_growth']) ? number_format($fundamentals['revenue_growth'] * 100, 1) . '%' : '—' ?></strong></div>
+        <div><span class="text-muted">Gross Margin</span><br><strong><?= !empty($fundamentals['gross_margin']) ? number_format($fundamentals['gross_margin'] * 100, 1) . '%' : '—' ?></strong></div>
+        <div><span class="text-muted">Operating Margin</span><br><strong><?= !empty($fundamentals['operating_margin']) ? number_format($fundamentals['operating_margin'] * 100, 1) . '%' : '—' ?></strong></div>
+        <div><span class="text-muted">ROA</span><br><strong><?= !empty($fundamentals['roa']) ? number_format($fundamentals['roa'] * 100, 1) . '%' : '—' ?></strong></div>
     </div>
 </div>
 

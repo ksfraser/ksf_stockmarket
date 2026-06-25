@@ -26,22 +26,22 @@ $portfolioSummary = $data['portfolio_summary'] ?? null;
     </div>
     <div class="stats-grid">
         <div class="stat-card">
-            <div class="stat-value">$<?php echo number_format($portfolioSummary['market_value'], 0); ?></div>
+            <div class="stat-value">$<?php echo number_format($portfolioSummary['market_value'] ?? 0, 0); ?></div>
             <div class="stat-label">Current Value</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value">$<?php echo number_format($portfolioSummary['cost_basis'], 0); ?></div>
+            <div class="stat-value">$<?php echo number_format($portfolioSummary['cost_basis'] ?? 0, 0); ?></div>
             <div class="stat-label">Cost Basis</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value <?php echo ($portfolioSummary['pnl'] >= 0) ? 'pnl-positive' : 'pnl-negative'; ?>">
-                <?php echo ($portfolioSummary['pnl'] >= 0) ? '+' : ''; ?>$<?php echo number_format($portfolioSummary['pnl'], 0); ?>
-                <span style="font-size:0.7em;">(<?php echo ($portfolioSummary['pnl_pct'] >= 0) ? '+' : ''; ?><?php echo number_format($portfolioSummary['pnl_pct'], 1); ?>%)</span>
+            <div class="stat-value <?php echo (($portfolioSummary['pnl'] ?? 0) >= 0) ? 'pnl-positive' : 'pnl-negative'; ?>">
+                <?php echo (($portfolioSummary['pnl'] ?? 0) >= 0) ? '+' : ''; ?>$<?php echo number_format($portfolioSummary['pnl'] ?? 0, 0); ?>
+                <span style="font-size:0.7em;">(<?php echo (($portfolioSummary['pnl_pct'] ?? 0) >= 0) ? '+' : ''; ?><?php echo number_format($portfolioSummary['pnl_pct'] ?? 0, 1); ?>%)</span>
             </div>
             <div class="stat-label">Unrealized P&amp;L</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value"><?php echo $portfolioSummary['num_holdings']; ?></div>
+            <div class="stat-value"><?php echo $portfolioSummary['num_holdings'] ?? 0; ?></div>
             <div class="stat-label">Holdings</div>
         </div>
         <div class="stat-card">

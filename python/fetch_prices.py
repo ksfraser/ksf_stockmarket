@@ -12,8 +12,19 @@ Usage:
 import pymysql, yfinance as yf, pandas as pd
 import sys, os, time, argparse
 from datetime import date, timedelta
+from pathlib import Path
 from config_loader import Config
-from python.src.events.publisher import EventPublisher
+
+# Ensure python/ and repo root are importable from any cwd
+_script_dir = Path(__file__).resolve().parent
+if str(_script_dir) not in sys.path:
+    sys.path.insert(0, str(_script_dir))
+_repo_root = _script_dir.parent
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+
+# Try relative first (CWD = python/), fallback to package-style import
+from src.events.publisher import EventPublisher
 
 # Credentials loaded from Ansible Vault via config_loader, fallback to .env
 _cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config.yaml')
@@ -45,7 +56,10 @@ if _cfg is not None:
         password=_cfg.db_password,
         database=_cfg.data.db_name,
         charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
+        cursorclass=pymysql.cursors.DictCursor,
+        connect_timeout=20,
+        read_timeout=120,
+        write_timeout=120,
     )
 else:
     _env = _load_env_db() or {}
@@ -55,8 +69,34 @@ else:
         password=_env.get('DB_PASS', ''),
         database=_env.get('DB_NAME', ''),
         charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor
+        cursorclass=pymysql.cursors.DictCursor,
+        connect_timeout=20,
+        read_timeout=120,
+        write_timeout=120,
     )
+
+
+def _retry(fn, label="operation", attempts=4):
+    """Reconnect on transient MySQL connection errors, then retry."""
+    delay = 1
+    last = RuntimeError(f"_retry() failed after {attempts} attempts for {label}")
+    for i in range(1, attempts + 1):
+        try:
+            return fn()
+        except Exception as e:
+            last = e
+            name = type(e).__name__
+            if name in ("OperationalError", "InterfaceError"):
+                print(f"  WARN {label} attempt {i}/{attempts} failed ({name}), reconnecting in {delay}s...")
+                try:
+                    conn.ping(reconnect=True)
+                except Exception:
+                    pass
+                time.sleep(delay)
+                delay = min(delay * 2, 30)
+            else:
+                raise
+    raise last
 
 
 def get_existing_symbols(c):
@@ -76,7 +116,7 @@ def fetch_symbol(sym, start='2014-01-01', end=None):
         end = (date.today() + timedelta(days=1)).isoformat()
     try:
         hist = yf.Ticker(sym).history(start=start, end=end, auto_adjust=False)
-        if hist.empty or len(hist) < 50:
+        if hist is None or hist.empty:
             return None
         return hist
     except Exception as e:
@@ -131,10 +171,14 @@ def main():
         pending = custom_symbols
         print(f"Force-fetching specified symbols: {len(pending)}")
     else:
-        existing = get_existing_symbols(c)
+        existing = _retry(lambda: get_existing_symbols(c), label="existing symbols")
         print(f"Already have price data for: {len(existing)} symbols")
 
-        pending = get_pending_symbols(c, existing)
+        if args.full_history or (args.days and args.days > 0):
+            c.execute("SELECT symbol FROM symbol_master WHERE is_active = 1 ORDER BY symbol")
+            pending = [r['symbol'] for r in c.fetchall()]
+        else:
+            pending = get_pending_symbols(c, existing)
         if args.start_from:
             pending = [s for s in pending if s >= args.start_from]
         if args.max:
@@ -163,7 +207,7 @@ def main():
             time.sleep(1)
             continue
 
-        n = insert_prices(c, sym, hist)
+        n = _retry(lambda: insert_prices(c, sym, hist), label=f"insert {sym}")
         conn.commit()
         ok += 1
         total_rows += n
@@ -183,17 +227,30 @@ def main():
             )
         except Exception:
             pass
-        # Batch update symbol_master
-        c.execute("UPDATE symbol_master SET data_start=%s, last_updated=CURRENT_TIMESTAMP WHERE symbol=%s",
-                  (hist.index[0].date().isoformat(), sym))
+        _retry(lambda: c.execute("UPDATE symbol_master SET data_start=%s, last_updated=CURRENT_TIMESTAMP WHERE symbol=%s",
+                  (hist.index[0].date().isoformat(), sym)), label=f"update symbol_master {sym}")
         conn.commit()
 
     print(f"\n✓ Fetched {ok} symbols, {fail} failed, {total_rows:,} total rows")
 
-    c.execute("SELECT COUNT(DISTINCT symbol) as cnt FROM stockprices")
-    print(f"  Total symbols with prices: {c.fetchone()['cnt']}")
+    # Final summary with retry/health-check
+    try:
+        conn.ping(reconnect=True)
+    except Exception:
+        try:
+            conn = pymysql.connect(**MYSQL)
+            c = conn.cursor()
+        except Exception as e:
+            print(f"WARN: could not reconnect for summary query: {e}")
+            return
 
-    conn.close()
+    try:
+        c.execute("SELECT COUNT(DISTINCT symbol) as cnt FROM stockprices")
+        print(f"  Total symbols with prices: {c.fetchone()['cnt']}")
+    except Exception as e:
+        print(f"WARN: summary count failed after reconnect: {e}")
+    finally:
+        conn.close()
 
 
 if __name__ == '__main__':

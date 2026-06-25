@@ -164,24 +164,70 @@ class AdminSettingsController {
      * GET /?action=refresh_all_prices — Admin-triggered full price sync.
      */
     public function refreshAllPrices(): void {
-        $script = __DIR__ . '/../../../../python/fetch_prices.py';
+        $script = __DIR__ . '/../../../python/fetch_prices.py';
         if (!file_exists($script)) {
             $_SESSION['flash_error'] = 'Price fetcher not found.';
             header('Location: ?action=admin_settings');
             exit;
         }
 
+        $fullHistory = isset($_GET['full_history']) && $_GET['full_history'] == '1';
+
         $cmd = [
             PHP_BINARY,
             $script,
         ];
 
+        if ($fullHistory) {
+            $cmd[] = '--full-history';
+        } else {
+            $cmd[] = '--days';
+            $cmd[] = '1';
+        }
+
+        $workerUrl = rtrim((string) ($_ENV['PYTHON_WORKER_URL'] ?? ''), '/');
+        if ($workerUrl !== '') {
+            try {
+                $ch = curl_init();
+                curl_setopt_array($ch, [
+                    CURLOPT_URL => $workerUrl . '/worker/refresh_prices',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_POST => true,
+                    CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+                    CURLOPT_TIMEOUT => 30,
+                ]);
+                $workerPayload = ['full_history' => $fullHistory ? 1 : 0];
+                if (!$fullHistory) {
+                    $workerPayload['days'] = 1;
+                }
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($workerPayload));
+                $raw = curl_exec($ch);
+                $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $err = curl_error($ch);
+                curl_close($ch);
+                if ($err || $code < 200 || $code >= 300) {
+                    throw new RuntimeException('Python worker request failed: ' . ($err ?: ('HTTP ' . $code)));
+                }
+                $_SESSION['flash_message'] = $fullHistory ? 'Full history refresh queued via worker. This may take a while.' : 'Recent price refresh queued via worker.';
+            } catch (Exception $ce) {
+                $_SESSION['flash_error'] = 'Worker refresh failed, falling back to local run: ' . $ce->getMessage();
+                $this->_runLocal($cmd, dirname($script), $fullHistory);
+            }
+        } else {
+            $this->_runLocal($cmd, dirname($script), $fullHistory);
+        }
+
+        header('Location: ' . ($_GET['redirect'] ?? '?action=admin_settings'));
+        exit;
+    }
+
+    private function _runLocal(array $cmd, string $cwd, bool $fullHistory): void {
         try {
             $proc = proc_open(
                 $cmd,
                 [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']],
                 $pipes,
-                dirname($script),
+                $cwd,
                 null,
                 ['bypass_shell' => true]
             );
@@ -195,7 +241,7 @@ class AdminSettingsController {
                 fclose($pipes[2]);
                 $rc = proc_close($proc);
                 if ($rc === 0) {
-                    $_SESSION['flash_message'] = 'Full price refresh queued. This may take a while.';
+                    $_SESSION['flash_message'] = $fullHistory ? 'Full history refresh queued. This may take a while.' : 'Recent price refresh queued.';
                 } else {
                     throw new RuntimeException('Price refresh failed: ' . substr($stderr ?: $stdout, 0, 300));
                 }
@@ -203,34 +249,7 @@ class AdminSettingsController {
                 $_SESSION['flash_error'] = 'Could not start price refresh process.';
             }
         } catch (Exception $e) {
-            $workerUrl = rtrim((string) ($_ENV['PYTHON_WORKER_URL'] ?? ''), '/');
-            if ($workerUrl === '') {
-                $_SESSION['flash_error'] = 'Full price refresh failed: ' . $e->getMessage();
-            } else {
-                try {
-                    $ch = curl_init();
-                    curl_setopt_array($ch, [
-                        CURLOPT_URL => $workerUrl . '/worker/refresh_prices',
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_POST => true,
-                        CURLOPT_POSTFIELDS => json_encode(['full_history' => 1]),
-                        CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-                        CURLOPT_TIMEOUT => 30,
-                    ]);
-                    $raw = curl_exec($ch);
-                    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-                    $err = curl_error($ch);
-                    curl_close($ch);
-                    if ($err || $code < 200 || $code >= 300) {
-                        throw new RuntimeException('Python worker request failed: ' . ($err ?: ('HTTP ' . $code)));
-                    }
-                } catch (Exception $ce) {
-                    $_SESSION['flash_error'] = 'Full price refresh failed: ' . $ce->getMessage();
-                }
-            }
+            $_SESSION['flash_error'] = 'Full price refresh failed: ' . $e->getMessage();
         }
-
-        header('Location: ?action=admin_settings');
-        exit;
     }
 }

@@ -28,6 +28,15 @@ $total_all      = $data['total_all']      ?? 0;
         <button type="submit" class="btn btn-sm">Filter</button>
     </form>
 
+    <form method="GET" action="?action=refresh_all_prices" style="margin-bottom:12px; display:inline-flex; align-items:center; gap:8px;">
+        <input type="hidden" name="redirect" value="?action=admin_symbols">
+        <label style="font-size:0.85em; display:flex; align-items:center; gap:4px; cursor:pointer;">
+            <input type="checkbox" name="full_history" value="1" onchange="var btn=this.form.querySelector('button'); btn.textContent=this.checked?'Refresh All History':'Refresh Recent Gap'">
+            All History
+        </label>
+        <button type="submit" class="btn btn-sm" style="background:var(--orange);">Refresh Recent Gap</button>
+    </form>
+
     <!-- Inline deactivate reason form (shown via JS) -->
     <div id="deactivate-form" style="display:none; margin-bottom:16px; padding:16px; background:rgba(0,0,0,0.2); border-radius:8px;">
         <form method="POST" action="?action=admin_symbols&subaction=deactivate">
@@ -50,7 +59,7 @@ $total_all      = $data['total_all']      ?? 0;
                 <th>Exchange</th>
                 <th>Sector</th>
                 <th>Status</th>
-                <th>Deactivated</th>
+                <th>Deactivation Date</th>
                 <th>Reason</th>
                 <th>Actions</th>
             </tr>
@@ -59,9 +68,9 @@ $total_all      = $data['total_all']      ?? 0;
         <?php foreach ($symbols as $s): ?>
             <tr>
                 <td><strong><?= htmlspecialchars($s['symbol']) ?></strong></td>
-                <td><?= htmlspecialchars($s['name'] ?? '—') ?></td>
-                <td><?= htmlspecialchars($s['exchange'] ?? '<span class="text-muted">—</span>') ?></td>
-                <td><?= htmlspecialchars($s['sector'] ?? '—') ?></td>
+                <td><?= $s['name'] ? htmlspecialchars($s['name']) : '<span class="text-muted">—</span>' ?></td>
+                <td><?= $s['exchange'] ? htmlspecialchars($s['exchange']) : '<span class="text-muted">—</span>' ?></td>
+                <td><?= $s['sector'] ? htmlspecialchars($s['sector']) : '<span class="text-muted">—</span>' ?></td>
                 <td>
                     <?php if ((int)$s['is_active'] === 1): ?>
                         <span style="color:var(--green)">&#x2713; Active</span>
@@ -113,10 +122,10 @@ $mappings = $exchangeCtrl->listExchangeMappings();
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($appings as $m): ?>
+        <?php foreach ($mappings as $m): ?>
             <tr>
                 <td><strong><?= htmlspecialchars($m['symbol']) ?></strong></td>
-                <td><?= htmlspecialchars($m['exchange']) ?></td>
+                <td><?= $m['exchange'] ? htmlspecialchars($m['exchange']) : '<span class="text-muted">—</span>' ?></td>
                 <td><?= htmlspecialchars($m['data_source']) ?></td>
                 <td><?= htmlspecialchars($m['yahoo_ticker'] ?? $m['symbol']) ?></td>
                 <td><?= htmlspecialchars($m['notes'] ?? '—') ?></td>

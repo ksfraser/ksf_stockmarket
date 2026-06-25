@@ -13,6 +13,20 @@ $sortDir = $_GET['dir'] ?? 'ASC';
 <div class="card">
     <div class="card-header">All Symbols (<?= count($symbols) ?>)</div>
 
+    <?php if (($data['current_user']['role'] ?? '') === 'admin'): ?>
+    <div style="margin-bottom:12px; display:flex; align-items:center; gap:12px; padding:8px 12px; background:rgba(0,0,0,0.15); border-radius:6px;">
+        <form method="GET" action="?action=refresh_all_prices" style="display:flex; align-items:center; gap:8px;">
+            <input type="hidden" name="redirect" value="?action=list">
+            <label style="font-size:0.85em; display:flex; align-items:center; gap:4px; cursor:pointer;">
+                <input type="checkbox" name="full_history" value="1" onchange="var btn=this.form.querySelector('button'); btn.textContent=this.checked?'Refresh All History':'Refresh Recent Gap'">
+                All History
+            </label>
+            <button type="submit" class="btn btn-sm" style="background:var(--orange);">Refresh Recent Gap</button>
+        </form>
+        <span style="font-size:0.75em; color:var(--text3);">Admin only</span>
+    </div>
+    <?php endif; ?>
+
     <div class="search-bar">
         <input type="text" name="search" value="<?= htmlspecialchars($search) ?>"
                placeholder="Search symbol or name..." id="searchInput"

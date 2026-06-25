@@ -232,7 +232,7 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
             <tr>
                 <td><?php echo htmlspecialchars($t['trade_date'] ?? ''); ?></td>
                 <td class="<?php echo $rowClass; ?>"><?php echo htmlspecialchars($t['type'] ?? ''); ?></td>
-                <td><a href="?action=detail&symbol=<?php echo $t['symbol']; ?>"><?php echo htmlspecialchars($t['symbol']); ?></a></td>
+                <td><a href="?action=detail&symbol=<?php echo htmlspecialchars($t['symbol'] ?? ''); ?>"><?php echo htmlspecialchars($t['symbol'] ?? ''); ?></a></td>
                 <td class="c"><?php echo htmlspecialchars($t['account_type'] ?? ''); ?></td>
                 <td class="r"><?php echo number_format($t['quantity'] ?? 0, 4); ?></td>
                 <td class="r">$<?php echo number_format($t['price'] ?? 0, 4); ?></td>

@@ -31,18 +31,18 @@ class SharedWithMeController {
             FROM users u
             LEFT JOIN portfolio_visibilities pv ON pv.user_id = u.id
             WHERE u.is_active = 1
-              AND u.id != :me
+              AND u.id != ?
               AND (
                 pv.is_public = 1
                 OR EXISTS (
                     SELECT 1 FROM portfolio_share_users psu
-                    WHERE psu.user_id = u.id AND psu.shared_with_user_id = :me
+                    WHERE psu.user_id = u.id AND psu.shared_with_user_id = ?
                 )
               )
             ORDER BY (u.role = 'advisor') DESC, u.username ASC
         ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':me' => $currentUserId]);
+        $stmt->execute([$currentUserId, $currentUserId]);
         $rows = $stmt->fetchAll();
 
         foreach ($rows as &$r) {

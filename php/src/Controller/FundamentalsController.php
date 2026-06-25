@@ -49,7 +49,7 @@ class FundamentalsController {
         $components = [];
 
         // Payout ratio
-        if ($f['payout_ratio'] !== null) {
+        if (($f['payout_ratio'] ?? null) !== null) {
             $pr = (float)$f['payout_ratio'];
             if ($pr > 1.0) { $score -= 40; $components[] = ['Payout Ratio', 'CRITICAL', sprintf('%.0f%% — exceeds earnings', $pr * 100)]; }
             elseif ($pr > 0.8) { $score -= 20; $components[] = ['Payout Ratio', 'WARNING', sprintf('%.0f%% — limited cushion', $pr * 100)]; }
@@ -58,7 +58,7 @@ class FundamentalsController {
         }
 
         // FCF coverage
-        if ($f['dividend_fcf_coverage'] !== null) {
+        if (($f['dividend_fcf_coverage'] ?? null) !== null) {
             $cov = (float)$f['dividend_fcf_coverage'];
             if ($cov < 0.5) { $score -= 35; $components[] = ['FCF Coverage', 'CRITICAL', sprintf('%.1f× — not covering dividends', $cov)]; }
             elseif ($cov < 0.8) { $score -= 20; $components[] = ['FCF Coverage', 'WARNING', sprintf('%.1f×', $cov)]; }
@@ -67,7 +67,7 @@ class FundamentalsController {
         }
 
         // Debt/Equity
-        if ($f['debt_to_equity'] !== null) {
+        if (($f['debt_to_equity'] ?? null) !== null) {
             $de = (float)$f['debt_to_equity'];
             if ($de > 2.0) { $score -= 20; $components[] = ['Debt/Equity', 'CRITICAL', sprintf('%.1f× — highly leveraged', $de)]; }
             elseif ($de > 1.5) { $score -= 10; $components[] = ['Debt/Equity', 'WARNING', sprintf('%.1f×', $de)]; }

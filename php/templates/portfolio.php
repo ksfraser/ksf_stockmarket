@@ -152,7 +152,7 @@ $SAFETY_TOOLTIP = "Dividend Safety Score (0-100): Based on payout ratio, " .
                     <?php if ($safety !== null): ?>
                         <span title="<?= htmlspecialchars($SAFETY_TOOLTIP) ?>"
                               style="cursor:help; color:<?= $safety >= 80 ? 'var(--green)' : ($safety >= 60 ? 'var(--yellow)' : 'var(--red)') ?>">
-                            <?= $safety ?> <span style="font-size:0.8em; color:var(--text3)">(<?= $safety_rating ?>)</span>
+                            <?= $safety ?> <span style="font-size:0.8em; color:var(--text3)">(<?= $safetyRating ?>)</span>
                             <span style="font-size:0.7em; color:var(--text3)">&#x24D8;</span>
                         </span>
                     <?php else: ?>—<?php endif; ?>

@@ -162,7 +162,7 @@ window.currentPrice = <?= (float)$close ?>;
         <div class="stat-label">Market Cap</div>
     </div>
     <div class="stat-card">
-        <div class="stat-value"><?= $fundamentals['trailing_pe'] ? number_format($fundamentals['trailing_pe'], 1) : '—' ?></div>
+        <div class="stat-value"><?= !empty($fundamentals['trailing_pe']) ? number_format($fundamentals['trailing_pe'], 1) : '—' ?></div>
         <div class="stat-label">P/E (TTM)</div>
     </div>
     <div class="stat-card">

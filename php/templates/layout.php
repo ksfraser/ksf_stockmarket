@@ -57,6 +57,7 @@
             <?php if (($data['current_user']['role'] ?? '') === 'admin'): ?>
                 |&nbsp;
                 <a href="?action=admin_symbols" class="<?php echo active_class('admin_symbols', $action); ?>">Admin</a>
+                <a href="?action=manual_ohlcv" class="<?php echo active_class('manual_ohlcv', $action); ?>">OHLCV Import</a>
                 <a href="?action=admin_settings" class="<?php echo active_class('admin_settings', $action); ?>">Settings</a>
             <?php endif; ?>
         <?php else: ?>

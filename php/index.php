@@ -385,6 +385,12 @@ case 'strategy_timing':
         $pageTitle = 'Timing & Technical Strategies';
         $template = 'strategy_timing';
         break;
+    case 'manual_ohlcv':
+        $ctrl = new StockController();
+        $data = array_merge($data, $ctrl->manualOhlcv());
+        $pageTitle = 'Manual OHLCV Import';
+        $template = 'manual_ohlcv';
+        break;
     case 'screener':
         $ctrl = new StockController();
         $data = array_merge($data, $ctrl->screener(

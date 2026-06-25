@@ -863,6 +863,138 @@ class StockController {
     }
 
     /**
+     * GET/POST /?action=manual_ohlcv — Manual OHLCV entry + CSV import.
+     */
+    public function manualOhlcv(): array {
+        $message = '';
+        $error = '';
+        $imported = 0;
+        $skipped = 0;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Single-row form submission
+            if (!empty($_POST['single_symbol'])) {
+                $row = [
+                    'symbol' => strtoupper(trim($_POST['single_symbol'] ?? '')),
+                    'date'   => trim($_POST['single_date'] ?? ''),
+                    'open'   => $_POST['single_open'] !== '' ? (float)$_POST['single_open'] : null,
+                    'high'   => $_POST['single_high'] !== '' ? (float)$_POST['single_high'] : null,
+                    'low'    => $_POST['single_low'] !== '' ? (float)$_POST['single_low'] : null,
+                    'close'  => $_POST['single_close'] !== '' ? (float)$_POST['single_close'] : null,
+                    'volume' => $_POST['single_volume'] !== '' ? (int)$_POST['single_volume'] : null,
+                    'adj_close' => $_POST['single_adj_close'] !== '' ? (float)$_POST['single_adj_close'] : null,
+                    'dividend'  => $_POST['single_dividend'] !== '' ? (float)$_POST['single_dividend'] : 0,
+                    'split_ratio' => $_POST['single_split'] !== '' ? (float)$_POST['single_split'] : 1,
+                ];
+                if (!preg_match('/^[A-Z][A-Z0-9\.\-]*$/', $row['symbol']) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $row['date'])) {
+                    $error = 'Invalid symbol or date (YYYY-MM-DD).';
+                } else {
+                    try {
+                        $stmt = $this->pdo->prepare('INSERT IGNORE INTO stockprices (symbol,price_date,open,high,low,close,volume,adj_close,dividend,split_ratio) VALUES (:s,:d,:o,:h,:l,:c,:v,:a,:div,:split)');
+                        $stmt->execute([
+                            ':s' => $row['symbol'], ':d' => $row['date'],
+                            ':o' => $row['open'], ':h' => $row['high'], ':l' => $row['low'],
+                            ':c' => $row['close'], ':v' => $row['volume'], ':a' => $row['adj_close'] ?? $row['close'],
+                            ':div' => $row['dividend'], ':split' => $row['split_ratio'],
+                        ]);
+                        if ($stmt->rowCount() > 0) {
+                            $imported = 1;
+                            $message = "Inserted 1 row for {$row['symbol']} on {$row['date']}.";
+                        } else {
+                            $skipped = 1;
+                            $error = "Duplicate: {$row['symbol']} on {$row['date']} already exists.";
+                        }
+                    } catch (Exception $e) {
+                        $error = 'DB error: ' . $e->getMessage();
+                    }
+                }
+            }
+
+            // CSV upload
+            if (!empty($_FILES['csv_file']['tmp_name'])) {
+                $handle = fopen($_FILES['csv_file']['tmp_name'], 'r');
+                if ($handle) {
+                    $headers = fgetcsv($handle);
+                    $map = $this->mapCsvHeaders($headers);
+                    if (!$map['symbol'] || !$map['date']) {
+                        $error .= ($error ? ' | ' : '') . 'CSV must contain a symbol and date column.';
+                    } else {
+                        $batch = [];
+                        while (($row = fgetcsv($handle)) !== false) {
+                            if (count($row) < count($headers)) continue;
+                            $data = [];
+                            foreach ($headers as $idx => $h) {
+                                $field = $map[$h] ?? null;
+                                if ($field) $data[$field] = $row[$idx];
+                            }
+                            if (empty($data['symbol']) || empty($data['date'])) continue;
+                            $data['symbol'] = strtoupper($data['symbol']);
+                            $data['open']   = isset($data['open']) && $data['open'] !== '' ? (float)$data['open'] : null;
+                            $data['high']   = isset($data['high']) && $data['high'] !== '' ? (float)$data['high'] : null;
+                            $data['low']    = isset($data['low']) && $data['low'] !== '' ? (float)$data['low'] : null;
+                            $data['close']  = isset($data['close']) && $data['close'] !== '' ? (float)$data['close'] : null;
+                            $data['volume'] = isset($data['volume']) && $data['volume'] !== '' ? (int)$data['volume'] : null;
+                            $data['adj_close'] = isset($data['adj_close']) && $data['adj_close'] !== '' ? (float)$data['adj_close'] : ($data['close'] ?? null);
+                            $data['dividend']  = isset($data['dividend']) && $data['dividend'] !== '' ? (float)$data['dividend'] : 0;
+                            $data['split_ratio'] = isset($data['split_ratio']) && $data['split_ratio'] !== '' ? (float)$data['split_ratio'] : 1;
+                            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['date'])) continue;
+                            $batch[] = $data;
+                        }
+                        fclose($handle);
+                        if ($batch) {
+                            try {
+                                $this->pdo->beginTransaction();
+                                $stmt = $this->pdo->prepare('INSERT IGNORE INTO stockprices (symbol,price_date,open,high,low,close,volume,adj_close,dividend,split_ratio) VALUES (:s,:d,:o,:h,:l,:c,:v,:a,:div,:split)');
+                                foreach ($batch as $r) {
+                                    $stmt->execute([
+                                        ':s' => $r['symbol'], ':d' => $r['date'],
+                                        ':o' => $r['open'], ':h' => $r['high'], ':l' => $r['low'],
+                                        ':c' => $r['close'], ':v' => $r['volume'], ':a' => $r['adj_close'],
+                                        ':div' => $r['dividend'], ':split' => $r['split_ratio'],
+                                    ]);
+                                    if ($stmt->rowCount() > 0) $imported++;
+                                    else $skipped++;
+                                }
+                                $this->pdo->commit();
+                                $message .= ($message ? ' | ' : '') . "CSV imported: {$imported} rows inserted, {$skipped} duplicates skipped.";
+                            } catch (Exception $e) {
+                                $this->pdo->rollBack();
+                                $error .= ($error ? ' | ' : '') . 'Import failed: ' . $e->getMessage();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return [
+            'message' => $message,
+            'error' => $error,
+            'imported' => $imported,
+            'skipped' => $skipped,
+        ];
+    }
+
+    private function mapCsvHeaders(array $headers): array {
+        $map = [];
+        foreach ($headers as $h) {
+            $h = strtolower(trim($h));
+            if (!$h) continue;
+            if (str_starts_with($h, 'adj') || $h === 'adjusted close' || $h === 'adj_close' || $h === 'adjclose') $map[$h] = 'adj_close';
+            elseif (str_contains($h, 'split')) $map[$h] = 'split_ratio';
+            elseif (str_contains($h, 'dividend') || $h === 'div') $map[$h] = 'dividend';
+            elseif (str_contains($h, 'volume') || $h === 'vol') $map[$h] = 'volume';
+            elseif (str_contains($h, 'open')) $map[$h] = 'open';
+            elseif (str_contains($h, 'high')) $map[$h] = 'high';
+            elseif (str_contains($h, 'low')) $map[$h] = 'low';
+            elseif (str_contains($h, 'close') || $h === 'last') $map[$h] = 'close';
+            elseif (str_contains($h, 'symbol') || str_contains($h, 'ticker') || $h === 'sym') $map[$h] = 'symbol';
+            elseif (str_contains($h, 'date') || str_contains($h, 'time') || str_contains($h, 'day') || $h === 'datetime') $map[$h] = 'date';
+        }
+        return $map;
+    }
+
+    /**
      * GET /?action=screener — Display TradingView screener results.
      */
     public function screener(string $preset = 'dividend_stocks', ?string $sort = null, ?string $sector = null): array {

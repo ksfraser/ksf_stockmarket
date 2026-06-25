@@ -152,7 +152,14 @@ def save_news_to_db(news_items, category="stocks", conn=None):
 
 
 def main():
-    """Run news fetch and save for all categories."""
+    """Run news fetch and save."""
+    import argparse
+    parser = argparse.ArgumentParser(description='Financial News Monitor')
+    parser.add_argument('--symbol', help='Filter news for a specific symbol')
+    parser.add_argument('--category', default='stocks', choices=['stocks', 'crypto', 'all'])
+    parser.add_argument('--limit', type=int, default=20)
+    args = parser.parse_args()
+
     mysql_pass = os.environ.get('DB_PASSWORD', 'Zaqwsx9sm1@')
     conn = pymysql.connect(
         host='ksfraser.ca',
@@ -170,9 +177,13 @@ def main():
             cur.execute("DELETE FROM news_feeds WHERE run_at < DATE_SUB(NOW(), INTERVAL 7 DAY)")
         
         total_saved = 0
-        for category in ["crypto", "stocks"]:
+        if args.symbol:
+            categories = [args.category]
+        else:
+            categories = ["crypto", "stocks"]
+        for category in categories:
             print(f"\nFetching {category} news...")
-            news = fetch_news(category=category, limit=20)
+            news = fetch_news(symbol=args.symbol, category=category, limit=args.limit)
             if news:
                 saved = save_news_to_db(news, category, conn)
                 total_saved += saved

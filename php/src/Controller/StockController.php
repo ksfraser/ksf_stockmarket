@@ -193,7 +193,7 @@ class StockController {
 
         // Options snapshot
         $opts = $this->getTableData('options_snapshot', $symbol, 'fetch_date DESC', 1);
-        $optionsData = $opts[0] ?: [];
+        $optionsData = $opts[0] ?? [];
 
         // Buffett quality score (pass close price since it's in stockprices, not indicators)
         $closePrice = $latest['close'] ?? 0;
@@ -780,7 +780,7 @@ class StockController {
             exit;
         }
 
-        $script = __DIR__ . '/../../../../python/fetch_prices.py';
+        $script = __DIR__ . '/../../../python/fetch_prices.py';
         if (!file_exists($script)) {
             $_SESSION['flash_error'] = 'Price fetcher not found.';
             header('Location: ?action=detail&symbol=' . urlencode($symbol));
@@ -865,7 +865,7 @@ class StockController {
     /**
      * GET /?action=screener — Display TradingView screener results.
      */
-    public function screener(string $preset = 'dividend_stocks'): array {
+    public function screener(string $preset = 'dividend_stocks', ?string $sort = null, ?string $sector = null): array {
         // Available presets with markets
         $presets = [
             'dividend_stocks' => ['label' => 'Dividend Stocks (Yield >3%)', 'market' => 'america'],
@@ -895,12 +895,71 @@ class StockController {
         foreach ($results as &$r) {
             $r['metrics'] = json_decode($r['data'], true) ?: [];
         }
+
+        // Override name from symbol_master when available
+        $symbols = [];
+        foreach ($results as $r) {
+            $symbols[] = $r['symbol'];
+        }
+        if ($symbols) {
+            $in = implode(',', array_fill(0, count($symbols), '?'));
+            $stmt2 = $this->pdo->prepare("SELECT symbol, name FROM symbol_master WHERE symbol IN ($in)");
+            $stmt2->execute($symbols);
+            $names = [];
+            while ($row = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                $names[$row['symbol']] = $row['name'];
+            }
+            foreach ($results as &$r) {
+                $sym = $r['symbol'];
+                if (!empty($names[$sym])) {
+                    $r['metrics']['name'] = $names[$sym];
+                }
+            }
+            unset($r);
+        }
+        
+        // Client-side sector filter
+        if ($sector !== null && $sector !== '') {
+            $results = array_values(array_filter($results, function($r) use ($sector) {
+                $m = $r['metrics'] ?? [];
+                return ($m['sector'] ?? '') === $sector;
+            }));
+        }
+        
+        // Client-side sort
+        $allowedSort = [
+            'symbol' => fn($a,$b)=>strcmp($a['symbol'],$b['symbol']),
+            'name' => fn($a,$b)=>strcmp($a['metrics']['name']??'',$b['metrics']['name']??''),
+            'close' => fn($a,$b)=>($a['metrics']['close']??0)<=>($b['metrics']['close']??0),
+            'change' => fn($a,$b)=>($a['metrics']['change']??0)<=>($b['metrics']['change']??0),
+            'Perf.Y' => fn($a,$b)=>($a['metrics']['Perf.Y']??0)<=>($b['metrics']['Perf.Y']??0),
+            'dividends_yield_current' => fn($a,$b)=>($a['metrics']['dividends_yield_current']??0)<=>($b['metrics']['dividends_yield_current']??0),
+            'price_earnings_ttm' => fn($a,$b)=>($a['metrics']['price_earnings_ttm']??0)<=>($b['metrics']['price_earnings_ttm']??0),
+            'sector' => fn($a,$b)=>strcmp($a['metrics']['sector']??'',$b['metrics']['sector']??''),
+        ];
+        
+        if ($sort !== null && isset($allowedSort[$sort])) {
+            usort($results, $allowedSort[$sort]);
+        }
+        
+        // Build unique sector list for filter dropdown
+        $sectors = [];
+        foreach ($results as $r) {
+            $sec = $r['metrics']['sector'] ?? '';
+            if ($sec !== '' && !in_array($sec, $sectors, true)) {
+                $sectors[] = $sec;
+            }
+        }
+        sort($sectors);
         
         return [
             'preset_name' => $preset,
             'preset_label' => $presets[$preset]['label'],
             'presets' => $presets,
             'screener_results' => $results,
+            'sectors' => $sectors,
+            'current_sector' => $sector ?? '',
+            'current_sort' => $sort ?? '',
         ];
     }
 }

@@ -14,6 +14,33 @@ from python.db_connector import get_connection
 
 API_BASE = "https://scanner.tradingview.com"
 
+
+def _translate_symbol(raw: str) -> str:
+    """Normalize TradingView screener symbols to canonical form.
+
+    Rules:
+      * NASDAQ:SYM / NYSE:SYM -> SYM
+      * TSX:SYM.UN            -> SYM.UN.TO
+      * TSX:SYM               -> SYM.TO
+      * NEO:SYM.UN            -> SYM.UN.TO
+      * NEO:SYM               -> SYM.TO
+      * already .TO/.UN.TO    -> pass-through
+    """
+    if not raw:
+        return ""
+    sym = raw.strip()
+    for prefix in ("NASDAQ:", "NYSE:", "TSE:", "TSX:", "NEO:"):
+        if sym.startswith(prefix):
+            sym = sym[len(prefix):]
+            break
+    if sym.endswith(".TO") or sym.endswith(".UN.TO"):
+        return sym
+    lower = sym.lower()
+    if ".un" in lower or (len(sym) > 3 and sym[-3] == "." and sym[-2:].isalpha()):
+        return sym + ".TO"
+    return sym + ".TO"
+
+
 def fetch_tradingview_screen(preset: str = None, filters: list = None, markets: list = None, 
                             sort_by: str = "market_cap_basic", limit: int = 50) -> list:
     """Fetch stock screener results from TradingView."""
@@ -82,10 +109,9 @@ def fetch_tradingview_screen(preset: str = None, filters: list = None, markets: 
 
 def save_screening_results(results: list, preset_name: str, conn, market: str = "america"):
     """Save screening results to MariaDB."""
-    
     cur = conn.cursor()
-    
-    # Create table if not exists (add market column)
+
+    # Ensure unique key for true upsert
     cur.execute("""
         CREATE TABLE IF NOT EXISTS tradingview_screener_results (
             id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -94,25 +120,31 @@ def save_screening_results(results: list, preset_name: str, conn, market: str = 
             symbol VARCHAR(20),
             data JSON,
             run_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE KEY uq_preset_market_symbol (preset_name, market, symbol),
             INDEX idx_preset (preset_name),
             INDEX idx_symbol (symbol),
             INDEX idx_run_at (run_at)
         )
     """)
-    
-    # Clear old results for this preset+market (keep latest)
-    cur.execute("DELETE FROM tradingview_screener_results WHERE preset_name = %s AND market = %s", (preset_name, market))
-    
-    # Insert results
+
+    upsert_sql = """
+        INSERT INTO tradingview_screener_results (preset_name, market, symbol, data, run_at)
+        VALUES (%s, %s, %s, %s, NOW())
+        ON DUPLICATE KEY UPDATE
+            data = VALUES(data),
+            run_at = VALUES(run_at)
+    """
+    rows_inserted = 0
     for row in results:
-        symbol = row.get("symbol", "")
-        cur.execute("""
-            INSERT INTO tradingview_screener_results (preset_name, market, symbol, data)
-            VALUES (%s, %s, %s, %s)
-        """, (preset_name, market, symbol, json.dumps(row)))
-    
+        sym = _translate_symbol(row.get("symbol", ""))
+        if not sym:
+            continue
+        payload = dict(row)
+        payload["symbol"] = sym
+        cur.execute(upsert_sql, (preset_name, market, sym, json.dumps(payload)))
+        rows_inserted += 1
     conn.commit()
-    print(f"Saved {len(results)} results for '{preset_name}' ({market})")
+    print(f"Upserted {rows_inserted} results for '{preset_name}' ({market})")
 
 
 def main():

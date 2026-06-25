@@ -125,7 +125,7 @@ def _persist_trade(
             (sig.symbol, trade_date),
         )
         row = cur.fetchone()
-        price = float(row[0]) if row else 0.0
+        price = float(row['close']) if row else 0.0
         commission = 9.99 if price > 0 else 0.0
         total = price - commission
         notes = f"Advisor {sig.symbol} action={sig.action} weight={sig.weight:.2f} rank={sig.meta.get('rank', '')} confidence={sig.confidence:.2f}"

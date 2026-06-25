@@ -29,6 +29,9 @@ spl_autoload_register(function ($class) {
 // Helpers
 require_once '/var/www/stockmarket-app/src/View/helpers.php';
 
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
 $action = $_GET['action'] ?? 'overview';
 
 // Redirect actions with trailing slash to canonical version
@@ -55,12 +58,32 @@ if ($action === 'api_chart' && isset($_GET['symbol'])) {
 
 if ($action === 'api_screener') {
     $ctrl = new StockController();
-    $d = $ctrl->screener($_GET['preset'] ?? 'dividend_stocks');
+    $d = $ctrl->screener(
+        $_GET['preset'] ?? 'dividend_stocks',
+        $_GET['sort'] ?? null,
+        $_GET['sector'] ?? null
+    );
     $presetLabel = $d['preset_label'] ?? 'Screener';
     $results = $d['screener_results'] ?? [];
+    $sectors = $d['sectors'] ?? [];
+    $currentSector = $d['current_sector'] ?? '';
+    $currentSort = $d['current_sort'] ?? '';
     if (empty($results)) {
         echo '<p class="text-muted">No screener results found. Cron job runs daily at 6:30 AM.</p>';
         exit;
+    }
+    function apiScreenerSortLink(string $field, string $label, string $preset, string $currentSort, ?string $sector = null): string {
+        $url = '?action=screener&preset=' . urlencode($preset) . '&sort=' . urlencode($field);
+        if ($sector !== null && $sector !== '') {
+            $url .= '&sector=' . urlencode($sector);
+        }
+        $arrow = '';
+        if ($currentSort === $field) {
+            $arrow = ' ▲';
+        } elseif ($currentSort === $field . '_desc') {
+            $arrow = ' ▼';
+        }
+        return '<a href="' . htmlspecialchars($url) . '" style="color:var(--text);text-decoration:none;">' . htmlspecialchars($label) . $arrow . '</a>';
     }
     ?>
     <p style="margin-top:12px;font-size:0.85em;color:var(--text3);">
@@ -71,9 +94,16 @@ if ($action === 'api_screener') {
         <table>
             <thead>
                 <tr>
-                    <th>Symbol</th><th>Name</th><th class="r">Price</th><th class="r">Change %</th>
-                    <th class="r">1Y Perf</th><th class="r">Yield %</th><th class="r">P/E</th>
-                    <th class="r">ROE %</th><th class="r">Gross Margin %</th><th>Sector</th>
+                    <th><?php echo apiScreenerSortLink('symbol', 'Symbol', $d['preset_name'] ?? 'dividend_stocks', $currentSort, $currentSector); ?></th>
+                    <th><?php echo apiScreenerSortLink('name', 'Name', $d['preset_name'] ?? 'dividend_stocks', $currentSort, $currentSector); ?></th>
+                    <th class="r"><?php echo apiScreenerSortLink('close', 'Price', $d['preset_name'] ?? 'dividend_stocks', $currentSort, $currentSector); ?></th>
+                    <th class="r"><?php echo apiScreenerSortLink('change', 'Change %', $d['preset_name'] ?? 'dividend_stocks', $currentSort, $currentSector); ?></th>
+                    <th class="r"><?php echo apiScreenerSortLink('Perf.Y', '1Y Perf', $d['preset_name'] ?? 'dividend_stocks', $currentSort, $currentSector); ?></th>
+                    <th class="r"><?php echo apiScreenerSortLink('dividends_yield_current', 'Yield %', $d['preset_name'] ?? 'dividend_stocks', $currentSort, $currentSector); ?></th>
+                    <th class="r"><?php echo apiScreenerSortLink('price_earnings_ttm', 'P/E', $d['preset_name'] ?? 'dividend_stocks', $currentSort, $currentSector); ?></th>
+                    <th class="r"><?php echo apiScreenerSortLink('return_on_equity', 'ROE %', $d['preset_name'] ?? 'dividend_stocks', $currentSort, $currentSector); ?></th>
+                    <th class="r"><?php echo apiScreenerSortLink('gross_margin_ttm', 'Gross Margin %', $d['preset_name'] ?? 'dividend_stocks', $currentSort, $currentSector); ?></th>
+                    <th><?php echo apiScreenerSortLink('sector', 'Sector', $d['preset_name'] ?? 'dividend_stocks', $currentSort, $currentSector); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -87,7 +117,7 @@ if ($action === 'api_screener') {
                         <?php echo number_format($m['change'] ?? 0, 2); ?>
                     </td>
                     <td class="r"><?php echo number_format($m['Perf.Y'] ?? 0, 1); ?>%</td>
-                    <td class="r"><?php echo ($d['preset_name'] ?? '') === 'dividend_stocks' ? number_format($m['dividends_yield_current'] ?? 0, 2) . '%' : '-'; ?></td>
+                    <td class="r"><?php echo $m['dividends_yield_current'] !== null && $m['dividends_yield_current'] !== '' ? number_format((float)$m['dividends_yield_current'], 2) . '%' : '-'; ?></td>
                     <td class="r"><?php echo number_format($m['price_earnings_ttm'] ?? 0, 1); ?></td>
                     <td class="r"><?php echo number_format($m['return_on_equity'] ?? 0, 1); ?>%</td>
                     <td class="r"><?php echo number_format($m['gross_margin_ttm'] ?? 0, 1); ?>%</td>
@@ -352,7 +382,11 @@ case 'strategy_timing':
         break;
     case 'screener':
         $ctrl = new StockController();
-        $data = array_merge($data, $ctrl->screener($_GET['preset'] ?? 'dividend_stocks'));
+        $data = array_merge($data, $ctrl->screener(
+            $_GET['preset'] ?? 'dividend_stocks',
+            $_GET['sort'] ?? null,
+            $_GET['sector'] ?? null
+        ));
         $pageTitle = 'Stock Screener - TradingView';
         $template = 'screener';
         break;

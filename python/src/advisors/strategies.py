@@ -45,7 +45,7 @@ class BuffettQualityStrategy(AdvisorBase):
                 f"""
                 SELECT f.symbol
                 FROM {self._t('fundamentals')} f
-                LEFT JOIN {self._t('stockprices')} p ON p.symbol = f.symbol AND p.price_date = %s
+                LEFT JOIN {self._t('stockprices')} p ON p.symbol = f.symbol AND p.price_date <= %s
                 WHERE f.fetch_date >= %s
                   AND f.roe IS NOT NULL
                   AND f.debt_to_equity IS NOT NULL
@@ -109,8 +109,8 @@ class DividendGrowthStrategy(AdvisorBase):
                 """,
                 (
                     run_date - timedelta(days=cfg["lookback_days"]),
-                    cfg["min_yield"] / 100.0,
-                    cfg["max_yield"] / 100.0,
+                    cfg["min_yield"],
+                    cfg["max_yield"],
                 ),
             )
             return [r["symbol"] for r in cur.fetchall()]

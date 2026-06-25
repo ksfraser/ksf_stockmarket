@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import logging
+import os
+import subprocess
 import sys
 import time
+from pathlib import Path
 from typing import Any
 
 import pymysql
@@ -15,6 +18,9 @@ from events.publisher import EventPublisher
 
 logger = logging.getLogger(__name__)
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+PYTHON_DIR = REPO_ROOT / "python"
+
 
 class LifecycleWorker:
     def __init__(self, mysql_config: dict[str, Any], db) -> None:
@@ -22,6 +28,22 @@ class LifecycleWorker:
         self.db = db
         self.lifecycle_repo = SymbolLifecycleRepository(db)
         self.publisher = EventPublisher(db)
+
+    def _spawn(self, script_name: str, args: list[str]) -> None:
+        script = str(PYTHON_DIR / script_name)
+        cmd = [sys.executable, script, *args]
+        env = os.environ.copy()
+        env["PYTHONPATH"] = str(REPO_ROOT)
+        try:
+            subprocess.Popen(
+                cmd,
+                cwd=str(REPO_ROOT),
+                env=env,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        except Exception:
+            logger.exception("Failed to spawn %s", script_name)
 
     def pump(self, batch: int = 10) -> int:
         events = self._claim(batch)
@@ -126,6 +148,13 @@ class LifecycleWorker:
                 self.lifecycle_repo.set_state(symbol, next_state)
         except Exception:
             logger.exception("Failed state transition for %s after price load", symbol)
+
+        # Trigger downstream analysis for this symbol
+        try:
+            self._spawn("news_monitor.py", ["--symbol", symbol, "--category", "stocks"])
+            self._spawn("fundamental_data.py", ["--mode", "fetch", "--symbol", symbol])
+        except Exception:
+            logger.exception("Failed to trigger downstream jobs for %s", symbol)
         return True
 
     def handle_indicators_calculated(self, payload: dict[str, Any]) -> bool:
@@ -140,6 +169,12 @@ class LifecycleWorker:
                 self.publisher.publish_symbol_state(symbol, next_state, "indicators_calculated")
         except Exception:
             logger.exception("Failed state transition for %s after indicators", symbol)
+
+        # Trigger LLM / Buffett-style qualitative analysis
+        try:
+            self._spawn("llm_analyzer.py", ["--table", "tenets", "--symbol", symbol])
+        except Exception:
+            logger.exception("Failed to trigger LLM analysis for %s", symbol)
         return True
 
     def forward_to_candidate(self, symbol: str, source: str) -> None:

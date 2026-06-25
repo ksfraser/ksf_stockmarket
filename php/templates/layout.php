@@ -13,6 +13,8 @@
 .nav-system a.active, .nav-personal a.active { background:var(--accent); color:#fff; }
 .nav-section { display:inline-block; margin-right:24px; }
 .nav-section-label { font-size:0.7em; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-right:8px; vertical-align:middle; }
+.sort-link { color:var(--text); text-decoration:none; }
+.sort-link:hover { text-decoration:underline; opacity:0.85; }
 </style>
 </head>
 <body>

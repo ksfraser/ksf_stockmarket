@@ -91,7 +91,7 @@ $atrData = json_encode(array_map(function($d) {
 
 <!-- Price Chart -->
 <div class="card">
-    <div class="card-header">Price History (250 days)</div>
+    <div class="card-header" title="Closing price over 250 trading days. Green line = price; blue bars = volume.">Price History (250 days)</div>
     <div class="chart-container chart-lg">
         <canvas id="priceChart" data-chart='<?= $chartData ?>' data-type="price"></canvas>
     </div>
@@ -101,13 +101,13 @@ $atrData = json_encode(array_map(function($d) {
 <?php if (!empty($indHistory)): ?>
 <div class="grid-2">
     <div class="card">
-        <div class="card-header">RSI (14)</div>
+        <div class="card-header" title="Relative Strength Index (14). Measures speed of price changes. Above 70 = overbought; below 30 = oversold.">RSI (14)</div>
         <div class="chart-container">
             <canvas id="rsiChart" data-chart='<?= json_encode(array_values(array_filter($rsiData ? json_decode($rsiData, true) : [], fn($d) => $d['rsi'] !== null))) ?>' data-type="indicator" data-key="rsi" data-color="#eab308" data-min="0" data-max="100"></canvas>
         </div>
     </div>
     <div class="card">
-        <div class="card-header">ATR (14) — Volatility</div>
+        <div class="card-header" title="Average True Range (14-day). Measures dollar volatility; higher ATR = wider expected price swings.">ATR (14) — Volatility</div>
         <div class="chart-container">
             <canvas id="atrChart" data-chart='<?= json_encode(array_values(array_filter($atrData ? json_decode($atrData, true) : [], fn($d) => $d['atr'] !== null))) ?>' data-type="indicator" data-key="atr" data-color="#f97316"></canvas>
         </div>

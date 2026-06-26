@@ -195,7 +195,7 @@ window.currentPrice = <?= (float)$close ?>;
 <!-- ===== PRICE/VOLUME CHART ===== -->
 <div class="card" style="margin-top:12px;">
     <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
-        <span>Price & Volume — 250 Days</span>
+        <span title="Closing price over 250 trading days. Green line = price; blue bars = volume. Overlays: orange = entry price, red dashed = trailing stop, purple = analyst consensus, yellow triangles = individual analyst targets, red dots = news events.">Price & Volume — 250 Days</span>
         <div style="font-size:0.85em; color:var(--text3);">
             <?php if ($entryPrice): ?>🟢 Entry: $<?= number_format($entryPrice, 2) ?> | <?php endif; ?>
             <?php if ($stopPrice): ?>🔴 Stop: $<?= number_format($stopPrice, 2) ?> | <?php endif; ?>
@@ -219,22 +219,22 @@ window.currentPrice = <?= (float)$close ?>;
 
 <!-- ===== OSCILLATOR CHARTS ===== -->
 <div class="card" style="margin-top:12px;">
-    <div class="card-header">Technical Oscillators</div>
+    <div class="card-header" title="Momentum oscillators to identify overbought/oversold conditions and trend strength.">Technical Oscillators</div>
     <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
         <div>
-            <div style="font-size:0.9em; font-weight:600; margin-bottom:4px;">RSI (14)</div>
+            <div style="font-size:0.9em; font-weight:600; margin-bottom:4px;" title="Relative Strength Index (14). Measures speed of price changes. Above 70 = overbought; below 30 = oversold. Purple line.">RSI (14)</div>
             <div class="chart-container" style="height:180px;">
                 <canvas id="rsiChart"></canvas>
             </div>
         </div>
         <div>
-            <div style="font-size:0.9em; font-weight:600; margin-bottom:4px;">MACD (12,26,9)</div>
+            <div style="font-size:0.9em; font-weight:600; margin-bottom:4px;" title="Moving Average Convergence Divergence. Shows relationship between two moving averages. Blue line = MACD; orange line = signal line; green/red bars = histogram (momentum above/below signal).">MACD (12,26,9)</div>
             <div class="chart-container" style="height:180px;">
                 <canvas id="macdChart"></canvas>
             </div>
         </div>
         <div>
-            <div style="font-size:0.9em; font-weight:600; margin-bottom:4px;">Stochastic (14,3,3)</div>
+            <div style="font-size:0.9em; font-weight:600; margin-bottom:4px;" title="Stochastic Oscillator (14,3,3). Measures current price relative to its range over 14 periods. Blue = %K line; orange = %D signal line. Above 80 = overbought; below 20 = oversold.">Stochastic (14,3,3)</div>
             <div class="chart-container" style="height:180px;">
                 <canvas id="stochChart"></canvas>
             </div>
@@ -244,7 +244,7 @@ window.currentPrice = <?= (float)$close ?>;
 
 <!-- ===== VOLATILITY & BOLLINGER BANDS ===== -->
 <div class="card" style="margin-top:12px;">
-    <div class="card-header">Volatility (ATR) & Bollinger Bands</div>
+    <div class="card-header" title="Average True Range measures dollar volatility. Bollinger Bands show price volatility envelope (red = upper band, grey dashed = middle SMA, green = lower band). Prices near bands signal potential overextension.">Volatility (ATR) & Bollinger Bands</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
         <div class="chart-container" style="height:200px;">
             <canvas id="atrChart"></canvas>
@@ -258,7 +258,7 @@ window.currentPrice = <?= (float)$close ?>;
 <!-- ===== MARKOV REGIME ANALYSIS ===== -->
 <?php if (!empty($regime['current_regime'])): ?>
 <div class="card" style="margin-top:12px;">
-    <div class="card-header">Markov Regime Analysis (20-day rolling return)</div>
+    <div class="card-header" title="Classifies current market state as Bull, Bear, or Sideways based on 20-day rolling returns using a Markov model. Green = Bull, Red = Bear, Grey = Sideways.">Markov Regime Analysis (20-day rolling return)</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start;">
         <div>
             <h4>Current Regime: 

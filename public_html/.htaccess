@@ -1,0 +1,16 @@
+# Stockmarket app — public HTML security rules
+
+# Block direct access to hidden files (.env, .git, etc.)
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Block access to sensitive non-PHP files
+<FilesMatch "\.(yaml|yml|sql|env|log|txt|json)$">
+    Require all denied
+</FilesMatch>
+
+# Protect the .htaccess file itself
+<Files ".htaccess">
+    Require all denied
+</Files>

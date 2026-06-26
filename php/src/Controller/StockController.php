@@ -37,7 +37,9 @@ class StockController {
                      FROM stockprices sp
                      LEFT JOIN symbol_master sm ON sp.symbol = sm.symbol
                      {$whereSql}";
-        $totalAll = (int)$this->pdo->query($countSql)->fetchColumn();
+        $stmt = $this->pdo->prepare($countSql);
+        $stmt->execute($params);
+        $totalAll = (int)$stmt->fetchColumn();
 
         $page = max(1, $page);
         $perPage = in_array($perPage, [50, 100, 250, 500, 1000]) ? $perPage : 200;

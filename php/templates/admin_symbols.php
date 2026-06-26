@@ -21,19 +21,7 @@ $preserve = [
     'page'     => $page,
     'per_page' => $perPage,
 ];
-$baseQs = http_build_query($preserve);
 $baseQsNoPage = http_build_query(array_diff_key($preserve, ['page' => $page]));
-
-function pageLink(int $targetPage, string $queryString, int $currentPage): string
-{
-    if ($targetPage < 1) return '#';
-    $qs = preg_replace('/&?page=\d+/', '', $queryString);
-    $qs = trim($qs, '&');
-    $qs = $qs ? $qs . '&page=' . $targetPage : 'page=' . $targetPage;
-    return '?' . $qs;
-}
-
-$perPageOptions = [50, 100, 250, 500, 1000];
 ?>
 <div class="card">
     <div class="card-header">Symbol Management</div>

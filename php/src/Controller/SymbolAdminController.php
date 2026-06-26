@@ -38,7 +38,9 @@ class SymbolAdminController
         $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
         $countSql = "SELECT COUNT(*) FROM symbol_master sm LEFT JOIN exchange_mapping em ON sm.symbol = em.symbol AND em.is_primary = 1 {$whereSql}";
-        $totalAll = (int)$this->pdo->query($countSql)->fetchColumn();
+        $stmt = $this->pdo->prepare($countSql);
+        $stmt->execute($params);
+        $totalAll = (int)$stmt->fetchColumn();
 
         $page = max(1, $page);
         $perPage = in_array($perPage, [50, 100, 250, 500, 1000]) ? $perPage : 500;

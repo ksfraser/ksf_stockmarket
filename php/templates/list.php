@@ -27,16 +27,6 @@ $preserve = [
 ];
 $baseQs = http_build_query(array_diff_key($preserve, ['page' => $page]));
 
-function pageLinkList(int $targetPage, string $queryString, int $currentPage): string
-{
-    if ($targetPage < 1) return '#';
-    $qs = preg_replace('/&?page=\d+/', '', $queryString);
-    $qs = trim($qs, '&');
-    $qs = $qs ? $qs . '&page=' . $targetPage : 'page=' . $targetPage;
-    return '?' . $qs;
-}
-
-$perPageOptions = [50, 100, 250, 500, 1000];
 $sortLink = fn($field) => '?action=list&sort=' . $field . '&dir=' . (($sortBy === $field && $sortDir === 'ASC') ? 'DESC' : 'ASC') . '&search=' . urlencode($search) . '&exchange=' . urlencode($exchange) . '&per_page=' . $perPage;
 ?>
 <div class="card">

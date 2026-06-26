@@ -16,7 +16,7 @@ class SymbolAdminController
     /**
      * List all symbols with their active status and exchange mappings.
      */
-    public function listSymbols(string $filter = 'all', string $search = ''): array
+    public function listSymbols(string $filter = 'all', string $search = '', int $page = 1, int $perPage = 500): array
     {
         $where = [];
         $params = [];
@@ -37,6 +37,18 @@ class SymbolAdminController
 
         $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
+        $countSql = "SELECT COUNT(*) FROM symbol_master sm LEFT JOIN exchange_mapping em ON sm.symbol = em.symbol AND em.is_primary = 1 {$whereSql}";
+        $totalAll = (int)$this->pdo->query($countSql)->fetchColumn();
+
+        $page = max(1, $page);
+        $perPage = in_array($perPage, [50, 100, 250, 500, 1000]) ? $perPage : 500;
+        $offset = ($page - 1) * $perPage;
+        $totalPages = max(1, (int)ceil($totalAll / $perPage));
+        if ($page > $totalPages) {
+            $page = $totalPages;
+            $offset = ($page - 1) * $perPage;
+        }
+
         $sql = "SELECT sm.symbol, sm.name, COALESCE(NULLIF(sm.exchange, ''), em.exchange) as exchange, sm.sector, sm.is_active,
                        sm.deactivated_at, sm.deactivated_reason,
                        CASE WHEN sm.is_active = 0 THEN 'Inactive' ELSE 'Active' END as status_label
@@ -44,18 +56,21 @@ class SymbolAdminController
                 LEFT JOIN exchange_mapping em ON sm.symbol = em.symbol AND em.is_primary = 1
                 {$whereSql}
                 ORDER BY sm.is_active DESC, sm.symbol
-                LIMIT 500";
+                LIMIT {$perPage} OFFSET {$offset}";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
 
         return [
-            'symbols'   => $stmt->fetchAll(),
-            'filter'    => $filter,
-            'search'    => $search,
-            'total_active'   => $this->pdo->query("SELECT COUNT(*) FROM symbol_master WHERE is_active = 1")->fetchColumn(),
-            'total_inactive' => $this->pdo->query("SELECT COUNT(*) FROM symbol_master WHERE is_active = 0")->fetchColumn(),
-            'total_all'      => $this->pdo->query("SELECT COUNT(*) FROM symbol_master")->fetchColumn(),
+            'symbols'        => $stmt->fetchAll(),
+            'filter'         => $filter,
+            'search'         => $search,
+            'page'           => $page,
+            'per_page'       => $perPage,
+            'total_all'      => $totalAll,
+            'total_pages'    => $totalPages,
+            'total_active'   => (int)$this->pdo->query("SELECT COUNT(*) FROM symbol_master WHERE is_active = 1")->fetchColumn(),
+            'total_inactive' => (int)$this->pdo->query("SELECT COUNT(*) FROM symbol_master WHERE is_active = 0")->fetchColumn(),
         ];
     }
 

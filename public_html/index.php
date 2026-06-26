@@ -297,7 +297,7 @@ switch ($action) {
             header('Location: ?action=admin_symbols');
             exit;
         }
-        $data = array_merge($data, $ctrl->listSymbols($_GET['filter'] ?? 'all', $_GET['search'] ?? ''));
+        $data = array_merge($data, $ctrl->listSymbols($_GET['filter'] ?? 'all', $_GET['search'] ?? '', (int)($_GET['page'] ?? 1), (int)($_GET['per_page'] ?? 500)));
         $data = array_merge($data, ['watchlistSymbols' => $ctrl->listWatchlistSymbols()]);
         $pageTitle = 'Symbol Admin';
         $template = 'admin_symbols';

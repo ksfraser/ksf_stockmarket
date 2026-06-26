@@ -1,35 +1,83 @@
 <?php
-/**
- * Admin — Symbol & Exchange Management.
- * Expects: $data from SymbolAdminController::listSymbols()
- */
+/** @var array $data */
 $data = $data ?? [];
 $symbols   = $data['symbols']   ?? [];
 $filter    = $data['filter']    ?? 'all';
 $search    = $data['search']    ?? '';
-$total_active   = $data['total_active']   ?? 0;
-$total_inactive = $data['total_inactive'] ?? 0;
-$total_all      = $data['total_all']      ?? 0;
-?>
+$totalActive   = $data['total_active']   ?? 0;
+$totalInactive = $data['total_inactive'] ?? 0;
+$totalAll      = $data['total_all']      ?? 0;
+$page          = (int)($data['page'] ?? 1);
+$perPage       = (int)($data['per_page'] ?? 500);
+$totalPages    = (int)($data['total_pages'] ?? 1);
 
+$start = ($page - 1) * $perPage + 1;
+$end   = min($page * $perPage, $totalAll);
+
+$preserve = [
+    'action'   => 'admin_symbols',
+    'filter'   => $filter,
+    'search'   => $search,
+    'page'     => $page,
+    'per_page' => $perPage,
+];
+$baseQs = http_build_query($preserve);
+$baseQsNoPage = http_build_query(array_diff_key($preserve, ['page' => $page]));
+
+function pageLink(int $targetPage, string $queryString, int $currentPage): string
+{
+    if ($targetPage < 1) return '#';
+    $qs = preg_replace('/&?page=\d+/', '', $queryString);
+    $qs = trim($qs, '&');
+    $qs = $qs ? $qs . '&page=' . $targetPage : 'page=' . $targetPage;
+    return '?' . $qs;
+}
+
+$perPageOptions = [50, 100, 250, 500, 1000];
+?>
 <div class="card">
     <div class="card-header">Symbol Management</div>
 
     <!-- Filter bar -->
     <form method="GET" class="search-bar" style="margin-bottom:12px">
         <input type="hidden" name="action" value="admin_symbols">
+        <input type="hidden" name="page" value="1">
         <select name="filter" onchange="this.form.submit()">
-            <option value="all"     <?= $filter === 'all'     ? 'selected' : '' ?>>All (<?= $total_all ?>)</option>
-            <option value="active"  <?= $filter === 'active'  ? 'selected' : '' ?>>Active (<?= $total_active ?>)</option>
-            <option value="inactive" <?= $filter === 'inactive' ? 'selected' : '' ?>>Inactive (<?= $total_inactive ?>)</option>
+            <option value="all"     <?= $filter === 'all'     ? 'selected' : '' ?>>All (<?= $totalAll ?>)</option>
+            <option value="active"  <?= $filter === 'active'  ? 'selected' : '' ?>>Active (<?= $totalActive ?>)</option>
+            <option value="inactive" <?= $filter === 'inactive' ? 'selected' : '' ?>>Inactive (<?= $totalInactive ?>)</option>
             <option value="no_exchange" <?= $filter === 'no_exchange' ? 'selected' : '' ?>>No Exchange</option>
         </select>
         <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="Search symbol or name...">
         <button type="submit" class="btn btn-sm">Filter</button>
     </form>
 
+    <!-- Toolbar: page size + pager summary -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <form method="GET" style="display:inline-flex; align-items:center; gap:6px; font-size:0.85em;">
+            <input type="hidden" name="action" value="admin_symbols">
+            <input type="hidden" name="filter" value="<?= htmlspecialchars($filter) ?>">
+            <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
+            <input type="hidden" name="page" value="1">
+            <label>Show</label>
+            <select name="per_page" onchange="this.form.submit()">
+                <?php foreach ($perPageOptions as $opt): ?>
+                    <option value="<?= $opt ?>" <?= $perPage === $opt ? 'selected' : '' ?>><?= $opt ?></option>
+                <?php endforeach; ?>
+            </select>
+            <span class="muted">per page</span>
+        </form>
+
+        <div style="display:flex; align-items:center; gap:8px; font-size:0.85em;">
+            <span class="muted">Showing <?= $start ?>–<?= $end ?> of <?= $totalAll ?></span>
+            <a href="<?= pageLink($page - 1, $baseQs, $page) ?>" class="btn btn-sm" style="<?= $page <= 1 ? 'opacity:0.4;pointer-events:none;' : '' ?>">◀ Prev</a>
+            <span style="color:var(--text2);">Page <?= $page ?> / <?= $totalPages ?></span>
+            <a href="<?= pageLink($page + 1, $baseQs, $page) ?>" class="btn btn-sm" style="<?= $page >= $totalPages ? 'opacity:0.4;pointer-events:none;' : '' ?>">Next ▶</a>
+        </div>
+    </div>
+
     <form method="GET" action="?action=refresh_all_prices" style="margin-bottom:12px; display:inline-flex; align-items:center; gap:8px;">
-        <input type="hidden" name="redirect" value="?action=admin_symbols">
+        <input type="hidden" name="redirect" value="?<?= htmlspecialchars($baseQsNoPage) ?>">
         <label style="font-size:0.85em; display:flex; align-items:center; gap:4px; cursor:pointer;">
             <input type="checkbox" name="full_history" value="1" onchange="var btn=this.form.querySelector('button'); btn.textContent=this.checked?'Refresh All History':'Refresh Recent Gap'">
             All History
@@ -39,7 +87,7 @@ $total_all      = $data['total_all']      ?? 0;
 
     <!-- Inline deactivate reason form (shown via JS) -->
     <div id="deactivate-form" style="display:none; margin-bottom:16px; padding:16px; background:rgba(0,0,0,0.2); border-radius:8px;">
-        <form method="POST" action="?action=admin_symbols&subaction=deactivate">
+        <form method="POST" action="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=deactivate">
             <input type="hidden" id="deactivate-symbol" name="symbol" value="">
             <label style="font-size:0.85em; color:var(--text3)">Reason for deactivating <strong id="deactivate-symbol-label"></strong>:</label>
             <textarea name="reason" rows="2" style="width:100%; margin:8px 0; background:rgba(0,0,0,0.2); border:1px solid var(--border); color:var(--text); padding:8px; border-radius:4px;" placeholder="e.g. Taken private, delisted, acquired, data unreliable..."></textarea>
@@ -91,16 +139,24 @@ $total_all      = $data['total_all']      ?? 0;
                             Deactivate
                         </button>
                     <?php else: ?>
-                        <a href="?action=admin_symbols&subaction=reactivate&symbol=<?= urlencode($s['symbol']) ?>"
-                           class="btn btn-sm" style="padding:2px 8px; font-size:0.8em; background:var(--green)">
-                            Reactivate
-                        </a>
+                        <a href="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=reactivate&symbol=<?= urlencode($s['symbol']) ?>"
+                           class="btn btn-sm" style="padding:2px 8px; font-size:0.8em; background:var(--green)">Reactivate</a>
                     <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
         </tbody>
     </table>
+
+    <!-- Bottom pager -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; flex-wrap:wrap; gap:8px;">
+        <span class="muted" style="font-size:0.85em;">Showing <?= $start ?>–<?= $end ?> of <?= $totalAll ?></span>
+        <div style="display:flex; gap:6px; align-items:center;">
+            <a href="<?= pageLink($page - 1, $baseQs, $page) ?>" class="btn btn-sm" style="<?= $page <= 1 ? 'opacity:0.4;pointer-events:none;' : '' ?>">◀ Prev</a>
+            <span style="color:var(--text2); font-size:0.85em;">Page <?= $page ?> of <?= $totalPages ?></span>
+            <a href="<?= pageLink($page + 1, $baseQs, $page) ?>" class="btn btn-sm" style="<?= $page >= $totalPages ? 'opacity:0.4;pointer-events:none;' : '' ?>">Next ▶</a>
+        </div>
+    </div>
 </div>
 
 <!-- Exchange Mapping section -->
@@ -137,7 +193,7 @@ $mappings = $exchangeCtrl->listExchangeMappings();
 
     <!-- Add new mapping -->
     <h4 style="margin-top:20px; font-size:0.9em; color:var(--text2)">Add / Update Mapping</h4>
-    <form method="POST" action="?action=admin_symbols&subaction=save_mapping" style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr 2fr auto; gap:8px; align-items:end">
+    <form method="POST" action="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=save_mapping" style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr 2fr auto; gap:8px; align-items:end">
         <div>
             <label style="font-size:0.75em; color:var(--text3)">Symbol</label>
             <input type="text" name="symbol" placeholder="e.g. KEG-UN.TO" style="width:100%">
@@ -211,7 +267,7 @@ $mappings = $exchangeCtrl->listExchangeMappings();
                 <td><?= htmlspecialchars($w['notes'] ?? '—') ?></td>
                 <td style="font-size:0.85em"><?= date('Y-m-d', strtotime($w['added_at'])) ?></td>
                 <td>
-                    <form method="POST" action="?action=admin_symbols&subaction=remove_watchlist" style="display:inline" onsubmit="return confirm('Remove this symbol from watchlist?');">
+                    <form method="POST" action="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=remove_watchlist" style="display:inline" onsubmit="return confirm('Remove this symbol from watchlist?');">
                         <input type="hidden" name="symbol" value="<?= htmlspecialchars($w['symbol']) ?>">
                         <button type="submit" class="btn btn-sm" style="background:var(--red);font-size:0.8em;padding:4px 8px;">Remove</button>
                     </form>
@@ -226,7 +282,7 @@ $mappings = $exchangeCtrl->listExchangeMappings();
 
     <!-- Add to watchlist form -->
     <h4 style="margin-top:16px; font-size:0.9em; color:var(--text2)">Add Symbol to Watchlist</h4>
-    <form method="POST" action="?action=admin_symbols&subaction=add_watchlist" style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr auto; gap:8px; align-items:end">
+    <form method="POST" action="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=add_watchlist" style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr auto; gap:8px; align-items:end">
         <div>
             <label style="font-size:0.75em; color:var(--text3)">Symbol</label>
             <input type="text" name="symbol" placeholder="e.g. AAPL" required style="width:100%">

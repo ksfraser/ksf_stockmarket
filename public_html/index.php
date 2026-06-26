@@ -212,7 +212,7 @@ switch ($action) {
         break;
     case 'list':
         $ctrl = new StockController();
-        $data['symbols'] = $ctrl->listSymbols($_GET['search'] ?? '', $_GET['exchange'] ?? '', $_GET['sort'] ?? 'symbol', $_GET['dir'] ?? 'ASC');
+        $data = array_merge($data, $ctrl->listSymbols($_GET['search'] ?? '', $_GET['exchange'] ?? '', $_GET['sort'] ?? 'symbol', $_GET['dir'] ?? 'ASC', (int)($_GET['page'] ?? 1), (int)($_GET['per_page'] ?? 200)));
         $pageTitle = 'All Symbols';
         $template = 'list';
         break;

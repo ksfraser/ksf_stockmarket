@@ -133,6 +133,8 @@ $perPageOptions = [50, 100, 250, 500, 1000];
                     <?= htmlspecialchars(mb_strimwidth($s['deactivated_reason'] ?? '', 0, 60, '...')) ?>
                 </td>
                 <td>
+                    <button class="btn btn-sm" style="background:var(--blue); padding:2px 8px; font-size:0.8em;"
+                            onclick="toggleRowEdit('<?= htmlspecialchars($s['symbol']) ?>')">Edit</button>
                     <?php if ((int)$s['is_active'] === 1): ?>
                         <button class="btn btn-sm" style="background:var(--orange); padding:2px 8px; font-size:0.8em;"
                                 onclick="showDeactivate('<?= htmlspecialchars($s['symbol']) ?>')">
@@ -142,6 +144,40 @@ $perPageOptions = [50, 100, 250, 500, 1000];
                         <a href="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=reactivate&symbol=<?= urlencode($s['symbol']) ?>"
                            class="btn btn-sm" style="padding:2px 8px; font-size:0.8em; background:var(--green)">Reactivate</a>
                     <?php endif; ?>
+                </td>
+            </tr>
+            <tr class="edit-row" id="edit-<?= htmlspecialchars($s['symbol']) ?>" style="display:none; background:rgba(0,0,0,0.15);">
+                <td colspan="8">
+                    <form method="POST" action="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=save_mapping" style="display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; align-items:end; padding:8px 0;">
+                        <input type="hidden" name="symbol" value="<?= htmlspecialchars($s['symbol']) ?>">
+                        <div>
+                            <label style="font-size:0.75em; color:var(--text3)">Name</label>
+                            <input type="text" name="name" value="<?= htmlspecialchars($s['name'] ?? '') ?>" style="width:100%">
+                        </div>
+                        <div>
+                            <label style="font-size:0.75em; color:var(--text3)">Exchange</label>
+                            <select name="exchange" style="width:100%">
+                                <option value="">—</option>
+                                <option value="TSX" <?= $s['exchange'] === 'TSX' ? 'selected' : '' ?>>TSX</option>
+                                <option value="TSXV" <?= $s['exchange'] === 'TSXV' ? 'selected' : '' ?>>TSXV</option>
+                                <option value="NYSE" <?= $s['exchange'] === 'NYSE' ? 'selected' : '' ?>>NYSE</option>
+                                <option value="NASDAQ" <?= $s['exchange'] === 'NASDAQ' ? 'selected' : '' ?>>NASDAQ</option>
+                                <option value="AMEX" <?= $s['exchange'] === 'AMEX' ? 'selected' : '' ?>>AMEX</option>
+                                <option value="LSE" <?= $s['exchange'] === 'LSE' ? 'selected' : '' ?>>LSE</option>
+                                <option value="HKEX" <?= $s['exchange'] === 'HKEX' ? 'selected' : '' ?>>HKEX</option>
+                                <option value="ASX" <?= $s['exchange'] === 'ASX' ? 'selected' : '' ?>>ASX</option>
+                                <option value="Other" <?= $s['exchange'] === 'Other' ? 'selected' : '' ?>>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:0.75em; color:var(--text3)">Yahoo Ticker</label>
+                            <input type="text" name="yahoo_ticker" value="<?= htmlspecialchars($s['yahoo_ticker'] ?? $s['symbol']) ?>" placeholder="override" style="width:100%">
+                        </div>
+                        <div style="display:flex; gap:4px; align-items:end;">
+                            <button type="submit" class="btn btn-sm" style="background:var(--green)">Save</button>
+                            <button type="button" class="btn btn-sm" onclick="toggleRowEdit('<?= htmlspecialchars($s['symbol']) ?>')">Cancel</button>
+                        </div>
+                    </form>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -308,5 +344,10 @@ function showDeactivate(symbol) {
     document.getElementById('deactivate-symbol-label').textContent = symbol;
     document.getElementById('deactivate-form').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function toggleRowEdit(symbol) {
+    var row = document.getElementById('edit-' + symbol);
+    if (!row) return;
+    row.style.display = row.style.display === 'none' ? '' : 'none';
 }
 </script>

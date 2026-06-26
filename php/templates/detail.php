@@ -145,6 +145,9 @@ window.currentPrice = <?= (float)$close ?>;
             <a href="?action=manual_ohlcv&symbol=<?= urlencode($sym) ?>" class="btn" title="Add OHLCV data manually or via CSV">
                 &#x1F4CB; Add Data
             </a>
+            <a href="?action=admin_symbols&search=<?= urlencode($sym) ?>" class="btn" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:4px;font-size:0.8em;text-decoration:none;">
+                &#x270F; Edit Mapping
+            </a>
             <div style="text-align:right;">
                 <div style="font-size:1.8em; font-weight:700;">$<?= number_format($close, 2) ?></div>
                 <div class="<?= $changeClass ?>" style="font-size:1.1em;">

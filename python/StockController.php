@@ -12,7 +12,7 @@ class StockController {
     /**
      * GET /?action=list — List all symbols with latest price.
      */
-    public function listSymbols(string $search = '', string $exchange = '', string $sortBy = 'symbol', string $sortDir = 'ASC'): array {
+    public function listSymbols(string $search = '', string $exchange = '', string $sortBy = 'symbol', string $sortDir = 'ASC', int $page = 1, int $perPage = 200): array {
         $allowedSort = ['symbol','close','volume','change_pct','price_date'];
         if (!in_array($sortBy, $allowedSort)) $sortBy = 'symbol';
         $sortDir = strtoupper($sortDir) === 'DESC' ? 'DESC' : 'ASC';
@@ -32,7 +32,22 @@ class StockController {
 
         $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-        // Get previous close for change calculation
+        $countSql = "SELECT COUNT(DISTINCT sp.symbol)
+                     FROM stockprices sp
+                     LEFT JOIN symbol_master sm ON sp.symbol = sm.symbol
+                     {$whereSql}";
+        $totalAll = (int)$this->pdo->query($countSql)->fetchColumn();
+
+        $page = max(1, $page);
+        $perPage = in_array($perPage, [50, 100, 250, 500, 1000]) ? $perPage : 200;
+        $offset = ($page - 1) * $perPage;
+        $totalPages = max(1, (int)ceil($totalAll / $perPage));
+        if ($page > $totalPages) {
+            $page = $totalPages;
+            $offset = ($page - 1) * $perPage;
+        }
+
+        // Get latest price for each symbol
         $sql = "SELECT sp.symbol, sp.price_date, sp.close, sp.volume, sp.open, sp.high, sp.low,
                        sm.name, sm.exchange, sm.sector, sm.industry,
                        prev.close as prev_close
@@ -47,7 +62,7 @@ class StockController {
                     )
                 {$whereSql}
                 ORDER BY {$sortBy} {$sortDir}
-                LIMIT 200";
+                LIMIT {$perPage} OFFSET {$offset}";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
@@ -62,7 +77,17 @@ class StockController {
             }
         }
 
-        return $rows;
+        return [
+            'symbols'     => $rows,
+            'search'      => $search,
+            'exchange'    => $exchange,
+            'sortBy'      => $sortBy,
+            'sortDir'     => $sortDir,
+            'page'        => $page,
+            'per_page'    => $perPage,
+            'total_all'   => $totalAll,
+            'total_pages' => $totalPages,
+        ];
     }
 
     /**

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 from datetime import datetime
 from typing import Any
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def _json_safe(value: Any) -> str:
     if isinstance(value, (dict, list)):
-        return str(value)
+        return json.dumps(value, ensure_ascii=False)
     return str(value)
 
 
@@ -26,21 +27,26 @@ class EventPublisher:
 
     def publish(self, event_type: str, payload: dict[str, Any]) -> str:
         event_id = str(uuid4())
-        with self.db.cursor() as cur:
-            cur.execute(
-                "INSERT INTO event_queue "
-                "(event_id, event_type, payload, occurred_at, status, attempts, last_error) "
-                "VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                (
-                    event_id,
-                    event_type,
-                    _json_safe(payload),
-                    datetime.now().isoformat(),
-                    "pending",
-                    0,
-                    None,
-                ),
-            )
+        sql = (
+            "INSERT INTO event_queue "
+            "(event_id, event_type, payload, occurred_at, status, attempts, last_error) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        )
+        params = (
+            event_id,
+            event_type,
+            _json_safe(payload),
+            datetime.now().isoformat(),
+            "pending",
+            0,
+            None,
+        )
+        if hasattr(self.db, 'execute'):
+            self.db.execute(sql, params)
+        else:
+            with self.db.cursor() as cur:
+                cur.execute(sql, params)
+                self.db.commit()
         logger.info("Published event %s of type %s", event_id, event_type)
         return event_id
 

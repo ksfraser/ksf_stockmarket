@@ -229,23 +229,24 @@ class StockController {
         // Performance
         $perf = $this->calcPerformance($symbol);
         
+        // Exit signal risk assessment (InvestorsObserver 18 warning signs)
+        $exitSignals = $this->calcExitSignals($symbol, $history, $fundamentals);
+
         // Markov regime analysis
         $regime = $this->getRegimeAnalysis($symbol);
 
-        return compact(
-            'symbol', 'latest', 'history', 'indicators', 'indHistory',
-            'fundamentals', 'portfolio', 'dividendSafety', 'dividends',
-            'analystRatings', 'analystTargets', 'news', 'optionsData',
-            'buffettScore', 'perf', 'regime'
-        );
-        // Ensure template gets both naming conventions
+        // Ensure template gets both naming conventions (snake_case for template, camelCase for JS)
         $result = compact(
             'symbol', 'latest', 'history', 'indicators', 'indHistory',
             'fundamentals', 'portfolio', 'dividendSafety', 'dividends',
             'analystRatings', 'analystTargets', 'news', 'optionsData',
-            'buffettScore', 'perf'
+            'buffettScore', 'perf', 'regime', 'exitSignals'
         );
-        $result['analyst_targets'] = $result['analystTargets'];
+        // Alias keys for template (expects snake_case)
+        $result['dividend_safety'] = $result['dividendSafety'] ?? [];
+        $result['analyst_targets'] = $result['analystTargets'] ?? [];
+        $result['options'] = $result['optionsData'] ?? [];
+        $result['exit_signals'] = $result['exitSignals'] ?? [];
         return $result;
     }
 
@@ -304,6 +305,190 @@ class StockController {
         }
 
         return ['total' => $score, 'score' => $score, 'max' => $maxScore, 'checks' => $checks];
+    }
+
+    /**
+     * Calculate exit signal risk score based on InvestorsObserver 18 warning signs.
+     * Higher score = higher risk = more reasons to sell.
+     */
+    private function calcExitSignals(array $f, array $ind, float $closePrice = 0): array {
+        if (!$closePrice || $closePrice <= 0) {
+            return ['composite_exit_risk' => 0.5, 'insufficient_data' => true];
+        }
+        
+        $signals = [];
+        $weights = [];
+        $cfg = $this->getExitSignalConfig();
+        
+        // 1. Technical: Trailing stop breach (ATR-based)
+        if (!empty($ind['atr_14']) && !empty($ind['high_60'])) {
+            $atrMult = $cfg['trailing_stop_atr_mult_core'] ?? 3.0;
+            $highestHigh = max($ind['high_60']); // last 60 days highest high
+            $trailingStop = $highestHigh - ($atrMult * $ind['atr_14']);
+            $signals['trailing_stop_breach'] = ($closePrice < $trailingStop) ? 1.0 : 0.0;
+            $weights['trailing_stop_breach'] = 0.20;
+        }
+        
+        // 2. Technical: RSI overbought
+        if (!empty($ind['rsi_14'])) {
+            $rsiExit = $cfg['rsi_exit_above'] ?? 65;
+            $signals['rsi_overbought'] = ($ind['rsi_14'] > $rsiExit) ? 1.0 : 0.0;
+            $weights['rsi_overbought'] = 0.10;
+        }
+        
+        // 3. Technical: Price vs 200d MA breakdown
+        if (!empty($ind['sma_200']) && $ind['sma_200'] > 0) {
+            $ma200Threshold = $cfg['price_vs_ma200_exit_below'] ?? 0.95;
+            $vsMA200 = $closePrice / $ind['sma_200'];
+            $signals['ma200_breakdown'] = ($vsMA200 < $ma200Threshold) ? 1.0 : 0.0;
+            $weights['ma200_breakdown'] = 0.15;
+        }
+        
+        // 4. Technical: Bollinger Band upper touch
+        if (!empty($ind['bb_20_2_0_upper']) && !empty($ind['bb_20_2_0_lower'])) {
+            $bbUpper = $ind['bb_20_2_0_upper'];
+            $bbLower = $ind['bb_20_2_0_lower'];
+            $bbMid = ($bbUpper + $bbLower) / 2;
+            $bbPosition = ($bbUpper != $bbLower) ? ($closePrice - $bbLower) / ($bbUpper - $bbLower) : 0.5;
+            $signals['bb_upper_touch'] = ($bbPosition > 0.95) ? 1.0 : 0.0;
+            $weights['bb_upper_touch'] = 0.10;
+        }
+        
+        // 5. Fundamental: ROE deterioration
+        $roeThreshold = $cfg['exit_on_roe_drop_below'] ?? 0.10;
+        if (!empty($f['roe'])) {
+            $signals['roe_deterioration'] = ($f['roe'] < $roeThreshold) ? 1.0 : 0.0;
+            $weights['roe_deterioration'] = 0.10;
+        }
+        
+        // 6. Fundamental: Debt/Equity rise
+        $deThreshold = $cfg['exit_on_debt_equity_above'] ?? 0.60;
+        if (!empty($f['debt_to_equity'])) {
+            $signals['debt_equity_rise'] = ($f['debt_to_equity'] > $deThreshold) ? 1.0 : 0.0;
+            $weights['debt_equity_rise'] = 0.10;
+        }
+        
+        // 7. Fundamental: FCF negative
+        if (($cfg['exit_on_fcf_negative'] ?? true) && isset($f['free_cash_flow'])) {
+            $signals['fcf_negative'] = ($f['free_cash_flow'] < 0) ? 1.0 : 0.0;
+            $weights['fcf_negative'] = 0.10;
+        }
+        
+        // 8. Fundamental: Earnings drop > 20%
+        $epsDropThreshold = $cfg['exit_if_earnings_drop_pct'] ?? 0.20;
+        if (!empty($f['eps_quarterly']) && is_array($f['eps_quarterly']) && count($f['eps_quarterly']) >= 2) {
+            $epsQ = $f['eps_quarterly'];
+            $epsDrop = ($epsQ[0] - $epsQ[1]) / abs($epsQ[0]);
+            $signals['earnings_drop'] = ($epsDrop > $epsDropThreshold) ? 1.0 : 0.0;
+            $weights['earnings_drop'] = 0.10;
+        }
+        
+        // 9. Fundamental: Dividend cut
+        if (($cfg['exit_on_dividend_cut'] ?? true) && !empty($f['dividend_history']) && is_array($f['dividend_history']) && count($f['dividend_history']) >= 2) {
+            $divHist = $f['dividend_history'];
+            $divCut = ($divHist[0] < $divHist[1]) ? 1.0 : 0.0;
+            $signals['dividend_cut'] = $divCut;
+            $weights['dividend_cut'] = 0.08;
+        }
+        
+        // 10. Valuation: Yield on cost too low
+        $yocThreshold = $cfg['min_yield_on_cost_exit'] ?? 0.015;
+        if (!empty($f['yield_on_cost'])) {
+            $signals['yield_on_cost_low'] = ($f['yield_on_cost'] < $yocThreshold) ? 1.0 : 0.0;
+            $weights['yield_on_cost_low'] = 0.05;
+        }
+        
+        // 11. Valuation: P/E extreme
+        $maxPe = $cfg['max_pe_core'] ?? 25.0;
+        if (!empty($f['trailing_pe'])) {
+            $signals['pe_extreme'] = ($f['trailing_pe'] > $maxPe) ? 1.0 : 0.0;
+            $weights['pe_extreme'] = 0.08;
+        }
+        
+        // 12. Insider selling (placeholder - would need insider_trades table query)
+        if (($cfg['exit_on_insider_selling_pct'] ?? 0.50) > 0) {
+            $insiderSellRatio = $this->getInsiderSellRatio($f['symbol'] ?? '');
+            if ($insiderSellRatio !== null) {
+                $signals['insider_selling'] = ($insiderSellRatio > 0.50) ? 1.0 : 0.0;
+                $weights['insider_selling'] = 0.08;
+            }
+        }
+        
+        // 13. Corporate events (placeholder)
+        if ($cfg['flag_corporate_events'] ?? true) {
+            $signals['corporate_event_risk'] = 0.0; // would query corporate_events table
+            $weights['corporate_event_risk'] = 0.05;
+        }
+        
+        // 14. Sector relative strength (placeholder - would need sector ETF data)
+        $sectorRelThreshold = $cfg['sector_relative_strength_min'] ?? -0.10;
+        $signals['sector_underperformance'] = 0.0; // would compare to XIC.TO or sector ETF
+        $weights['sector_underperformance'] = 0.08;
+        
+        // 15. FCF yield too low
+        $fcfYieldThreshold = $cfg['min_fcf_yield'] ?? 0.02;
+        if (!empty($f['free_cash_flow']) && !empty($f['market_cap'])) {
+            $fcfYield = $f['free_cash_flow'] / $f['market_cap'];
+            $signals['fcf_yield_low'] = ($fcfYield < $fcfYieldThreshold) ? 1.0 : 0.0;
+            $weights['fcf_yield_low'] = 0.05;
+        }
+        
+        // 16. Debt/EBITDA too high
+        $deEbitdaThreshold = $cfg['max_debt_to_ebitda'] ?? 4.0;
+        if (!empty($f['debt_to_ebitda'])) {
+            $signals['debt_ebitda_high'] = ($f['debt_to_ebitda'] > $deEbitdaThreshold) ? 1.0 : 0.0;
+            $weights['debt_ebitda_high'] = 0.05;
+        }
+        
+        // Composite exit risk score
+        $totalWeight = array_sum($weights);
+        if ($totalWeight > 0) {
+            $composite = 0;
+            foreach ($weights as $signal => $weight) {
+                $composite += ($signals[$signal] ?? 0) * $weight;
+            }
+            $composite = $composite / $totalWeight;
+        } else {
+            $composite = 0.5;
+        }
+        
+        return [
+            'composite_exit_risk' => round($composite, 3),
+            'individual_signals' => array_map(fn($v) => round($v, 3), $signals),
+            'signal_weights' => array_map(fn($v) => round($v, 3), $weights),
+            'n_signals_triggered' => array_sum(array_map(fn($v) => $v > 0 ? 1 : 0, $signals)),
+            'n_signals_total' => count($signals)
+        ];
+    }
+    
+    private function getExitSignalConfig(): array {
+        // Load from config.yaml or return defaults
+        $cfgPath = __DIR__ . '/../config.yaml';
+        if (file_exists($cfgPath)) {
+            $config = yaml_parse_file($cfgPath);
+            return $config['signals']['exit_signals'] ?? [];
+        }
+        return [];
+    }
+    
+    private function getInsiderSellRatio(string $symbol): ?float {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT 
+                    SUM(CASE WHEN transaction_type IN ('S', 'Sale', 'Sell') THEN 1 ELSE 0 END) as sells,
+                    COUNT(*) as total
+                FROM insider_trades
+                WHERE symbol = ? AND filing_date >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)
+            ");
+            $stmt->execute([$symbol]);
+            $row = $stmt->fetch();
+            if ($row && $row['total'] > 0) {
+                return $row['sells'] / $row['total'];
+            }
+        } catch (Exception $e) {
+            // table may not exist or query may fail
+        }
+        return null;
     }
 
     /**

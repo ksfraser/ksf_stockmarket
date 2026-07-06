@@ -320,6 +320,66 @@ signals:
   vix_max_for_entry:          30
   market_regime_check:        true       # SPY trend > 200d MA = bull market
 
+  # Exit/sell signal rules (InvestorsObserver 18 warning signs coverage)
+  exit_signals:
+    # 1. Technical trailing stops (covers: price drop 10-15%, stagnation, overbought)
+    trailing_stop_atr_mult_core:      3.0      # core sleeve: wide stop
+    trailing_stop_atr_mult_tactical:  1.5      # tactical: tight stop
+    trailing_stop_atr_mult_income:    2.0      # income: moderate
+    trailing_stop_atr_mult_satellite: 2.0      # satellite: wider for vol
+    rsi_exit_above:                   65       # overbought exit (tactical)
+    bb_upper_touch_exit:              true     # exit at upper Bollinger Band
+    time_stop_days_core:              365      # max hold without action
+    time_stop_days_tactical:          60
+    time_stop_days_income:            180
+    time_stop_days_satellite:         30
+
+    # 2. Fundamental deterioration (covers: falling earnings, dividend cuts, FCF burn)
+    exit_on_roe_drop_below:           0.10     # core: ROE < 10%
+    exit_on_debt_equity_above:        0.60     # core: D/E > 0.6
+    exit_on_fcf_negative:             true     # core: FCF turns negative
+    exit_if_earnings_drop_pct:        0.20     # income: >20% earnings drop
+    exit_if_payout_above:             0.85     # income: unsustainable payout
+    exit_on_dividend_cut:             true     # income: auto-exit on cut
+    min_yield_on_cost_exit:           0.015    # income: yield on cost < 1.5%
+
+    # 3. Valuation extremes (covers: P/E too high, stock "discovered")
+    max_pe_core:                      25.0
+    max_pe_tactical:                  30.0
+    max_pe_income:                    25.0
+    max_pe_satellite:                 40.0
+    price_vs_ma200_exit_below:        0.95     # exit if >5% below 200d MA
+
+    # 4. Insider/corporate signals (covers: insider selling, bad acquisitions)
+    exit_on_insider_selling_pct:      0.50     # exit if >50% insider trades are sells (90d)
+    flag_corporate_events:            true     # M&A, delisting, bankruptcy filings
+
+    # 5. Sector/relative strength (covers: industry problems, too big for growth)
+    sector_relative_strength_min:     -0.10    # exit if sector underperforms by >10%
+    max_market_cap_growth_sleeve:     50e9     # satellite: avoid mega-caps for growth
+
+    # 6. Cash burn / financial distress (covers: burning cash, declining sales)
+    min_fcf_yield:                    0.02     # exit if FCF yield < 2%
+    max_debt_to_ebitda:               4.0      # exit if Debt/EBITDA > 4x
+
+#═══════════════════════════════════════════════════════════════════════════
+# SYMBOL MAPPING — for backtesting continuity across ticker changes
+#═══════════════════════════════════════════════════════════════════════════
+symbol_mapping:
+  # old_symbol -> new_symbol (for historical continuity in backtests)
+  "RNK":           "RNK"           # Rainmaker Entertainment - delisted 2013 (no successor)
+  "RNK-UN.TO":     "REI-UN.TO"     # Was misclassified; RioCan is REI-UN.TO (still active)
+  "SIF-UN.TO":     "SIA.TO"        # Sienna Senior Living - ticker change
+  "TOC.TO":        "TRI.TO"        # Thomson Reuters - ticker change
+  "UPL":           "UPL"           # Ultra Petroleum - bankrupt (no successor)
+  "VMW":           "AVGO"          # VMware acquired by Broadcom
+  "UTX":           "RTX"           # United Tech merged with Raytheon
+  "WYE":           "PFE"           # Wyeth acquired by Pfizer
+  "XTO":           "XOM"           # XTO Energy acquired by ExxonMobil
+  "SWY":           "SWY"           # Safeway merged with Albertsons (private)
+  "TSX:MFC.PR.L":  "MFC.PR.L.TO"   # Manulife preferred - symbol format change
+  "TSX:VITL.UN":   "VITL.UN.TO"    # Vital Trust - symbol format change
+
 #═══════════════════════════════════════════════════════════════════════════
 # LAYER 2 — MONEY MANAGEMENT
 #═══════════════════════════════════════════════════════════════════════════

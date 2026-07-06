@@ -71,9 +71,23 @@ $macdData = [];
 $stochData = [];
 foreach ($indHistory as $ih) {
     $date = $ih['price_date'];
-    if (isset($ih['rsi_14'])) $rsiData[] = ['date' => $date, 'value' => round((float)$ih['rsi_14'], 2)];
-    if (isset($ih['macd_12_26_9_macd'])) $macdData[] = ['date' => $date, 'macd' => round((float)$ih['macd_12_26_9_macd'], 4), 'signal' => round((float)($ih['macd_12_26_9_signal'] ?? 0), 4)];
-    if (isset($ih['stoch_14_3_3_k'])) $stochData[] = ['date' => $date, 'k' => round((float)$ih['stoch_14_3_3_k'], 2), 'd' => round((float)($ih['stoch_14_3_3_d'] ?? 0), 2)];
+    // RSI: try both naming conventions
+    $rsi = $ih['rsi_14'] ?? $ih['rsi_14_1'] ?? null;
+    if ($rsi !== null) $rsiData[] = ['date' => $date, 'value' => round((float)$rsi, 2)];
+    
+    // MACD: try multiple key formats
+    $macd = $ih['macd_12_26_9_macd'] ?? $ih['macd'] ?? null;
+    $macdSignal = $ih['macd_12_26_9_signal'] ?? $ih['macd_signal'] ?? null;
+    if ($macd !== null && $macdSignal !== null) {
+        $macdData[] = ['date' => $date, 'macd' => round((float)$macd, 4), 'signal' => round((float)$macdSignal, 4)];
+    }
+    
+    // Stochastic: try both naming conventions
+    $stochK = $ih['stoch_14_3_3_k'] ?? $ih['stoch_k_14'] ?? null;
+    $stochD = $ih['stoch_14_3_3_d'] ?? $ih['stoch_d_14'] ?? null;
+    if ($stochK !== null && $stochD !== null) {
+        $stochData[] = ['date' => $date, 'k' => round((float)$stochK, 2), 'd' => round((float)$stochD, 2)];
+    }
 }
 
 // News markers for chart
@@ -94,10 +108,18 @@ foreach ($indHistory as $ih) {
     if (isset($ih['atr_14'])) $atrData[] = ['date' => $ih['price_date'], 'atr' => round((float)$ih['atr_14'], 4)];
 }
 
-// Bollinger Band data
+// Bollinger Band data - try both key formats (canonical uses dots, legacy uses underscores)
 $bbData = [];
 foreach ($indHistory as $ih) {
-    if (isset($ih['bb_20_2_0_mid'])) $bbData[] = ['date' => $ih['price_date'], 'upper' => round((float)$ih['bb_20_2_0_upper'], 4), 'mid' => round((float)$ih['bb_20_2_0_mid'], 4), 'lower' => round((float)$ih['bb_20_2_0_lower'], 4)];
+    $bbMid = $ih['bb_20_2.0_mid'] ?? $ih['bb_20_2_0_mid'] ?? null;
+    if ($bbMid !== null) {
+        $bbData[] = [
+            'date' => $ih['price_date'],
+            'upper' => round((float)($ih['bb_20_2.0_upper'] ?? $ih['bb_20_2_0_upper'] ?? 0), 4),
+            'mid' => round((float)$bbMid, 4),
+            'lower' => round((float)($ih['bb_20_2.0_lower'] ?? $ih['bb_20_2_0_lower'] ?? 0), 4)
+        ];
+    }
 }
 ?>
 <script>
@@ -202,7 +224,9 @@ window.currentPrice = <?= (float)$close ?>;
     <!-- Legend for chart overlays -->
     <div style="display:flex; gap:16px; padding:8px 12px; font-size:0.8em; color:var(--text3); flex-wrap:wrap;">
         <span><span style="color:#4CAF50">━━</span> Price</span>
-        <span><span style="color:#2196F3">▍</span> Volume</span>
+        <span><span style="color:#4CAF50">▍</span> Volume (green=up, red=down)</span>
+        <span><span style="color:#FFC107">━━</span> Vol Avg 22d</span>
+        <span><span style="color:#9C27B0">━━</span> Vol Avg 63d</span>
         <?php if ($entryPrice): ?><span><span style="color:#FF9800">━━</span> Entry $<?= number_format($entryPrice, 2) ?></span><?php endif; ?>
         <?php if ($stopPrice): ?><span><span style="color:#f44336">━━</span> Trailing Stop $<?= number_format($stopPrice, 2) ?></span><?php endif; ?>
         <?php if ($consensusPrice): ?><span><span style="color:#9C27B0">━━</span> Analyst Consensus $<?= number_format($consensusPrice, 2) ?></span><?php endif; ?>
@@ -324,9 +348,9 @@ window.currentPrice = <?= (float)$close ?>;
                 <tbody>
                 <?php foreach (array_slice($dividends, 0, 8) as $d): ?>
                     <tr>
-                        <td><?= $d['payment_date'] ?></td>
+                        <td><?= $d['ex_date'] ?></td>
                         <td class="r">$<?= number_format($d['amount'] ?? 0, 4) ?></td>
-                        <td class="r"><?= $dividend_yield_at_payment ?? '—' ?></td>
+                        <td class="r"><?= $close > 0 && $d['amount'] ? number_format(($d['amount'] * 4) / $close * 100, 2) . '%' : '—' ?></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>
@@ -419,6 +443,45 @@ window.currentPrice = <?= (float)$close ?>;
     <p class="text-muted">Buffett analysis not yet generated for this symbol.</p>
     <?php endif; ?>
 </div>
+
+<!-- ===== EXIT SIGNALS / SELL RISK ===== -->
+<?php 
+$exitSignals = $data['exit_signals'] ?? [];
+$exitRisk = $exitSignals['composite_exit_risk'] ?? null;
+$exitDetails = $exitSignals['individual_signals'] ?? [];
+$exitWeights = $exitSignals['signal_weights'] ?? [];
+$exitTriggered = $exitSignals['n_signals_triggered'] ?? 0;
+$exitTotal = $exitSignals['n_signals_total'] ?? 0;
+?>
+<?php if ($exitRisk !== null): ?>
+<div class="card" style="margin-top:12px;">
+    <div class="card-header">Exit Signal Risk Assessment <span class="text-muted" style="font-size:0.8em; font-weight:normal;">(InvestorsObserver 18 Warning Signs)</span></div>
+    <div style="display:flex; gap:20px; align-items:center; margin-bottom:12px;">
+        <div style="font-size:2.5em; font-weight:700; color:<?= $exitRisk >= 0.6 ? 'var(--red)' : ($exitRisk >= 0.3 ? 'var(--yellow)' : 'var(--green)') ?>">
+            <?= round($exitRisk * 100) ?>%
+        </div>
+        <div style="font-size:0.9em; color:var(--text2);">
+            <strong><?= $exitTriggered ?></strong> of <strong><?= $exitTotal ?></strong> signals triggered
+        </div>
+    </div>
+    <?php if (!empty($exitDetails)): ?>
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; font-size:0.85em;">
+        <?php foreach ($exitDetails as $signal => $triggered): 
+            $weight = $exitWeights[$signal] ?? 0;
+            $color = $triggered ? 'var(--red)' : 'var(--green)';
+            $icon = $triggered ? '⚠' : '✓';
+            $label = ucwords(str_replace('_', ' ', $signal));
+        ?>
+            <div style="display:flex; align-items:center; gap:6px; padding:6px; background:<?= $triggered ? 'var(--red-bg)' : 'var(--green-bg)' ?>; border-radius:4px;">
+                <span style="color:<?= $color ?>; font-size:1.1em;"><?= $icon ?></span>
+                <span style="color:<?= $color ?>; font-weight:500;"><?= $label ?></span>
+                <span style="color:var(--text3); margin-left:auto; font-size:0.75em;">(<?= round($weight * 100) ?>%)</span>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+</div>
+<?php endif; ?>
 
 <!-- ===== RECENT NEWS ===== -->
 <?php if (!empty($news)): ?>

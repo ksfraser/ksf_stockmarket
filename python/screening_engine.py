@@ -38,6 +38,69 @@ MYSQL = dict(
 )
 
 
+# ── Symbol Mapping for Backtesting Continuity ────────────────────────────────
+
+class SymbolMapper:
+    """Loads symbol changes from DB and config for historical continuity in backtests."""
+    
+    def __init__(self, config: dict = None, db_cursor=None):
+        self.config = config or {}
+        self.mapping = self.config.get('symbol_mapping', {})
+        # Load from DB symbol_changes table if cursor provided
+        if db_cursor:
+            try:
+                db_cursor.execute("""
+                    SELECT old_symbol, new_symbol, change_type, change_date, reason
+                    FROM symbol_changes
+                    WHERE new_symbol IS NOT NULL
+                """)
+                for row in db_cursor.fetchall():
+                    if row['new_symbol']:
+                        self.mapping[row['old_symbol']] = row['new_symbol']
+            except Exception:
+                pass  # table may not exist yet
+    
+    def get_current_symbol(self, old_symbol: str) -> str:
+        """Map old symbol to current active symbol."""
+        return self.mapping.get(old_symbol, old_symbol)
+    
+    def get_history_chain(self, symbol: str) -> list:
+        """Get full history chain: [oldest, ..., current]."""
+        chain = [symbol]
+        current = symbol
+        visited = set()
+        while current in self.mapping and current not in visited:
+            visited.add(current)
+            current = self.mapping[current]
+            if current != symbol:  # avoid self-loops
+                chain.append(current)
+        return chain
+    
+    def resolve_for_backtest(self, symbol: str, as_of_date: str = None, db_cursor=None) -> str:
+        """
+        Resolve symbol to what it should be for a backtest as of a given date.
+        If as_of_date is None, returns current active symbol.
+        """
+        if as_of_date is None:
+            return self.get_current_symbol(symbol)
+        
+        # For backtesting: if the symbol changed after as_of_date, use the old symbol
+        if db_cursor:
+            try:
+                db_cursor.execute("""
+                    SELECT old_symbol, new_symbol, change_date
+                    FROM symbol_changes
+                    WHERE old_symbol = %s AND change_date > %s
+                    ORDER BY change_date ASC
+                """, (symbol, as_of_date))
+                rows = db_cursor.fetchall()
+                if rows:
+                    return rows[0]['old_symbol']  # use symbol as it was at that date
+            except Exception:
+                pass
+        return self.get_current_symbol(symbol)
+
+
 # ── Indicator Data Access ──────────────────────────────────────────────────
 
 class IndicatorStore:
@@ -417,6 +480,160 @@ class StrategyScorer:
         return (closes[-1] - low) / (high - low)
 
     # ── Individual Strategy Scorers ──
+
+    def score_exit_signals(self, closes, volumes, highs, lows, indicators=None, 
+                            fundamentals=None, insider_data=None, sector_etf_data=None) -> dict:
+        """
+        Score exit/sell signals based on InvestorsObserver 18 warning signs coverage.
+        Returns dict with individual signal scores and composite exit risk score.
+        Higher score = higher exit risk (more reasons to sell).
+        """
+        if len(closes) < 20:
+            return {'composite_exit_risk': 0.5, 'insufficient_data': True}
+        
+        current_price = closes[-1]
+        signals = {}
+        weights = {}
+        
+        # Load config for thresholds
+        cfg = self.config if hasattr(self, 'config') else {}
+        exit_cfg = cfg.get('exit_signals', {}) if isinstance(cfg, dict) else {}
+        
+        # 1. Technical trailing stop breach
+        atr_mult = exit_cfg.get('trailing_stop_atr_mult_core', 3.0)
+        if len(closes) >= 14:
+            trs = []
+            for i in range(1, min(len(closes), 30)):
+                tr = max(highs[i] - lows[i], abs(highs[i] - closes[i-1]), abs(lows[i] - closes[i-1]))
+                trs.append(tr)
+            atr = np.mean(trs[-14:]) if len(trs) >= 14 else np.mean(trs) if trs else 0
+            # Trailing stop from highest high
+            highest_high = max(highs[-60:]) if len(highs) >= 60 else max(highs)
+            trailing_stop = highest_high - (atr_mult * atr)
+            signals['trailing_stop_breach'] = 1.0 if current_price < trailing_stop else 0.0
+            weights['trailing_stop_breach'] = 0.20
+        
+        # 2. RSI overbought exit
+        rsi_exit = exit_cfg.get('rsi_exit_above', 65)
+        if len(closes) >= 14:
+            deltas = np.diff(closes[-(14+1):])
+            gains = np.where(deltas > 0, deltas, 0)
+            losses = np.where(deltas < 0, -deltas, 0)
+            avg_gain = np.mean(gains)
+            avg_loss = np.mean(losses)
+            rsi = 100 - (100 / (1 + avg_gain / avg_loss)) if avg_loss > 0 else 100
+            signals['rsi_overbought'] = 1.0 if rsi > rsi_exit else 0.0
+            weights['rsi_overbought'] = 0.10
+        
+        # 3. Price vs 200d MA breakdown
+        ma200_threshold = exit_cfg.get('price_vs_ma200_exit_below', 0.95)
+        if len(closes) >= 200:
+            ma200 = np.mean(closes[-200:])
+            vs_ma200 = current_price / ma200 if ma200 > 0 else 1.0
+            signals['ma200_breakdown'] = 1.0 if vs_ma200 < ma200_threshold else 0.0
+            weights['ma200_breakdown'] = 0.15
+        
+        # 4. Bollinger Band upper touch (overbought)
+        if len(closes) >= 20:
+            sma20 = np.mean(closes[-20:])
+            std20 = np.std(closes[-20:])
+            upper_bb = sma20 + 2 * std20
+            bb_position = (current_price - (sma20 - 2*std20)) / (upper_bb - (sma20 - 2*std20)) if std20 > 0 else 0.5
+            signals['bb_upper_touch'] = 1.0 if bb_position > 0.95 else 0.0
+            weights['bb_upper_touch'] = 0.10
+        
+        # 5. Fundamental: ROE drop
+        roe_threshold = exit_cfg.get('exit_on_roe_drop_below', 0.10)
+        if fundamentals and 'roe' in fundamentals:
+            signals['roe_deterioration'] = 1.0 if fundamentals['roe'] < roe_threshold else 0.0
+            weights['roe_deterioration'] = 0.10
+        
+        # 6. Fundamental: Debt/Equity rise
+        de_threshold = exit_cfg.get('exit_on_debt_equity_above', 0.60)
+        if fundamentals and 'debt_equity' in fundamentals:
+            signals['debt_equity_rise'] = 1.0 if fundamentals['debt_equity'] > de_threshold else 0.0
+            weights['debt_equity_rise'] = 0.10
+        
+        # 7. Fundamental: FCF negative
+        if exit_cfg.get('exit_on_fcf_negative', True) and fundamentals and 'fcf' in fundamentals:
+            signals['fcf_negative'] = 1.0 if fundamentals['fcf'] < 0 else 0.0
+            weights['fcf_negative'] = 0.10
+        
+        # 8. Earnings drop > 20%
+        eps_drop_threshold = exit_cfg.get('exit_if_earnings_drop_pct', 0.20)
+        if fundamentals and 'eps_quarterly' in fundamentals and len(fundamentals['eps_quarterly']) >= 2:
+            eps_q = fundamentals['eps_quarterly']
+            eps_drop = (eps_q[-2] - eps_q[-1]) / abs(eps_q[-2]) if eps_q[-2] != 0 else 0
+            signals['earnings_drop'] = 1.0 if eps_drop > eps_drop_threshold else 0.0
+            weights['earnings_drop'] = 0.10
+        
+        # 9. Dividend cut
+        if exit_cfg.get('exit_on_dividend_cut', True) and fundamentals and 'dividend_history' in fundamentals:
+            div_hist = fundamentals['dividend_history']
+            if len(div_hist) >= 2:
+                div_cut = div_hist[-1] < div_hist[-2]
+                signals['dividend_cut'] = 1.0 if div_cut else 0.0
+                weights['dividend_cut'] = 0.08
+        
+        # 10. Yield on cost too low
+        yoc_threshold = exit_cfg.get('min_yield_on_cost_exit', 0.015)
+        if fundamentals and 'yield_on_cost' in fundamentals:
+            signals['yield_on_cost_low'] = 1.0 if fundamentals['yield_on_cost'] < yoc_threshold else 0.0
+            weights['yield_on_cost_low'] = 0.05
+        
+        # 11. P/E too high (valuation extreme)
+        max_pe = exit_cfg.get('max_pe_core', 25.0)
+        if fundamentals and 'pe_ratio' in fundamentals:
+            signals['pe_extreme'] = 1.0 if fundamentals['pe_ratio'] > max_pe else 0.0
+            weights['pe_extreme'] = 0.08
+        
+        # 12. Insider selling > 50% of trades
+        insider_threshold = exit_cfg.get('exit_on_insider_selling_pct', 0.50)
+        if insider_data and 'sell_ratio_90d' in insider_data:
+            signals['insider_selling'] = 1.0 if insider_data['sell_ratio_90d'] > insider_threshold else 0.0
+            weights['insider_selling'] = 0.08
+        
+        # 13. Corporate events (M&A, bankruptcy, delisting)
+        if exit_cfg.get('flag_corporate_events', True):
+            # Check corporate_events table via external data
+            signals['corporate_event_risk'] = 0.0  # placeholder - would query DB
+            weights['corporate_event_risk'] = 0.05
+        
+        # 14. Sector relative strength deterioration
+        sector_rel_threshold = exit_cfg.get('sector_relative_strength_min', -0.10)
+        if sector_etf_data and len(sector_etf_data) >= 60:
+            stock_ret = (closes[-1] / closes[-60]) - 1
+            sector_ret = (sector_etf_data[-1] / sector_etf_data[-60]) - 1
+            rel_strength = stock_ret - sector_ret
+            signals['sector_underperformance'] = 1.0 if rel_strength < sector_rel_threshold else 0.0
+            weights['sector_underperformance'] = 0.08
+        
+        # 15. FCF yield too low
+        fcf_yield_threshold = exit_cfg.get('min_fcf_yield', 0.02)
+        if fundamentals and 'fcf_yield' in fundamentals:
+            signals['fcf_yield_low'] = 1.0 if fundamentals['fcf_yield'] < fcf_yield_threshold else 0.0
+            weights['fcf_yield_low'] = 0.05
+        
+        # 16. Debt/EBITDA too high
+        de_ebitda_threshold = exit_cfg.get('max_debt_to_ebitda', 4.0)
+        if fundamentals and 'debt_to_ebitda' in fundamentals:
+            signals['debt_ebitda_high'] = 1.0 if fundamentals['debt_to_ebitda'] > de_ebitda_threshold else 0.0
+            weights['debt_ebitda_high'] = 0.05
+        
+        # Composite exit risk score (0 = low risk, 1 = high risk - many sell signals)
+        total_weight = sum(weights.values())
+        if total_weight > 0:
+            composite = sum(signals[k] * weights[k] for k in signals if k in weights) / total_weight
+        else:
+            composite = 0.0
+        
+        return {
+            'composite_exit_risk': round(composite, 3),
+            'individual_signals': {k: round(v, 3) for k, v in signals.items()},
+            'signal_weights': {k: round(v, 3) for k, v in weights.items()},
+            'n_signals_triggered': sum(1 for v in signals.values() if v > 0),
+            'n_signals_total': len(signals)
+        }
 
     def score_canslim(self, closes, volumes, highs, lows, indicators=None) -> float:
         """
@@ -928,7 +1145,7 @@ class StrategyScorer:
 
         # Build OHLC from close (approximate for indicators that need it)
         highs = closes * 1.01  # Estimate
-        lows = closes * 0.01   # Estimate
+        lows = closes * 0.99   # Estimate (was 0.01 - fixing)
 
         # Get latest indicator data for enhanced scoring
         ind = store.get_latest_indicators(symbol, 5)
@@ -960,6 +1177,39 @@ class StrategyScorer:
                 scores[name] = available_strategies[name](closes, volumes, highs, lows, latest_ind)
             except Exception:
                 scores[name] = 0.5  # neutral on error
+
+        # Add exit signal scoring (InvestorsObserver 18 warning signs)
+        try:
+            # Fetch fundamentals for exit signal evaluation
+            cursor = store.cursor
+            cursor.execute("""
+                SELECT f.*, h.institutional_pct
+                FROM fundamentals f
+                LEFT JOIN holders h ON h.symbol = f.symbol
+                WHERE f.symbol = %s
+                ORDER BY f.last_updated DESC LIMIT 1
+            """, (symbol,))
+            fund_row = cursor.fetchone()
+            fundamentals = dict(fund_row) if fund_row else {}
+            
+            # Fetch insider trading data (last 90 days)
+            cursor.execute("""
+                SELECT transaction_type, COUNT(*) as cnt
+                FROM insider_trades
+                WHERE symbol = %s AND filing_date >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)
+                GROUP BY transaction_type
+            """, (symbol,))
+            insider_rows = cursor.fetchall()
+            insider_data = {r['transaction_type']: r['cnt'] for r in insider_rows}
+            
+            exit_signals = self.score_exit_signals(
+                closes, volumes, highs, lows, latest_ind,
+                fundamentals=fundamentals,
+                insider_data=insider_data
+            )
+            scores['exit_signals'] = exit_signals
+        except Exception:
+            scores['exit_signals'] = {'composite_exit_risk': 0.5, 'error': 'exit_scoring_failed'}
 
         scores['symbol'] = symbol
         scores['n_data_points'] = len(closes)

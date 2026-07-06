@@ -56,11 +56,42 @@
             ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
         }
 
-        // Volume bars (subtle)
-        ctx.fillStyle = 'rgba(33,150,243,0.1)';
+        // Volume bars - color coded by price change (green=up, red=down) + volume average lines
+        const volAvg22 = calculateVolumeAvg(volumes, 22);
+        const volAvg63 = calculateVolumeAvg(volumes, 63);
         for (let i = 0; i < data.length; i++) {
+            const priceChange = i > 0 ? data[i].close - data[i-1].close : 0;
+            ctx.fillStyle = priceChange >= 0 ? 'rgba(76,175,80,0.6)' : 'rgba(244,67,54,0.6)';
             ctx.fillRect(x(i) - 1, yv(volumes[i]), 2, pad.top + plotH - yv(volumes[i]));
         }
+        // 22-day volume average line (monthly)
+        const yvAvg22 = yv(volAvg22);
+        ctx.strokeStyle = 'rgba(255,193,7,0.7)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, yvAvg22);
+        ctx.lineTo(W - pad.right, yvAvg22);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(255,193,7,0.8)';
+        ctx.font = '10px system-ui';
+        ctx.textAlign = 'left';
+        ctx.fillText('Vol Avg 22d: ' + (volAvg22/1e6).toFixed(1) + 'M', pad.left + 4, yvAvg22 - 4);
+        // 63-day volume average line (quarterly)
+        const yvAvg63 = yv(volAvg63);
+        ctx.strokeStyle = 'rgba(156,39,176,0.7)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        ctx.moveTo(pad.left, yvAvg63);
+        ctx.lineTo(W - pad.right, yvAvg63);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = 'rgba(156,39,176,0.8)';
+        ctx.font = '10px system-ui';
+        ctx.textAlign = 'left';
+        ctx.fillText('Vol Avg 63d: ' + (volAvg63/1e6).toFixed(1) + 'M', pad.left + 4, yvAvg63 - 4);
 
         // Price line
         ctx.beginPath();
@@ -364,6 +395,12 @@
         ctx.fillStyle = '#94a3b8'; ctx.font = '10px system-ui'; ctx.textAlign = 'right';
         ctx.fillText('$' + mx.toFixed(0), W - pad.right + 4, pad.top + 10);
         ctx.fillText('$' + mn.toFixed(0), W - pad.right + 4, pad.top + plotH);
+    }
+
+    function calculateVolumeAvg(volumes, period) {
+        if (volumes.length < period) return volumes.reduce((a, b) => a + b, 0) / volumes.length;
+        const sum = volumes.slice(-period).reduce((a, b) => a + b, 0);
+        return sum / period;
     }
 
     // Run on DOM ready

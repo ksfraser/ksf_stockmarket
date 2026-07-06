@@ -12,6 +12,10 @@ import pymysql, numpy as np, json, sys, os, argparse, time
 from datetime import date
 from config_loader import Config
 
+# Import canonical indicator key registry
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from indicator_keys import ALL_KEYS, ALIASES, resolve_indicator_dict
+
 try:
     import talib
 except ImportError:
@@ -130,24 +134,31 @@ def compute_for_symbol(symbol, rows):
         out['ht_sine_sine'] = [None]*n
         out['ht_sine_leadsine'] = [None]*n
 
-    # Oscillators
-    for p, nm in [(3,'rsi_3'),(7,'rsi_7'),(14,'rsi_14'),(21,'rsi_21')]:
+    # RSI - use canonical keys
+    for p, nm in [(3, 'rsi_3'), (7, 'rsi_7'), (14, 'rsi_14'), (21, 'rsi_21')]:
         try:
             r = talib.RSI(c, timeperiod=p)
             out[nm] = [safe(x) for x in r]
         except: out[nm] = [None]*n
 
-    # MACD
-    for fp, sp, sig, prefix in [(8,21,5,'macd_8_21_5'),(12,26,9,'macd_12_26_9'),(24,52,18,'macd_24_52_18')]:
+    # High 60 - 60-day highest high (for trailing stop calculation)
+    try:
+        out['high_60'] = [safe(x) for x in talib.MAX(h, timeperiod=60)]
+    except: out['high_60'] = [None]*n
+
+    # MACD - use canonical keys
+    for fp, sp, sig, prefix in [(8, 21, 5, 'macd_8_21_5'), (12, 26, 9, 'macd_12_26_9'), (24, 52, 18, 'macd_24_52_18')]:
         try:
             m, s, h = talib.MACD(c, fp, sp, sig)
             out[f'{prefix}_macd'] = [safe(x) for x in m]
             out[f'{prefix}_signal'] = [safe(x) for x in s]
+            out[f'{prefix}_hist'] = [safe(x) for x in h]
         except:
             out[f'{prefix}_macd'] = [None]*n
             out[f'{prefix}_signal'] = [None]*n
+            out[f'{prefix}_hist'] = [None]*n
 
-    # STOCH
+    # STOCH - use canonical keys
     for fk, sk, sd, prefix in [(5,3,3,'stoch_5_3_3'),(14,3,3,'stoch_14_3_3'),(21,5,5,'stoch_21_5_5')]:
         try:
             k, d = talib.STOCH(h, l, c, fastk_period=fk, slowk_period=sk, slowd_period=sd)
@@ -279,6 +290,8 @@ def compute_for_symbol(symbol, rows):
     results = []
     for i in range(200, n):
         vals = {k: v[i] for k, v in out.items()}
+        # Resolve canonical + legacy keys for backward compatibility
+        vals = resolve_indicator_dict(vals)
         results.append((symbol, dates[i], vals))
 
     return results

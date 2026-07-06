@@ -230,7 +230,7 @@ class StockController {
         $perf = $this->calcPerformance($symbol);
         
         // Exit signal risk assessment (InvestorsObserver 18 warning signs)
-        $exitSignals = $this->calcExitSignals($symbol, $history, $fundamentals);
+        $exitSignals = $this->calcExitSignals($fundamentals, $indicators, $closePrice);
 
         // Markov regime analysis
         $regime = $this->getRegimeAnalysis($symbol);
@@ -323,7 +323,7 @@ class StockController {
         // 1. Technical: Trailing stop breach (ATR-based)
         if (!empty($ind['atr_14']) && !empty($ind['high_60'])) {
             $atrMult = $cfg['trailing_stop_atr_mult_core'] ?? 3.0;
-            $highestHigh = max($ind['high_60']); // last 60 days highest high
+            $highestHigh = $ind['high_60']; // current day's 60-day highest high
             $trailingStop = $highestHigh - ($atrMult * $ind['atr_14']);
             $signals['trailing_stop_breach'] = ($closePrice < $trailingStop) ? 1.0 : 0.0;
             $weights['trailing_stop_breach'] = 0.20;

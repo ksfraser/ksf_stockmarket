@@ -54,6 +54,7 @@ case "$MODE" in
 
     # 2) Templates from all sources → app root
     rsync -av php/templates/                "$HOST:$APPROOT/templates/"
+    rsync -av php/templates/partials/detail/ "$HOST:$APPROOT/templates/partials/detail/"
     rsync -av python/*.php                  "$HOST:$APPROOT/"
     rsync -av dashboard/templates/          "$HOST:$APPROOT/dashboard/templates/"
     rsync -av dashboard/src/Controller/     "$HOST:$APPROOT/controllers/"
@@ -107,6 +108,9 @@ case "$MODE" in
     rsync -av --delete \
         --exclude='.git' \
         php/templates/            "$TARGET/templates/"
+    rsync -av --delete \
+        --exclude='.git' \
+        php/templates/partials/detail/ "$TARGET/templates/partials/detail/"
     rsync -av --delete \
         --exclude='.git' \
         python/*.php              "$TARGET/"

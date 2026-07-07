@@ -70,7 +70,7 @@ $signalMeta = [
                     $icon = $triggered ? '⚠ SELL' : '✓ OK';
                 ?>
                 <td style="padding:6px 8px; font-weight:500;" title="<?= htmlspecialchars($meta[1]) ?>"><?= htmlspecialchars($meta[0]) ?></td>
-                <td style="padding:6px 8px; text-align:center;"><?= isset($exitDetails[$left]) ? ($exitDetails[$left] ? '1.00' : '0.00') : '—' ?></td>
+                <td style="padding:6px 8px; text-align:center;"><?= isset($exitDetails[$left]) ? ($exitDetails[$left] ? 'True' : 'False') : '—' ?></td>
                 <td style="padding:6px 8px; text-align:center;"><?= round($weight * 100) ?>%</td>
                 <td style="padding:6px 8px; text-align:center; color:<?= $color ?>; font-weight:600;"><?= $icon ?></td>
                 <?php else: ?>
@@ -84,7 +84,7 @@ $signalMeta = [
                     $icon = $triggered ? '⚠ SELL' : '✓ OK';
                 ?>
                 <td style="padding:6px 8px; font-weight:500;" title="<?= htmlspecialchars($meta[1]) ?>"><?= htmlspecialchars($meta[0]) ?></td>
-                <td style="padding:6px 8px; text-align:center;"><?= isset($exitDetails[$right]) ? ($exitDetails[$right] ? '1.00' : '0.00') : '—' ?></td>
+                <td style="padding:6px 8px; text-align:center;"><?= isset($exitDetails[$right]) ? ($exitDetails[$right] ? 'True' : 'False') : '—' ?></td>
                 <td style="padding:6px 8px; text-align:center;"><?= round($weight * 100) ?>%</td>
                 <td style="padding:6px 8px; text-align:center; color:<?= $color ?>; font-weight:600;"><?= $icon ?></td>
                 <?php else: ?>

@@ -1,6 +1,6 @@
 <div class="card" style="margin-top:12px;">
     <div class="card-header">Price & Volume — 250 Days</div>
-    <div id="priceChart" style="height:400px; width:100%;"></div>
+    <div style="height:400px; width:100%;"><canvas id="priceChart" style="display:block; width:100%; height:100%;"></canvas></div>
     <div style="display:flex; gap:16px; padding:8px 12px; font-size:0.8em; color:var(--text3); flex-wrap:wrap;">
         <span><span style="color:#4CAF50">━━</span> Price</span>
         <span><span style="color:#4CAF50">▍</span> Volume (green=up, red=down)</span>

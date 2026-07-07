@@ -310,6 +310,10 @@ class StockController {
         // Markov regime analysis
         $regime = $this->getRegimeAnalysis($symbol);
 
+        // Exit signal risk assessment
+        $closePrice = $latest['close'] ?? 0;
+        $exitSignals = $this->calcExitSignals($fundamentals, $indicators, $closePrice);
+
         $result = compact(
             'symbol', 'latest', 'history', 'indicators', 'indHistory',
             'fundamentals', 'portfolio', 'dividendSafety', 'dividends',

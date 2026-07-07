@@ -314,7 +314,7 @@ class StockController {
             'symbol', 'latest', 'history', 'indicators', 'indHistory',
             'fundamentals', 'portfolio', 'dividendSafety', 'dividends',
             'analystRatings', 'analystTargets', 'news', 'optionsData',
-            'buffettScore', 'perf', 'regime',
+            'buffettScore', 'perf', 'regime', 'exitSignals',
             'recommendations', 'holders', 'financials', 'estimates'
         );
         $result['analyst_ratings'] = $result['analystRatings'];
@@ -323,7 +323,103 @@ class StockController {
         $result['options'] = $result['optionsData'];
         $result['ind_history'] = $result['indHistory'];
         $result['dividend_safety'] = $result['dividendSafety'];
+        $result['exit_signals'] = $result['exitSignals'] ?? [];
         return $result;
+    }
+
+    private function calcExitSignals(array $f, array $ind, float $closePrice = 0): array {
+        if (!$closePrice || $closePrice <= 0) {
+            return ['composite_exit_risk' => 0.5, 'insufficient_data' => true];
+        }
+        
+        $signals = [];
+        $weights = [];
+        $cfg = $this->getExitSignalConfig();
+        
+        if (!empty($ind['atr_14']) && !empty($ind['high_60'])) {
+            $atrMult = $cfg['trailing_stop_atr_mult_core'] ?? 3.0;
+            $highestHigh = $ind['high_60'];
+            $trailingStop = $highestHigh - ($atrMult * $ind['atr_14']);
+            $signals['trailing_stop_breach'] = ($closePrice < $trailingStop) ? 1.0 : 0.0;
+            $weights['trailing_stop_breach'] = 0.20;
+        }
+        
+        if (!empty($ind['rsi_14'])) {
+            $rsiExit = $cfg['rsi_exit_above'] ?? 65;
+            $signals['rsi_overbought'] = ($ind['rsi_14'] > $rsiExit) ? 1.0 : 0.0;
+            $weights['rsi_overbought'] = 0.10;
+        }
+        
+        if (!empty($ind['sma_200']) && $ind['sma_200'] > 0) {
+            $ma200Threshold = $cfg['price_vs_ma200_exit_below'] ?? 0.95;
+            $vsMA200 = $closePrice / $ind['sma_200'];
+            $signals['ma200_breakdown'] = ($vsMA200 < $ma200Threshold) ? 1.0 : 0.0;
+            $weights['ma200_breakdown'] = 0.15;
+        }
+        
+        if (!empty($ind['bb_20_2_0_upper']) && !empty($ind['bb_20_2_0_lower'])) {
+            $bbUpper = $ind['bb_20_2_0_upper'];
+            $bbLower = $ind['bb_20_2_0_lower'];
+            $bbMid = ($bbUpper + $bbLower) / 2;
+            $bbPosition = ($bbUpper != $bbLower) ? ($closePrice - $bbLower) / ($bbUpper - $bbLower) : 0.5;
+            $signals['bb_upper_touch'] = ($bbPosition > 0.95) ? 1.0 : 0.0;
+            $weights['bb_upper_touch'] = 0.10;
+        }
+        
+        if (!empty($f['roe'])) {
+            $signals['roe_deterioration'] = ($f['roe'] < ($cfg['exit_on_roe_drop_below'] ?? 0.10)) ? 1.0 : 0.0;
+            $weights['roe_deterioration'] = 0.10;
+        }
+        
+        if (!empty($f['debt_to_equity'])) {
+            $signals['debt_equity_rise'] = ($f['debt_to_equity'] > ($cfg['exit_on_debt_equity_above'] ?? 0.60)) ? 1.0 : 0.0;
+            $weights['debt_equity_rise'] = 0.10;
+        }
+        
+        if (($cfg['exit_on_fcf_negative'] ?? true) && isset($f['free_cash_flow'])) {
+            $signals['fcf_negative'] = ($f['free_cash_flow'] < 0) ? 1.0 : 0.0;
+            $weights['fcf_negative'] = 0.10;
+        }
+        
+        if (!empty($f['trailing_pe'])) {
+            $signals['pe_extreme'] = ($f['trailing_pe'] > ($cfg['max_pe_core'] ?? 25.0)) ? 1.0 : 0.0;
+            $weights['pe_extreme'] = 0.08;
+        }
+        
+        if (!empty($f['market_cap']) && !empty($f['free_cash_flow'])) {
+            $fcfYieldThreshold = $cfg['min_fcf_yield_exit_signals'] ?? 0.02;
+            $fcfYield = $f['free_cash_flow'] / $f['market_cap'];
+            $signals['fcf_yield_low'] = ($fcfYield < $fcfYieldThreshold) ? 1.0 : 0.0;
+            $weights['fcf_yield_low'] = 0.05;
+        }
+        
+        $totalWeight = array_sum($weights);
+        if ($totalWeight > 0) {
+            $composite = 0;
+            foreach ($weights as $signal => $weight) {
+                $composite += ($signals[$signal] ?? 0) * $weight;
+            }
+            $composite = $composite / $totalWeight;
+        } else {
+            $composite = 0.5;
+        }
+        
+        return [
+            'composite_exit_risk' => round($composite, 3),
+            'individual_signals' => array_map(fn($v) => round($v, 3), $signals),
+            'signal_weights' => array_map(fn($v) => round($v, 3), $weights),
+            'n_signals_triggered' => array_sum(array_map(fn($v) => $v > 0 ? 1 : 0, $signals)),
+            'n_signals_total' => count($signals)
+        ];
+    }
+    
+    private function getExitSignalConfig(): array {
+        $cfgPath = __DIR__ . '/../config.yaml';
+        if (file_exists($cfgPath)) {
+            $config = yaml_parse_file($cfgPath);
+            return $config['signals']['exit_signals'] ?? [];
+        }
+        return [];
     }
 
     /**

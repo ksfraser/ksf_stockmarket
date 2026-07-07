@@ -62,6 +62,8 @@ case "$MODE" in
     for f in dashboard/*.php; do
       [ -f "$f" ] && rsync -av "$f" "$HOST:$APPROOT/"
     done
+    # Ensure Apache can read all template files
+    ssh "$HOST" "chown -R apache:apache $APPROOT/templates/partials/detail && chmod 644 $APPROOT/templates/partials/detail/*.php"
 
     # 3) PHP app code
     rsync -av php/src/                      "$HOST:$APPROOT/src/"

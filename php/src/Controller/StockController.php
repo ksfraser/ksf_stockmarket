@@ -136,8 +136,8 @@ class StockController {
         $stmt->execute([':sym' => $symbol, ':d' => $latest['price_date']]);
         $latest['prev_close'] = $stmt->fetchColumn();
 
-        // 250 days history
-        $stmt = $this->pdo->prepare("SELECT price_date, open, high, low, close, volume FROM stockprices WHERE symbol = :sym ORDER BY price_date DESC LIMIT 250");
+        // 2 years history — enough to cover dividend ex-dates for the Recent Dividends table
+        $stmt = $this->pdo->prepare("SELECT price_date, open, high, low, close, volume FROM stockprices WHERE symbol = :sym ORDER BY price_date DESC LIMIT 730");
         $stmt->execute([':sym' => $symbol]);
         $history = array_reverse($stmt->fetchAll());
 
@@ -216,7 +216,10 @@ class StockController {
             }
         }
 
-        // News — use news_feeds table populated by news_monitor.py
+        // Analyst recommendations
+        $recommendations = $this->getTableData('analyst_recommendations', $symbol, 'rec_date DESC', 30);
+
+        // News — use news_feeds table populated by news_monitor.py, fallback to symbol_news
         $news = [];
         try {
             $sql = "SELECT title, url, source, published AS date, summary FROM news_feeds WHERE symbol_filter = :sym ORDER BY published DESC LIMIT 10";
@@ -226,10 +229,76 @@ class StockController {
         } catch (\Exception $e) {
             $news = [];
         }
+        if (empty($news)) {
+            $news = $this->getTableData('symbol_news', $symbol, 'date DESC', 10);
+        }
+        // Enrich news with LLM processed summaries
+        $newsProcessed = [];
+        foreach ($news as $n) {
+            $url = $n['url'] ?? '';
+            $date = $n['date'] ?? '';
+            // Try to find a processed record by matching title or url roughly
+            // We map by source_id if we can infer it, otherwise we'll just do a best-effort join
+            // For now, we'll fetch by symbol + nearby date
+            try {
+                $stmt = $this->pdo->prepare("
+                    SELECT np.summary, np.classification, np.sentiment, np.recommendation, np.confidence
+                    FROM news_processed np
+                    WHERE np.symbol = :sym
+                      AND np.processed_at >= DATE_SUB(:dt, INTERVAL 7 DAY)
+                    ORDER BY np.processed_at DESC
+                    LIMIT 10
+                ");
+                $stmt->execute([':sym' => $symbol, ':dt' => $date]);
+                $matched = $stmt->fetchAll();
+                $n['processed'] = $matched ? $matched[0] : null;
+            } catch (\Exception $e) {
+                $n['processed'] = null;
+            }
+            $newsProcessed[] = $n;
+        }
+        $news = $newsProcessed;
 
         // Options snapshot
         $opts = $this->getTableData('options_snapshot', $symbol, 'fetch_date DESC', 1);
         $optionsData = $opts[0] ?? [];
+
+        // Holders
+        $holders = ['major' => [], 'institutional' => []];
+        try {
+            $stmt = $this->pdo->prepare("SELECT holder_name, shares, percent_held, value FROM holders WHERE symbol = :sym AND holder_type = 'major' AND fetch_date = CURDATE() ORDER BY shares DESC");
+            $stmt->execute([':sym' => $symbol]);
+            $holders['major'] = $stmt->fetchAll();
+        } catch (\Exception $e) {}
+        try {
+            $stmt = $this->pdo->prepare("SELECT holder_name, shares, percent_held, value FROM holders WHERE symbol = :sym AND holder_type = 'institutional' AND fetch_date = CURDATE() ORDER BY shares DESC");
+            $stmt->execute([':sym' => $symbol]);
+            $holders['institutional'] = $stmt->fetchAll();
+        } catch (\Exception $e) {}
+
+        // Financial statements
+        $financials = [];
+        foreach (['income', 'balance', 'cashflow'] as $stmtType) {
+            $financials[$stmtType] = ['annual' => [], 'quarterly' => []];
+            foreach (['annual', 'quarterly'] as $period) {
+                try {
+                    $stmt = $this->pdo->prepare("SELECT fiscal_date, raw_data FROM financial_statements WHERE symbol = :sym AND statement_type = :stmt AND period_type = :period ORDER BY fiscal_date DESC LIMIT 8");
+                    $stmt->execute([':sym' => $symbol, ':stmt' => $stmtType, ':period' => $period]);
+                    $financials[$stmtType][$period] = $stmt->fetchAll();
+                } catch (\Exception $e) {}
+            }
+        }
+
+        // Analyst estimates
+        $estimates = [];
+        foreach (['earnings', 'revenue'] as $estType) {
+            $estimates[$estType] = [];
+            try {
+                $stmt = $this->pdo->prepare("SELECT period, low_estimate, high_estimate, avg_estimate, num_analysts FROM analyst_estimates WHERE symbol = :sym AND estimate_type = :est ORDER BY period DESC LIMIT 6");
+                $stmt->execute([':sym' => $symbol, ':est' => $estType]);
+                $estimates[$estType] = $stmt->fetchAll();
+            } catch (\Exception $e) {}
+        }
 
         // Buffett quality score (pass close price since it's in stockprices, not indicators)
         $closePrice = $latest['close'] ?? 0;
@@ -245,13 +314,15 @@ class StockController {
             'symbol', 'latest', 'history', 'indicators', 'indHistory',
             'fundamentals', 'portfolio', 'dividendSafety', 'dividends',
             'analystRatings', 'analystTargets', 'news', 'optionsData',
-            'buffettScore', 'perf', 'regime'
+            'buffettScore', 'perf', 'regime',
+            'recommendations', 'holders', 'financials', 'estimates'
         );
         $result['analyst_ratings'] = $result['analystRatings'];
         $result['analyst_targets'] = $result['analystTargets'];
         $result['buffett_score'] = $result['buffettScore'];
         $result['options'] = $result['optionsData'];
         $result['ind_history'] = $result['indHistory'];
+        $result['dividend_safety'] = $result['dividendSafety'];
         return $result;
     }
 

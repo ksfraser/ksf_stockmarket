@@ -12,6 +12,6 @@
         <div><span class="text-muted">Gross Margin</span><br><strong><?= $fundamentals['gross_margin'] ? number_format($fundamentals['gross_margin'], 1) . '%' : '—' ?></strong></div>
         <div><span class="text-muted">Operating Margin</span><br><strong><?= $fundamentals['operating_margin'] ? number_format($fundamentals['operating_margin'], 1) . '%' : '—' ?></strong></div>
         <div><span class="text-muted">ROA</span><br><strong><?= $fundamentals['roa'] ? number_format($fundamentals['roa'], 1) . '%' : '—' ?></strong></div>
-        <div><span class="text-muted">EV/EBITDA</span><br><strong><?= $fundamentals['enterprise_to_ebitda'] ? number_format($fundamentals['enterprise_to_ebitda'], 2) : '—' ?></strong></div>
+        <div><span class="text-muted">EV/EBITDA</span><br><strong><?= ($fundamentals['enterprise_to_ebitda'] ?? '') ? number_format($fundamentals['enterprise_to_ebitda'], 2) : '—' ?></strong></div>
     </div>
 </div>

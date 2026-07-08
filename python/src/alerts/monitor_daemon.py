@@ -4,10 +4,10 @@
 Stock Alert Monitor - Complete async LLM alert system
 ===================================================
 
-1. Detection scripts queue alerts (non-blocking)
-2. This script polls MariaDB for pending alerts
+1. Detection scripts queue alerts to local SQLite staging (non-blocking)
+2. This script polls SQLite staging for pending alerts
 3. Calls LLM for analysis
-4. Responds to Discord #stock-sell-alerts channel
+4. Promotes completed alerts into MariaDB and responds to Discord #stock-sell-alerts channel
 """
 
 import os
@@ -81,8 +81,8 @@ def build_prompt(alert_type: str, symbol: str, payload: dict) -> str:
     return prompts.get(alert_type, f"Analyze {symbol} alert: {alert_type}")
 
 
-def process_alert(conn, alert_row):
-    """Process single alert with LLM analysis."""
+def process_alert(alert_row):
+    """Process single alert with LLM analysis from staging."""
     alert_id = alert_row["id"]
     symbol = alert_row["symbol"]
     alert_type = alert_row["alert_type"]
@@ -92,18 +92,23 @@ def process_alert(conn, alert_row):
     response = call_llm(prompt, symbol)
     
     if response:
-        cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO alert_responses (alert_id, response_text, response_type, responder) VALUES (%s, %s, %s, %s)",
-            (alert_id, response[:1000], "hermes", "alert_monitor")
-        )
-        cursor.execute(
-            "UPDATE alert_queue SET status = %s, completed_at = NOW() WHERE id = %s",
-            ("completed", alert_id)
-        )
-        conn.commit()
-        
-# Send to Discord
+        conn = get_connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO alert_responses (alert_id, response_text, response_type, responder) VALUES (%s, %s, %s, %s)",
+                (alert_id, response[:1000], "hermes", "alert_monitor")
+            )
+            cursor.execute(
+                "UPDATE alert_queue SET status = %s, completed_at = NOW() WHERE id = %s",
+                ("completed", alert_id)
+            )
+            conn.commit()
+        finally:
+            cursor.close()
+            conn.close()
+
+        # Send to Discord
         try:
             from hermes_tools import send_message
             formatted_type = alert_type.replace("_", " ").title()
@@ -111,7 +116,7 @@ def process_alert(conn, alert_row):
                 target=f"discord:{DISCORD_CHANNEL}",
                 message=f"**{symbol} - {formatted_type} Analysis**\n\n{response}"
             )
-        except:
+        except Exception:
             logger.info(f"Alert processed: {symbol} - {alert_type}")
             
         return True
@@ -120,26 +125,21 @@ def process_alert(conn, alert_row):
 
 def monitor_once():
     """Process all pending alerts once."""
+    from alerts.sqlite_staging import fetch_pending_staging, mark_completed_staging
+    from alerts.repository import promote_to_mariadb
+    
     llm = template = 0
     try:
-        conn = get_connection()
-        cursor = conn.cursor(pymysql.cursors.DictCursor)
-
-        cursor.execute("""
-            SELECT * FROM alert_queue
-            WHERE status = 'pending' AND request_llm_analysis = 1
-            ORDER BY created_at ASC LIMIT 10
-        """)
-
-        alerts = cursor.fetchall()
+        alerts = list(fetch_pending_staging(limit=10))
 
         for alert in alerts:
-            if process_alert(conn, alert):
+            if process_alert(alert):
                 llm += 1
+                promote_to_mariadb(alert, "Processed via monitor daemon")
             else:
                 template += 1
+            mark_completed_staging(alert["id"])
 
-        conn.close()
         logger.info("Processed %d alerts", len(alerts))
     except Exception as e:
         logger.error("Monitor error: %s", e)

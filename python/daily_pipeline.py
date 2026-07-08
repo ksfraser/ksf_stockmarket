@@ -224,12 +224,16 @@ class DailyPriceDownloader:
             "ON DUPLICATE KEY UPDATE open=%s, high=%s, low=%s, close=%s, volume=%s"
         )
 
+        batch = []
+        for p in new_prices:
+            batch.append((
+                symbol, p['date'], p['open'], p['high'], p['low'], p['close'], p['volume'],
+                p['open'], p['high'], p['low'], p['close'], p['volume']
+            ))
+
         with self.db.connect() as conn:
-            for p in new_prices:
-                conn.execute(sql, (
-                    symbol, p['date'], p['open'], p['high'], p['low'], p['close'], p['volume'],
-                    p['open'], p['high'], p['low'], p['close'], p['volume']
-                ))
+            if batch:
+                conn.executemany(sql, batch)
 
         return len(new_prices)
 

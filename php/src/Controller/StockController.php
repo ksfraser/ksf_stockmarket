@@ -304,6 +304,9 @@ class StockController {
         $closePrice = $latest['close'] ?? 0;
         $buffettScore = $this->calcBuffettScore($fundamentals, $indicators, $closePrice);
 
+        // Zacks-style composite score
+        $zacksScore = $this->calcZacksStyleScore($fundamentals, $indicators, $closePrice);
+
         // Performance
         $perf = $this->calcPerformance($symbol);
         
@@ -318,12 +321,13 @@ class StockController {
             'symbol', 'latest', 'history', 'indicators', 'indHistory',
             'fundamentals', 'portfolio', 'dividendSafety', 'dividends',
             'analystRatings', 'analystTargets', 'news', 'optionsData',
-            'buffettScore', 'perf', 'regime', 'exitSignals',
+            'buffettScore', 'zacksScore', 'perf', 'regime', 'exitSignals',
             'recommendations', 'holders', 'financials', 'estimates'
         );
         $result['analyst_ratings'] = $result['analystRatings'];
         $result['analyst_targets'] = $result['analystTargets'];
         $result['buffett_score'] = $result['buffettScore'];
+        $result['zacks_score'] = $result['zacksScore'] ?? [];
         $result['options'] = $result['optionsData'];
         $result['ind_history'] = $result['indHistory'];
         $result['dividend_safety'] = $result['dividendSafety'];
@@ -528,6 +532,116 @@ class StockController {
         }
 
         return ['total' => $score, 'score' => $score, 'max' => $maxScore, 'checks' => $checks];
+    }
+
+    /**
+     * Compute a Zacks-style composite score using available fundamentals + indicators.
+     * Grades: A=90-100, B=80-89, C=70-79, D=60-69, F=<60
+     * Rank: 1=Strong Buy, 2=Buy, 3=Hold, 4=Sell, 5=Strong Sell
+     */
+    private function calcZacksStyleScore(array $f, array $ind, float $closePrice = 0): array {
+        $checks = [];
+        $maxScore = 100;
+
+        // Value (40 points): low PE, low PB, high FCF yield, manageable debt
+        $valueScore = 0;
+        if (!empty($f['trailing_pe']) && $f['trailing_pe'] > 0) {
+            $pe = (float)$f['trailing_pe'];
+            $checks['P/E < 20x'] = $pe < 20;
+            if ($pe < 15) $valueScore += 10;
+            elseif ($pe < 20) $valueScore += 7;
+            elseif ($pe < 30) $valueScore += 4;
+        }
+        if (!empty($f['price_to_book']) && $f['price_to_book'] > 0) {
+            $pb = (float)$f['price_to_book'];
+            $checks['P/B < 2.0'] = $pb < 2.0;
+            if ($pb < 1.0) $valueScore += 10;
+            elseif ($pb < 2.0) $valueScore += 7;
+            elseif ($pb < 3.0) $valueScore += 4;
+        }
+        if (!empty($f['free_cash_flow']) && !empty($f['market_cap']) && $f['market_cap'] > 0) {
+            $fcfYield = (float)$f['free_cash_flow'] / (float)$f['market_cap'];
+            $checks['FCF Yield > 3%'] = $fcfYield > 0.03;
+            if ($fcfYield > 0.06) $valueScore += 10;
+            elseif ($fcfYield > 0.03) $valueScore += 7;
+            elseif ($fcfYield > 0.01) $valueScore += 4;
+        }
+        if (!empty($f['debt_to_equity'])) {
+            $de = (float)$f['debt_to_equity'];
+            $checks['D/E < 0.8'] = $de < 0.8;
+            if ($de < 0.3) $valueScore += 10;
+            elseif ($de < 0.8) $valueScore += 7;
+            elseif ($de < 1.5) $valueScore += 4;
+        }
+        $valuePct = min(100, ($valueScore / 40) * 100);
+        $valueGrade = $valuePct >= 90 ? 'A' : ($valuePct >= 80 ? 'B' : ($valuePct >= 70 ? 'C' : ($valuePct >= 60 ? 'D' : 'F')));
+
+        // Growth (30 points): EPS growth, revenue growth
+        $growthScore = 0;
+        if (!empty($f['earnings_growth'])) {
+            $eg = (float)$f['earnings_growth'];
+            $checks['EPS Growth > 10%'] = $eg > 0.10;
+            if ($eg > 0.20) $growthScore += 15;
+            elseif ($eg > 0.10) $growthScore += 10;
+            elseif ($eg > 0) $growthScore += 5;
+        }
+        if (!empty($f['revenue_growth'])) {
+            $rg = (float)$f['revenue_growth'];
+            $checks['Revenue Growth > 5%'] = $rg > 0.05;
+            if ($rg > 0.15) $growthScore += 15;
+            elseif ($rg > 0.05) $growthScore += 10;
+            elseif ($rg > 0) $growthScore += 5;
+        }
+        $growthPct = min(100, ($growthScore / 30) * 100);
+        $growthGrade = $growthPct >= 90 ? 'A' : ($growthPct >= 80 ? 'B' : ($growthPct >= 70 ? 'C' : ($growthPct >= 60 ? 'D' : 'F')));
+
+        // Momentum (20 points): price vs SMA200, RSI not overbought
+        $momentumScore = 0;
+        if (!empty($ind['sma_200']) && $ind['sma_200'] > 0 && $closePrice > 0) {
+            $vsSMA = $closePrice / (float)$ind['sma_200'];
+            $checks['Price > SMA200'] = $vsSMA > 1.0;
+            if ($vsSMA > 1.05) $momentumScore += 10;
+            elseif ($vsSMA > 1.0) $momentumScore += 7;
+            elseif ($vsSMA > 0.95) $momentumScore += 4;
+        }
+        if (!empty($ind['rsi_14'])) {
+            $rsi = (float)$ind['rsi_14'];
+            $checks['RSI 30-65'] = $rsi >= 30 && $rsi <= 65;
+            if ($rsi >= 40 && $rsi <= 60) $momentumScore += 10;
+            elseif ($rsi >= 30 && $rsi <= 70) $momentumScore += 6;
+            elseif ($rsi >= 20 && $rsi <= 80) $momentumScore += 3;
+        }
+        $momentumPct = min(100, ($momentumScore / 20) * 100);
+        $momentumGrade = $momentumPct >= 90 ? 'A' : ($momentumPct >= 80 ? 'B' : ($momentumPct >= 70 ? 'C' : ($momentumPct >= 60 ? 'D' : 'F')));
+
+        // VGM composite
+        $vgmPct = ($valuePct + $growthPct + $momentumPct) / 3;
+        $vgmGrade = $vgmPct >= 90 ? 'A' : ($vgmPct >= 80 ? 'B' : ($vgmPct >= 70 ? 'C' : ($vgmPct >= 60 ? 'D' : 'F')));
+
+        // Zacks Rank 1-5 from weighted composite
+        $composite = ($valuePct * 0.40) + ($growthPct * 0.30) + ($momentumPct * 0.20) + ($vgmPct * 0.10);
+        $rank = 5;
+        if ($composite >= 90) $rank = 1;
+        elseif ($composite >= 80) $rank = 2;
+        elseif ($composite >= 70) $rank = 3;
+        elseif ($composite >= 60) $rank = 4;
+
+        $rankText = ['1' => 'Strong Buy', '2' => 'Buy', '3' => 'Hold', '4' => 'Sell', '5' => 'Strong Sell'][$rank];
+
+        return [
+            'rank' => $rank,
+            'rank_text' => $rankText,
+            'composite' => round($composite, 1),
+            'value_grade' => $valueGrade,
+            'growth_grade' => $growthGrade,
+            'momentum_grade' => $momentumGrade,
+            'vgm_grade' => $vgmGrade,
+            'value_pct' => round($valuePct, 1),
+            'growth_pct' => round($growthPct, 1),
+            'momentum_pct' => round($momentumPct, 1),
+            'vgm_pct' => round($vgmPct, 1),
+            'checks' => $checks,
+        ];
     }
 
     /**

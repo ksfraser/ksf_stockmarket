@@ -236,28 +236,61 @@ def upsert_fundamentals(conn, symbol, info):
         cur.execute(sql, values)
     conn.commit()
 
+def _extract_article(article):
+    """Support both legacy flat yfinance news and the newer nested 'content' format."""
+    content = article.get('content') if isinstance(article, dict) else None
+    if isinstance(content, dict):
+        title = content.get('title', '') or ''
+        summary = content.get('summary', '') or ''
+        pub = content.get('pubDate')
+        publisher = ''
+        provider = content.get('provider')
+        if isinstance(provider, dict):
+            publisher = provider.get('displayName', '') or ''
+        # Prefer canonical, then clickThrough, then previewUrl
+        link = ''
+        for key in ('canonicalUrl', 'clickThroughUrl'):
+            url_obj = content.get(key)
+            if isinstance(url_obj, dict):
+                link = url_obj.get('url', '') or ''
+                if link:
+                    break
+    else:
+        title = article.get('title', '') or ''
+        summary = article.get('summary', '') or ''
+        pub = article.get('published') or article.get('pubDate')
+        publisher = article.get('publisher', '') or ''
+        link = article.get('link', '') or ''
+    return title, summary, pub, publisher, link
+
+
 def upsert_news(conn, symbol, news):
     if not news:
         return
     with conn.cursor() as cur:
         for article in news:
-            title = article.get('title', '')
-            link = article.get('link', '')
-            pub = article.get('published')
+            title, summary, pub, publisher, link = _extract_article(article)
             if isinstance(pub, datetime):
                 pub = pub.strftime('%Y-%m-%d %H:%i:%s')
-            # Skip articles without a URL or title
+            # Skip articles without a URL and title
             if not title and not link:
                 continue
             cur.execute("""
                 INSERT IGNORE INTO symbol_news (symbol, title, url, source, summary, date)
                 VALUES (%s, %s, %s, %s, %s, %s)
-            """, (symbol, title, link, article.get('publisher', ''), article.get('summary', ''), pub))
+            """, (symbol, title, link, publisher, summary, pub))
     conn.commit()
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--symbols', default=None, help='Comma-separated symbols to enrich')
+    args = parser.parse_args()
+
     conn = pymysql.connect(**DB_CFG)
     symbols = get_active_symbols(conn)
+    if args.symbols:
+        symbols = [s.strip() for s in args.symbols.split(',') if s.strip()]
     print(f"Active symbols: {len(symbols)}")
 
     done = 0

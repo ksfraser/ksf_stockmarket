@@ -366,6 +366,54 @@ window.currentPrice = <?= (float)$close ?>;
 </div>
 <?php endif; ?>
 
+<!-- ===== ZACKS STYLE SCORE ===== -->
+<?php
+$z = $zacks_score ?? [];
+if (!empty($z)):
+    $rankColors = [1=>'var(--green)', 2=>'var(--green)', 3=>'var(--yellow)', 4=>'var(--red)', 5=>'var(--red)'];
+    $rankColor = $rankColors[$z['rank'] ?? 5] ?? 'var(--text3)';
+    $gradeColors = ['A'=>'var(--green)', 'B'=>'#4caf50', 'C'=>'var(--yellow)', 'D'=>'var(--red)', 'F'=>'var(--red)'];
+?>
+<div class="card" style="margin-top:12px;">
+    <div class="card-header">Zacks-Style Score</div>
+    <div style="display:flex; gap:20px; align-items:center; margin-bottom:12px;">
+        <div style="font-size:2.5em; font-weight:700; color:<?= $rankColor ?>">
+            <?= htmlspecialchars($z['rank_text'] ?? '—') ?>
+        </div>
+        <div style="font-size:0.9em; color:var(--text3);">
+            Composite <?= htmlspecialchars($z['composite'] ?? '—') ?>/100
+        </div>
+    </div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value" style="color:<?= $gradeColors[$z['value_grade'] ?? 'C'] ?? 'var(--text1)' ?>"><?= htmlspecialchars($z['value_grade'] ?? '—') ?></div>
+            <div class="stat-label">Value (<?= htmlspecialchars($z['value_pct'] ?? '—') ?>/100)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color:<?= $gradeColors[$z['growth_grade'] ?? 'C'] ?? 'var(--text1)' ?>"><?= htmlspecialchars($z['growth_grade'] ?? '—') ?></div>
+            <div class="stat-label">Growth (<?= htmlspecialchars($z['growth_pct'] ?? '—') ?>/100)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color:<?= $gradeColors[$z['momentum_grade'] ?? 'C'] ?? 'var(--text1)' ?>"><?= htmlspecialchars($z['momentum_grade'] ?? '—') ?></div>
+            <div class="stat-label">Momentum (<?= htmlspecialchars($z['momentum_pct'] ?? '—') ?>/100)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color:<?= $gradeColors[$z['vgm_grade'] ?? 'C'] ?? 'var(--text1)' ?>"><?= htmlspecialchars($z['vgm_grade'] ?? '—') ?></div>
+            <div class="stat-label">VGM (<?= htmlspecialchars($z['vgm_pct'] ?? '—') ?>/100)</div>
+        </div>
+    </div>
+    <?php if (!empty($z['checks'])): ?>
+    <div style="margin-top:10px; font-size:0.85em;">
+        <?php foreach ($z['checks'] as $label => $passed): ?>
+            <span style="display:inline-block; padding:3px 8px; margin:2px; border-radius:4px; background:<?= $passed ? 'var(--green-bg)' : 'var(--red-bg)' ?>; color:<?= $passed ? 'var(--green)' : 'var(--red)' ?>;">
+                <?= $passed ? '✓' : '✗' ?> <?= htmlspecialchars($label) ?>
+            </span>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+</div>
+<?php endif; ?>
+
 <!-- ===== FUNDAMENTALS DEEP DIVE ===== -->
 <div class="card" style="margin-top:12px;">
     <div class="card-header">Fundamentals Deep Dive</div>

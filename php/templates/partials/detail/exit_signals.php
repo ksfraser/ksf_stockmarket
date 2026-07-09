@@ -11,6 +11,7 @@ $signalMeta = [
     'rsi_overbought' => ['RSI Overbought', 'RSI(14) above 65 — momentum overextended'],
     'ma200_breakdown' => ['200D MA Breakdown', 'Price below 95% of 200-day SMA — long-term trend broken'],
     'bb_upper_touch' => ['Bollinger Band Upper Touch', 'Price at >95% of BB(20,2) range — overextended'],
+    'price_drop_7d' => ['7-Day Hard Drop', 'Price dropped >5% in 7 trading days — sharp short-term weakness'],
     'roe_deterioration' => ['ROE Deterioration', 'Return on Equity below 10% — quality declining'],
     'debt_equity_rise' => ['Debt/Equity Rise', 'D/E ratio above 0.6 — leverage increasing'],
     'fcf_negative' => ['FCF Negative', 'Free Cash Flow negative — cash burn'],
@@ -20,10 +21,9 @@ $signalMeta = [
     'sector_underperformance' => ['Sector Underperformance', 'Stock lagging sector ETF by >10%'],
     'fcf_yield_low' => ['FCF Yield Low', 'FCF/Market Cap below 2% — poor cash generation'],
     'earnings_drop' => ['Earnings Drop', 'Quarterly EPS declined >20% QoQ'],
-    'dividend_cut' => ['Dividend Cut', 'Dividend reduced vs prior period'],
+    'dividend_cut_signal' => ['Dividend Cut Signal', 'Dividend reduced to zero or below prior period'],
     'yield_on_cost_low' => ['Yield on Cost Low', 'Yield on cost below 1.5%'],
     'debt_ebitda_high' => ['Debt/EBITDA High', 'Debt/EBITDA above 4× — leverage risk'],
-    'management_change' => ['Management Change', 'CEO/CFO departure — execution risk'],
     'cash_burn' => ['Cash Burn', 'Cash runway <4 quarters at current burn rate'],
 ];
 ?>

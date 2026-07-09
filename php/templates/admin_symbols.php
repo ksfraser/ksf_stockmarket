@@ -58,9 +58,9 @@ $baseQsNoPage = http_build_query(array_diff_key($preserve, ['page' => $page]));
 
         <div style="display:flex; align-items:center; gap:8px; font-size:0.85em;">
             <span class="muted">Showing <?= $start ?>–<?= $end ?> of <?= $totalAll ?></span>
-            <a href="<?= pageLink($page - 1, $baseQs, $page) ?>" class="btn btn-sm" style="<?= $page <= 1 ? 'opacity:0.4;pointer-events:none;' : '' ?>">◀ Prev</a>
+            <a href="?<?= $baseQsNoPage ?>&page=<?= max(1, $page - 1) ?>" class="btn btn-sm" style="<?= $page <= 1 ? 'opacity:0.4;pointer-events:none;' : '' ?>">◀ Prev</a>
             <span style="color:var(--text2);">Page <?= $page ?> / <?= $totalPages ?></span>
-            <a href="<?= pageLink($page + 1, $baseQs, $page) ?>" class="btn btn-sm" style="<?= $page >= $totalPages ? 'opacity:0.4;pointer-events:none;' : '' ?>">Next ▶</a>
+            <a href="?<?= $baseQsNoPage ?>&page=<?= min($totalPages, $page + 1) ?>" class="btn btn-sm" style="<?= $page >= $totalPages ? 'opacity:0.4;pointer-events:none;' : '' ?>">Next ▶</a>
         </div>
     </div>
 
@@ -176,9 +176,9 @@ $baseQsNoPage = http_build_query(array_diff_key($preserve, ['page' => $page]));
     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; flex-wrap:wrap; gap:8px;">
         <span class="muted" style="font-size:0.85em;">Showing <?= $start ?>–<?= $end ?> of <?= $totalAll ?></span>
         <div style="display:flex; gap:6px; align-items:center;">
-            <a href="<?= pageLink($page - 1, $baseQs, $page) ?>" class="btn btn-sm" style="<?= $page <= 1 ? 'opacity:0.4;pointer-events:none;' : '' ?>">◀ Prev</a>
+            <a href="?<?= $baseQsNoPage ?>&page=<?= max(1, $page - 1) ?>" class="btn btn-sm" style="<?= $page <= 1 ? 'opacity:0.4;pointer-events:none;' : '' ?>">◀ Prev</a>
             <span style="color:var(--text2); font-size:0.85em;">Page <?= $page ?> of <?= $totalPages ?></span>
-            <a href="<?= pageLink($page + 1, $baseQs, $page) ?>" class="btn btn-sm" style="<?= $page >= $totalPages ? 'opacity:0.4;pointer-events:none;' : '' ?>">Next ▶</a>
+            <a href="?<?= $baseQsNoPage ?>&page=<?= min($totalPages, $page + 1) ?>" class="btn btn-sm" style="<?= $page >= $totalPages ? 'opacity:0.4;pointer-events:none;' : '' ?>">Next ▶</a>
         </div>
     </div>
 </div>

@@ -186,7 +186,7 @@ class LifecycleWorker:
             self.lifecycle_repo.set_state(symbol, next_state)
 
     def _claim(self, limit: int) -> list[tuple[str, str, dict[str, Any]]]:
-        conn = pymysql.connect(**self.mysql_config)
+        conn = pymysql.connect(cursorclass=pymysql.cursors.DictCursor, **self.mysql_config)
         try:
             conn.begin()
             cur = conn.cursor()
@@ -198,7 +198,7 @@ class LifecycleWorker:
                 (limit,),
             )
             rows = cur.fetchall()
-            event_ids = [row[0] for row in rows]
+            event_ids = [row['event_id'] for row in rows]
             if event_ids:
                 placeholders = ",".join(["%s"] * len(event_ids))
                 cur.execute(
@@ -207,7 +207,7 @@ class LifecycleWorker:
                     event_ids,
                 )
             conn.commit()
-            return [(row[0], row[1], _safe_payload(row[2])) for row in rows]
+            return [(row['event_id'], row['event_type'], _safe_payload(row['payload'])) for row in rows]
         finally:
             conn.close()
 

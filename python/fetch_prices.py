@@ -9,7 +9,7 @@ explicitly requested with --symbols or --full-history.
 Usage:
     python3 fetch_prices.py [--max 100] [--start-from SYMBOL] [--days N] [--full-history] [--symbols A,B]
 """
-import pymysql, yfinance as yf, pandas as pd, re
+import pymysql, yfinance as yf, pandas as pd, re, csv
 import sys, os, time, argparse
 from datetime import date, timedelta
 from pathlib import Path
@@ -48,6 +48,54 @@ def _load_env_db():
                 k, v = line.split('=', 1)
                 vals[k.strip()] = v.strip().strip('"').strip("'")
     return vals
+
+
+def _load_manifest(path: str) -> dict:
+    manifest = {}
+    if not os.path.exists(path):
+        return manifest
+    with open(path, newline='') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            sym = row.get('symbol')
+            if not sym:
+                continue
+            manifest[sym] = {
+                'status': row.get('status', ''),
+                'rows': int(row.get('rows', 0) or 0),
+                'start_date': row.get('start_date', ''),
+                'end_date': row.get('end_date', ''),
+                'error': row.get('error', ''),
+            }
+    return manifest
+
+
+def _save_manifest(path: str, manifest: dict) -> None:
+    os.makedirs(os.path.dirname(path) or '.', exist_ok=True)
+    with open(path, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['symbol', 'status', 'rows', 'start_date', 'end_date', 'error'])
+        for sym in sorted(manifest):
+            row = manifest[sym]
+            writer.writerow([
+                sym,
+                row.get('status', ''),
+                row.get('rows', 0),
+                row.get('start_date', ''),
+                row.get('end_date', ''),
+                row.get('error', ''),
+            ])
+
+
+def _update_manifest(manifest: dict, sym: str, status: str, rows: int = 0,
+                     start_date: str = '', end_date: str = '', error: str = '') -> None:
+    manifest[sym] = {
+        'status': status,
+        'rows': rows,
+        'start_date': start_date,
+        'end_date': end_date,
+        'error': error,
+    }
 
 if _cfg is not None:
     MYSQL = dict(
@@ -148,28 +196,22 @@ def insert_prices(c, sym, hist):
     rows = []
     for idx, row in hist.iterrows():
         d = idx.strftime('%Y-%m-%d')
-        rows.append(
-            (
-                sym,
-                d,
-                float(row['Open']) if pd.notna(row['Open']) else None,
-                float(row['High']) if pd.notna(row['High']) else None,
-                float(row['Low']) if pd.notna(row['Low']) else None,
-                float(row['Close']),
-                int(row['Volume']) if pd.notna(row['Volume']) else None,
-                float(row['Close'])
-                if 'Adj Close' in row and pd.isna(row.get('Adj Close'))
-                else float(row['Adj Close'])
-                if 'Adj Close' in row and pd.notna(row.get('Adj Close'))
-                else float(row['Close']),
-                float(row.get('Dividends', 0))
-                if pd.notna(row.get('Dividends', 0))
-                else 0,
-                float(row.get('Stock Splits', 1))
-                if pd.notna(row.get('Stock Splits', 1))
-                else 1,
-            )
-        )
+        close = row['Close']
+        adj = row.get('Adj Close', close)
+        if pd.isna(close):
+            continue
+        rows.append((
+            sym,
+            d,
+            float(row['Open']) if pd.notna(row['Open']) else None,
+            float(row['High']) if pd.notna(row['High']) else None,
+            float(row['Low']) if pd.notna(row['Low']) else None,
+            float(close),
+            int(row['Volume']) if pd.notna(row['Volume']) else None,
+            float(adj) if pd.notna(adj) else float(close),
+            float(row.get('Dividends', 0)) if pd.notna(row.get('Dividends', 0)) else 0,
+            float(row.get('Stock Splits', 1)) if pd.notna(row.get('Stock Splits', 1)) else 1,
+        ))
     if not rows:
         return 0
     try:
@@ -195,6 +237,7 @@ def main():
     parser.add_argument('--full-history', help='Fetch full history from 2014-01-01')
     parser.add_argument('--days', type=int, default=None, help='Fetch only last N days')
     parser.add_argument('--symbols', default=None, help='Comma-separated symbols to force fetch')
+    parser.add_argument('--manifest', default=None, help='Path to CSV manifest for resumable fetches')
     args = parser.parse_args()
 
     conn = pymysql.connect(**MYSQL)
@@ -230,6 +273,16 @@ def main():
     if args.max:
         pending = pending[:args.max]
 
+    # Manifest resumability: skip symbols already marked success
+    manifest_path = args.manifest
+    manifest = {}
+    if manifest_path:
+        manifest = _load_manifest(manifest_path)
+        already_done = [s for s in pending if manifest.get(s, {}).get('status') == 'success']
+        if already_done:
+            print(f"Resuming from manifest: skipping {len(already_done)} already-success symbols")
+        pending = [s for s in pending if manifest.get(s, {}).get('status') != 'success']
+
     print(f"Fetching: {len(pending)} symbols")
 
     # Determine date range
@@ -248,6 +301,8 @@ def main():
         hist = fetch_symbol(sym, start=default_start)
         if hist is None:
             fail += 1
+            if manifest_path:
+                _update_manifest(manifest, sym, status='failed', error='no_data')
             if args.verbose:
                 print(f"  [{i+1}/{len(pending)}] {sym}: NO DATA")
             time.sleep(1)
@@ -257,10 +312,13 @@ def main():
         conn.commit()
         ok += 1
         total_rows += n
-        elapsed = (i + 1) * 1.5  # rough time estimate
         start_d = str(hist.index[0])[:10]
         end_d = str(hist.index[-1])[:10]
         print(f"  [{i+1}/{len(pending)}] {sym}: {n} rows ({start_d} -> {end_d})")
+
+        if manifest_path:
+            _update_manifest(manifest, sym, status='success', rows=n,
+                             start_date=start_d, end_date=end_d)
 
         # Rate limit: max ~100/hour
         time.sleep(1.5)
@@ -276,6 +334,10 @@ def main():
         _retry(lambda: c.execute("UPDATE symbol_master SET data_start=%s, last_updated=CURRENT_TIMESTAMP WHERE symbol=%s",
                   (hist.index[0].date().isoformat(), sym)), label=f"update symbol_master {sym}")
         conn.commit()
+
+    if manifest_path:
+        _save_manifest(manifest_path, manifest)
+        print(f"Manifest saved to {manifest_path}")
 
     print(f"\n✓ Fetched {ok} symbols, {fail} failed, {total_rows:,} total rows")
 

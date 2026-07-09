@@ -438,7 +438,26 @@ class DocumentUploadController
                     ':currency' => $txn['currency'] ?? 'CAD', ':notes' => $txn['notes'] ?? '',
                     ':source_file' => $txn['source_file'] ?? 'upload', ':source_line' => $txn['source_line'] ?? 0,
                 ]);
-                if ($stmt->rowCount() > 0) $imported++;
+                if ($stmt->rowCount() > 0) {
+                    $imported++;
+                    // For dividends, auto-create balanced CASH inflow
+                    if (($txn['type'] ?? '') === 'DIVIDEND') {
+                        $ccy = strtoupper($txn['currency'] ?? 'CAD');
+                        $cashSymbol = "CASH-{$ccy}";
+                        $ins = $this->pdo->prepare("
+                            INSERT IGNORE INTO transactions
+                                (symbol, trade_date, type, quantity, price, total, commission, account_type, currency, notes, source_file, source_line)
+                            VALUES (:sym, :td, 'DIV-RECV', 1, :prc, :tot, 0, :acct, :ccy, :notes, 'auto_balance', 0)
+                        ");
+                        $ins->execute([
+                            ':sym' => $cashSymbol, ':td' => $txn['trade_date'],
+                            ':prc' => $txn['total'], ':tot' => $txn['total'],
+                            ':acct' => $txn['account_type'] ?? 'UNKNOWN',
+                            ':ccy' => $ccy,
+                            ':notes' => "Balanced against dividend {$txn['symbol']} on {$txn['trade_date']}",
+                        ]);
+                    }
+                }
             } catch (Exception $e) { /* skip duplicates / bad rows */ }
         }
         return $imported;

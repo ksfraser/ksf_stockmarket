@@ -91,7 +91,7 @@ function ensureInitialPortfolio(PDO $pdo, int $userId, int $advisorId): void {
     );
     $ins->execute([
         ':uid' => $userId,
-        ':sym' => 'CASH',
+        ':sym' => 'CASH-CAD',
         ':sh' => 100000,
         ':cb' => 1.0,
         ':cbt' => 100000.00,

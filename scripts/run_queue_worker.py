@@ -14,7 +14,8 @@ for candidate in (str(REPO_ROOT), str(SRC_ROOT)):
         sys.path.insert(0, candidate)
 
 from python.src.queue_worker import LifecycleWorker
-from python.db_connector import get_connection, DB_CONFIG
+from python.config_loader import Config
+from python.db.mysql_adapter import MySQLConnection
 
 logging.basicConfig(
     level=logging.INFO,
@@ -24,26 +25,21 @@ logger = logging.getLogger(__name__)
 
 
 def _mysql_config() -> dict:
-    backend = DB_CONFIG.get("backend") or "mysql"
-    if backend != "mysql":
-        raise RuntimeError(f"Queue worker requires mysql backend, got {backend}")
+    cfg = Config(str(REPO_ROOT / 'config.yaml'))
     return {
-        "host": DB_CONFIG["host"],
-        "port": int(DB_CONFIG.get("port", 3306)),
-        "database": DB_CONFIG["database"],
-        "user": DB_CONFIG["user"],
-        "password": DB_CONFIG["password"],
-        "charset": DB_CONFIG.get("charset", "utf8mb4"),
-        "cursorclass": __import__("pymysql.cursors").cursors.DictCursor,
-        "autocommit": False,
+        'host': cfg.data.db_host,
+        'port': int(getattr(cfg.data, 'db_port', 3306)),
+        'database': cfg.data.db_name,
+        'user': cfg.data.db_user,
+        'password': cfg.db_password,
     }
 
 
 def main() -> int:
-    db = get_connection()
     config = _mysql_config()
+    conn = MySQLConnection(**config)
     try:
-        worker = LifecycleWorker(mysql_config=config, db=db)
+        worker = LifecycleWorker(mysql_config=config, db=conn)
         while True:
             worker.claim_once()
     except KeyboardInterrupt:
@@ -54,7 +50,7 @@ def main() -> int:
         return 1
     finally:
         try:
-            db.close()
+            conn.close()
         except Exception:
             pass
     return 0

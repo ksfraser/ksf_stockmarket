@@ -56,6 +56,7 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                 <option value="BUY" <?php echo ($txnForm['type'] ?? '') === 'BUY' ? 'selected' : ''; ?>>BUY</option>
                 <option value="SELL" <?php echo ($txnForm['type'] ?? '') === 'SELL' ? 'selected' : ''; ?>>SELL</option>
                 <option value="DIVIDEND" <?php echo ($txnForm['type'] ?? '') === 'DIVIDEND' ? 'selected' : ''; ?>>DIVIDEND</option>
+                <option value="DIV-RECV" <?php echo ($txnForm['type'] ?? '') === 'DIV-RECV' ? 'selected' : ''; ?>>DIV-RECV</option>
                 <option value="SPLIT" <?php echo ($txnForm['type'] ?? '') === 'SPLIT' ? 'selected' : ''; ?>>SPLIT</option>
             </select>
         </div>
@@ -157,6 +158,7 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                     <option value="BUY" <?php echo $tf === 'BUY' ? 'selected' : ''; ?>>Buy</option>
                     <option value="SELL" <?php echo $tf === 'SELL' ? 'selected' : ''; ?>>Sell</option>
                     <option value="DIVIDEND" <?php echo $tf === 'DIVIDEND' ? 'selected' : ''; ?>>Dividend</option>
+                    <option value="DIV-RECV" <?php echo $tf === 'DIV-RECV' ? 'selected' : ''; ?>>Div Recv</option>
                     <option value="SPLIT" <?php echo $tf === 'SPLIT' ? 'selected' : ''; ?>>Split</option>
                 </select>
             </div>
@@ -226,6 +228,7 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                 'BUY' => 'green',
                 'SELL' => 'red',
                 'DIVIDEND' => '',
+                'DIV-RECV' => '',
                 default => ''
             };
         ?>

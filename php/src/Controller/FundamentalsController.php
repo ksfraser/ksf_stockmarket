@@ -98,12 +98,17 @@ class FundamentalsController {
         $ratingColor = $score >= 80 ? '#22c55e' : ($score >= 60 ? '#eab308' : ($score >= 40 ? '#f97316' : '#ef4444'));
 
         return [
-            'symbol' => $symbol,
-            'score' => $score,
-            'rating' => $rating,
-            'rating_color' => $ratingColor,
-            'components' => $components,
-            'fetch_date' => $f['fetch_date'] ?? null,
+            'symbol'          => $symbol,
+            'score'           => $score,
+            'rating'          => $rating,
+            'rating_color'    => $ratingColor,
+            'components'      => $components,
+            'fetch_date'      => $f['fetch_date'] ?? null,
+            'payout_ratio'    => $f['payout_ratio'] ?? null,
+            'fcf_coverage'    => $f['dividend_fcf_coverage'] ?? null,
+            'debt_equity'     => $f['debt_to_equity'] ?? null,
+            'revenue_growth'  => $f['revenue_growth'] ?? null,
+            'roe'             => $f['roe'] ?? null,
         ];
     }
 

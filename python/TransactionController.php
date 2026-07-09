@@ -121,7 +121,7 @@ class TransactionController {
         }
 
         if (strlen($symbol) < 1 || strlen($symbol) > 20) $errors[] = 'Symbol is required (1-20 chars).';
-        if (!in_array($type, ['BUY', 'SELL', 'DIVIDEND', 'SPLIT'], true)) $errors[] = 'Type must be BUY, SELL, DIVIDEND, or SPLIT.';
+        if (!in_array($type, ['BUY', 'SELL', 'DIVIDEND', 'SPLIT', 'DIV-RECV'], true)) $errors[] = 'Type must be BUY, SELL, DIVIDEND, SPLIT, or DIV-RECV.';
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $tradeDate)) $errors[] = 'Trade date must be YYYY-MM-DD.';
         if (!in_array($accountType, ['RRSP', 'TFSA', 'MARGIN'], true)) $errors[] = 'Account must be RRSP, TFSA, or MARGIN.';
         if ($type === 'SPLIT') {
@@ -163,7 +163,16 @@ class TransactionController {
             } elseif ($type === 'SPLIT') {
                 $this->applySplit($pdo, $userId, $symbol, $quantity);
             }
-            // DIVIDEND: no portfolio share change
+            // DIVIDEND: no portfolio share change, but create balanced CASH inflow
+            if ($type === 'DIVIDEND') {
+                $cashSymbol = 'CASH-' . ($this->detectCurrency($pdo, $symbol, $accountType) ?: 'CAD');
+                $this->insertCashInflow($pdo, $userId, $cashSymbol, $accountType, $tradeDate, $total, 'Dividend receipt: ' . $symbol);
+            }
+            // DIV-RECV is the cash-side record; it should not double-count
+            if ($type === 'DIV-RECV') {
+                $cashSymbol = $symbol;  // already a CASH-<ccy> symbol
+                $this->upsertCashPosition($pdo, $userId, $cashSymbol, $accountType, $total);
+            }
 
             $pdo->commit();
             return ['success' => true, 'txn_id' => $txnId, 'message' => "Recorded {$type} {$symbol} {$quantity} @ \${$price}"];
@@ -603,5 +612,47 @@ class TransactionController {
         }
 
         return ['holding_discrepancies' => $discrepancies];
+    }
+
+    private function detectCurrency(PDO $pdo, string $symbol, string $account): string {
+        // Look up currency from symbol_master; fallback based on suffix
+        $stmt = $pdo->prepare("SELECT currency FROM symbol_master WHERE symbol = :sym LIMIT 1");
+        $stmt->execute([':sym' => $symbol]);
+        $row = $stmt->fetch();
+        if ($row && !empty($row['currency'])) {
+            return $row['currency'];
+        }
+        if (str_ends_with($symbol, '.TO')) {
+            return 'CAD';
+        }
+        return 'USD';
+    }
+
+    private function insertCashInflow(PDO $pdo, int $userId, string $cashSymbol, string $account, string $date, float $total, string $notes): void {
+        $stmt = $pdo->prepare("
+            INSERT INTO transactions (user_id, symbol, trade_date, type, quantity, price, total, commission, account_type, currency, notes, source_file, created_at)
+            VALUES (:uid, :sym, :td, 'DIV-RECV', 1, :prc, :tot, 0, :acct, :ccy, :notes, 'auto_balance', NOW())
+        ");
+        $stmt->execute([
+            ':uid' => $userId, ':sym' => $cashSymbol, ':td' => $date,
+            ':prc' => $total, ':tot' => $total,
+            ':acct' => $account, ':ccy' => strtoupper(substr($cashSymbol, 5)), ':notes' => $notes,
+        ]);
+    }
+
+    private function upsertCashPosition(PDO $pdo, int $userId, string $cashSymbol, string $account, float $total): void {
+        $stmt = $pdo->prepare("
+            INSERT INTO portfolio (user_id, symbol, price_symbol, account_type, shares, cost_basis, cost_basis_total, currency, entry_date, strategy, notes, updated_at, stop_loss_pct, atr_multiplier)
+            VALUES (:uid, :sym, :sym, :acct, :shares, 1.0, :cbt, :ccy, '1997-01-01', 'CASH', 'Auto-balanced cash position', NOW(), 0.15, 2.0)
+            ON DUPLICATE KEY UPDATE
+                shares = shares + VALUES(shares),
+                cost_basis_total = cost_basis_total + VALUES(cost_basis_total),
+                updated_at = NOW()
+        ");
+        $stmt->execute([
+            ':uid' => $userId, ':sym' => $cashSymbol, ':acct' => $account,
+            ':shares' => round(abs($total), 2), ':cbt' => round(abs($total), 2),
+            ':ccy' => strtoupper(substr($cashSymbol, 5)),
+        ]);
     }
 }

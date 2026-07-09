@@ -5,11 +5,12 @@
 # 3. Generate Layer 1 signals
 # 4. Fetch financial news from RSS feeds
 
+export PYTHONPATH="/home/ksf_stockmarket/ksf_stockmarket:python:python/src"
 cd /home/ksf_stockmarket/ksf_stockmarket
 
 # Step 1: Data import (last 5 days to catch any revisions)
 echo "$(date): Starting nightly data import"
-python3 scripts/update_prices.py --days 5 2>&1 || echo "WARNING: price import failed"
+python3 python/fetch_prices.py --days 5 2>&1 || echo "WARNING: price import failed"
 
 # Step 2: TA Indicators (MariaDB version - writes to ta_indicators/indicators_json)
 echo "$(date): Computing TA indicators"

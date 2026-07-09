@@ -44,6 +44,16 @@ function json_encode_safe($val) {
     return htmlspecialchars(json_encode($val, JSON_NUMERIC_CHECK));
 }
 
+function pageLink(int $target, string $baseQs, int $currentPage): string {
+    if ($target < 1) return '#';
+    $qs = $baseQs . '&page=' . $target;
+    return '?' . ltrim($qs, '&');
+}
+
+function pageLinkList(int $target, string $baseQs, int $currentPage): string {
+    return pageLink($target, $baseQs, $currentPage);
+}
+
 /**
  * Render a pagination toolbar: per-page DDL, "Showing X-Y of Z", Prev/Next.
  * Intended to be called from list/admin templates.

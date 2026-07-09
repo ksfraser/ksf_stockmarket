@@ -124,6 +124,11 @@ def get_fundamentals(symbol: str) -> Optional[dict]:
             'pe': info.get('trailingPE'),
             'market_cap': info.get('marketCap'),
             'eps_growth': info.get('earningsQuarterlyGrowth'),
+            'total_debt': info.get('totalDebt'),
+            'ebitda': info.get('ebitda'),
+            'dividend_rate': info.get('dividendRate'),
+            'total_cash': info.get('totalCash'),
+            'insider_ownership': info.get('heldPercentInsiders'),
         }
     except Exception:
         base = {}
@@ -155,6 +160,16 @@ def get_fundamentals(symbol: str) -> Optional[dict]:
                 base['pe'] = value
             elif field in ('market_cap',):
                 base['market_cap'] = value
+            elif field in ('total_debt',):
+                base['total_debt'] = value
+            elif field in ('ebitda',):
+                base['ebitda'] = value
+            elif field in ('dividend_rate',):
+                base['dividend_rate'] = value
+            elif field in ('total_cash',):
+                base['total_cash'] = value
+            elif field in ('insider_ownership',):
+                base['insider_ownership'] = value
     except Exception:
         pass
 
@@ -199,6 +214,47 @@ def signals_for_bar(row: pd.Series, fundamentals: Optional[dict]) -> List[Tuple[
     if fundamentals and fundamentals.get('market_cap') and fundamentals.get('fcf') is not None:
         fcf_yield = float(fundamentals['fcf']) / float(fundamentals['market_cap'])
         signals.append(('fcf_yield_low', 1.0 if fcf_yield < 0.02 else 0.0))
+
+    # 11) insider_selling — heldPercentInsiders falling below 10% or missing
+    insider = fundamentals.get('insider_ownership') if fundamentals else None
+    if insider is not None and float(insider) < 0.10:
+        signals.append(('insider_selling', 1.0))
+
+    # 12) corporate_event_risk — proxy: very high P/E (> 40) on top of growth miss
+    if (fundamentals and fundamentals.get('pe') is not None
+            and fundamentals.get('eps_growth') is not None
+            and float(fundamentals['pe']) > 40 and float(fundamentals['eps_growth']) < 0):
+        signals.append(('corporate_event_risk', 1.0))
+
+    # 13) sector_underperformance — price has fallen below its 200-day average
+    if not pd.isna(row.get('sma_200')):
+        signals.append(('sector_underperformance', 1.0 if close < float(row['sma_200']) else 0.0))
+
+    # 14) earnings_drop — quarterly earnings growth negative
+    if fundamentals and fundamentals.get('eps_growth') is not None:
+        signals.append(('earnings_drop', 1.0 if float(fundamentals['eps_growth']) < 0 else 0.0))
+
+    # 15) dividend_cut_signal — dividend rate dropped to zero after previously positive
+    #     (proxy: dividend_rate missing or 0 with positive market cap)
+    if fundamentals and fundamentals.get('market_cap') and fundamentals.get('dividend_rate') is not None:
+        signals.append(('dividend_cut_signal', 1.0 if float(fundamentals['dividend_rate']) <= 0 else 0.0))
+
+    # 16) yield_on_cost_low — dividend yield below 1% (market-level proxy if dividend_rate known)
+    if fundamentals and fundamentals.get('market_cap') and fundamentals.get('dividend_rate') is not None:
+        dividend_yield = float(fundamentals['dividend_rate']) / float(fundamentals['market_cap'])
+        signals.append(('yield_on_cost_low', 1.0 if dividend_yield < 0.01 else 0.0))
+
+    # 17) debt_ebitda_high — total debt exceeds EBITDA
+    if (fundamentals and fundamentals.get('total_debt') is not None
+            and fundamentals.get('ebitda') is not None
+            and float(fundamentals['ebitda']) > 0):
+        signals.append(('debt_ebitda_high', 1.0 if float(fundamentals['total_debt']) / float(fundamentals['ebitda']) > 3 else 0.0))
+
+    # 18) cash_burn — free cash flow negative AND cash balance lower than debt
+    if (fundamentals and fundamentals.get('fcf') is not None
+            and fundamentals.get('total_cash') is not None and fundamentals.get('total_debt') is not None):
+        if float(fundamentals['fcf']) < 0 and float(fundamentals['total_cash']) < float(fundamentals['total_debt']):
+            signals.append(('cash_burn', 1.0))
 
     return signals
 

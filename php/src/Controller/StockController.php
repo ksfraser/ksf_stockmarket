@@ -397,6 +397,53 @@ class StockController {
             $weights['fcf_yield_low'] = 0.05;
         }
         
+        if (!empty($ind['close_7d_ago'])) {
+            $signals['price_drop_7d'] = ($closePrice < 0.95 * $ind['close_7d_ago']) ? 1.0 : 0.0;
+            $weights['price_drop_7d'] = 0.15;
+        }
+        
+        if (!empty($f['insider_ownership']) && $f['insider_ownership'] < 0.10) {
+            $signals['insider_selling'] = 1.0;
+            $weights['insider_selling'] = 0.05;
+        }
+        
+        if (!empty($f['trailing_pe']) && !empty($f['earnings_quarterly_growth'])
+            && $f['trailing_pe'] > 40 && $f['earnings_quarterly_growth'] < 0) {
+            $signals['corporate_event_risk'] = 1.0;
+            $weights['corporate_event_risk'] = 0.05;
+        }
+        
+        if (!empty($ind['sma_200']) && $ind['sma_200'] > 0) {
+            $signals['sector_underperformance'] = ($closePrice < $ind['sma_200']) ? 1.0 : 0.0;
+            $weights['sector_underperformance'] = 0.08;
+        }
+        
+        if (!empty($f['earnings_quarterly_growth'])) {
+            $signals['earnings_drop'] = ($f['earnings_quarterly_growth'] < 0) ? 1.0 : 0.0;
+            $weights['earnings_drop'] = 0.08;
+        }
+        
+        if (!empty($f['dividend_rate']) && !empty($f['market_cap'])) {
+            $signals['dividend_cut_signal'] = ($f['dividend_rate'] <= 0) ? 1.0 : 0.0;
+            $weights['dividend_cut_signal'] = 0.08;
+        }
+        
+        if (!empty($f['dividend_rate']) && !empty($f['market_cap']) && $f['market_cap'] > 0) {
+            $yieldOnCost = $f['dividend_rate'] / $f['market_cap'];
+            $signals['yield_on_cost_low'] = ($yieldOnCost < 0.01) ? 1.0 : 0.0;
+            $weights['yield_on_cost_low'] = 0.05;
+        }
+        
+        if (!empty($f['total_debt']) && !empty($f['ebitda']) && $f['ebitda'] > 0) {
+            $signals['debt_ebitda_high'] = ($f['total_debt'] / $f['ebitda'] > 3) ? 1.0 : 0.0;
+            $weights['debt_ebitda_high'] = 0.08;
+        }
+        
+        if (!empty($f['free_cash_flow']) && !empty($f['total_cash']) && !empty($f['total_debt'])) {
+            $signals['cash_burn'] = ($f['free_cash_flow'] < 0 && $f['total_cash'] < $f['total_debt']) ? 1.0 : 0.0;
+            $weights['cash_burn'] = 0.08;
+        }
+        
         $totalWeight = array_sum($weights);
         if ($totalWeight > 0) {
             $composite = 0;

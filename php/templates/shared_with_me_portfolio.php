@@ -5,6 +5,8 @@ $totalCost = $portfolioData['total_cost'] ?? 0;
 $totalValue = $portfolioData['total_value'] ?? 0;
 $totalPnl = $portfolioData['total_pnl'] ?? 0;
 $totalPnlPct = $portfolioData['total_pnl_pct'] ?? 0;
+$cashBalance = $portfolioData['cash_balance'] ?? 0;
+$netWorth = $portfolioData['net_worth'] ?? ($cashBalance + $totalValue);
 ?>
 
 <div style="margin-bottom:10px;">
@@ -14,12 +16,16 @@ $totalPnlPct = $portfolioData['total_pnl_pct'] ?? 0;
 
 <div style="display:flex; gap:12px; margin-bottom:12px;">
     <div class="card" style="flex:1; padding:8px;">
-        <strong>Cost</strong><br>
-        $<?php echo number_format($totalCost, 2); ?>
+        <strong>Cash</strong><br>
+        $<?php echo number_format($cashBalance, 2); ?>
     </div>
     <div class="card" style="flex:1; padding:8px;">
         <strong>Value</strong><br>
         $<?php echo number_format($totalValue, 2); ?>
+    </div>
+    <div class="card" style="flex:1; padding:8px;">
+        <strong>Net Worth</strong><br>
+        $<?php echo number_format($netWorth, 2); ?>
     </div>
     <div class="card" style="flex:1; padding:8px;">
         <strong>P&L</strong><br>

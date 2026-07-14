@@ -15,6 +15,7 @@ from typing import Dict, List, Optional
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 import yfinance as yf
+from symbol_resolver import resolve_for_yfinance
 from database import get_connection, log_monitoring_run
 
 
@@ -39,7 +40,7 @@ def check_alert(alert: Dict) -> Optional[Dict]:
     """Check if an alert condition is triggered."""
     try:
         ticker = alert['ticker']
-        stock = yf.Ticker(ticker.replace('.UN', '-UN.TO') if '.UN' in ticker else ticker)
+        stock = yf.Ticker(resolve_for_yfinance(ticker))
         hist = stock.history(period='1d', interval='1d')
         
         if hist.empty:

@@ -10,6 +10,9 @@ class DashboardController {
         $this->pdo = Database::get();
     }
 
+    /**
+     * GET /?action=overview — App-level dashboard stats, gainers, losers, freshness.
+     */
     public function overview(): array {
         // Summary stats — ALL symbols (app level, no portfolio data)
         $stats = [
@@ -69,6 +72,11 @@ class DashboardController {
             'losers'      => $losers,
             'freshness'   => $freshness,
             'last_update' => date('Y-m-d H:i:s'),
+            'symbol_quality' => [
+                'dead_names'     => (int)$this->pdo->query("SELECT COUNT(*) FROM symbol_master WHERE name LIKE '%(no data)%'")->fetchColumn(),
+                'null_exchanges' => (int)$this->pdo->query("SELECT COUNT(*) FROM symbol_master WHERE exchange IS NULL OR exchange = ''")->fetchColumn(),
+                'needs_review'   => (int)$this->pdo->query("SELECT COUNT(*) FROM symbol_master WHERE name LIKE '%(no data)%' OR exchange IS NULL OR exchange = ''")->fetchColumn(),
+            ],
         ];
     }
 }

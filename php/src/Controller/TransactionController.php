@@ -5,9 +5,12 @@
 class TransactionController {
 
     private $currentUser;
+    /** @var SymbolResolver */
+    private $resolver;
 
     public function __construct() {
         $this->currentUser = AuthController::requireAuth();
+        $this->resolver = new SymbolResolver(Database::get());
     }
 
     /**
@@ -41,7 +44,7 @@ class TransactionController {
         $params = [];
 
         if ($account) { $where[] = "t.account_type = :acct"; $params[':acct'] = $account; }
-        if ($symbol) { $where[] = "t.symbol = :sym"; $params[':sym'] = strtoupper($symbol); }
+        if ($symbol) { $resolved = $this->resolver->resolve($symbol); $where[] = "t.symbol = :sym"; $params[':sym'] = $resolved; }
         if ($type)   { $where[] = "t.type = :type"; $params[':type'] = $type; }
         if ($dateFrom) { $where[] = "t.trade_date >= :dfrom"; $params[':dfrom'] = $dateFrom; }
         if ($dateTo)   { $where[] = "t.trade_date <= :dto"; $params[':dto'] = $dateTo; }
@@ -102,23 +105,8 @@ class TransactionController {
         $commission = isset($post['commission']) ? (float) $post['commission'] : 0;
         $notes    = trim($post['notes'] ?? '');
 
-        // Normalize symbol based on exchange
-        if ($exchange === 'TSX' && !str_ends_with($symbol, '.TO')) {
-            $symbol = $symbol . '.TO';
-        }
-        // For NASDAQ/NYSE, ensure no .TO suffix
-        if (($exchange === 'NASDAQ' || $exchange === 'NYSE') && str_ends_with($symbol, '.TO')) {
-            $symbol = substr($symbol, 0, -3);
-        }
-        // Auto-detect: check symbol_master for exchange, default to .TO for short symbols
-        if ($exchange === '' && !str_ends_with($symbol, '.TO')) {
-            $stmt = $pdo->prepare("SELECT exchange FROM symbol_master WHERE symbol = :sym OR symbol = CONCAT(:sym, '.TO') LIMIT 1");
-            $stmt->execute([':sym' => $symbol]);
-            $row = $stmt->fetch();
-            if ($row && $row['exchange'] === 'TSX') {
-                $symbol = $symbol . '.TO';
-            }
-        }
+        // Normalize symbol via canonical resolver
+        $symbol = $this->resolver->resolve($symbol);
 
         if (strlen($symbol) < 1 || strlen($symbol) > 20) $errors[] = 'Symbol is required (1-20 chars).';
         if (!in_array($type, ['BUY', 'SELL', 'DIVIDEND', 'SPLIT'], true)) $errors[] = 'Type must be BUY, SELL, DIVIDEND, or SPLIT.';

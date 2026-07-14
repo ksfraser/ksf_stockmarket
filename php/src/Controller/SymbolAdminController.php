@@ -27,6 +27,8 @@ class SymbolAdminController
             $where[] = 'sm.is_active = 1';
         } elseif ($filter === 'no_exchange') {
             $where[] = '(sm.exchange IS NULL OR sm.exchange = "")';
+        } elseif ($filter === 'needs_review') {
+            $where[] = '(sm.name LIKE \'%(no data)%\' OR sm.exchange IS NULL OR sm.exchange = "")';
         }
 
         if ($search) {
@@ -141,7 +143,76 @@ class SymbolAdminController
     }
 
     /**
-     * Get active symbols only (for price fetcher).
+     * Update symbol_master fields for one symbol.
+     */
+    public function saveSymbol(array $data): bool
+    {
+        $sql = "UPDATE symbol_master SET name = :name, exchange = :exchange, sector = :sector, industry = :industry WHERE symbol = :symbol";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            ':symbol'   => $data['symbol'] ?? '',
+            ':name'     => $data['name'] ?? null,
+            ':exchange' => $data['exchange'] ?? null,
+            ':sector'   => $data['sector'] ?? null,
+            ':industry' => $data['industry'] ?? null,
+        ]);
+    }
+
+    /**
+     * Spawn Python batch cleanup for dead-name symbols in the background.
+     */
+    public function runBatchCleanup(): array
+    {
+        $log  = $GLOBALS['APP_ROOT'] . '/results/batch_cleanup.log';
+        $pid  = $GLOBALS['APP_ROOT'] . '/results/batch_cleanup.pid';
+        $res  = $GLOBALS['APP_ROOT'] . '/results/batch_cleanup_result.json';
+        $script = $GLOBALS['APP_ROOT'] . '/python/batch_cleanup_symbols.py';
+
+        if (is_readable($pid)) {
+            $content = @file_get_contents($pid);
+            if ($content && @posix_kill((int)trim($content), 0)) {
+                return ['status' => 'running', 'message' => 'Batch cleanup is already in progress.', 'log' => $log];
+            }
+        }
+
+        if (!is_readable($script)) {
+            return ['status' => 'error', 'message' => 'Batch cleanup script not found on server: ' . $script];
+        }
+
+        @unlink($res);
+        $cmd = sprintf(
+            'nohup /usr/bin/python3 %s > %s 2>&1 & echo $!',
+            escapeshellarg($script),
+            escapeshellarg($log)
+        );
+        exec($cmd, $output, $exitCode);
+        if ($exitCode !== 0 || empty($output)) {
+            return ['status' => 'error', 'message' => 'Failed to start batch cleanup.', 'log' => $log];
+        }
+
+        return [
+            'status'    => 'started',
+            'pid'       => trim($output[0]),
+            'message'   => 'Batch cleanup started. Check results/batch_cleanup.log for progress. Symbol name sync completes after the run, no browser refresh needed.',
+            'log'       => $log,
+            'result'    => $res,
+        ];
+    }
+
+    /**
+     * Read the batch cleanup log for admin rendering.
+     */
+    public function viewBatchLog(): string
+    {
+        $log = $GLOBALS['APP_ROOT'] . '/results/batch_cleanup.log';
+        if (is_readable($log)) {
+            return file_get_contents($log);
+        }
+        return 'Batch cleanup log not available yet.';
+    }
+
+    /**
+     * List active symbols only (for price fetcher).
      */
     public function getActiveSymbolsForFetch(): array
     {

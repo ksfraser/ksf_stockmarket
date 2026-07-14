@@ -105,12 +105,57 @@ class SharedWithMeController {
             $totalValue += $currentValue;
         }
 
+        // Cash balance: derive from transactions, default to 100k for empty portfolios
+        $cashStmt = $this->pdo->prepare("
+            SELECT type, total, commission
+            FROM transactions
+            WHERE user_id = :uid AND is_deleted = 0
+        ");
+        $cashStmt->execute([':uid' => $ownerUserId]);
+        $txns = $cashStmt->fetchAll();
+
+        if (empty($txns)) {
+            $cashBalance = 100000.0;
+        } else {
+            $cash = 0.0;
+            foreach ($txns as $t) {
+                $total = (float)($t['total'] ?? 0);
+                $commission = (float)($t['commission'] ?? 0);
+                switch ($t['type']) {
+                    case 'BUY':
+                        $cash -= $total + $commission;
+                        break;
+                    case 'SELL':
+                        $cash += $total - $commission;
+                        break;
+                    case 'DIVIDEND':
+                    case 'DIV-RECV':
+                    case 'INTEREST':
+                        $cash += $total;
+                        break;
+                    case 'FEE':
+                        $cash -= $total;
+                        break;
+                    case 'TRANSFER':
+                        $cash += $total;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            $cashBalance = $cash;
+        }
+
+        $netWorth = $cashBalance + $totalValue;
+
         return [
             'rows' => $rows,
             'total_cost' => $totalCost,
             'total_value' => $totalValue,
             'total_pnl' => $totalValue - $totalCost,
             'total_pnl_pct' => $totalCost > 0 ? (($totalValue - $totalCost) / $totalCost) * 100 : 0,
+            'cash_balance' => $cashBalance,
+            'net_worth' => $netWorth,
         ];
     }
 

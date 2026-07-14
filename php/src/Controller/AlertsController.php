@@ -25,9 +25,14 @@ class AlertsController
 
     /**
      * GET /?action=alerts_status — Alerts and cron monitoring dashboard.
+     * POST /?action=alerts_status — Update alert status (ack/ignore).
      */
     public function index(): array
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            return $this->updateStatus();
+        }
+
         $jobs = $this->loadCronJobs();
         $summary = $this->computeSummary($jobs);
         $volumeSnapshots = $this->getVolumeSnapshotInfo($jobs);
@@ -51,6 +56,25 @@ class AlertsController
             'filter'          => $filter,
         ];
     }
+
+    private function updateStatus(): array
+    {
+        $alertId = trim((string)($_POST['alert_id'] ?? ''));
+        $status = strtolower(trim((string)($_POST['status'] ?? '')));
+        $allowed = ['ack', 'ignore'];
+
+        if ($alertId === '' || !in_array($status, $allowed, true)) {
+            return ['updateStatus' => 'missing'];
+        }
+
+        try {
+            $pdo = Database::get();
+            $stmt = $pdo->prepare("UPDATE alert_queue SET status = :status WHERE id = :id");
+            $stmt->execute([':status' => $status, ':id' => $alertId]);
+            return ['updateStatus' => $stmt->rowCount() > 0 ? 'ok' : 'missing'];
+        } catch (Exception $e) {
+            return ['updateStatus' => 'error'];
+        }
 
     /**
      * Load cron jobs from Hermes JSON store.

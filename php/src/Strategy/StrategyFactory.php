@@ -33,8 +33,8 @@ class StrategyFactory
         return [
             // === STOCK SELECTION STRATEGIES ===
             new StockSelection\BuffettQualityStrategy(),
-            new StockSelection\CANSLIMStrategy(),
             new StockSelection\GARPStrategy(),
+            new StockSelection\CANSLIMStrategy(),
             new StockSelection\MomentumRelativeStrengthStrategy(),
             new StockSelection\EarningsMomentumStrategy(),
             new StockSelection\PiotroskiFScoreStrategy(),

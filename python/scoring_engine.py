@@ -46,6 +46,8 @@ except ImportError:
     HAS_YFINANCE = False
     print("WARNING: yfinance not available. MariaDB-only mode.")
 
+from symbol_resolver import resolve_for_yfinance
+
 # --------------------------------------------------------------------------
 # Configuration — mirrors ta_calculator.py DB_CONFIG pattern
 # --------------------------------------------------------------------------
@@ -187,7 +189,7 @@ def fetch_yfinance_data(symbol: str) -> Dict:
         return {}
 
     try:
-        ticker = yf.Ticker(symbol)
+        ticker = yf.Ticker(resolve_for_yfinance(symbol))
         info = ticker.info
 
         # Financials (TTM or most recent annual)
@@ -278,7 +280,7 @@ def fetch_price_history(conn, symbol: str, days: int = 252) -> pd.DataFrame:
     # Fallback: yfinance
     if HAS_YFINANCE:
         try:
-            ticker = yf.Ticker(symbol)
+            ticker = yf.Ticker(resolve_for_yfinance(symbol))
             hist = ticker.history(period='1y')
             if len(hist) > 0:
                 return hist[['Close', 'Volume']].rename(
@@ -1703,7 +1705,7 @@ def sync_quarterly_from_yfinance(conn, symbol: str) -> bool:
         return False
 
     try:
-        ticker = yf.Ticker(symbol)
+        ticker = yf.Ticker(resolve_for_yfinance(symbol))
         q_financials = ticker.quarterly_financials
         q_balance = ticker.quarterly_balance_sheet
         q_cashflow = ticker.quarterly_cashflow

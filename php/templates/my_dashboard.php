@@ -72,6 +72,8 @@ $portfolioSummary = $data['portfolio_summary'] ?? null;
                 <th class="r">Cost</th>
                 <th class="r">RSI</th>
                 <th>Signal</th>
+                <th class="c">Zacks</th>
+                <th class="c">Exit Risk</th>
                 <th>Reasons</th>
             </tr>
         </thead>
@@ -84,6 +86,13 @@ $portfolioSummary = $data['portfolio_summary'] ?? null;
                 str_contains($r['action'], 'SELL') => 'red',
                 default => ''
             };
+            $zacks = $r['zacks_score'] ?? [];
+            $zacksRank = $zacks['rank'] ?? '—';
+            $zacksRankText = $zacks['rank_text'] ?? '—';
+            $zacksColor = [1=>'var(--green)',2=>'var(--green)',3=>'var(--yellow)',4=>'var(--red)',5=>'var(--red)'][$zacksRank] ?? 'var(--text3)';
+            $exit = $r['exit_signals'] ?? [];
+            $exitComposite = $exit['composite_exit_risk'] ?? '—';
+            $exitPct = is_numeric($exitComposite) ? round($exitComposite * 100, 0) . '%' : '—';
         ?>
             <tr>
                 <td><strong><a href="?action=detail&symbol=<?php echo $r['symbol']; ?>"><?php echo $r['symbol']; ?></a></strong></td>
@@ -93,6 +102,8 @@ $portfolioSummary = $data['portfolio_summary'] ?? null;
                 <td class="r">$<?php echo number_format($r['cost_basis'], 2); ?></td>
                 <td class="r"><?php echo $r['rsi'] ? number_format($r['rsi'], 1) : '—'; ?></td>
                 <td class="<?php echo $signalClass; ?>"><strong><?php echo $r['action']; ?></strong></td>
+                <td class="c" style="color:<?php echo $zacksColor ?>"><strong><?php echo htmlspecialchars($zacksRankText); ?></strong></td>
+                <td class="c"><?php echo $exitPct; ?></td>
                 <td style="font-size:0.82em;color:var(--text3);"><?php echo htmlspecialchars(implode(', ', $r['reasons'])); ?></td>
             </tr>
         <?php endforeach; ?>

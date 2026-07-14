@@ -20,10 +20,10 @@ class CANSLIMStrategy extends BaseStrategy
         $this->description = 'Buy leading stocks in strong sectors just before breakouts from sound bases. '
             . 'Each letter represents a screening dimension: Current earnings, Annual growth, New catalysts, '
             . 'Supply/demand, Leader, Institutional sponsorship, Market direction.';
-        $this->sleeve = 'tactical';
-        $this->timeHorizon = 'medium_term';
-        $this->riskLevel = 'medium';
-        $this->status = 'battle_tested';
+        $this->sleeve = 'core';
+        $this->timeHorizon = 'short_to_medium_term';
+        $this->riskLevel = 'medium-high';
+        $this->status = 'active';
         $this->requiredData = ['price', 'volume', 'fundamentals'];
         $this->sources = [
             'William O\'Neil — "How I Made $2,000,000 in the Stock Market" (1988)',

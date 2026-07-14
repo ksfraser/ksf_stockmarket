@@ -56,6 +56,7 @@ DEFAULT_MIN_TRAIN = 252
 def fetch_ticker(ticker: str, years: int = DEFAULT_YEARS) -> pd.Series:
     """Fetch a daily close series via yfinance, with one retry on empty data."""
     import yfinance as yf
+    from symbol_resolver import resolve_for_yfinance
 
     end = pd.Timestamp.now("UTC").tz_localize(None).normalize()
     start = end - pd.DateOffset(years=years)
@@ -64,7 +65,7 @@ def fetch_ticker(ticker: str, years: int = DEFAULT_YEARS) -> pd.Series:
     for attempt in (1, 2):
         try:
             df = yf.download(
-                ticker,
+                resolve_for_yfinance(ticker),
                 start=start.strftime("%Y-%m-%d"),
                 end=end.strftime("%Y-%m-%d"),
                 progress=False,

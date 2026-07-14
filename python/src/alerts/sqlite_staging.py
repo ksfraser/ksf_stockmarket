@@ -12,10 +12,11 @@ import pymysql
 
 from alerts.dto import Alert, DetectionResult
 from alerts.config_mysql import MYSQL
+from config.paths import ALERT_STAGING_DB
 
 logger = logging.getLogger(__name__)
 
-STAGING_DB = Path(__file__).resolve().parents[2] / 'data' / 'alert_staging.db'
+STAGING_DB = ALERT_STAGING_DB
 STAGING_DB.parent.mkdir(parents=True, exist_ok=True)
 
 CREATE_TABLE_SQL = """
@@ -66,7 +67,7 @@ def write_alert_staging(detection: DetectionResult) -> bool:
         return False
 
     alert = detection.alert
-    alert_id = f"{alert.symbol}_{alert.alert_type}_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+    alert_id = f"{alert.symbol}_{alert.alert_type}_{datetime.now().strftime('%Y%m%d')}"
     row = _alert_to_row(alert, alert_id)
 
     conn = _conn()

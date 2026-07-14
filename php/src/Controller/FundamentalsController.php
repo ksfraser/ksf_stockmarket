@@ -4,34 +4,27 @@
  */
 class FundamentalsController {
     private $pdo;
+    /** @var SymbolResolver */
+    private $resolver;
 
     public function __construct() {
         $this->pdo = Database::get();
+        $this->resolver = new SymbolResolver($this->pdo);
     }
 
     /**
      * Get latest fundamental data for a symbol.
-     * Tries .TO suffix for Canadian symbols if no direct match.
+     * Uses resolver so Canadian symbols hit the canonical DB symbol.
      */
     public function getSymbol(string $symbol): array {
+        $resolved = $this->resolver->resolve($symbol);
         $stmt = $this->pdo->prepare("
             SELECT * FROM fundamentals
             WHERE symbol = :sym
             ORDER BY fetch_date DESC LIMIT 1
         ");
-        $stmt->execute([':sym' => $symbol]);
+        $stmt->execute([':sym' => $resolved]);
         $result = $stmt->fetch();
-        
-        // If no match, try .TO suffix for Canadian symbols
-        if (!$result && preg_match('/^[A-Z]/', $symbol)) {
-            $stmt = $this->pdo->prepare("
-                SELECT * FROM fundamentals
-                WHERE symbol = :sym
-                ORDER BY fetch_date DESC LIMIT 1
-            ");
-            $stmt->execute([':sym' => $symbol . '.TO']);
-            $result = $stmt->fetch();
-        }
         return $result ?: [];
     }
 
@@ -114,20 +107,14 @@ class FundamentalsController {
 
     /**
      * Get dividend history for a symbol.
-     * Tries .TO suffix for Canadian symbols if no direct match.
+     * Uses resolver so Canadian symbols hit the canonical DB symbol.
      */
     public function getDividends(string $symbol): array {
+        $resolved = $this->resolver->resolve($symbol);
         $sql = "SELECT * FROM dividends WHERE symbol = :sym ORDER BY ex_date DESC LIMIT 50";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':sym' => $symbol]);
+        $stmt->execute([':sym' => $resolved]);
         $result = $stmt->fetchAll();
-        
-        // If no match, try .TO suffix for Canadian symbols
-        if (empty($result) && preg_match('/^[A-Z]/', $symbol)) {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([':sym' => $symbol . '.TO']);
-            $result = $stmt->fetchAll();
-        }
         return $result;
     }
 }

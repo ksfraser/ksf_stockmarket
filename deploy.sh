@@ -38,11 +38,22 @@ shift || true
 
 case "$MODE" in
   vps)
-    HOST="${1:-root@192.168.1.102}"
+    HOST="${1:-192.168.1.102}"
     shift || true
     WEBROOT="${1:-/var/www/html/stockmarket}"
     APPROOT="${1:-/var/www/stockmarket-app}"
     shift || true
+
+    # Detect localhost — if HOST points at this box, skip SSH prefixes
+    # so rsync runs locally without going through localhost loopback.
+    # Added 192.168.1.102 because this dev box has that address on the LAN.
+    if [[ "$HOST" =~ ^(localhost|127\.0\.0\.1|::1|192\.168\.1\.102)$ ]]; then
+        RSYNC_DEST=""
+        REMOTE_CMD="sh -c"
+    else
+        RSYNC_DEST="$HOST:"
+        REMOTE_CMD="ssh $HOST"
+    fi
 
     echo "Deploying to VPS: $HOST"
     echo "  Webroot:    $WEBROOT"
@@ -50,34 +61,35 @@ case "$MODE" in
 
     # 1) Public files → webroot
     rsync -av --delete \
-        public_html/ "$HOST:$WEBROOT/"
+        public_html/ "${RSYNC_DEST}${WEBROOT}/"
 
     # 2) Templates from all sources → app root
-    rsync -av php/templates/                "$HOST:$APPROOT/templates/"
-    rsync -av php/templates/partials/detail/ "$HOST:$APPROOT/templates/partials/detail/"
-    rsync -av python/*.php                  "$HOST:$APPROOT/"
-    rsync -av dashboard/templates/          "$HOST:$APPROOT/dashboard/templates/"
-    rsync -av dashboard/src/Controller/     "$HOST:$APPROOT/controllers/"
-    rsync -av dashboard/config/             "$HOST:$APPROOT/config/"
+    rsync -av php/templates/                "${RSYNC_DEST}${APPROOT}/templates/"
+    rsync -av php/templates/partials/detail/ "${RSYNC_DEST}${APPROOT}/templates/partials/detail/"
+    rsync -av python/*.php                  "${RSYNC_DEST}${APPROOT}/"
+    rsync -av dashboard/templates/          "${RSYNC_DEST}${APPROOT}/dashboard/templates/"
+    rsync -av dashboard/src/Controller/     "${RSYNC_DEST}${APPROOT}/controllers/"
+    rsync -av dashboard/config/             "${RSYNC_DEST}${APPROOT}/config/"
     for f in dashboard/*.php; do
-      [ -f "$f" ] && rsync -av "$f" "$HOST:$APPROOT/"
+      [ -f "$f" ] && rsync -av "$f" "${RSYNC_DEST}${APPROOT}/"
     done
-    # Ensure Apache can read all template files
-    ssh "$HOST" "chown -R apache:apache $APPROOT/templates/partials/detail && chmod 644 $APPROOT/templates/partials/detail/*.php"
 
     # 3) PHP app code
-    rsync -av php/src/                      "$HOST:$APPROOT/src/"
-    rsync -av php/config/                   "$HOST:$APPROOT/config/"
-    rsync -av config.yaml                   "$HOST:$APPROOT/config.yaml"
+    rsync -av php/src/                      "${RSYNC_DEST}${APPROOT}/src/"
+    rsync -av php/config/                   "${RSYNC_DEST}${APPROOT}/config/"
+    rsync -av config.yaml                   "${RSYNC_DEST}${APPROOT}/config.yaml"
+
+    # Ensure Apache can read all template/app utility files post-rsync
+    $REMOTE_CMD "chown -R apache:apache $APPROOT/templates/partials/detail && chmod 644 $APPROOT/templates/partials/detail/*.php && chown -R apache:apache $APPROOT/src/Util && chmod -R u+rwX $APPROOT/src/Util && chown -R apache:apache $APPROOT/python && chmod 755 $APPROOT/python/*.py && mkdir -p $APPROOT/results && chown apache:apache $APPROOT/results && chmod 755 $APPROOT/results"
 
     # 4) Python backend
-    rsync -av python/src/                   "$HOST:$APPROOT/python/src/"
-    rsync -av python/*.py                   "$HOST:$APPROOT/python/"
+    rsync -av python/src/                   "${RSYNC_DEST}${APPROOT}/python/src/"
+    rsync -av python/*.py                   "${RSYNC_DEST}${APPROOT}/python/"
 
     # 5) Scripts, tests, external
-    rsync -av scripts/                      "$HOST:$APPROOT/scripts/"
-    rsync -av tests/                        "$HOST:$APPROOT/tests/"
-    rsync -av external/                     "$HOST:$APPROOT/external/"
+    rsync -av scripts/                      "${RSYNC_DEST}${APPROOT}/scripts/"
+    rsync -av tests/                        "${RSYNC_DEST}${APPROOT}/tests/"
+    rsync -av external/                     "${RSYNC_DEST}${APPROOT}/external/"
 
     # 6) Remind user
     echo ""

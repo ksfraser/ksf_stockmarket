@@ -19,6 +19,7 @@ from datetime import date, timedelta
 
 import pymysql
 import yfinance as yf
+from symbol_resolver import resolve_for_yfinance
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from config_loader import Config
@@ -57,7 +58,7 @@ def _propose_fix(symbol: str):
 
 def _yf_ok(symbol: str) -> bool:
     try:
-        hist = yf.Ticker(symbol).history(start=_SPOT_START, end=_SPOT_END, auto_adjust=False)
+        hist = yf.Ticker(resolve_for_yfinance(symbol)).history(start=_SPOT_START, end=_SPOT_END, auto_adjust=False)
         return hist is not None and len(hist) >= 5
     except Exception:
         return False

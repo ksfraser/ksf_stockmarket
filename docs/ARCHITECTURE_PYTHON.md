@@ -133,7 +133,7 @@ python/
     advisors/              # Advisor runner + strategies
     queue_worker.py        # Event loop
     database.py            # High-level DB facade if needed
-    symbol_resolver.py     # Symbol mapping (BNS -> BNS.TO)
+    symbol_resolver.py     # Canonical yfinance resolver (DB-aware: `exchange_mapping`, `symbol_master`, dual-fetch fallback)
   agents/                  # GA, NN, RL, Blender, Orchestrator
   api/                     # Flask/fastapi HTTP adapter
   daily_pipeline.py        # Scheduled entry point
@@ -146,6 +146,13 @@ python/
   (`fetch_prices.py`, `ta_calculator.py`, etc.) directly.
 - All external access goes through interfaces defined in `python/src/`.
 - Test fixtures in `tests/conftest.py` may provide in-memory SQLite adapters.
+
+### 5.3 PHP resolver mirror
+`php/src/Util/SymbolResolver.php` implements the same resolution logic as
+`python/src/symbol_resolver.py`. Both must stay in sync:
+- exchange_mapping lookup
+- symbol_master exchange hint
+- `.UN` / `.B.TO` hyphen normalization
 
 ---
 

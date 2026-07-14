@@ -125,6 +125,118 @@ function statusBadge(string $status): array
 <?php endforeach; ?>
 <?php endif; ?>
 
+<!-- Alert Queue Summary -->
+<?php $alertCounts = $data['alertCounts'] ?? ['pending'=>0,'completed'=>0,'failed'=>0]; ?>
+<?php
+function alertStatusBadge(string $status): string
+{
+    $s = strtolower($status);
+    $color = match ($s) {
+        'pending'    => 'yellow',
+        'completed'  => 'green',
+        'failed'     => 'red',
+        'ack'        => 'cyan',
+        'ignore'     => 'gray',
+        default      => 'yellow',
+    };
+    return '<span style="color:var(--' . $color . ');font-weight:600;">' . htmlspecialchars($status) . '</span>';
+}
+?>
+<div class="card" style="margin-top:12px;border-color:var(--accent);">
+    <div class="card-header">&#x1F4CA; Alert Queue</div>
+    <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:12px;">
+        <div class="stat-card"><div class="stat-value" style="color:var(--yellow);"><?= (int)($alertCounts['pending'] ?? 0) ?></div><div class="stat-label">Pending</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--green);"><?= (int)($alertCounts['completed'] ?? 0) ?></div><div class="stat-label">Completed</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--red);"><?= (int)($alertCounts['failed'] ?? 0) ?></div><div class="stat-label">Failed</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--cyan);"><?= (int)($alertCounts['ack'] ?? 0) ?></div><div class="stat-label">Acknowledged</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--gray);"><?= (int)($alertCounts['ignore'] ?? 0) ?></div><div class="stat-label">Ignored</div></div>
+    </div>
+</div>
+
+<!-- Recent Alerts (last 2 trading days) -->
+<?php
+$recentAlerts = $data['recentAlerts'] ?? [];
+if (!empty($recentAlerts)) {
+    // last 2 distinct trading days
+    $dates = [];
+    foreach ($recentAlerts as $ra) {
+        $d = substr($ra['created_at'] ?? '', 0, 10);
+        $dates[$d] = true;
+    }
+    krsort($dates);
+    $lastTwo = array_slice(array_keys($dates), 0, 2, true);
+    if (empty($lastTwo)) {
+        $lastTwo = array_slice(array_keys($dates), 0, 2, true);
+    }
+    $prevDate = null;
+    if (count($lastTwo) >= 2) {
+        $keys = array_keys($lastTwo);
+        $prevDate = $keys[1] ?? null;
+    }
+    $repeatKeyCache = [];
+    $todayGroup = [];
+    $sortedDates = array_keys($lastTwo);
+    $latestDate = $sortedDates[0] ?? null;
+    $prevDate = $sortedDates[1] ?? null;
+    foreach ($recentAlerts as $ra) {
+        $d = substr($ra['created_at'] ?? '', 0, 10);
+        if (!in_array($d, $lastTwo, true)) continue;
+        $key = ($ra['symbol'] ?? '') . '::' . ($ra['alert_type'] ?? '');
+        $isRepeat = false;
+        if ($prevDate !== null && $d === $latestDate) {
+            if (!isset($repeatKeyCache[$prevDate])) {
+                $repeatKeyCache[$prevDate] = [];
+                foreach ($recentAlerts as $prev) {
+                    if (substr($prev['created_at'] ?? '', 0, 10) === $prevDate) {
+                        $k = ($prev['symbol'] ?? '') . '::' . ($prev['alert_type'] ?? '');
+                        $repeatKeyCache[$prevDate][$k] = true;
+                    }
+                }
+            }
+            $isRepeat = isset($repeatKeyCache[$prevDate][$key]);
+        }
+        $todayGroup[] = ['alert' => $ra, 'isRepeat' => $isRepeat, 'date' => $d];
+    }
+    $todayGroup = array_slice($todayGroup, 0, 100);
+?>
+<div class="card" style="margin-top:24px;border-color:var(--accent);">
+    <div class="card-header">&#x1F4A1; Recent Alerts (<?= htmlspecialchars(implode(', ', $lastTwo)) ?>)</div>
+    <p style="margin-bottom:12px;font-size:0.85em;color:var(--text3);">Last 2 trading days. <span style="background:var(--yellow);color:#222;font-size:0.8em;padding:1px 6px;border-radius:10px;">REPEAT</span> = same symbol+type also hit the day before.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Symbol</th>
+                <th>Alert Type</th>
+                <th>Severity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($todayGroup as $row): ?>
+            <tr style="background:<?= $row['isRepeat'] ? 'rgba(255,255,0,0.08)' : '' ?>">
+                <td style="font-size:0.85em;color:var(--text3)"><?= htmlspecialchars($row['date']) ?></td>
+                <td><strong><?= htmlspecialchars($row['alert']['symbol'] ?? '—') ?></strong></td>
+                <td><?= htmlspecialchars($row['alert']['alert_type'] ?? '—') ?></td>
+                <td style="color:var(--<?= ($row['alert']['severity'] ?? 'medium') === 'critical' ? 'red' : 'yellow' ?>)"><?= htmlspecialchars($row['alert']['severity'] ?? 'medium') ?></td>
+                <td><?= alertStatusBadge($row['alert']['status'] ?? 'pending') ?></td>
+                <td>
+                    <form method="post" style="display:inline;" onsubmit="return confirm('Mark ack?')">
+                        <input type="hidden" name="alert_id" value="<?= htmlspecialchars($row['alert']['id'] ?? '') ?>">
+                        <button type="submit" name="status" value="ack" style="background:var(--cyan);color:#000;border:none;padding:2px 8px;border-radius:4px;font-size:0.75em;cursor:pointer;">Ack</button>
+                    </form>
+                    <form method="post" style="display:inline;margin-left:6px;" onsubmit="return confirm('Ignore?')">
+                        <input type="hidden" name="alert_id" value="<?= htmlspecialchars($row['alert']['id'] ?? '') ?>">
+                        <button type="submit" name="status" value="ignore" style="background:var(--gray);color:#000;border:none;padding:2px 8px;border-radius:4px;font-size:0.75em;cursor:pointer;">Ignore</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<?php } ?>
+
 <!-- All Jobs Table -->
 <h2 style="color:var(--accent);margin:24px 0 12px;border-bottom:1px solid rgba(99,179,237,0.3);padding-bottom:8px;">
     &#x23F0; All Cron Jobs

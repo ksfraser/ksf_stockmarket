@@ -51,6 +51,7 @@ try:
     YFINANCE_AVAILABLE = True
 except ImportError:
     pass
+from symbol_resolver import resolve_for_yfinance
 
 TALIB_AVAILABLE = False
 try:
@@ -139,7 +140,7 @@ class DailyPriceDownloader:
             return []
 
         try:
-            ticker = yf.Ticker(symbol)
+            ticker = yf.Ticker(resolve_for_yfinance(symbol))
             hist = ticker.history(period="5d")
             if hist.empty:
                 return []
@@ -166,7 +167,7 @@ class DailyPriceDownloader:
         if not YFINANCE_AVAILABLE:
             return []
         try:
-            ticker = yf.Ticker(symbol)
+            ticker = yf.Ticker(resolve_for_yfinance(symbol))
             divs = ticker.dividends
             results = []
             for date_idx, amount in divs.items():
@@ -183,7 +184,7 @@ class DailyPriceDownloader:
         if not YFINANCE_AVAILABLE:
             return []
         try:
-            ticker = yf.Ticker(symbol)
+            ticker = yf.Ticker(resolve_for_yfinance(symbol))
             splits = ticker.splits
             results = []
             for date_idx, ratio in splits.items():
@@ -283,7 +284,7 @@ class DailyPriceDownloader:
             print(f"Backfilling {symbol}: {start_date} to {end_date}")
 
         try:
-            ticker = yf.Ticker(symbol)
+            ticker = yf.Ticker(resolve_for_yfinance(symbol))
             hist = ticker.history(start=start_date, end=end_date)
 
             if hist.empty:

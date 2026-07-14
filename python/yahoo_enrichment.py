@@ -18,6 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import pymysql
 import yfinance as yf
 import pandas as pd
+from symbol_resolver import resolve_for_yfinance
 
 DB_CFG = {
     'host': 'ksfraser.ca',
@@ -297,7 +298,8 @@ def main():
     errors = 0
     for sym in symbols:
         try:
-            tk = yf.Ticker(sym)
+            resolved = resolve_for_yfinance(sym)
+            tk = yf.Ticker(resolved)
             # Recommendations
             try:
                 recs = tk.recommendations

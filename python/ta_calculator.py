@@ -239,7 +239,7 @@ def fetch_price_data(conn, symbol: str, lookback: int = LOOKBACK_DAYS) -> pd.Dat
     """
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""
-        SELECT price_date, day_open, day_high, day_low, day_close, volume
+        SELECT price_date, `open`, `high`, `low`, `close`, volume
         FROM stockprices
         WHERE symbol = %s
           AND price_date >= DATE_SUB(CURDATE(), INTERVAL %s DAY)
@@ -268,14 +268,11 @@ def compute_indicators(df: pd.DataFrame, symbol: str) -> Dict[str, float]:
         return {}
 
     results = {}
-    
-    open_arr = df['day_open'].values.astype(np.float64)
-    high_arr = df['day_high'].values.astype(np.float64)
-    low_arr = df['day_low'].values.astype(np.float64)
-    close_arr = df['day_close'].values.astype(np.float64)
+    open_arr = df['open'].values.astype(np.float64)
+    high_arr = df['high'].values.astype(np.float64)
+    low_arr = df['low'].values.astype(np.float64)
+    close_arr = df['close'].values.astype(np.float64)
     volume_arr = df['volume'].values.astype(np.float64)
-
-    # Suppress TA-Lib warnings for insufficient data
     import warnings
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
@@ -374,8 +371,8 @@ def compute_pandas_ta(ind_name: str, df: pd.DataFrame):
     """Fallback TA calculation using pandas-ta."""
     try:
         strategy = pta.Strategy(name="Custom", ta=[
-            {"kind": ind_name.lower(), "close": "day_close", "high": "day_high",
-             "low": "day_low", "open": "day_open", "volume": "volume"}
+            {"kind": ind_name.lower(), "close": "close", "high": "high",
+             "low": "low", "open": "open", "volume": "volume"}
         ])
         df.ta.strategy(strategy)
         col = [c for c in df.columns if ind_name.lower() in c.lower()]
@@ -490,10 +487,10 @@ def update_daily_tier2(conn, symbol: str, price_date: date,
     prev = df.iloc[-2] if len(df) > 1 else latest
 
     # Compute Bollinger position
-    sma20 = df['day_close'].rolling(20).mean().iloc[-1]
-    std20 = df['day_close'].rolling(20).std().iloc[-1]
+    sma20 = df['close'].rolling(20).mean().iloc[-1]
+    std20 = df['close'].rolling(20).std().iloc[-1]
     if std20 > 0:
-        bb_pct = float((latest['day_close'] - (sma20 - 2 * std20)) / (4 * std20) * 100)
+        bb_pct = float((latest['close'] - (sma20 - 2 * std20)) / (4 * std20) * 100)
         bb_width = float(4 * std20 / sma20 * 100) if sma20 > 0 else None
     else:
         bb_pct = None
@@ -501,7 +498,7 @@ def update_daily_tier2(conn, symbol: str, price_date: date,
 
     # ATR percent
     atr_14 = ta_results.get('ATR_14')
-    atr_pct = float(atr_14 / latest['day_close'] * 100) if atr_14 and latest['day_close'] > 0 else None
+    atr_pct = float(atr_14 / latest['close'] * 100) if atr_14 and latest['close'] > 0 else None
 
     # Volume ratios
     vol_avg20 = df['volume'].rolling(20).mean().iloc[-1]
@@ -510,10 +507,10 @@ def update_daily_tier2(conn, symbol: str, price_date: date,
     vol_ratio_50 = float(latest['volume'] / vol_avg50) if vol_avg50 > 0 else None
 
     # Trend classification
-    sma50 = df['day_close'].rolling(50).mean().iloc[-1]
-    sma200 = df['day_close'].rolling(200).mean().iloc[-1] if len(df) >= 200 else None
-    sma50_prev = df['day_close'].rolling(50).mean().iloc[-2] if len(df) >= 51 else None
-    sma200_prev = df['day_close'].rolling(200).mean().iloc[-2] if len(df) >= 201 else None
+    sma50 = df['close'].rolling(50).mean().iloc[-1]
+    sma200 = df['close'].rolling(200).mean().iloc[-1] if len(df) >= 200 else None
+    sma50_prev = df['close'].rolling(50).mean().iloc[-2] if len(df) >= 51 else None
+    sma200_prev = df['close'].rolling(200).mean().iloc[-2] if len(df) >= 201 else None
 
     if sma200 and sma50 and sma50_prev and sma200_prev:
         if sma50 > sma200 and sma50_prev <= sma200_prev:
@@ -790,7 +787,7 @@ def run_backtest_mode(start_date: str, end_date: str):
         # Fetch data up to end_date
         cursor = conn.cursor(dictionary=True)
         cursor.execute("""
-            SELECT price_date, day_open, day_high, day_low, day_close, volume
+            SELECT price_date, `open`, `high`, `low`, `close`, volume
             FROM stockprices
             WHERE symbol = %s AND price_date BETWEEN %s AND %s
             ORDER BY price_date ASC

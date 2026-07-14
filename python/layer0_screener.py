@@ -177,6 +177,7 @@ def fetch_fundamentals(symbols: list, cfg: Config, verbose=False) -> list:
     """Fetch fundamentals from yfinance."""
     try:
         import yfinance as yf
+        from symbol_resolver import resolve_for_yfinance
     except ImportError:
         print("pip3 install yfinance required"); return []
 
@@ -187,7 +188,7 @@ def fetch_fundamentals(symbols: list, cfg: Config, verbose=False) -> list:
     print(f"Fetching {len(symbols)} symbols...")
     for i, sym in enumerate(symbols):
         try:
-            t = yf.Ticker(sym)
+            t = yf.Ticker(resolve_for_yfinance(sym))
             info = t.get_info() or {}
             if not info or not info.get('regularMarketPrice'):
                 if verbose: print(f"  [{i+1}/{len(symbols)}] {sym}: no price"); continue

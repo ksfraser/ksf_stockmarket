@@ -234,7 +234,9 @@ class UserController {
                    p.strategy, p.atr_multiplier,
                    latest.close as current_price,
                    latest.price_date,
-                   ind.data as indicators
+                   ind.data as indicators,
+                   f.trailing_pe, f.price_to_book, f.free_cash_flow, f.market_cap,
+                   f.debt_to_equity, f.earnings_growth, f.revenue_growth
             FROM portfolio p
             LEFT JOIN (
                 SELECT sp1.symbol, sp1.close, sp1.price_date
@@ -248,6 +250,13 @@ class UserController {
                 INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM indicators_json GROUP BY symbol) i2
                     ON i1.symbol = i2.symbol AND i1.price_date = i2.max_date
             ) ind ON COALESCE(p.price_symbol, p.symbol) = ind.symbol
+            LEFT JOIN (
+                SELECT f1.symbol, f1.trailing_pe, f1.price_to_book, f1.free_cash_flow,
+                       f1.market_cap, f1.debt_to_equity, f1.earnings_growth, f1.revenue_growth
+                FROM fundamentals f1
+                INNER JOIN (SELECT symbol, MAX(fetch_date) as max_date FROM fundamentals GROUP BY symbol) f2
+                    ON f1.symbol = f2.symbol AND f1.fetch_date = f2.max_date
+            ) f ON COALESCE(p.price_symbol, p.symbol) = f.symbol
             WHERE p.user_id = :uid AND p.shares > 0
             ORDER BY p.symbol
         ";
@@ -256,6 +265,7 @@ class UserController {
         $rows = $stmt->fetchAll();
 
         $recs = [];
+        $scoreCtrl = new \StockController();
         foreach ($rows as $r) {
             $price = $r['current_price'] ?? 0;
             $ind = json_decode($r['indicators'] ?? '{}', true);
@@ -294,11 +304,26 @@ class UserController {
             elseif ($score <= -1) $action = 'SELL';
             else $action = 'HOLD';
 
+            // Zacks-style score and exit signals
+            $fund = [
+                'trailing_pe' => $r['trailing_pe'] ?? null,
+                'price_to_book' => $r['price_to_book'] ?? null,
+                'free_cash_flow' => $r['free_cash_flow'] ?? null,
+                'market_cap' => $r['market_cap'] ?? null,
+                'debt_to_equity' => $r['debt_to_equity'] ?? null,
+                'earnings_growth' => $r['earnings_growth'] ?? null,
+                'revenue_growth' => $r['revenue_growth'] ?? null,
+            ];
+            $zacksScore = $scoreCtrl->calcZacksStyleScore($fund, $ind, (float)$price);
+            $exitSignals = $scoreCtrl->calcExitSignals($fund, $ind, (float)$price);
+
             $r['action'] = $action;
             $r['score'] = $score;
             $r['reasons'] = $reasons;
             $r['rsi'] = $rsi;
             $r['atr_14'] = $atr14;
+            $r['zacks_score'] = $zacksScore;
+            $r['exit_signals'] = $exitSignals;
             $recs[] = $r;
         }
 

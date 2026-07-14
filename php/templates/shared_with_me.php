@@ -6,6 +6,8 @@ $tab = $data['tab'] ?? 'portfolio';
 $ownerSummary = $data['owner_summary'] ?? [];
 $portfolioData = $data['portfolio_data'] ?? [];
 $transactions = $data['transactions'] ?? [];
+$GLOBALS['selected_user_id'] = $selectedUserId;
+$GLOBALS['tab'] = $tab;
 ?>
 
 <div class="card">

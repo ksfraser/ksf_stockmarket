@@ -6,9 +6,12 @@
  */
 class RiskController {
     private $pdo;
+    /** @var SymbolResolver */
+    private $resolver;
     
     public function __construct() {
         $this->pdo = Database::get();
+        $this->resolver = new SymbolResolver($this->pdo);
     }
     
     /**
@@ -16,7 +19,7 @@ class RiskController {
      */
     public function preTradeGate(array $params): array {
         $userId = $params['user_id'] ?? 1;
-        $symbol = strtoupper($params['symbol'] ?? '');
+        $symbol = $this->resolver->resolve(strtoupper($params['symbol'] ?? ''));
         $direction = strtoupper($params['direction'] ?? '');
         $entryPrice = (float)($params['entry_price'] ?? 0);
         $accountBalance = (float)($params['account_balance'] ?? 100000);

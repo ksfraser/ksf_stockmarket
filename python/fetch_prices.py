@@ -26,6 +26,9 @@ if str(_repo_root) not in sys.path:
 # Try relative first (CWD = python/), fallback to package-style import
 from src.events.publisher import EventPublisher
 
+# ALL yfinance calls MUST resolve through symbol_resolver first.
+from symbol_resolver import resolve_for_yfinance
+
 # Credentials loaded from Ansible Vault via config_loader, fallback to .env
 _cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config.yaml')
 _cfg = None
@@ -179,8 +182,9 @@ def fetch_symbol(sym, start='2014-01-01', end=None):
     """Fetch daily OHLCV from yfinance. Returns DataFrame or None."""
     if end is None:
         end = (date.today() + timedelta(days=1)).isoformat()
+    resolved = resolve_for_yfinance(sym)
     try:
-        hist = yf.Ticker(sym).history(start=start, end=end, auto_adjust=False)
+        hist = yf.Ticker(resolved).history(start=start, end=end, auto_adjust=False)
         if hist is None or hist.empty:
             return None
         return hist

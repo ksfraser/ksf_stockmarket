@@ -38,35 +38,46 @@ class BuffettQualityStrategy(AdvisorBase):
     name = "Buffett Quality"
     slug = "buffett_quality"
 
+    def _buffett_cfg(self) -> dict[str, Any]:
+        raw = self.config.get("buffett") or {}
+        if not raw:
+            return _DEFAULTS["buffett"]
+        return {**_DEFAULTS["buffett"], **raw}
+
     def select_universe(self, run_date: date) -> list[str]:
-        cfg = {**_DEFAULTS["buffett"], **self.config}
+        cfg = self._buffett_cfg()
         with self.db.cursor() as cur:
             cur.execute(
                 f"""
                 SELECT f.symbol
                 FROM {self._t('fundamentals')} f
-                LEFT JOIN {self._t('stockprices')} p ON p.symbol = f.symbol AND p.price_date <= %s
-                WHERE f.fetch_date >= %s
-                  AND f.roe IS NOT NULL
+                INNER JOIN (
+                    SELECT symbol, MAX(fetch_date) AS max_fd
+                    FROM {self._t('fundamentals')}
+                    GROUP BY symbol
+                ) latest ON latest.symbol = f.symbol AND latest.max_fd = f.fetch_date
+                WHERE f.roe IS NOT NULL
                   AND f.debt_to_equity IS NOT NULL
                   AND f.market_cap >= %s
                   AND f.roe >= %s
                   AND f.debt_to_equity <= %s
-                  AND p.symbol IS NOT NULL
+                  AND EXISTS (
+                      SELECT 1 FROM {self._t('stockprices')} p
+                      WHERE p.symbol = f.symbol AND p.price_date <= %s
+                  )
                 GROUP BY f.symbol
                 """,
                 (
-                    run_date,
-                    run_date - timedelta(days=cfg["lookback_days"]),
                     cfg["min_market_cap"],
                     cfg["min_roe"],
                     cfg["max_debt_ratio"],
+                    run_date,
                 ),
             )
             return [r["symbol"] for r in cur.fetchall()]
 
     def score(self, symbol: str, run_date: date) -> float:
-        cfg = {**_DEFAULTS["buffett"], **self.config}
+        cfg = self._buffett_cfg()
         with self.db.cursor() as cur:
             cur.execute(
                 f"""
@@ -90,6 +101,19 @@ class BuffettQualityStrategy(AdvisorBase):
         if row.get("gross_margin"):
             score += row["gross_margin"] * 1.0
         return score
+
+    def generate_signals(self, run_date: date, max_positions: int = 20) -> list[Signal]:
+        max_positions = min(int(self.config.get("max_positions", 6)), 6)
+        signals = super().generate_signals(run_date, max_positions=max_positions)
+        if not signals:
+            return signals
+        weight = max(0.10, 0.5 / max_positions)
+        total_weight = weight * len(signals)
+        if total_weight > 0.5 and len(signals) > 1:
+            weight = 0.5 / len(signals)
+        for sig in signals:
+            sig.weight = weight
+        return signals
 
 
 class DividendGrowthStrategy(AdvisorBase):
@@ -366,6 +390,185 @@ class BalancedFundStrategy(AdvisorBase):
                     weight=weight_per_bond,
                     reason="bond basket 40%",
                     confidence=0.7,
+                )
+            )
+        return signals
+
+
+class VectorVestSafeStockStrategy(AdvisorBase):
+    """Safe Stock Selector — VectorVest 5-point checklist advisor.
+
+    Criteria:
+      1. Smooth & steady price uptrend over 1 year (linear regression slope > 0, R² >= threshold).
+      2. Price currently rising (close > close 20 trading days ago).
+      3. Earnings rising (forward_eps positive or earnings_growth > 0).
+      4. Market on your side (SPY 20-day trend positive).
+      5. Follow-through confirmed (today close > today open and > yesterday close).
+    """
+
+    name = "VectorVest Safe Stock"
+    slug = "vectorvest_safe"
+
+    _DEFAULTS = {
+        "smooth_r2_min": 0.55,
+        "min_price_days": 200,
+        "market_symbol": "SPY",
+    }
+
+    def _smooth_uptrend(self, closes: list[float]) -> tuple[bool, float, float]:
+        n = len(closes)
+        if n < 2:
+            return False, 0.0, 0.0
+        x = list(range(n))
+        y = closes
+        sx = sum(x)
+        sy = sum(y)
+        sxy = sum(a * b for a, b in zip(x, y))
+        sxx = sum(a * a for a in x)
+        den = n * sxx - sx * sx
+        if den == 0:
+            return False, 0.0, 0.0
+        slope = (n * sxy - sx * sy) / den
+        intercept = (sy - slope * sx) / n
+        ss_res = sum((y[i] - (slope * x[i] + intercept)) ** 2 for i in range(n))
+        ss_tot = sum((yi - sy / n) ** 2 for yi in y)
+        r2 = 1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0
+        cfg = {**self._DEFAULTS, **self.config}
+        return slope > 0 and r2 >= cfg["smooth_r2_min"], slope, r2
+
+    def select_universe(self, run_date: date) -> list[str]:
+        cfg = {**self._DEFAULTS, **self.config}
+        start = run_date - timedelta(days=cfg["min_price_days"] + 60)
+        with self.db.cursor() as cur:
+            cur.execute(
+                f"""
+                SELECT DISTINCT symbol
+                FROM {self._t('stockprices')}
+                WHERE price_date >= %s
+                GROUP BY symbol
+                HAVING COUNT(*) >= %s
+                """,
+                (str(start), cfg["min_price_days"]),
+            )
+            return [r["symbol"] for r in cur.fetchall()]
+
+    def score(self, symbol: str, run_date: date) -> float:
+        cfg = {**self._DEFAULTS, **self.config}
+        start = run_date - timedelta(days=cfg["min_price_days"] + 60)
+
+        with self.db.cursor() as cur:
+            cur.execute(
+                f"""
+                SELECT price_date, open, high, low, close, volume
+                FROM {self._t('stockprices')}
+                WHERE symbol = %s AND price_date >= %s
+                ORDER BY price_date ASC
+                """,
+                (symbol, str(start)),
+            )
+            rows = cur.fetchall()
+
+        if not rows or len(rows) < cfg["min_price_days"]:
+            return 0.0
+
+        closes = [float(r["close"]) for r in rows]
+        today = rows[-1]
+        yesterday = rows[-2] if len(rows) > 1 else None
+
+        # 1) Smooth uptrend
+        smooth_ok, _, _ = self._smooth_uptrend(closes)
+
+        # 2) Price rising
+        price_rising = len(closes) > 20 and closes[-1] > closes[-21]
+
+        # 3) Earnings rising
+        with self.db.cursor() as cur:
+            cur.execute(
+                f"""
+                SELECT forward_eps, earnings_growth, trailing_eps
+                FROM {self._t('fundamentals')}
+                WHERE symbol = %s
+                ORDER BY fetch_date DESC
+                LIMIT 1
+                """,
+                (symbol,),
+            )
+            fund = cur.fetchone()
+        earnings_rising = False
+        if fund:
+            fwd = fund.get("forward_eps")
+            eg = fund.get("earnings_growth")
+            if fwd is not None and float(fwd) > 0:
+                earnings_rising = True
+            elif eg is not None and float(eg) > 0:
+                earnings_rising = True
+            elif fund.get("trailing_eps") is not None and float(fund["trailing_eps"]) > 0:
+                earnings_rising = True
+
+        # 4) Market on your side
+        market_ok = self._market_trend(run_date)
+
+        # 5) Follow-through
+        follow_through = False
+        if today and yesterday:
+            c = float(today["close"])
+            o = float(today["open"])
+            yc = float(yesterday["close"])
+            follow_through = c > o and c > yc
+
+        pass_count = sum([
+            1 if smooth_ok else 0,
+            1 if price_rising else 0,
+            1 if earnings_rising else 0,
+            1 if market_ok else 0,
+            1 if follow_through else 0,
+        ])
+        return float(pass_count)
+
+    def _market_trend(self, run_date: date) -> bool:
+        cfg = {**self._DEFAULTS, **self.config}
+        start = run_date - timedelta(days=40)
+        with self.db.cursor() as cur:
+            cur.execute(
+                f"""
+                SELECT close FROM {self._t('stockprices')}
+                WHERE symbol = %s AND price_date BETWEEN %s AND %s
+                ORDER BY price_date ASC
+                """,
+                (cfg["market_symbol"], str(start), str(run_date)),
+            )
+            rows = cur.fetchall()
+        if not rows or len(rows) < 20:
+            return True
+        closes = [float(r["close"]) for r in rows]
+        return closes[-1] > closes[-21] if len(closes) > 21 else closes[-1] > closes[0]
+
+    def generate_signals(self, run_date: date, max_positions: int = 20) -> list[Signal]:
+        universe = self.select_universe(run_date)
+        if not universe:
+            return []
+        scored: list[tuple[str, float, bool]] = []
+        for symbol in universe:
+            try:
+                s = self.score(symbol, run_date)
+            except Exception:
+                continue
+            if s >= 4.0:
+                scored.append((symbol, s, True))
+            elif s > 0:
+                scored.append((symbol, s, False))
+        scored.sort(key=lambda x: x[1], reverse=True)
+        selected = scored[:max_positions]
+        signals: list[Signal] = []
+        for rank, (symbol, score, passed) in enumerate(selected, start=1):
+            signals.append(
+                Signal(
+                    symbol=symbol,
+                    action="BUY",
+                    weight=1.0 / max_positions,
+                    reason=f"vv pass={int(score)}/5 rank={rank}",
+                    confidence=min(score / 5.0, 1.0) if passed else score / 5.0 * 0.6,
+                    meta={"rank": rank, "pass_count": int(score), "passed": passed},
                 )
             )
         return signals

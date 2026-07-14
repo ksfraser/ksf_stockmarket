@@ -24,6 +24,7 @@ from typing import List, Optional, Tuple
 import numpy as np
 import pymysql
 import yfinance as yf
+from symbol_resolver import resolve_for_yfinance
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 logger = logging.getLogger(__name__)
@@ -67,7 +68,7 @@ SIGNAL_NAMES = [s[0] for s in SIGNAL_META]
 
 def get_symbol_data(symbol: str, days: int = LOOKBACK_DAYS) -> Optional[pd.DataFrame]:
     try:
-        ticker = yf.Ticker(symbol)
+        ticker = yf.Ticker(resolve_for_yfinance(symbol))
         hist = ticker.history(period=f'{days}d', auto_adjust=True)
         if hist.empty:
             return None

@@ -28,10 +28,11 @@ spl_autoload_register(function ($class) {
         $file = $GLOBALS['APP_ROOT'] . '/src/' . str_replace('\\', '/', $relative) . '.php';
         if (file_exists($file)) { require_once $file; return; }
     }
-    // Legacy controller/model paths
+    // Legacy controller/model/util paths
     $paths = [
         $GLOBALS['APP_ROOT'] . '/src/Controller/' . $class . '.php',
         $GLOBALS['APP_ROOT'] . '/src/Model/' . $class . '.php',
+        $GLOBALS['APP_ROOT'] . '/src/Util/' . $class . '.php',
     ];
     foreach ($paths as $p) {
         if (file_exists($p)) { require_once $p; return; }
@@ -42,7 +43,9 @@ spl_autoload_register(function ($class) {
 require_once $GLOBALS['APP_ROOT'] . '/src/View/helpers.php';
 
 error_reporting(E_ALL);
-ini_set('display_errors', '1');
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+ini_set('error_log', $GLOBALS['APP_ROOT'] . '/logs/php_errors.log');
 
 $action = $_GET['action'] ?? 'overview';
 
@@ -285,6 +288,27 @@ switch ($action) {
             header('Location: ?action=admin_symbols');
             exit;
         }
+        if ($subaction === 'save_symbol' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $ctrl->saveSymbol($_POST);
+            header('Location: ?action=admin_symbols');
+            exit;
+        }
+        if ($subaction === 'run_batch' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $batch = $ctrl->runBatchCleanup();
+            $filterList = $_GET['filter'] ?? 'all';
+            if ($batch['status'] === 'started' || $batch['status'] === 'running') {
+                $_SESSION['flash_message'] = $batch['message'];
+            } elseif ($batch['status'] === 'error') {
+                $_SESSION['flash_error'] = $batch['message'];
+            }
+            header('Location: ?action=admin_symbols&filter=' . urlencode($filterList));
+            exit;
+        }
+        if ($subaction === 'view_batch_log') {
+            $data = array_merge($data, ['batch_log' => $ctrl->viewBatchLog()]);
+            $pageTitle = 'Batch Cleanup Log';
+            $template = 'admin_batch_log';
+        }
         if ($subaction === 'add_watchlist' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             $ctrl->addToWatchlist($_POST);
             $_SESSION['flash_message'] = 'Symbol added to watchlist.';
@@ -396,6 +420,21 @@ case 'strategy_timing':
         $data = array_merge($data, $ctrl->timing());
         $pageTitle = 'Timing & Technical Strategies';
         $template = 'strategy_timing';
+        break;
+    case 'advisor_backtest':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdvisorBacktestController.php';
+        $ctrl = new AdvisorBacktestController();
+        $data = array_merge($data, $ctrl->leaderboard());
+        $pageTitle = 'Advisor Backtest Performance';
+        $template = 'advisor_backtest';
+        break;
+    case 'advisor_backtest_trades':
+        $runId = (int)($_GET['run_id'] ?? 0);
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdvisorBacktestController.php';
+        $ctrl = new AdvisorBacktestController();
+        $data = array_merge($data, $ctrl->trades($runId));
+        $pageTitle = 'Advisor Backtest Trades';
+        $template = 'advisor_backtest_trades';
         break;
     case 'manual_ohlcv':
         $ctrl = new StockController();

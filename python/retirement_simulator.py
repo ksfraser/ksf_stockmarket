@@ -127,6 +127,7 @@ def load_prices_from_yfinance(symbols, start='2014-01-01', end='2024-12-31'):
     """Fetch prices from yfinance for symbols not in DB."""
     try:
         import yfinance as yf
+        from symbol_resolver import resolve_for_yfinance
         import pandas as pd
     except ImportError:
         return {}
@@ -134,7 +135,7 @@ def load_prices_from_yfinance(symbols, start='2014-01-01', end='2024-12-31'):
     data = {}
     for sym in symbols:
         try:
-            hist = yf.Ticker(sym).history(start=start, end=end, auto_adjust=True)
+            hist = yf.Ticker(resolve_for_yfinance(sym)).history(start=start, end=end, auto_adjust=True)
             if hist.empty:
                 continue
             sym_data = {}

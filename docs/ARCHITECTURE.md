@@ -1,7 +1,8 @@
 # Investment Agent — Architecture & Specification
 
-> **Version:** 5.0 | **Date:** 2026-06-01 | **Repo:** `ksfraser/ksf_stockmarket`
+> **Version:** 5.1 | **Date:** 2026-07-13 | **Repo:** `ksfraser/ksf_stockmarket`
 > **Status:** Web dashboard complete. Auth, portfolio, transactions, strategies pages live. GA/NN/RL agents in development.
+> **Recent changes:** Unified detail-page ratings overview with buffett/zacks/vectorvest/exit-signal checks and threshold-filtered screener presets; broker stop history + portion-sell modes; alerts page now shows alert-queue counts, last 2 trading days with repeat detection; shared-with-me fixed user-selection propagation; advisor backtest leaderboard hardened against empty results. Nightly population scripts scheduled for analyst ratings and rating scores.
 
 ---
 
@@ -97,6 +98,9 @@ From the 222-indicator correlation study:
 
 **Stack:** PHP 8.1, Apache, PHP-FPM, PDO MySQL, inline CSS/JS (canvas charts), sessions
 
+**Shared Resolver Rule:**
+All ticker-to-yfinance formatting MUST go through `src/Util/SymbolResolver.php` (PHP) or `python/src/symbol_resolver.py` (Python). No controller, script, or template may append `.TO` or normalize `.UN` inline. The resolver checks `exchange_mapping`, `portfolio.price_symbol`, and `symbol_master.exchange` in that order.
+
 **Directory Layout:**
 ```
 /var/www/stockmarket-app/          ← Workspace (authoritative)
@@ -111,6 +115,7 @@ From the 222-indicator correlation study:
     SymbolAdminController.php      ← Symbol activation/deactivation
     FundamentalsController.php     ← Fundamental data fetcher
   src/Model/Database.php           ← PDO singleton
+  src/Util/SymbolResolver.php      ← Canonical TSX/US ticker resolver
   src/View/helpers.php             ← Template helpers
   templates/                       ← PHP templates
   config/database.php              ← DB credentials

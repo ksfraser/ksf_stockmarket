@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pymysql
 import yfinance as yf
+from symbol_resolver import resolve_for_yfinance
 
 DB_CFG = {
     'host': 'ksfraser.ca',
@@ -31,7 +32,7 @@ def fetch_sector_via_yfinance(symbol):
 
     for tk_sym in tickers:
         try:
-            info = yf.Ticker(tk_sym).info or {}
+            info = yf.Ticker(resolve_for_yfinance(tk_sym)).info or {}
             sector = info.get('sector')
             if sector and str(sector).strip():
                 return str(sector).strip()

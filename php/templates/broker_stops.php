@@ -54,8 +54,19 @@ $error = $data['error'] ?? '';
                 <input type="text" name="stop_value" placeholder="10.00 or 55.50" required style="width:100%;">
             </div>
             <div>
-                <label style="font-size:0.75em;color:var(--text3);">Shares (0=all)</label>
+                <label style="font-size:0.75em;color:var(--text3);">Sell Quantity</label>
+                <select name="sell_mode" id="sellMode" onchange="document.getElementById('sellPct').disabled=this.value==='all';document.getElementById('sellQty').disabled=this.value==='all';" style="width:100%;">
+                    <option value="all">All Shares</option>
+                    <option value="portion">Portion</option>
+                </select>
+            </div>
+            <div id="sellQty">
+                <label style="font-size:0.75em;color:var(--text3);">Shares</label>
                 <input type="number" name="shares" value="0" min="0" step="0.01" style="width:100%;">
+            </div>
+            <div id="sellPct">
+                <label style="font-size:0.75em;color:var(--text3);">% of Position</label>
+                <input type="number" name="sell_pct" value="100" min="1" max="100" step="1" style="width:100%;">
             </div>
             <button type="submit" name="action" value="place" class="btn btn-sm">Place Stop</button>
         </form>
@@ -84,6 +95,7 @@ $error = $data['error'] ?? '';
                 <th>Account</th>
                 <th>Stop Type</th>
                 <th class="r">Stop Value</th>
+                <th class="r">Sell</th>
                 <th class="r">Shares</th>
                 <th class="r">Current $</th>
                 <th class="r">Distance %</th>
@@ -93,18 +105,13 @@ $error = $data['error'] ?? '';
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($stops as $s):
-            $statusColor = match($s['status']) {
-                'active' => 'var(--green)',
-                'triggered' => 'var(--red)',
-                default => 'var(--text3)'
-            };
-        ?>
+        <?php foreach ($stops as $s): $statusColor = match($s['status']) { 'active' => 'var(--green)', 'triggered' => 'var(--red)', default => 'var(--text3)' }; ?>
             <tr>
                 <td><strong><a href="?action=detail&symbol=<?= urlencode($s['symbol']) ?>"><?= htmlspecialchars($s['symbol']) ?></a></strong></td>
                 <td><?= htmlspecialchars($s['account_type']) ?></td>
                 <td><?= htmlspecialchars(str_replace('_', ' ', $s['stop_type'])) ?></td>
                 <td class="r"><?= number_format($s['stop_value'], 2) ?><?= in_array($s['stop_type'], ['trailing_pct', 'stop_loss']) ? '%' : '' ?></td>
+                <td class="r"><?= strpos($s['notes'] ?? '', '[sell_pct=') !== false ? (int)filter_var($s['notes'] ?? '', FILTER_SANITIZE_NUMBER_INT) . '%' : '100%' ?></td>
                 <td class="r"><?= $s['shares'] > 0 ? number_format($s['shares'], 2) : 'All' ?></td>
                 <td class="r">$<?= number_format($s['current_price'] ?? 0, 2) ?></td>
                 <td class="r" style="color:var(--<?= $s['distance_pct'] < 3 ? 'red' : ($s['distance_pct'] < 6 ? 'yellow' : 'green') ?>);">
@@ -125,6 +132,46 @@ $error = $data['error'] ?? '';
         <?php endforeach; ?>
         </tbody>
     </table>
+    </div>
+    <?php endif; ?>
+
+    <?php if (!empty($history)): ?>
+    <div style="margin-top:24px;">
+        <h3 style="margin-bottom:12px;color:var(--text3);">Historical Stops (triggered / cancelled / expired)</h3>
+        <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Account</th>
+                    <th>Stop Type</th>
+                    <th class="r">Stop Value</th>
+                    <th class="r">Sell</th>
+                    <th class="r">Shares</th>
+                    <th class="r">Placed</th>
+                    <th class="r">Triggered / Closed</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($history as $s): ?>
+                <tr>
+                    <td><strong><a href="?action=detail&symbol=<?= urlencode($s['symbol']) ?>"><?= htmlspecialchars($s['symbol']) ?></a></strong></td>
+                    <td><?= htmlspecialchars($s['account_type']) ?></td>
+                    <td><?= htmlspecialchars(str_replace('_', ' ', $s['stop_type'])) ?></td>
+                    <td class="r"><?= number_format($s['stop_value'], 2) ?><?= in_array($s['stop_type'], ['trailing_pct', 'stop_loss']) ? '%' : '' ?></td>
+                    <td class="r"><?= strpos($s['notes'] ?? '', '[sell_pct=') !== false ? (int)filter_var($s['notes'] ?? '', FILTER_SANITIZE_NUMBER_INT) . '%' : '100%' ?></td>
+                    <td class="r"><?= $s['shares'] > 0 ? number_format($s['shares'], 2) : 'All' ?></td>
+                    <td style="font-size:0.85em;color:var(--text3)"><?= date('Y-m-d H:i', strtotime($s['placed_at'])) ?></td>
+                    <td style="font-size:0.85em;color:var(--text3)"><?= date('Y-m-d H:i', strtotime($s['triggered_at'] ?? $s['placed_at'])) ?></td>
+                    <td><span class="badge" style="background:var(--<?= $s['status'] === 'triggered' ? 'red' : 'yellow' ?>);color:#fff;font-size:0.8em;padding:2px 8px;border-radius:10px;"><?= htmlspecialchars($s['status']) ?></span></td>
+                    <td style="font-size:0.8em;color:var(--text2)"><?= htmlspecialchars($s['notes'] ?? '') ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+        </div>
     </div>
     <?php endif; ?>
 

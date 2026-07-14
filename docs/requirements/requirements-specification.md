@@ -93,13 +93,37 @@ The system shall generate:
 | FR-5.3 | Watchlists per user                                  | Medium   |
 | FR-5.4 | Session management                                   | High     |
 
-### FR-6: FA Integration
+### FR-6: FrontAccounting Integration
 | ID     | Requirement                                          | Priority |
 |--------|------------------------------------------------------|----------|
-| FR-6.1 | Create FA journal entries for transfers              | Medium   |
+| FR-6.1 | Record cash → brokerage transfers                   | Medium   |
 | FR-6.2 | Track asset revaluation in FA                        | Medium   |
 | FR-6.3 | Stock data in MariaDB (not FA tables)                | High     |
 | FR-6.4 | UI respects FA RBAC and permissions                  | Medium   |
+
+### FR-7: Shared Advisor Access
+| ID     | Requirement                                          | Priority |
+|--------|------------------------------------------------------|----------|
+| FR-7.1 | Advisor portfolios may be public or shared           | High     |
+| FR-7.2 | Users may browse shared advisor portfolios           | High     |
+| FR-7.3 | Shared portfolio path must auto-select the advisor   | High     |
+| FR-7.4 | Shared transactions tab must preserve advisor selection | High   |
+
+### FR-8: Broker Stop Orders
+| ID     | Requirement                                          | Priority |
+|--------|------------------------------------------------------|----------|
+| FR-8.1 | Place manual stop orders (trailing, stop-loss, stop-limit) | High |
+| FR-8.2 | Support ALL-share or portion-percentage sell       | High     |
+| FR-8.3 | View active stops with distance to trigger          | High     |
+| FR-8.4 | View historical triggered / cancelled / expired stops | Medium |
+
+### FR-9: Alerts / Monitoring
+| ID     | Requirement                                          | Priority |
+|--------|------------------------------------------------------|----------|
+| FR-9.1 | Display alert queue counts (pending / completed / failed) | High |
+| FR-9.2 | Show last 2 trading days of recent alerts           | High     |
+| FR-9.3 | Date-stamp each alert                                | High     |
+| FR-9.4 | Indicate repeat alerts (same symbol+type hit prior day) | Medium |
 
 ## 3. Non-Functional Requirements
 

@@ -13,6 +13,8 @@ $analystRatings = $data['analyst_ratings'] ?? [];
 $news = $data['news'] ?? [];
 $optionsData = $data['options'] ?? [];
 $buffettScore = $data['buffett_score'] ?? [];
+$zacksScore = $data['zacks_score'] ?? [];
+$vectorvest = $data['vectorvest'] ?? [];
 $sectorRank = $data['sector_rank'] ?? [];
 $regime = $data['regime'] ?? [];
 

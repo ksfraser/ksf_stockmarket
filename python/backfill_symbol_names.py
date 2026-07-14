@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pymysql
 import yfinance as yf
+from symbol_resolver import resolve_for_yfinance
 
 DB_CFG = {
     'host': 'ksfraser.ca',
@@ -39,7 +40,7 @@ def get_name_from_yfinance(symbol):
     """Try to get company name from yfinance."""
     candidates = []
     try:
-        tk = yf.Ticker(symbol)
+        tk = yf.Ticker(resolve_for_yfinance(symbol))
         info = tk.info
         candidates.append(info.get('longName'))
         candidates.append(info.get('shortName'))
@@ -49,7 +50,7 @@ def get_name_from_yfinance(symbol):
     # Fallback: try .TO suffix for Canadian stocks
     if not any(candidates) and not symbol.endswith('.TO'):
         try:
-            tk = yf.Ticker(symbol + '.TO')
+            tk = yf.Ticker(resolve_for_yfinance(symbol + '.TO'))
             info = tk.info
             candidates.append(info.get('longName'))
             candidates.append(info.get('shortName'))

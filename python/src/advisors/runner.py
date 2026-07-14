@@ -24,6 +24,7 @@ from advisors import (
     SectorStrategy,
     BondBasketStrategy,
     BalancedFundStrategy,
+    VectorVestSafeStockStrategy,
 )
 from advisors.base import AdvisorBase, Signal
 from advisors.repository import AdvisorRepository
@@ -37,6 +38,7 @@ _STRATEGY_MAP: dict[str, type[AdvisorBase]] = {
     "sector": SectorStrategy,
     "bond_basket": BondBasketStrategy,
     "balanced_fund": BalancedFundStrategy,
+    "vectorvest_safe": VectorVestSafeStockStrategy,
 }
 
 

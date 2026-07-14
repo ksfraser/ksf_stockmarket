@@ -76,13 +76,8 @@ KNOWN_US = {
 
 def resolve_ticker(symbol: str) -> str:
     """Resolve symbol to proper format for yfinance."""
-    if symbol.endswith('.UN'):
-        return symbol[:-3] + '-UN.TO'
-    if symbol in KNOWN_US:
-        return symbol
-    if symbol in KNOWN_TSX:
-        return symbol + '.TO'
-    return symbol
+    from symbol_resolver import resolve_for_yfinance
+    return resolve_for_yfinance(symbol)
 
 
 def check_volume_spike(symbol: str, threshold: float = 3.0) -> dict:

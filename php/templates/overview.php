@@ -107,3 +107,32 @@
     Check the <a href="?action=admin_symbols">Admin</a> page for details.
 </div>
 <?php endif; ?>
+
+<!-- Symbol Data Quality -->
+<?php $sq = $data['symbol_quality'] ?? []; ?>
+<div class="card" style="margin-top:24px;border-color:var(--accent);">
+    <div class="card-header">&#x1F50D; Symbol Data Quality</div>
+    <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));">
+        <div class="stat-card">
+            <div class="stat-value" style="color:<?php echo ($sq['dead_names'] ?? 0) > 0 ? 'var(--yellow)' : 'var(--green)'; ?>">
+                <?php echo $sq['dead_names'] ?? 0; ?>
+            </div>
+            <div class="stat-label">Dead / Synthetic Names</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color:<?php echo ($sq['null_exchanges'] ?? 0) > 0 ? 'var(--yellow)' : 'var(--green)'; ?>">
+                <?php echo $sq['null_exchanges'] ?? 0; ?>
+            </div>
+            <div class="stat-label">Missing Exchange</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="color:<?php echo ($sq['needs_review'] ?? 0) > 0 ? 'var(--orange)' : 'var(--green)'; ?>">
+                <?php echo $sq['needs_review'] ?? 0; ?>
+            </div>
+            <div class="stat-label">Needs Review</div>
+        </div>
+    </div>
+    <p style="font-size:0.8em;color:var(--text3);margin-top:12px;">
+        Open <a href="?action=admin_symbols" style="color:var(--accent);">Symbol Admin</a> and select <strong>Needs Review</strong> to batch-fix names, exchanges, and sectors.
+    </p>
+</div>

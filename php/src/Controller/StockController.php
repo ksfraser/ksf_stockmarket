@@ -4,9 +4,12 @@
  */
 class StockController {
     private $pdo;
+    /** @var SymbolResolver */
+    private $resolver;
 
     public function __construct() {
         $this->pdo = Database::get();
+        $this->resolver = new SymbolResolver($this->pdo);
     }
 
     /**
@@ -98,21 +101,13 @@ class StockController {
      */
     public function detail(string $symbol): array {
         $symbol = strtoupper(trim($symbol));
+        $resolved = $this->resolver->resolve($symbol);
+        // For DB lookups prefer the resolved form, but keep original as fallback
+        $candidates = $this->resolver->candidates($symbol);
 
-        // Latest price info
-        $stmt = $this->pdo->prepare("
-            SELECT sp.*, sm.name, sm.exchange, sm.sector, sm.industry
-            FROM stockprices sp
-            LEFT JOIN symbol_master sm ON sp.symbol = sm.symbol
-            WHERE sp.symbol = :sym
-            ORDER BY sp.price_date DESC LIMIT 1
-        ");
-        $stmt->execute([':sym' => $symbol]);
-        $latest = $stmt->fetch();
-
-        // If no price, try .TO suffix for Canadian symbols
-        if (!$latest && preg_match('/^[A-Z]/', $symbol)) {
-            $altSym = $symbol . '.TO';
+        // Latest price info — try candidates in order
+        $latest = null;
+        foreach ($candidates as $candidate) {
             $stmt = $this->pdo->prepare("
                 SELECT sp.*, sm.name, sm.exchange, sm.sector, sm.industry
                 FROM stockprices sp
@@ -120,10 +115,11 @@ class StockController {
                 WHERE sp.symbol = :sym
                 ORDER BY sp.price_date DESC LIMIT 1
             ");
-            $stmt->execute([':sym' => $altSym]);
+            $stmt->execute([':sym' => $candidate]);
             $latest = $stmt->fetch();
             if ($latest) {
-                $symbol = $altSym;
+                $symbol = $candidate;
+                break;
             }
         }
 
@@ -141,36 +137,21 @@ class StockController {
         $stmt->execute([':sym' => $symbol]);
         $history = array_reverse($stmt->fetchAll());
 
-        // Indicators: latest + 60 days for charts — check both symbol formats
+        // Indicators: latest + 60 days for charts — prefer the resolved symbol
+        $this->refreshIndicatorsJsonIfStale($resolved);
         $indHistory = [];
         $indicators = [];
 
-        // Check if this is a TSX symbol (has .TO variant) and which has more data
-        $hasTO = str_ends_with($symbol, '.TO');
-        $baseSym = $hasTO ? substr($symbol, 0, -3) : $symbol;
-        $altSym = $hasTO ? null : $symbol . '.TO';
-
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM indicators_json WHERE symbol = :sym");
-        $stmt->execute([':sym' => $symbol]);
-        $mainCount = $stmt->fetchColumn();
-
-        $altCount = 0;
-        if ($altSym) {
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM indicators_json WHERE symbol = :sym");
-            $stmt->execute([':sym' => $altSym]);
-            $altCount = $stmt->fetchColumn();
-        }
-
-        // Prefer the format with more data
-        $preferredSym = ($altCount > $mainCount && $altSym) ? $altSym : $symbol;
-
         $indSql = "SELECT price_date, data FROM indicators_json WHERE symbol = :sym ORDER BY price_date DESC LIMIT 60";
         $stmt = $this->pdo->prepare($indSql);
-        $stmt->execute([':sym' => $preferredSym]);
+        $stmt->execute([':sym' => $resolved]);
         $indRows = array_reverse($stmt->fetchAll());
 
-        // Update symbol for consistency (use the format we're querying)
-        $symbol = $preferredSym;
+        if (empty($indRows) && $resolved !== $symbol) {
+            // Fallback to input symbol if resolved form has no data yet
+            $stmt->execute([':sym' => $symbol]);
+            $indRows = array_reverse($stmt->fetchAll());
+        }
 
         foreach ($indRows as $i => $row) {
             $d = json_decode($row['data'], true);
@@ -179,16 +160,12 @@ class StockController {
         }
         if ($indHistory) $indicators = end($indHistory);
 
-        // Fundamentals — try alternate symbol formats (.TO for Canadian stocks)
-        $fundamentals = [];
+        // Fundamentals — use resolved symbol first, fallback to original
         $stmt = $this->pdo->prepare("SELECT * FROM fundamentals WHERE symbol = :sym ORDER BY fetch_date DESC LIMIT 1");
-        $stmt->execute([':sym' => $symbol]);
+        $stmt->execute([':sym' => $resolved]);
         $fundamentals = $stmt->fetch() ?: [];
-        
-        // If no fundamentals, try .TO suffix for Canadian symbols
-        if (!$fundamentals && (substr($symbol, 0, 1) >= 'A' && substr($symbol, 0, 1) <= 'Z')) {
-            $stmt = $this->pdo->prepare("SELECT * FROM fundamentals WHERE symbol = :sym ORDER BY fetch_date DESC LIMIT 1");
-            $stmt->execute([':sym' => $symbol . '.TO']);
+        if (empty($fundamentals) && $resolved !== $symbol) {
+            $stmt->execute([':sym' => $symbol]);
             $fundamentals = $stmt->fetch() ?: [];
         }
 
@@ -317,12 +294,16 @@ class StockController {
         $closePrice = $latest['close'] ?? 0;
         $exitSignals = $this->calcExitSignals($fundamentals, $indicators, $closePrice);
 
+        // VectorVest 5-point checklist (detail-page lightweight version)
+        $vectorVest = $this->calcVectorVest($history, $fundamentals, $latest, $indicators);
+
         $result = compact(
             'symbol', 'latest', 'history', 'indicators', 'indHistory',
             'fundamentals', 'portfolio', 'dividendSafety', 'dividends',
             'analystRatings', 'analystTargets', 'news', 'optionsData',
             'buffettScore', 'zacksScore', 'perf', 'regime', 'exitSignals',
-            'recommendations', 'holders', 'financials', 'estimates'
+            'recommendations', 'holders', 'financials', 'estimates',
+            'vectorVest'
         );
         $result['analyst_ratings'] = $result['analystRatings'];
         $result['analyst_targets'] = $result['analystTargets'];
@@ -332,10 +313,11 @@ class StockController {
         $result['ind_history'] = $result['indHistory'];
         $result['dividend_safety'] = $result['dividendSafety'];
         $result['exit_signals'] = $result['exitSignals'] ?? [];
+        $result['vectorvest'] = $result['vectorVest'] ?? [];
         return $result;
     }
 
-    private function calcExitSignals(array $f, array $ind, float $closePrice = 0): array {
+    public function calcExitSignals(array $f, array $ind, float $closePrice = 0): array {
         if (!$closePrice || $closePrice <= 0) {
             return ['composite_exit_risk' => 0.5, 'insufficient_data' => true];
         }
@@ -468,7 +450,7 @@ class StockController {
         ];
     }
     
-    private function getExitSignalConfig(): array {
+    public function getExitSignalConfig(): array {
         $cfgPath = __DIR__ . '/../config.yaml';
         if (file_exists($cfgPath)) {
             $config = yaml_parse_file($cfgPath);
@@ -479,25 +461,17 @@ class StockController {
 
     /**
      * Helper: get rows from a table (graceful if table doesn't exist).
-     * Tries .TO suffix for Canadian symbols if no direct match.
+     * Uses resolver so Canadian symbols hit the canonical DB symbol.
      */
     private function getTableData(string $table, string $symbol, string $order = 'date DESC', int $limit = 10): array {
         try {
+            $resolved = $this->resolver->resolve($symbol);
             $sql = "SELECT * FROM {$table} WHERE symbol = :sym ORDER BY {$order} LIMIT :lim";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindValue(':sym', $symbol);
+            $stmt->bindValue(':sym', $resolved);
             $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetchAll();
-            
-            // If no match, try .TO suffix for Canadian symbols
-            if (empty($result) && preg_match('/^[A-Z]/', $symbol)) {
-                $stmt = $this->pdo->prepare($sql);
-                $stmt->bindValue(':sym', $symbol . '.TO');
-                $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
-                $stmt->execute();
-                $result = $stmt->fetchAll();
-            }
             return $result;
         } catch (\Exception $e) {
             return [];
@@ -535,19 +509,174 @@ class StockController {
     }
 
     /**
+     * Compute VectorVest 5-point checklist for a single symbol on the detail page.
+     *
+     * Criteria (same logic as the Python vectorvest_screener advisor):
+     *  1. Smooth & steady uptrend — linear-regression slope > 0 and R² >= 0.55 on ~1y closes.
+     *  2. Price rising — close > close 20 trading days ago.
+     *  3. Earnings rising — forward_eps > 0 or earnings_growth > 0 or trailing_eps > 0.
+     *  4. Market on your side — requires SPY benchmark; skipped on detail page.
+     *  5. Follow-through — today close > today open AND today close > yesterday close.
+     */
+    private function calcVectorVest(array $history, array $f, array $latest, array $ind): array
+    {
+        $checks = [];
+        $passCount = 0;
+
+        // Need enough history for regression
+        $closes = array_column($history, 'close');
+        $n = count($closes);
+
+        // 1) Smooth uptrend (use up to 250 closes ~= 1y)
+        if ($n >= 60) {
+            $sample = array_slice($closes, -250);
+            [$slope, $r2] = $this->linearRegression($sample);
+            $smooth = $slope > 0 && $r2 >= 0.55;
+            $checks['smooth_uptrend'] = [
+                'passed' => $smooth,
+                'label' => 'Smooth Uptrend',
+                'detail' => "R²=" . round($r2, 2) . ($smooth ? " ✓" : " ✗"),
+            ];
+            if ($smooth) $passCount++;
+        } else {
+            $checks['smooth_uptrend'] = ['passed' => false, 'label' => 'Smooth Uptrend', 'detail' => 'insufficient data'];
+        }
+
+        // 2) Price rising — close > close 20 days ago
+        if ($n > 20) {
+            $priceRising = end($closes) > $closes[$n - 21];
+            $checks['price_rising'] = [
+                'passed' => $priceRising,
+                'label' => 'Price Rising (20d)',
+                'detail' => $priceRising ? 'close > 20d ago ✓' : 'close < 20d ago ✗',
+            ];
+            if ($priceRising) $passCount++;
+        } else {
+            $checks['price_rising'] = ['passed' => false, 'label' => 'Price Rising', 'detail' => 'insufficient data'];
+        }
+
+        // 3) Earnings rising
+        $earningsRising = false;
+        foreach (['forward_eps', 'earnings_growth'] as $k) {
+            if (isset($f[$k]) && $f[$k] !== null && $f[$k] !== '' && (float)$f[$k] > 0) {
+                $earningsRising = true;
+                break;
+            }
+        }
+        if (!$earningsRising && isset($f['trailing_eps']) && $f['trailing_eps'] > 0) {
+            $earningsRising = true;
+        }
+        $checks['earnings_rising'] = [
+            'passed' => $earningsRising,
+            'label' => 'Earnings Rising',
+            'detail' => $earningsRising ? 'positive eps/growth ✓' : 'no positive earnings ✗',
+        ];
+        if ($earningsRising) $passCount++;
+
+        // 4) Market on your side — needs SPY benchmark; omitted here
+        $checks['market_ok'] = [
+            'passed' => null,
+            'label' => 'Market Trend (SPY)',
+            'detail' => 'N/A on detail page',
+        ];
+
+        // 5) Follow-through — close > open AND close > yesterday close
+        $followThrough = false;
+        if (!empty($latest['close']) && !empty($latest['open']) && $n >= 2) {
+            $c = (float)$latest['close'];
+            $o = (float)$latest['open'];
+            $yC = (float)$closes[$n - 2];
+            $followThrough = $c > $o && $c > $yC;
+        }
+        $checks['follow_through'] = [
+            'passed' => $followThrough,
+            'label' => 'Follow-Through',
+            'detail' => $followThrough ? 'close > open & > yday ✓' : 'no follow-through ✗',
+        ];
+        if ($followThrough) $passCount++;
+
+        $score = $passCount * 20; // 5/5 = 100
+        $passed = $passCount >= 4;
+
+        return [
+            'checks' => $checks,
+            'pass_count' => $passCount,
+            'max' => 5,
+            'score' => $score,
+            'passed' => $passed,
+            'note' => 'Market trend check requires screener run with SPY data',
+        ];
+    }
+
+    /** Ordinary least-squares: returns [slope, r2]. */
+    private function linearRegression(array $y): array
+    {
+        $n = count($y);
+        if ($n < 2) return [0.0, 0.0];
+        $x = range(0, $n - 1);
+        $sx = array_sum($x);
+        $sy = array_sum($y);
+        $sxy = 0;
+        $sxx = 0;
+        for ($i = 0; $i < $n; $i++) {
+            $sxy += $x[$i] * $y[$i];
+            $sxx += $x[$i] * $x[$i];
+        }
+        $den = $n * $sxx - $sx * $sx;
+        if ($den == 0) return [0.0, 0.0];
+        $slope = ($n * $sxy - $sx * $sy) / $den;
+        $intercept = ($sy - $slope * $sx) / $n;
+        $ssRes = 0;
+        $ssTot = 0;
+        $meanY = $sy / $n;
+        for ($i = 0; $i < $n; $i++) {
+            $ssRes += ($y[$i] - ($slope * $x[$i] + $intercept)) ** 2;
+            $ssTot += ($y[$i] - $meanY) ** 2;
+        }
+        $r2 = $ssTot > 0 ? 1 - $ssRes / $ssTot : 0.0;
+        return [(float)$slope, (float)$r2];
+    }
+
+    /**
      * Compute a Zacks-style composite score using available fundamentals + indicators.
      * Grades: A=90-100, B=80-89, C=70-79, D=60-69, F=<60
      * Rank: 1=Strong Buy, 2=Buy, 3=Hold, 4=Sell, 5=Strong Sell
      */
-    private function calcZacksStyleScore(array $f, array $ind, float $closePrice = 0): array {
+    public function calcZacksStyleScore(array $f, array $ind, float $closePrice = 0): array {
         $checks = [];
         $maxScore = 100;
 
+        $hasFundamental = false;
+        foreach (['trailing_pe','price_to_book','free_cash_flow','market_cap','debt_to_equity','earnings_growth','revenue_growth','roe','forward_pe','peg_ratio','price_to_sales','book_value','total_revenue'] as $k) {
+            if (isset($f[$k]) && $f[$k] !== null && $f[$k] !== '') {
+                $hasFundamental = true;
+                break;
+            }
+        }
+        if (!$hasFundamental) {
+            return [
+                'rank' => null,
+                'rank_text' => 'N/A',
+                'composite' => null,
+                'value_grade' => 'N/A',
+                'growth_grade' => 'N/A',
+                'momentum_grade' => 'N/A',
+                'vgm_grade' => 'N/A',
+                'value_pct' => null,
+                'growth_pct' => null,
+                'momentum_pct' => null,
+                'vgm_pct' => null,
+                'checks' => ['Fundamental data not available'],
+            ];
+        }
+
         // Value (40 points): low PE, low PB, high FCF yield, manageable debt
         $valueScore = 0;
+        $maxValue = 0;
         if (!empty($f['trailing_pe']) && $f['trailing_pe'] > 0) {
             $pe = (float)$f['trailing_pe'];
             $checks['P/E < 20x'] = $pe < 20;
+            $maxValue += 10;
             if ($pe < 15) $valueScore += 10;
             elseif ($pe < 20) $valueScore += 7;
             elseif ($pe < 30) $valueScore += 4;
@@ -555,6 +684,7 @@ class StockController {
         if (!empty($f['price_to_book']) && $f['price_to_book'] > 0) {
             $pb = (float)$f['price_to_book'];
             $checks['P/B < 2.0'] = $pb < 2.0;
+            $maxValue += 10;
             if ($pb < 1.0) $valueScore += 10;
             elseif ($pb < 2.0) $valueScore += 7;
             elseif ($pb < 3.0) $valueScore += 4;
@@ -562,6 +692,7 @@ class StockController {
         if (!empty($f['free_cash_flow']) && !empty($f['market_cap']) && $f['market_cap'] > 0) {
             $fcfYield = (float)$f['free_cash_flow'] / (float)$f['market_cap'];
             $checks['FCF Yield > 3%'] = $fcfYield > 0.03;
+            $maxValue += 10;
             if ($fcfYield > 0.06) $valueScore += 10;
             elseif ($fcfYield > 0.03) $valueScore += 7;
             elseif ($fcfYield > 0.01) $valueScore += 4;
@@ -569,18 +700,21 @@ class StockController {
         if (!empty($f['debt_to_equity'])) {
             $de = (float)$f['debt_to_equity'];
             $checks['D/E < 0.8'] = $de < 0.8;
+            $maxValue += 10;
             if ($de < 0.3) $valueScore += 10;
             elseif ($de < 0.8) $valueScore += 7;
             elseif ($de < 1.5) $valueScore += 4;
         }
-        $valuePct = min(100, ($valueScore / 40) * 100);
+        $valuePct = $maxValue > 0 ? min(100, ($valueScore / $maxValue) * 100) : 0;
         $valueGrade = $valuePct >= 90 ? 'A' : ($valuePct >= 80 ? 'B' : ($valuePct >= 70 ? 'C' : ($valuePct >= 60 ? 'D' : 'F')));
 
         // Growth (30 points): EPS growth, revenue growth
         $growthScore = 0;
+        $maxGrowth = 0;
         if (!empty($f['earnings_growth'])) {
             $eg = (float)$f['earnings_growth'];
             $checks['EPS Growth > 10%'] = $eg > 0.10;
+            $maxGrowth += 15;
             if ($eg > 0.20) $growthScore += 15;
             elseif ($eg > 0.10) $growthScore += 10;
             elseif ($eg > 0) $growthScore += 5;
@@ -588,11 +722,12 @@ class StockController {
         if (!empty($f['revenue_growth'])) {
             $rg = (float)$f['revenue_growth'];
             $checks['Revenue Growth > 5%'] = $rg > 0.05;
+            $maxGrowth += 15;
             if ($rg > 0.15) $growthScore += 15;
             elseif ($rg > 0.05) $growthScore += 10;
             elseif ($rg > 0) $growthScore += 5;
         }
-        $growthPct = min(100, ($growthScore / 30) * 100);
+        $growthPct = $maxGrowth > 0 ? min(100, ($growthScore / $maxGrowth) * 100) : 0;
         $growthGrade = $growthPct >= 90 ? 'A' : ($growthPct >= 80 ? 'B' : ($growthPct >= 70 ? 'C' : ($growthPct >= 60 ? 'D' : 'F')));
 
         // Momentum (20 points): price vs SMA200, RSI not overbought
@@ -809,30 +944,65 @@ class StockController {
 
     /**
      * Get latest technical indicators for a symbol (for stop calculations).
-     * Tries .TO suffix for Canadian symbols if no direct match.
+     * Uses resolver so Canadian symbols hit the canonical DB symbol.
      */
     private function getLatestIndicators(string $symbol): array {
+        $this->refreshIndicatorsJsonIfStale($symbol);
+        $resolved = $this->resolver->resolve($symbol);
         $stmt = $this->pdo->prepare("
             SELECT data FROM indicators_json
             WHERE symbol = :sym
             ORDER BY price_date DESC LIMIT 1
         ");
-        $stmt->execute([':sym' => $symbol]);
+        $stmt->execute([':sym' => $resolved]);
         $row = $stmt->fetch();
-        
-        // If no match, try .TO suffix for Canadian symbols
-        if (!$row && preg_match('/^[A-Z]/', $symbol)) {
-            $stmt = $this->pdo->prepare("
-                SELECT data FROM indicators_json
-                WHERE symbol = :sym
-                ORDER BY price_date DESC LIMIT 1
-            ");
-            $stmt->execute([':sym' => $symbol . '.TO']);
-            $row = $stmt->fetch();
-        }
         
         if (!$row) return [];
         return json_decode($row['data'] ?: $row[0], true) ?: [];
+    }
+
+    private function refreshIndicatorsJsonIfStale(string $symbol): void {
+        $resolved = $this->resolver->resolve($symbol);
+        $stmt = $this->pdo->prepare("
+            SELECT updated_date FROM indicators_json
+            WHERE symbol = :sym
+            ORDER BY price_date DESC LIMIT 1
+        ");
+        $stmt->execute([':sym' => $resolved]);
+        $row = $stmt->fetch();
+
+        $today = date('Y-m-d');
+        $last = $row ? substr($row['updated_date'], 0, 10) : '';
+        if ($last !== $today) {
+            $this->refreshIndicatorsJson($resolved);
+            if ($resolved !== $symbol) {
+                $this->refreshIndicatorsJson($symbol);
+            }
+        }
+    }
+
+    private function refreshIndicatorsJson(string $symbol): void {
+        $stmt = $this->pdo->prepare("
+            SELECT * FROM indicators WHERE symbol = :sym ORDER BY price_date DESC LIMIT 1
+        ");
+        $stmt->execute([':sym' => $symbol]);
+        $row = $stmt->fetch();
+        if (!$row) return;
+
+        $data = $row;
+        unset($data['id'], $data['symbol'], $data['price_date']);
+        $pdate = $row['price_date'];
+
+        $up = $this->pdo->prepare("
+            INSERT INTO indicators_json (symbol, price_date, data)
+            VALUES (:sym, :pdate, :data)
+            ON DUPLICATE KEY UPDATE data = :data, updated_date = NOW()
+        ");
+        $up->execute([
+            ':sym' => $symbol,
+            ':pdate' => $pdate,
+            ':data' => json_encode($data),
+        ]);
     }
 
     /**
@@ -1138,8 +1308,8 @@ class StockController {
      * GET /?action=refresh_price&symbol=SU.TO — Trigger price refresh for one symbol.
      */
     public function refreshPrice(string $symbol): array {
-        $symbol = strtoupper(trim($symbol));
-        if (!preg_match('/^[A-Z][A-Z0-9\\.\\-]*$/', $symbol)) {
+        $symbol = $this->resolver->resolve(strtoupper(trim($symbol)));
+        if (!preg_match('/^[A-Z][A-Z0-9\\\\.\\\\-]*$/', $symbol)) {
             $_SESSION['flash_error'] = 'Invalid symbol.';
             header('Location: /stockmarket/?action=overview');
             exit;
@@ -1251,8 +1421,10 @@ class StockController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Single-row form submission
             if (!empty($_POST['single_symbol'])) {
+                $rawSym = strtoupper(trim($_POST['single_symbol'] ?? ''));
+                $sym = $this->resolver->resolve($rawSym);
                 $row = [
-                    'symbol' => strtoupper(trim($_POST['single_symbol'] ?? '')),
+                    'symbol' => $sym,
                     'date'   => trim($_POST['single_date'] ?? ''),
                     'open'   => $_POST['single_open'] !== '' ? (float)$_POST['single_open'] : null,
                     'high'   => $_POST['single_high'] !== '' ? (float)$_POST['single_high'] : null,
@@ -1263,7 +1435,7 @@ class StockController {
                     'dividend'  => $_POST['single_dividend'] !== '' ? (float)$_POST['single_dividend'] : 0,
                     'split_ratio' => $_POST['single_split'] !== '' ? (float)$_POST['single_split'] : 1,
                 ];
-                if (!preg_match('/^[A-Z][A-Z0-9\.\-]*$/', $row['symbol']) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $row['date'])) {
+                if (!preg_match('/^[A-Z][A-Z0-9\\.\\-]*$/', $sym) || !preg_match('/^\\d{4}-\\d{2}-\\d{2}$/', $row['date'])) {
                     $error = 'Invalid symbol or date (YYYY-MM-DD).';
                 } else {
                     try {
@@ -1382,6 +1554,10 @@ class StockController {
             'value_stocks' => ['label' => 'Value Stocks (P/E <15)', 'market' => 'america'],
             'canadian_dividends' => ['label' => 'Canadian Dividends (Yield >3%)', 'market' => 'canada'],
             'low_cost_index_funds' => ['label' => 'Low-Cost Index Funds', 'market' => 'canada'],
+            'buffett' => ['label' => 'Buffett Quality Score', 'market' => 'local'],
+            'zacks' => ['label' => 'Zacks-Style Composite', 'market' => 'local'],
+            'vectorvest' => ['label' => 'VectorVest Safe Stock', 'market' => 'local'],
+            'exit_risk' => ['label' => 'Low Exit Risk', 'market' => 'local'],
         ];
         
         if (!isset($presets[$preset])) {
@@ -1404,6 +1580,23 @@ class StockController {
         // Decode JSON data
         foreach ($results as &$r) {
             $r['metrics'] = json_decode($r['data'], true) ?: [];
+        }
+
+        // Threshold filter for rating-based presets
+        $minScore = isset($_GET['min_score']) ? (float) $_GET['min_score'] : null;
+        if ($minScore !== null && $minScore > 0) {
+            $results = array_values(array_filter($results, function($r) use ($preset, $minScore) {
+                $m = $r['metrics'] ?? [];
+                if ($preset === 'exit_risk') {
+                    $score = isset($m['composite_exit_risk']) ? ((float)$m['composite_exit_risk']) : null;
+                    if ($score === null) return false;
+                    // Invert: stored exit risk is 0-1; lower is better.
+                    return ((1 - $score) * 100) >= $minScore;
+                }
+                $score = isset($m['score']) ? (float)$m['score'] : null;
+                if ($score === null) return false;
+                return $score >= $minScore;
+            }));
         }
 
         // Override name from symbol_master when available
@@ -1445,13 +1638,16 @@ class StockController {
             'Perf.Y' => fn($a,$b)=>($a['metrics']['Perf.Y']??0)<=>($b['metrics']['Perf.Y']??0),
             'dividends_yield_current' => fn($a,$b)=>($a['metrics']['dividends_yield_current']??0)<=>($b['metrics']['dividends_yield_current']??0),
             'price_earnings_ttm' => fn($a,$b)=>($a['metrics']['price_earnings_ttm']??0)<=>($b['metrics']['price_earnings_ttm']??0),
+            'return_on_equity' => fn($a,$b)=>($a['metrics']['return_on_equity']??0)<=>($b['metrics']['return_on_equity']??0),
+            'gross_margin_ttm' => fn($a,$b)=>($a['metrics']['gross_margin_ttm']??0)<=>($b['metrics']['gross_margin_ttm']??0),
             'sector' => fn($a,$b)=>strcmp($a['metrics']['sector']??'',$b['metrics']['sector']??''),
+            'vv_pass_count' => fn($a,$b)=>($b['metrics']['pass_count']??0)<=>($a['metrics']['pass_count']??0),
+            'vv_score' => fn($a,$b)=>($b['metrics']['score']??0)<=>($a['metrics']['score']??0),
         ];
-        
         if ($sort !== null && isset($allowedSort[$sort])) {
             usort($results, $allowedSort[$sort]);
         }
-        
+
         // Build unique sector list for filter dropdown
         $sectors = [];
         foreach ($results as $r) {

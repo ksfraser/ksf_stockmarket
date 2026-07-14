@@ -44,6 +44,7 @@ try:
     import yfinance as yf
 except ImportError:
     yf = None  # graceful handling at function level
+from symbol_resolver import resolve_for_yfinance
 
 try:
     import pandas as pd
@@ -76,18 +77,8 @@ logger = logging.getLogger('data_importer')
 # Helpers
 # ---------------------------------------------------------------------------
 
-# TSX symbols: yfinance requires ".TO" suffix
+# TSX symbols in DB are stored without suffix; yfinance needs ".TO"
 TSX_PATTERN = re.compile(r'^[A-Z][A-Z0-9]*\.TO$', re.IGNORECASE)
-
-def normalize_symbol(symbol: str) -> str:
-    """Ensure TSX symbols carry the .TO suffix that yfinance expects."""
-    symbol = symbol.strip().upper()
-    if re.match(r'^[A-Z][A-Z0-9]*$', symbol) and '.' not in symbol:
-        # If it looks like a TSX symbol (<=4 chars, no dot), append .TO
-        if len(symbol) <= 4:
-            return f"{symbol}.TO"
-    return symbol
-
 
 def get_conn(config: Optional[Dict] = None):
     """Return a new mysql.connector connection."""
@@ -194,7 +185,7 @@ def fetch_yfinance_prices(
 
     for raw_sym in symbols:
         start = time.time()
-        sym = normalize_symbol(raw_sym)
+        sym = resolve_for_yfinance(raw_sym)
         # The original symbol (without .TO) is stored in the DB
         db_symbol = sym.replace('.TO', '').upper()
         try:
@@ -461,7 +452,7 @@ def fetch_fundamentals(
     updated = 0
 
     for raw_sym in symbols:
-        sym = normalize_symbol(raw_sym)
+        sym = resolve_for_yfinance(raw_sym)
         db_sym = sym.replace('.TO', '').upper()
         try:
             ticker = yf.Ticker(sym)

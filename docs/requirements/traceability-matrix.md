@@ -22,3 +22,12 @@
 | — | FR-6 FA Integration | US-10 Record Transfer | fa_transfers | FAController | — | Phase 2 |
 | — | FR-6 | US-11 Revalue Assets | portfolio, fa_transfers | FARevaluationController | revalue.py | Phase 2 |
 | — | FR-5 | US-13 Watchlists | watchlists, watchlist_symbols | WatchlistController | — | Phase 2 |
+| BR-1: Advisor Accounts | FR-7 Shared Access | US-14 Share Advisor Portfolio | portfolio, portfolio_visibilities, portfolio_share_users | SharedWithMeController | — | Phase 2 |
+| BR-1 | FR-7 | US-15 View Shared Portfolio | portfolio | SharedWithMeController | — | Phase 2 |
+| BR-1 | FR-7 | US-16 View Shared Transactions | portfolio_trades | SharedWithMeController | — | Phase 2 |
+| BR-4: Advisor Backtests | FR-4 Backtesting | US-17 Advisor Leaderboard | backtest_runs | AdvisorBacktestController | advisor_backtest.py | Phase 2 |
+| BR-2: Rating Screener | FR-3 Screening | US-18 Rating Presets | tradingview_screener_results | StockController::screener() | populate_ratings.py | Phase 2 |
+| BR-2 | FR-Population | US-19 Analyst Ratings Population | analyst_ratings | — | populate_analyst_ratings.py | Phase 2 |
+| BR-1: Broker Stops | FR-8 Stop Orders | US-20 Place Stop | broker_stop_orders | BrokerStopController | — | Phase 2 |
+| BR-1 | FR-8 | US-21 Historical Stops | broker_stop_orders | BrokerStopController | — | Phase 2 |
+| BR-1 | FR-9 Alerts | US-22 Review Alerts | alert_queue | AlertsController | — | Phase 2 |

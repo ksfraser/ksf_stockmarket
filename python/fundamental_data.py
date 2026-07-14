@@ -50,6 +50,7 @@ try:
     YFINANCE_AVAILABLE = True
 except ImportError:
     pass
+from symbol_resolver import resolve_for_yfinance
 
 
 # ── Fundamental Data Fetcher ───────────────────────────────────────────────
@@ -107,7 +108,7 @@ class FundamentalFetcher:
             return {'error': 'yfinance not available'}
 
         try:
-            ticker = yf.Ticker(symbol)
+            ticker = yf.Ticker(resolve_for_yfinance(symbol))
             info = ticker.info or {}
 
             result = {'symbol': symbol, 'fetch_date': str(date.today())}
@@ -144,7 +145,7 @@ class FundamentalFetcher:
         if not YFINANCE_AVAILABLE:
             return []
         try:
-            ticker = yf.Ticker(symbol)
+            ticker = yf.Ticker(resolve_for_yfinance(symbol))
             divs = ticker.dividends
             results = []
             for date_idx, amount in divs.items():
@@ -161,7 +162,7 @@ class FundamentalFetcher:
         if not YFINANCE_AVAILABLE:
             return []
         try:
-            ticker = yf.Ticker(symbol)
+            ticker = yf.Ticker(resolve_for_yfinance(symbol))
             # Get quarterly financials
             fin = ticker.quarterly_financials
             if fin is None or fin.empty:

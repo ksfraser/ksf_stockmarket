@@ -9,6 +9,7 @@ from advisors.strategies import (
     SectorStrategy,
     BondBasketStrategy,
     BalancedFundStrategy,
+    VectorVestSafeStockStrategy,
 )
 
 __all__ = [
@@ -20,4 +21,5 @@ __all__ = [
     "SectorStrategy",
     "BondBasketStrategy",
     "BalancedFundStrategy",
+    "VectorVestSafeStockStrategy",
 ]

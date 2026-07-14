@@ -27,11 +27,12 @@ Migrate monitoring cron jobs from Hermes orchestration to standalone system cron
 
 ### 2.2 DRY Violations Identified
 
-1. **Symbol Resolution Duplication**
-   - `volume_spike_check.py`: Inline `.UN` → `-UN.TO` conversion
-   - `price_alert_check.py`: Complex fallback resolution logic
-   - `check_delisted.py`: Uses `SymbolResolver` from shared module (good)
-   - **Solution**: Centralize in `ksf_stockmarket/src/monitoring/symbol_resolver.py`
+1. **Symbol Resolution Duplication** — ✅ RESOLVED
+   - Was: `volume_spike_check.py`, `price_alert_check.py` had inline `.UN` / fallback logic
+   - Now: Canonical resolver lives at:
+     - Python: `python/src/symbol_resolver.py` (`resolve_for_yfinance()`)
+     - PHP: `php/src/Util/SymbolResolver.php` (`SymbolResolver::resolve()`)
+   - All yfinance callers now route through the resolver (see FR-01 enforcement below)
 
 2. **Database Connection Duplication**
    - Each script has hardcoded MySQL credentials
@@ -51,15 +52,14 @@ Migrate monitoring cron jobs from Hermes orchestration to standalone system cron
 
 ### 3.1 Functional Requirements
 
-#### FR-01: Modular Python Library
-- All monitoring scripts must use shared modules for:
-  - Symbol resolution (`symbol_resolver.py`)
-  - Price fetching (`price_fetcher.py`)
-  - Database access (`database.py`)
-  - Notification (`notification.py`)
-  - Logging (`logger.py`)
+#### FR-01: Shared Resolver Mandatory
+All monitoring scripts must use the canonical resolver for ticker formatting.
+- Python: `python/src/symbol_resolver.py` — `resolve_for_yfinance(symbol)`
+- PHP: `php/src/Util/SymbolResolver.php` — `SymbolResolver::resolve($symbol)`
+No script may call `yf.Ticker(symbol)` or `yf.download(symbol)` directly with an unresolved DB symbol.
 
-#### FR-02: MariaDB Tables for Monitoring Data
+#### FR-02: Centralized Price Fetching
+All monitoring scripts must use shared price fetchers with caching rather than creating `yf.Ticker()` per-script.
 
 ```sql
 -- Volume snapshots for intraday monitoring

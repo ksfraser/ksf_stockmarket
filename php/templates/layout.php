@@ -29,6 +29,7 @@
         <a href="?action=list" class="<?php echo active_class('list', $action); ?>">All Symbols</a>
         <a href="?action=screener" class="<?php echo active_class('screener', $action); ?>">Screener</a>
         <a href="?action=strategy_stock" class="<?php echo active_class('strategy_stock', $action); ?>">Strategies</a>
+        <a href="?action=advisor_backtest" class="<?php echo active_class('advisor_backtest', $action); ?>">Advisor Backtest</a>
         <a href="?action=seg_funds" class="<?php echo in_array($action, ['seg_funds','seg_fund_detail']) ? 'active' : ''; ?>">Seg Funds</a>
     </span>
     

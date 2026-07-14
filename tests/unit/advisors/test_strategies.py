@@ -16,6 +16,7 @@ from advisors.strategies import (
     BuffettQualityStrategy,
     DividendGrowthStrategy,
     MomentumStrategy,
+    VectorVestSafeStockStrategy,
 )
 
 
@@ -182,3 +183,26 @@ class TestMomentumStrategy:
         strategy = MomentumStrategy(db, config={"schedule": "daily"})
         signals = strategy.generate_signals(datetime.date(2025, 5, 19), max_positions=5)
         assert len(signals) >= 1
+
+
+class TestVectorVestSafeStockStrategy:
+    def test_select_universe_returns_recent_symbols(self, db) -> None:
+        _seed_momentum_data(db)
+        strategy = VectorVestSafeStockStrategy(db, config={"schedule": "daily"})
+        universe = strategy.select_universe(datetime.date(2025, 5, 19))
+        assert "MSFT" in universe
+
+    def test_score_returns_pass_count(self, db) -> None:
+        _seed_momentum_data(db)
+        strategy = VectorVestSafeStockStrategy(db, config={"schedule": "daily"})
+        score = strategy.score("MSFT", datetime.date(2025, 5, 19))
+        assert score >= 0.0
+        assert score <= 5.0
+
+    def test_generate_signals_filters(self, db) -> None:
+        _seed_momentum_data(db)
+        strategy = VectorVestSafeStockStrategy(db, config={"schedule": "daily"})
+        signals = strategy.generate_signals(datetime.date(2025, 5, 19), max_positions=10)
+        for sig in signals:
+            assert sig.action == "BUY"
+            assert "pass=" in sig.reason

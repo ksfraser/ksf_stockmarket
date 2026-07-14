@@ -5,12 +5,12 @@
         <div>
             <h4>Dividend Safety Score: <span style="color:<?= ($dividendSafety['score'] ?? 0) >= 80 ? 'var(--green)' : (($dividendSafety['score'] ?? 0) >= 60 ? 'var(--yellow)' : 'var(--red)') ?>"><?= $dividendSafety['score'] ?? 'N/A' ?></span> <span style="font-size:0.8em; color:var(--text3)">(<?= $dividendSafety['rating'] ?? 'N/A' ?>)</span></h4>
             <table style="width:100%; font-size:0.9em;">
-                <tr><td class="text-muted">Payout Ratio</td><td class="r"><?= $fundamentals['payout_ratio'] ? number_format($fundamentals['payout_ratio'], 1) . '%' : '—' ?></td></tr>
+                <tr><td class="text-muted">Payout Ratio</td><td class="r"><?= isset($fundamentals['payout_ratio']) ? number_format($fundamentals['payout_ratio'], 1) . '%' : '—' ?></td></tr>
                 <tr><td class="text-muted">FCF Coverage</td><td class="r"><?= $dividendSafety['fcf_coverage'] ?? '—' ?></td></tr>
                 <tr><td class="text-muted">D/E Ratio</td><td class="r"><?= $dividendSafety['debt_equity'] ?? '—' ?></td></tr>
                 <tr><td class="text-muted">Revenue Growth</td><td class="r"><?= $dividendSafety['revenue_growth'] ?? '—' ?></td></tr>
                 <tr><td class="text-muted">Annual Dividend</td><td class="r">$<?= number_format($fundamentals['dividend_rate'] ?? 0, 2) ?></td></tr>
-                <tr><td class="text-muted">5Y Avg Yield</td><td class="r"><?= $fundamentals['five_year_div_yield'] ? number_format($fundamentals['five_year_div_yield'], 2) . '%' : '—' ?></td></tr>
+                <tr><td class="text-muted">5Y Avg Yield</td><td class="r"><?= isset($fundamentals['five_year_div_yield']) ? number_format($fundamentals['five_year_div_yield'], 2) . '%' : '—' ?></td></tr>
             </table>
         </div>
         <div>

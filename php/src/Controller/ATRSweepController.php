@@ -5,9 +5,12 @@
 
 class ATRSweepController {
     private $pdo;
+    /** @var SymbolResolver */
+    private $resolver;
 
     public function __construct() {
         $this->pdo = Database::get();
+        $this->resolver = new SymbolResolver($this->pdo);
     }
 
     /**
@@ -43,8 +46,13 @@ class ATRSweepController {
         ];
     }
 
+    /**
+     * GET /?action=atr_sweep&symbol=XXX — Generate ATR stop optimization chart.
+     * Uses resolver so Canadian symbols hit the canonical DB symbol.
+     */
     public function chart(): void {
-        $symbol = strtoupper(trim($_GET['symbol'] ?? ''));
+        $raw = strtoupper(trim($_GET['symbol'] ?? ''));
+        $symbol = $this->resolver->resolve($raw);
         if (!$symbol) {
             http_response_code(400);
             echo 'Missing symbol';
@@ -92,6 +100,9 @@ class ATRSweepController {
         }
     }
 
+    /**
+     * Get best/second best/worst/second worst ATR params for a symbol.
+     */
     private function getBestParams(string $symbol): ?array {
         $stmt = $this->pdo->prepare("
             SELECT stop_factor, trailing_pct, pnl_pct, n_trades, win_rate, avg_win, avg_loss, expectancy

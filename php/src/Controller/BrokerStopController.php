@@ -6,11 +6,14 @@ class BrokerStopController {
 
     private $pdo;
     private $userId;
+    /** @var SymbolResolver */
+    private $resolver;
 
     public function __construct() {
         $this->pdo = Database::get();
         $this->currentUser = AuthController::requireAuth();
         $this->userId = $this->currentUser['id'];
+        $this->resolver = new SymbolResolver($this->pdo);
     }
 
     /**
@@ -54,6 +57,7 @@ class BrokerStopController {
             'stops' => $stops,
             'account_filter' => $account_filter,
             'account_types' => ['TFSA', 'RRSP', 'MARGIN'],
+            'history' => $this->history(),
         ];
     }
 
@@ -95,18 +99,24 @@ class BrokerStopController {
         
         $stmt = $this->pdo->prepare("
             INSERT INTO broker_stop_orders 
-            (user_id, symbol, account_type, stop_type, stop_value, shares, notes)
-            VALUES (:uid, :sym, :acct, :type, :val, :shares, :notes)
+            (user_id, symbol, account_type, stop_type, stop_value, shares, status, notes)
+            VALUES (:uid, :sym, :acct, :type, :val, :shares, 'active', :notes)
         ");
         
+        $sym = strtoupper(trim($post['symbol']));
+        $resolved = (new SymbolResolver(Database::get()))->resolve($sym);
+        $shares = (float)($post['shares'] ?? 0);
+        $sellMode = $post['sell_mode'] ?? 'all';
+        $sellPct = ($sellMode === 'portion') ? (float)($post['sell_pct'] ?? 100) : 100.0;
+
         $stmt->execute([
             ':uid' => $this->userId,
-            ':sym' => strtoupper(trim($post['symbol'])),
+            ':sym' => $resolved,
             ':acct' => $post['account_type'],
             ':type' => $post['stop_type'],
             ':val' => (float)$post['stop_value'],
-            ':shares' => !empty($post['shares']) ? (float)$post['shares'] : 0,
-            ':notes' => $post['notes'] ?? '',
+            ':shares' => $shares,
+            ':notes' => ($post['notes'] ?? '') . ($sellMode === 'portion' ? " [sell_pct=$sellPct%]" : ''),
         ]);
         
         return ['success' => "Stop order placed for {$post['symbol']}"];
@@ -124,5 +134,28 @@ class BrokerStopController {
         $stmt->execute([':id' => $stopId, ':uid' => $this->userId]);
         
         return ['success' => "Stop marked as triggered"];
+    }
+
+    /**
+     * Historical expired/cancelled/triggered stops.
+     */
+    public function history(): array {
+        $stmt = $this->pdo->prepare("
+            SELECT bs.*, latest.close as current_price
+            FROM broker_stop_orders bs
+            LEFT JOIN (
+                SELECT sp1.symbol, sp1.close
+                FROM stockprices sp1
+                INNER JOIN (
+                    SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol
+                ) sp2 ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
+            ) latest ON bs.symbol = latest.symbol
+            WHERE bs.user_id = :uid
+              AND bs.status IN ('triggered', 'cancelled', 'expired')
+            ORDER BY bs.placed_at DESC
+            LIMIT 200
+        ");
+        $stmt->execute([':uid' => $this->userId]);
+        return $stmt->fetchAll();
     }
 }

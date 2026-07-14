@@ -14,6 +14,15 @@ $totalPages    = (int)($data['total_pages'] ?? 1);
 $start = ($page - 1) * $perPage + 1;
 $end   = min($page * $perPage, $totalAll);
 
+$batchResult = null;
+$batchResultPath = ($GLOBALS['APP_ROOT'] ?? '') . '/results/batch_cleanup_result.json';
+if (is_readable($batchResultPath)) {
+    $raw = @file_get_contents($batchResultPath);
+    if ($raw) {
+        $batchResult = json_decode($raw, true);
+    }
+}
+
 $preserve = [
     'action'   => 'admin_symbols',
     'filter'   => $filter,
@@ -35,10 +44,39 @@ $baseQsNoPage = http_build_query(array_diff_key($preserve, ['page' => $page]));
             <option value="active"  <?= $filter === 'active'  ? 'selected' : '' ?>>Active (<?= $totalActive ?>)</option>
             <option value="inactive" <?= $filter === 'inactive' ? 'selected' : '' ?>>Inactive (<?= $totalInactive ?>)</option>
             <option value="no_exchange" <?= $filter === 'no_exchange' ? 'selected' : '' ?>>No Exchange</option>
+            <option value="needs_review" <?= $filter === 'needs_review' ? 'selected' : '' ?>>Needs Review</option>
         </select>
         <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="Search symbol or name...">
         <button type="submit" class="btn btn-sm">Filter</button>
     </form>
+
+    <!-- Batch cleanup toolbar -->
+    <form method="POST" style="margin-bottom:12px; display:inline-flex; align-items:center; gap:8px;"
+          onsubmit="return confirm('Batch cleanup will enrich all dead-name symbols via yfinance in the background. This may take several minutes. Continue?');">
+        <input type="hidden" name="action" value="admin_symbols">
+        <input type="hidden" name="subaction" value="run_batch">
+        <button type="submit" class="btn btn-sm" style="background:var(--orange);">Run Batch Cleanup</button>
+    </form>
+
+    <?php if ($batchResult): ?>
+    <div style="margin-bottom:12px; padding:12px; border-radius:var(--radius); background:rgba(0,0,0,0.15); font-size:0.85em;">
+        <strong>Last batch cleanup:</strong>
+        <?php if ($batchResult['status'] === 'complete'): ?>
+        <span style="color:var(--green)">Completed</span> —
+        total=<?= (int)($batchResult['total'] ?? 0) ?> /
+        updated=<?= (int)($batchResult['updated'] ?? 0) ?> /
+        skipped=<?= (int)($batchResult['skipped'] ?? 0) ?>
+        <?php if (!empty($batchResult['started_at'])): ?>
+        (started <?= htmlspecialchars($batchResult['started_at']) ?>)
+        <?php endif; ?>
+        <?php elseif ($batchResult['status'] === 'already_running'): ?>
+        <span style="color:var(--yellow)">Already running</span> — check log.
+        <?php else: ?>
+        <span style="color:var(--red)"><?= htmlspecialchars($batchResult['status'] ?? 'unknown') ?></span>
+        <?php endif; ?>
+        <a href="?action=admin_symbols&subaction=view_batch_log" class="btn btn-sm" style="padding:2px 8px; font-size:0.8em;">View Log</a>
+    </div>
+    <?php endif; ?>
 
     <!-- Toolbar: page size + pager summary -->
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
@@ -136,7 +174,7 @@ $baseQsNoPage = http_build_query(array_diff_key($preserve, ['page' => $page]));
             </tr>
             <tr class="edit-row" id="edit-<?= htmlspecialchars($s['symbol']) ?>" style="display:none; background:rgba(0,0,0,0.15);">
                 <td colspan="8">
-                    <form method="POST" action="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=save_mapping" style="display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; align-items:end; padding:8px 0;">
+                    <form method="POST" action="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=save_symbol" style="display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; align-items:end; padding:8px 0;">
                         <input type="hidden" name="symbol" value="<?= htmlspecialchars($s['symbol']) ?>">
                         <div>
                             <label style="font-size:0.75em; color:var(--text3)">Name</label>
@@ -158,8 +196,8 @@ $baseQsNoPage = http_build_query(array_diff_key($preserve, ['page' => $page]));
                             </select>
                         </div>
                         <div>
-                            <label style="font-size:0.75em; color:var(--text3)">Yahoo Ticker</label>
-                            <input type="text" name="yahoo_ticker" value="<?= htmlspecialchars($s['yahoo_ticker'] ?? $s['symbol']) ?>" placeholder="override" style="width:100%">
+                            <label style="font-size:0.75em; color:var(--text3)">Sector</label>
+                            <input type="text" name="sector" value="<?= htmlspecialchars($s['sector'] ?? '') ?>" placeholder="optional" style="width:100%">
                         </div>
                         <div style="display:flex; gap:4px; align-items:end;">
                             <button type="submit" class="btn btn-sm" style="background:var(--green)">Save</button>

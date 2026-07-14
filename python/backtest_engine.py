@@ -21,8 +21,8 @@ import sys
 from datetime import datetime, date, timedelta
 from decimal import Decimal, ROUND_HALF_UP
 
-from python.db_connector import get_connection, get_active_symbols, fetch_price_data
-from python.ta_calculator import compute_indicators, compute_signal_strength, compute_signal_reasons
+from python.db_connector import get_connection
+from python.ta_calculator import fetch_price_data, get_active_symbols, compute_indicators, compute_signal_strength, compute_signal_reasons
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s [%(levelname)s] %(message)s')
@@ -90,7 +90,7 @@ class BacktestEngine:
         """Get the price for a symbol on a specific date."""
         cursor = self.conn.cursor(dictionary=True)
         cursor.execute("""
-            SELECT day_open, day_high, day_low, day_close, volume
+            SELECT `open`, `high`, `low`, `close`, volume
             FROM stockprices
             WHERE symbol = %s AND price_date = %s
         """, (symbol, target_date))
@@ -102,7 +102,7 @@ class BacktestEngine:
         """Get price data for a symbol over a date range."""
         cursor = self.conn.cursor(dictionary=True)
         cursor.execute("""
-            SELECT price_date, day_open, day_high, day_low, day_close, volume
+            SELECT price_date, `open`, `high`, `low`, `close`, volume
             FROM stockprices
             WHERE symbol = %s AND price_date BETWEEN %s AND %s
             ORDER BY price_date ASC
@@ -130,10 +130,10 @@ class BacktestEngine:
 
         cursor = self.conn.cursor(dictionary=True)
         cursor.execute("""
-            SELECT price_date, day_open, day_high, day_low, day_close, volume
+            SELECT price_date, `open`, `high`, `low`, `close`, volume
             FROM stockprices
             WHERE symbol = %s AND price_date <= %s
-            ORDER BY price_date ASC
+            ORDER BY price_date DESC
             LIMIT 250
         """, (symbol, as_of_date))
         rows = cursor.fetchall()
@@ -149,8 +149,9 @@ class BacktestEngine:
         df = DataFrame(rows)
         df['price_date'] = pd.to_datetime(df['price_date'])
         df.set_index('price_date', inplace=True)
+        df = df.sort_index()
         # Ensure numeric columns are float (SQLite may return strings)
-        for col in ['day_open', 'day_high', 'day_low', 'day_close', 'volume']:
+        for col in ['open', 'high', 'low', 'close', 'volume']:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors='coerce')
 
@@ -193,8 +194,9 @@ class BacktestEngine:
         }
 
     def execute_trade(self, symbol: str, trade_type: str, price: float,
-                      date: date, reason: str = '') -> bool:
+                      date: date, reason: str = '', indicators: dict | None = None) -> bool:
         """Execute a trade (BUY or SELL)."""
+        price = float(price)
         if trade_type == 'BUY':
             # Calculate position size
             max_investment = self.cash * self.max_position_pct
@@ -236,6 +238,7 @@ class BacktestEngine:
                 'commission': self.commission,
                 'total_cost': cost,
                 'signal_reasons': reason,
+                'indicators': indicators or {},
             })
 
             logger.debug(f"  BUY {shares} {symbol} @ ${price:.2f} = ${cost:.2f}")
@@ -265,6 +268,7 @@ class BacktestEngine:
                 'total_cost': -proceeds,
                 'signal_reasons': reason,
                 'pnl': pnl,
+                'indicators': indicators or {},
             })
 
             del self.positions[symbol]
@@ -281,13 +285,14 @@ class BacktestEngine:
         for symbol, pos in self.positions.items():
             price_data = self.get_price_on_date(symbol, as_of_date)
             if price_data:
-                current_price = price_data['day_close']
-                market_value = pos['shares'] * current_price
-                unrealized_pnl = market_value - (pos['shares'] * pos['cost_basis'])
+                current_price = float(price_data['close'])
+                market_value = float(pos['shares']) * current_price
+                cost_basis = float(pos['cost_basis'])
+                unrealized_pnl = market_value - (float(pos['shares']) * cost_basis)
                 total_value += market_value
                 position_values[symbol] = {
-                    'shares': pos['shares'],
-                    'cost_basis': pos['cost_basis'],
+                    'shares': int(pos['shares']),
+                    'cost_basis': cost_basis,
                     'current_price': current_price,
                     'market_value': market_value,
                     'unrealized_pnl': unrealized_pnl,
@@ -349,25 +354,25 @@ class BacktestEngine:
                 for symbol in universe:
                     signals = self.generate_signals(symbol, current_date)
                     if signals['signal'] == 'BUY' and signals['strength'] > 30:
-                        buy_signals.append((symbol, signals['strength'], signals['reasons']))
+                        buy_signals.append((symbol, signals['strength'], signals['reasons'], signals.get('indicators')))
                     elif signals['signal'] == 'SELL':
-                        sell_signals.append((symbol, signals['strength'], signals['reasons']))
+                        sell_signals.append((symbol, signals['strength'], signals['reasons'], signals.get('indicators')))
 
                 # Sort by signal strength
                 buy_signals.sort(key=lambda x: x[1], reverse=True)
                 sell_signals.sort(key=lambda x: x[1])
 
                 # Execute sells first (free up capital)
-                for symbol, strength, reasons in sell_signals:
+                for symbol, strength, reasons, indicators in sell_signals:
                     if symbol in self.positions:
                         price_data = self.get_price_on_date(symbol, current_date)
                         if price_data:
-                            self.execute_trade(symbol, 'SELL', price_data['day_close'],
-                                              current_date, reasons)
+                            self.execute_trade(symbol, 'SELL', price_data['close'],
+                                              current_date, reasons, indicators)
 
                 # Execute buys (top N by signal strength)
                 max_positions = 20  # Limit portfolio to 20 positions
-                for symbol, strength, reasons in buy_signals:
+                for symbol, strength, reasons, indicators in buy_signals:
                     if len(self.positions) >= max_positions:
                         break
                     if symbol in self.positions:
@@ -375,8 +380,8 @@ class BacktestEngine:
 
                     price_data = self.get_price_on_date(symbol, current_date)
                     if price_data:
-                        self.execute_trade(symbol, 'BUY', price_data['day_close'],
-                                          current_date, reasons)
+                        self.execute_trade(symbol, 'BUY', price_data['close'],
+                                          current_date, reasons, indicators)
 
             # Record weekly portfolio snapshot
             if i % 5 == 0:
@@ -462,12 +467,26 @@ class BacktestEngine:
         cursor = self.conn.cursor()
 
         cursor.execute("""
+            CREATE TABLE IF NOT EXISTS backtest_trade_indicators (
+              id BIGINT AUTO_INCREMENT PRIMARY KEY,
+              run_id INT NOT NULL,
+              trade_id BIGINT NULL,
+              symbol VARCHAR(50) NOT NULL,
+              trade_date DATE NOT NULL,
+              indicators JSON NULL,
+              created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+              INDEX idx_run (run_id),
+              INDEX idx_symbol_date (symbol, trade_date)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        """)
+
+        cursor.execute("""
             INSERT INTO backtest_runs
                 (user_id, strategy, parameters, start_date, end_date,
                  initial_capital, final_value, total_return, annualized_return,
                  sharpe_ratio, max_drawdown, num_trades, win_rate, status, completed_at)
             VALUES
-                (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'complete', ?)
+                (1, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'complete', %s)
         """, (
             self.strategy,
             json.dumps({
@@ -492,12 +511,13 @@ class BacktestEngine:
         run_id = cursor.lastrowid
 
         # Store trades
+        trade_ids = []
         for trade in results['trades']:
             cursor.execute("""
                 INSERT INTO backtest_trades
                     (backtest_id, symbol, trade_type, trade_date, price,
                      quantity, commission, total_cost, signal_reasons)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
             """, (
                 run_id,
                 trade['symbol'],
@@ -509,6 +529,27 @@ class BacktestEngine:
                 trade['total_cost'],
                 trade.get('signal_reasons', ''),
             ))
+            trade_ids.append(cursor.lastrowid)
+
+        # Store indicators in bulk
+        indicator_rows = []
+        for trade, trade_id in zip(results['trades'], trade_ids):
+            indicators = trade.get('indicators') or {}
+            if indicators:
+                indicator_rows.append((
+                    run_id,
+                    trade_id,
+                    trade['symbol'],
+                    trade['trade_date'].isoformat() if hasattr(trade['trade_date'], 'isoformat') else trade['trade_date'],
+                    json.dumps(indicators),
+                ))
+
+        if indicator_rows:
+            cursor.executemany("""
+                INSERT INTO backtest_trade_indicators
+                    (run_id, trade_id, symbol, trade_date, indicators)
+                VALUES (%s, %s, %s, %s, %s)
+            """, indicator_rows)
 
         self.conn.commit()
         cursor.close()

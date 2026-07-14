@@ -309,71 +309,74 @@ def main():
     args = parser.parse_args()
 
     conn = pymysql.connect(**MYSQL)
-    INDICATOR_WIDE_COLUMNS = load_indicator_columns(conn)
     c = conn.cursor()
 
     # Create JSON table first
-    c.execute("""CREATE TABLE IF NOT EXISTS indicators_json (
-        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-        symbol VARCHAR(20) NOT NULL,
-        price_date DATE NOT NULL,
-        data JSON,
-        updated_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        UNIQUE KEY uk_sym_date (symbol, price_date),
-        INDEX idx_symbol (symbol),
-        INDEX idx_updated (updated_date)
-    ) ENGINE=InnoDB""")
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS indicators_json (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            symbol VARCHAR(20) NOT NULL,
+            price_date DATE NOT NULL,
+            data JSON,
+            updated_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY uk_sym_date (symbol, price_date),
+            INDEX idx_symbol (symbol),
+            INDEX idx_updated (updated_date)
+        ) ENGINE=InnoDB""")
     conn.commit()
 
-    c.execute("""CREATE TABLE IF NOT EXISTS indicators (
-        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-        symbol VARCHAR(20) NOT NULL,
-        price_date DATE NOT NULL,
-        natr_7 decimal(10,6), natr_14 decimal(10,6), natr_20 decimal(10,6),
-        atr_7 decimal(10,6), atr_14 decimal(10,6), atr_20 decimal(10,6),
-        trange decimal(10,6),
-        stddev_5 decimal(10,6), stddev_10 decimal(10,6), stddev_14 decimal(10,6),
-        var_5 decimal(10,6), var_10 decimal(10,6), var_14 decimal(10,6),
-        adx_14 decimal(10,6), adx_21 decimal(10,6),
-        adxr_14 decimal(10,6), adxr_21 decimal(10,6),
-        ht_trendline decimal(12,4), ht_trendmode tinyint(4),
-        ht_dcperiod decimal(8,2), ht_dcphase decimal(8,2),
-        ht_phasor_inphase decimal(10,6), ht_phasor_quadrature decimal(10,6),
-        ht_sine_sine decimal(10,6), ht_sine_leadsine decimal(10,6),
-        rsi_7 decimal(8,4), rsi_14 decimal(8,4), rsi_21 decimal(8,4),
-        macd_8_21_5_macd decimal(10,6), macd_8_21_5_signal decimal(10,6),
-        macd_12_26_9_macd decimal(10,6), macd_12_26_9_signal decimal(10,6),
-        macd_24_52_18_macd decimal(10,6), macd_24_52_18_signal decimal(10,6),
-        stoch_5_3_3_k decimal(8,4), stoch_5_3_3_d decimal(8,4),
-        stoch_14_3_3_k decimal(8,4), stoch_14_3_3_d decimal(8,4),
-        stoch_21_5_5_k decimal(8,4), stoch_21_5_5_d decimal(8,4),
-        roc_7 decimal(10,6), roc_14 decimal(10,6), roc_21 decimal(10,6),
-        rocp_7 decimal(10,6), rocp_14 decimal(10,6), rocp_21 decimal(10,6),
-        rocr_7 decimal(10,6), rocr_14 decimal(10,6), rocr_21 decimal(10,6),
-        rocr100_7 decimal(10,4), rocr100_14 decimal(10,4), rocr100_21 decimal(10,4),
-        mom_7 decimal(12,4), mom_14 decimal(12,4), mom_21 decimal(12,4),
-        avgprice decimal(12,4), bop decimal(10,6),
-        ppo_7 decimal(10,6), ppo_14 decimal(10,6), ppo_21 decimal(10,6),
-        apo_7 decimal(10,6), apo_14 decimal(10,6), apo_21 decimal(10,6),
-        sma_5 decimal(12,4), sma_10 decimal(12,4), sma_20 decimal(12,4),
-        sma_50 decimal(12,4), sma_100 decimal(12,4), sma_200 decimal(12,4),
-        ema_5 decimal(12,4), ema_10 decimal(12,4), ema_20 decimal(12,4),
-        ema_50 decimal(12,4), ema_100 decimal(12,4), ema_200 decimal(12,4),
-        wma_5 decimal(12,4), wma_10 decimal(12,4), wma_100 decimal(12,4), wma_200 decimal(12,4),
-        tema_5 decimal(12,4), tema_10 decimal(12,4), tema_50 decimal(12,4),
-        dema_5 decimal(12,4), dema_10 decimal(12,4), dema_50 decimal(12,4),
-        trima_5 decimal(12,4), trima_10 decimal(12,4), trima_50 decimal(12,4),
-        kama_10 decimal(12,4), kama_20 decimal(12,4), kama_50 decimal(12,4),
-        obv bigint(20), ad decimal(16,4), adosc decimal(12,4),
-        linreg_5 decimal(12,4), linreg_10 decimal(12,4), linreg_14 decimal(12,4),
-        linreg_intercept_5 decimal(12,4), linreg_intercept_10 decimal(12,4), linreg_intercept_14 decimal(12,4),
-        linreg_slope_10 decimal(10,6), linreg_slope_14 decimal(10,6),
-        linreg_angle_10 decimal(10,6), linreg_angle_14 decimal(10,6),
-        tsf_5 decimal(12,4), tsf_14 decimal(12,4),
-        UNIQUE KEY uk_sym_date (symbol, price_date),
-        INDEX idx_symbol (symbol)
-    ) ENGINE=InnoDB""")
+    c.execute("""
+        CREATE TABLE IF NOT EXISTS indicators (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            symbol VARCHAR(20) NOT NULL,
+            price_date DATE NOT NULL,
+            natr_7 decimal(10,6), natr_14 decimal(10,6), natr_20 decimal(10,6),
+            atr_7 decimal(10,6), atr_14 decimal(10,6), atr_20 decimal(10,6),
+            trange decimal(10,6),
+            stddev_5 decimal(10,6), stddev_10 decimal(10,6), stddev_14 decimal(10,6),
+            var_5 decimal(10,6), var_10 decimal(10,6), var_14 decimal(10,6),
+            adx_14 decimal(10,6), adx_21 decimal(10,6),
+            adxr_14 decimal(10,6), adxr_21 decimal(10,6),
+            ht_trendline decimal(12,4), ht_trendmode tinyint(4),
+            ht_dcperiod decimal(8,2), ht_dcphase decimal(8,2),
+            ht_phasor_inphase decimal(10,6), ht_phasor_quadrature decimal(10,6),
+            ht_sine_sine decimal(10,6), ht_sine_leadsine decimal(10,6),
+            rsi_7 decimal(8,4), rsi_14 decimal(8,4), rsi_21 decimal(8,4),
+            macd_8_21_5_macd decimal(10,6), macd_8_21_5_signal decimal(10,6),
+            macd_12_26_9_macd decimal(10,6), macd_12_26_9_signal decimal(10,6),
+            macd_24_52_18_macd decimal(10,6), macd_24_52_18_signal decimal(10,6),
+            stoch_5_3_3_k decimal(8,4), stoch_5_3_3_d decimal(8,4),
+            stoch_14_3_3_k decimal(8,4), stoch_14_3_3_d decimal(8,4),
+            stoch_21_5_5_k decimal(8,4), stoch_21_5_5_d decimal(8,4),
+            roc_7 decimal(10,6), roc_14 decimal(10,6), roc_21 decimal(10,6),
+            rocp_7 decimal(10,6), rocp_14 decimal(10,6), rocp_21 decimal(10,6),
+            rocr_7 decimal(10,6), rocr_14 decimal(10,6), rocr_21 decimal(10,6),
+            rocr100_7 decimal(10,4), rocr100_14 decimal(10,4), rocr100_21 decimal(10,4),
+            mom_7 decimal(12,4), mom_14 decimal(12,4), mom_21 decimal(12,4),
+            avgprice decimal(12,4), bop decimal(10,6),
+            ppo_7 decimal(10,6), ppo_14 decimal(10,6), ppo_21 decimal(10,6),
+            apo_7 decimal(10,6), apo_14 decimal(10,6), apo_21 decimal(10,6),
+            sma_5 decimal(12,4), sma_10 decimal(12,4), sma_20 decimal(12,4),
+            sma_50 decimal(12,4), sma_100 decimal(12,4), sma_200 decimal(12,4),
+            ema_5 decimal(12,4), ema_10 decimal(12,4), ema_20 decimal(12,4),
+            ema_50 decimal(12,4), ema_100 decimal(12,4), ema_200 decimal(12,4),
+            wma_5 decimal(12,4), wma_10 decimal(12,4), wma_100 decimal(12,4), wma_200 decimal(12,4),
+            tema_5 decimal(12,4), tema_10 decimal(12,4), tema_50 decimal(12,4),
+            dema_5 decimal(12,4), dema_10 decimal(12,4), dema_50 decimal(12,4),
+            trima_5 decimal(12,4), trima_10 decimal(12,4), trima_50 decimal(12,4),
+            kama_10 decimal(12,4), kama_20 decimal(12,4), kama_50 decimal(12,4),
+            obv bigint(20), ad decimal(16,4), adosc decimal(12,4),
+            linreg_5 decimal(12,4), linreg_10 decimal(12,4), linreg_14 decimal(12,4),
+            linreg_intercept_5 decimal(12,4), linreg_intercept_10 decimal(12,4), linreg_intercept_14 decimal(12,4),
+            linreg_slope_10 decimal(10,6), linreg_slope_14 decimal(10,6),
+            linreg_angle_10 decimal(10,6), linreg_angle_14 decimal(10,6),
+            tsf_5 decimal(12,4), tsf_14 decimal(12,4),
+            UNIQUE KEY uk_sym_date (symbol, price_date),
+            INDEX idx_symbol (symbol)
+        ) ENGINE=InnoDB""")
     conn.commit()
+
+    INDICATOR_WIDE_COLUMNS = load_indicator_columns(conn)
 
     if args.symbols == 'ALL':
         c.execute("SELECT DISTINCT symbol FROM stockprices ORDER BY symbol")

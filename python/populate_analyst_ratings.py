@@ -18,7 +18,7 @@ from datetime import date
 from typing import Any
 
 from python.db_connector import get_connection
-from python.symbol_resolver import resolve_for_yfinance
+from python.src.symbol_resolver import resolve_for_yfinance
 import yfinance as yf
 
 LIMIT_PER_RUN = 1000

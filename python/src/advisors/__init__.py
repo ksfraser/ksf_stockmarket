@@ -12,6 +12,16 @@ from advisors.strategies import (
     VectorVestSafeStockStrategy,
 )
 
+STRATEGY_MAP: dict[str, type] = {
+    "buffett_quality": BuffettQualityStrategy,
+    "dividend_growth": DividendGrowthStrategy,
+    "momentum": MomentumStrategy,
+    "sector": SectorStrategy,
+    "bond_basket": BondBasketStrategy,
+    "balanced_fund": BalancedFundStrategy,
+    "vectorvest_safe": VectorVestSafeStockStrategy,
+}
+
 __all__ = [
     "AdvisorBase",
     "Signal",
@@ -22,4 +32,5 @@ __all__ = [
     "BondBasketStrategy",
     "BalancedFundStrategy",
     "VectorVestSafeStockStrategy",
+    "STRATEGY_MAP",
 ]

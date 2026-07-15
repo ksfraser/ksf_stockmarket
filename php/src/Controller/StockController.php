@@ -996,7 +996,7 @@ class StockController {
         $up = $this->pdo->prepare("
             INSERT INTO indicators_json (symbol, price_date, data)
             VALUES (:sym, :pdate, :data)
-            ON DUPLICATE KEY UPDATE data = :data, updated_date = NOW()
+            ON DUPLICATE KEY UPDATE data = VALUES(data), updated_date = NOW()
         ");
         $up->execute([
             ':sym' => $symbol,

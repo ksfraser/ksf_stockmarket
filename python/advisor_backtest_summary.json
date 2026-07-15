@@ -1,246 +1,138 @@
 {
-  "generated_at": "2026-07-12",
-  "start": "2022-01-01",
-  "end": "2022-06-30",
+  "generated_at": "2026-07-14",
+  "start": "2026-05-31",
+  "end": "2026-07-14",
   "initial_capital": 100000.0,
   "advisors": [
     {
-      "run_id": 4,
+      "run_id": 12,
       "slug": "warren-buffet",
       "display_name": "Buffett Quality",
       "strategy": "buffett_quality",
-      "start_date": "2022-01-01",
-      "end_date": "2022-06-30",
+      "start_date": "2026-05-31",
+      "end_date": "2026-07-14",
       "initial_capital": 100000.0,
-      "final_value": 91241.25,
-      "total_return": -8.76,
-      "annualized_return": -16.97,
-      "max_drawdown": 10.81,
+      "final_value": 96523.76,
+      "total_return": -3.48,
+      "annualized_return": -25.45,
+      "max_drawdown": 4.29,
       "num_trades": 6,
       "win_rate": 0.0,
       "trades": [
         {
           "symbol": "EULIF",
           "trade_type": "BUY",
-          "trade_date": "2022-01-03",
-          "price": 0.0963,
-          "quantity": 51921,
+          "trade_date": "2026-06-01",
+          "price": 0.35,
+          "quantity": 14285,
           "commission": 9.95,
-          "total_cost": 5009.9423,
-          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY EULIF at $0.10 on threshold confidence=0.64 score=63.8491 rank=1. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 5009.7,
+          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY EULIF at $0.35 on threshold confidence=0.64 score=63.8491 rank=1. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "IDXG",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-01",
+          "price": 1.72,
+          "quantity": 2761,
+          "commission": 9.95,
+          "total_cost": 4758.87,
+          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY IDXG at $1.72 on threshold confidence=0.63 score=62.563320000000004 rank=2. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
           "symbol": "SILEF",
           "trade_type": "BUY",
-          "trade_date": "2022-01-03",
-          "price": 2.2,
-          "quantity": 2158,
+          "trade_date": "2026-06-01",
+          "price": 0.1,
+          "quantity": 45115,
           "commission": 9.95,
-          "total_cost": 4757.55,
-          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY SILEF at $2.20 on threshold confidence=0.62 score=62.1842 rank=2. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 4521.45,
+          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY SILEF at $0.10 on threshold confidence=0.62 score=62.1842 rank=3. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
           "symbol": "OTLC",
           "trade_type": "BUY",
-          "trade_date": "2022-01-03",
-          "price": 0.16,
-          "quantity": 28197,
+          "trade_date": "2026-06-01",
+          "price": 0.06,
+          "quantity": 71424,
           "commission": 9.95,
-          "total_cost": 4521.47,
-          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY OTLC at $0.16 on threshold confidence=0.61 score=60.9412 rank=3. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
-        },
-        {
-          "symbol": "AAPL",
-          "trade_type": "BUY",
-          "trade_date": "2022-01-03",
-          "price": 182.01,
-          "quantity": 23,
-          "commission": 9.95,
-          "total_cost": 4196.179999999999,
-          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY AAPL at $182.01 on threshold confidence=0.24 score=23.5340398 rank=4. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
-        },
-        {
-          "symbol": "LLY",
-          "trade_type": "BUY",
-          "trade_date": "2022-01-03",
-          "price": 260.8889,
-          "quantity": 15,
-          "commission": 9.95,
-          "total_cost": 3923.2834999999995,
-          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY LLY at $260.89 on threshold confidence=0.13 score=12.9775 rank=5. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 4295.389999999999,
+          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY OTLC at $0.06 on threshold confidence=0.61 score=60.9412 rank=4. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
           "symbol": "NVDA.TO",
           "trade_type": "BUY",
-          "trade_date": "2022-02-02",
-          "price": 6.285,
-          "quantity": 617,
+          "trade_date": "2026-06-01",
+          "price": 50.35,
+          "quantity": 80,
           "commission": 9.95,
-          "total_cost": 3887.795,
-          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY NVDA.TO at $6.29 on threshold confidence=0.60 score=59.749709949999996 rank=4. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 4037.95,
+          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY NVDA.TO at $50.35 on threshold confidence=0.60 score=59.749709949999996 rank=5. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "AAPL",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-01",
+          "price": 306.31,
+          "quantity": 12,
+          "commission": 9.95,
+          "total_cost": 3685.67,
+          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY AAPL at $306.31 on threshold confidence=0.24 score=23.5340398 rank=6. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         }
       ],
       "portfolio_history": [
         {
-          "date": "2022-01-03",
-          "cash": 77591.5742,
-          "total_value": 99950.25,
-          "num_positions": 5
-        },
-        {
-          "date": "2022-01-10",
-          "cash": 77591.5742,
-          "total_value": 99809.45650000001,
-          "num_positions": 5
-        },
-        {
-          "date": "2022-01-17",
-          "cash": 77591.5742,
-          "total_value": 101515.30140000003,
-          "num_positions": 5
-        },
-        {
-          "date": "2022-01-24",
-          "cash": 77591.5742,
-          "total_value": 97066.9212,
-          "num_positions": 5
-        },
-        {
-          "date": "2022-01-31",
-          "cash": 77591.5742,
-          "total_value": 97556.213,
-          "num_positions": 5
-        },
-        {
-          "date": "2022-02-07",
-          "cash": 73703.7792,
-          "total_value": 97306.67820000001,
+          "date": "2026-06-01",
+          "cash": 73690.97000000002,
+          "total_value": 99940.30000000002,
           "num_positions": 6
         },
         {
-          "date": "2022-02-14",
-          "cash": 73703.7792,
-          "total_value": 97409.3586,
+          "date": "2026-06-08",
+          "cash": 73690.97000000002,
+          "total_value": 97610.58000000002,
           "num_positions": 6
         },
         {
-          "date": "2022-02-21",
-          "cash": 73703.7792,
-          "total_value": 97667.2562,
+          "date": "2026-06-15",
+          "cash": 73690.97000000002,
+          "total_value": 97561.29250000001,
           "num_positions": 6
         },
         {
-          "date": "2022-02-28",
-          "cash": 73703.7792,
-          "total_value": 98019.10070000001,
+          "date": "2026-06-22",
+          "cash": 73690.97000000002,
+          "total_value": 97388.05750000001,
           "num_positions": 6
         },
         {
-          "date": "2022-03-07",
-          "cash": 73703.7792,
-          "total_value": 97234.12969999999,
+          "date": "2026-06-27",
+          "cash": 73690.97000000002,
+          "total_value": 96070.86500000003,
           "num_positions": 6
         },
         {
-          "date": "2022-03-14",
-          "cash": 73703.7792,
-          "total_value": 96653.1053,
+          "date": "2026-07-02",
+          "cash": 73690.97000000002,
+          "total_value": 95713.27,
           "num_positions": 6
         },
         {
-          "date": "2022-03-21",
-          "cash": 73703.7792,
-          "total_value": 99034.8001,
+          "date": "2026-07-07",
+          "cash": 73690.97000000002,
+          "total_value": 96552.05590000004,
           "num_positions": 6
         },
         {
-          "date": "2022-03-28",
-          "cash": 73703.7792,
-          "total_value": 101239.7178,
+          "date": "2026-07-12",
+          "cash": 73690.97000000002,
+          "total_value": 96523.75540000004,
           "num_positions": 6
         },
         {
-          "date": "2022-04-04",
-          "cash": 73703.7792,
-          "total_value": 100532.4487,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-04-11",
-          "cash": 73703.7792,
-          "total_value": 98423.5852,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-04-19",
-          "cash": 73703.7792,
-          "total_value": 97755.6981,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-04-26",
-          "cash": 73703.7792,
-          "total_value": 96370.2026,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-05-03",
-          "cash": 73703.7792,
-          "total_value": 96034.0604,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-05-10",
-          "cash": 73703.7792,
-          "total_value": 94296.98070000001,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-05-17",
-          "cash": 73703.7792,
-          "total_value": 94581.33120000002,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-05-24",
-          "cash": 73703.7792,
-          "total_value": 93714.17159999999,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-05-31",
-          "cash": 73703.7792,
-          "total_value": 95046.12040000001,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-06-07",
-          "cash": 73703.7792,
-          "total_value": 94143.4295,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-06-14",
-          "cash": 73703.7792,
-          "total_value": 90679.28820000001,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-06-21",
-          "cash": 73703.7792,
-          "total_value": 90542.12269999999,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-06-28",
-          "cash": 73703.7792,
-          "total_value": 91092.0723,
-          "num_positions": 6
-        },
-        {
-          "date": "2022-06-30",
-          "cash": 73703.7792,
-          "total_value": 91241.2457,
+          "date": "2026-07-13",
+          "cash": 73690.97000000002,
+          "total_value": 96523.75540000004,
           "num_positions": 6
         }
       ]

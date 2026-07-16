@@ -1,139 +1,1683 @@
 {
-  "generated_at": "2026-07-14",
-  "start": "2026-05-31",
-  "end": "2026-07-14",
+  "generated_at": "2026-07-16",
+  "start": "2022-01-01",
+  "end": "2026-07-12",
   "initial_capital": 100000.0,
   "advisors": [
     {
-      "run_id": 12,
-      "slug": "warren-buffet",
-      "display_name": "Buffett Quality",
-      "strategy": "buffett_quality",
-      "start_date": "2026-05-31",
-      "end_date": "2026-07-14",
+      "run_id": 24,
+      "slug": "sector-transportation",
+      "display_name": "Transportation Advisor",
+      "strategy": "sector",
+      "start_date": "2022-01-01",
+      "end_date": "2026-07-12",
       "initial_capital": 100000.0,
-      "final_value": 96523.76,
-      "total_return": -3.48,
-      "annualized_return": -25.45,
-      "max_drawdown": 4.29,
-      "num_trades": 6,
-      "win_rate": 0.0,
+      "final_value": 283366.49,
+      "total_return": 183.37,
+      "annualized_return": 25.88,
+      "max_drawdown": 13.01,
+      "num_trades": 24,
+      "win_rate": 4.17,
       "trades": [
         {
-          "symbol": "EULIF",
+          "symbol": "CAT",
           "trade_type": "BUY",
-          "trade_date": "2026-06-01",
-          "price": 0.35,
-          "quantity": 14285,
+          "trade_date": "2022-01-03",
+          "price": 191.3455,
+          "quantity": 26,
           "commission": 9.95,
-          "total_cost": 5009.7,
-          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY EULIF at $0.35 on threshold confidence=0.64 score=63.8491 rank=1. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 4984.932999999999,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY CAT at $191.35 on threshold confidence=1.00 score=459426660352.0 rank=1. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "IDXG",
+          "symbol": "GE",
           "trade_type": "BUY",
-          "trade_date": "2026-06-01",
-          "price": 1.72,
-          "quantity": 2761,
-          "commission": 9.95,
-          "total_cost": 4758.87,
-          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY IDXG at $1.72 on threshold confidence=0.63 score=62.563320000000004 rank=2. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
-        },
-        {
-          "symbol": "SILEF",
-          "trade_type": "BUY",
-          "trade_date": "2026-06-01",
-          "price": 0.1,
-          "quantity": 45115,
-          "commission": 9.95,
-          "total_cost": 4521.45,
-          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY SILEF at $0.10 on threshold confidence=0.62 score=62.1842 rank=3. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
-        },
-        {
-          "symbol": "OTLC",
-          "trade_type": "BUY",
-          "trade_date": "2026-06-01",
-          "price": 0.06,
-          "quantity": 71424,
-          "commission": 9.95,
-          "total_cost": 4295.389999999999,
-          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY OTLC at $0.06 on threshold confidence=0.61 score=60.9412 rank=4. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
-        },
-        {
-          "symbol": "NVDA.TO",
-          "trade_type": "BUY",
-          "trade_date": "2026-06-01",
-          "price": 50.35,
+          "trade_date": "2022-01-03",
+          "price": 58.7117,
           "quantity": 80,
           "commission": 9.95,
-          "total_cost": 4037.95,
-          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY NVDA.TO at $50.35 on threshold confidence=0.60 score=59.749709949999996 rank=5. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 4706.8859999999995,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY GE at $58.71 on threshold confidence=1.00 score=385542127616.0 rank=2. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "AAPL",
+          "symbol": "CP.TO",
           "trade_type": "BUY",
-          "trade_date": "2026-06-01",
-          "price": 306.31,
-          "quantity": 12,
+          "trade_date": "2022-01-03",
+          "price": 88.0675,
+          "quantity": 51,
           "commission": 9.95,
-          "total_cost": 3685.67,
-          "signal_reasons": "Strategy buffett_quality (warren-buffet): BUY AAPL at $306.31 on threshold confidence=0.24 score=23.5340398 rank=6. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 4501.3925,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY CP.TO at $88.07 on threshold confidence=1.00 score=110461034496.0 rank=3. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CNR.TO",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 141.8032,
+          "quantity": 30,
+          "commission": 9.95,
+          "total_cost": 4264.046,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY CNR.TO at $141.80 on threshold confidence=1.00 score=103728603136.0 rank=4. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ATLKY",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 15.7918,
+          "quantity": 258,
+          "commission": 9.95,
+          "total_cost": 4084.2344,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY ATLKY at $15.79 on threshold confidence=1.00 score=94840389632.0 rank=5. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "EMR",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 83.8429,
+          "quantity": 46,
+          "commission": 9.95,
+          "total_cost": 3866.7234,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY EMR at $83.84 on threshold confidence=1.00 score=80368746496.0 rank=6. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CTAS",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 101.6748,
+          "quantity": 36,
+          "commission": 9.95,
+          "total_cost": 3670.2428,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY CTAS at $101.67 on threshold confidence=1.00 score=68783529984.0 rank=7. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ANNSF",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 14.0108,
+          "quantity": 249,
+          "commission": 9.95,
+          "total_cost": 3498.6391999999996,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY ANNSF at $14.01 on threshold confidence=1.00 score=46475309056.0 rank=8. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "AMKAF",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 1959.3419,
+          "quantity": 1,
+          "commission": 9.95,
+          "total_cost": 1969.2919,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY AMKAF at $1959.34 on threshold confidence=1.00 score=34768678912.0 rank=9. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "DOV",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 168.6241,
+          "quantity": 19,
+          "commission": 9.95,
+          "total_cost": 3213.8079,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY DOV at $168.62 on threshold confidence=1.00 score=30428092416.0 rank=10. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CICOY",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 4.7503,
+          "quantity": 644,
+          "commission": 9.95,
+          "total_cost": 3069.1432,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY CICOY at $4.75 on threshold confidence=1.00 score=25588822016.0 rank=12. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CICOF",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 0.9725,
+          "quantity": 2990,
+          "commission": 9.95,
+          "total_cost": 2917.725,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY CICOF at $0.97 on threshold confidence=1.00 score=25344536576.0 rank=13. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CJPRY",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 13.2176,
+          "quantity": 209,
+          "commission": 9.95,
+          "total_cost": 2772.4284,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY CJPRY at $13.22 on threshold confidence=1.00 score=20132896768.0 rank=14. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "BXBLY",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 13.7596,
+          "quantity": 190,
+          "commission": 9.95,
+          "total_cost": 2624.274,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY BXBLY at $13.76 on threshold confidence=1.00 score=18152157184.0 rank=15. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "IEX",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 217.5431,
+          "quantity": 11,
+          "commission": 9.95,
+          "total_cost": 2402.9240999999997,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY IEX at $217.54 on threshold confidence=1.00 score=16815480832.0 rank=16. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CPCAY",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 3.4138,
+          "quantity": 695,
+          "commission": 9.95,
+          "total_cost": 2382.5409999999997,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY CPCAY at $3.41 on threshold confidence=1.00 score=9936564224.0 rank=17. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "AKAAF",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 5.8764,
+          "quantity": 383,
+          "commission": 9.95,
+          "total_cost": 2260.6112,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY AKAAF at $5.88 on threshold confidence=1.00 score=8595269632.0 rank=18. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CMHHF",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 1.365,
+          "quantity": 1568,
+          "commission": 9.95,
+          "total_cost": 2150.27,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY CMHHF at $1.36 on threshold confidence=1.00 score=7052655104.0 rank=19. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CCOHF",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 0.8657,
+          "quantity": 2348,
+          "commission": 9.95,
+          "total_cost": 2042.6136000000001,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY CCOHF at $0.87 on threshold confidence=1.00 score=6866881024.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ICTEF",
+          "trade_type": "BUY",
+          "trade_date": "2022-03-21",
+          "price": 3.6398,
+          "quantity": 530,
+          "commission": 9.95,
+          "total_cost": 1939.044,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY ICTEF at $3.64 on threshold confidence=1.00 score=30111959040.0 rank=11. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "IEX",
+          "trade_type": "SELL",
+          "trade_date": "2024-08-20",
+          "price": 193.9996,
+          "quantity": 11,
+          "commission": 9.95,
+          "total_cost": -2124.0456,
+          "pnl": -268.9285,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "GAERF",
+          "trade_type": "BUY",
+          "trade_date": "2024-08-20",
+          "price": 0.4247,
+          "quantity": 4568,
+          "commission": 9.95,
+          "total_cost": 1949.9796000000001,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY GAERF at $0.42 on threshold confidence=1.00 score=5657382400.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ICTEF",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-02",
+          "price": 14.1375,
+          "quantity": 530,
+          "commission": 9.95,
+          "total_cost": -7482.925,
+          "pnl": 5553.831,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "EJTTF",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-02",
+          "price": 6.15,
+          "quantity": 360,
+          "commission": 9.95,
+          "total_cost": 2223.95,
+          "signal_reasons": "Strategy sector (sector-transportation): BUY EJTTF at $6.15 on threshold confidence=1.00 score=5217733120.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         }
       ],
       "portfolio_history": [
         {
-          "date": "2026-06-01",
-          "cash": 73690.97000000002,
-          "total_value": 99940.30000000002,
-          "num_positions": 6
+          "date": "2022-01-03",
+          "cash": 38617.2724,
+          "total_value": 99810.94999999998,
+          "num_positions": 19
         },
         {
-          "date": "2026-06-08",
-          "cash": 73690.97000000002,
-          "total_value": 97610.58000000002,
-          "num_positions": 6
+          "date": "2022-01-10",
+          "cash": 38617.2724,
+          "total_value": 100116.80790000001,
+          "num_positions": 19
         },
         {
-          "date": "2026-06-15",
-          "cash": 73690.97000000002,
-          "total_value": 97561.29250000001,
-          "num_positions": 6
+          "date": "2022-01-17",
+          "cash": 38617.2724,
+          "total_value": 101070.87599999999,
+          "num_positions": 19
         },
         {
-          "date": "2026-06-22",
-          "cash": 73690.97000000002,
-          "total_value": 97388.05750000001,
-          "num_positions": 6
+          "date": "2022-01-24",
+          "cash": 38617.2724,
+          "total_value": 98367.60269999999,
+          "num_positions": 19
         },
         {
-          "date": "2026-06-27",
-          "cash": 73690.97000000002,
-          "total_value": 96070.86500000003,
-          "num_positions": 6
+          "date": "2022-01-31",
+          "cash": 38617.2724,
+          "total_value": 97706.65410000001,
+          "num_positions": 19
         },
         {
-          "date": "2026-07-02",
-          "cash": 73690.97000000002,
-          "total_value": 95713.27,
-          "num_positions": 6
+          "date": "2022-02-07",
+          "cash": 38617.2724,
+          "total_value": 97086.3483,
+          "num_positions": 19
         },
         {
-          "date": "2026-07-07",
-          "cash": 73690.97000000002,
-          "total_value": 96552.05590000004,
-          "num_positions": 6
+          "date": "2022-02-14",
+          "cash": 38617.2724,
+          "total_value": 97436.7528,
+          "num_positions": 19
+        },
+        {
+          "date": "2022-02-21",
+          "cash": 38617.2724,
+          "total_value": 97467.1791,
+          "num_positions": 19
+        },
+        {
+          "date": "2022-02-28",
+          "cash": 38617.2724,
+          "total_value": 96549.6946,
+          "num_positions": 19
+        },
+        {
+          "date": "2022-03-07",
+          "cash": 38617.2724,
+          "total_value": 96014.52189999998,
+          "num_positions": 19
+        },
+        {
+          "date": "2022-03-14",
+          "cash": 38617.2724,
+          "total_value": 96158.46240000002,
+          "num_positions": 19
+        },
+        {
+          "date": "2022-03-21",
+          "cash": 36678.2284,
+          "total_value": 99396.64290000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-03-28",
+          "cash": 36678.2284,
+          "total_value": 98636.48159999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-04-04",
+          "cash": 36678.2284,
+          "total_value": 98320.56880000004,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-04-11",
+          "cash": 36678.2284,
+          "total_value": 95886.9042,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-04-19",
+          "cash": 36678.2284,
+          "total_value": 97349.36960000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-04-26",
+          "cash": 36678.2284,
+          "total_value": 94775.97540000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-05-03",
+          "cash": 36678.2284,
+          "total_value": 94664.5939,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-05-10",
+          "cash": 36678.2284,
+          "total_value": 92572.67929999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-05-17",
+          "cash": 36678.2284,
+          "total_value": 94006.10129999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-05-24",
+          "cash": 36678.2284,
+          "total_value": 93498.04840000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-05-31",
+          "cash": 36678.2284,
+          "total_value": 95167.291,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-06-07",
+          "cash": 36678.2284,
+          "total_value": 96175.94150000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-06-14",
+          "cash": 36678.2284,
+          "total_value": 91381.72060000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-06-21",
+          "cash": 36678.2284,
+          "total_value": 91022.25749999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-06-28",
+          "cash": 36678.2284,
+          "total_value": 91038.13290000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-07-05",
+          "cash": 36678.2284,
+          "total_value": 90079.9155,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-07-12",
+          "cash": 36678.2284,
+          "total_value": 89817.90110000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-07-19",
+          "cash": 36678.2284,
+          "total_value": 91699.6719,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-07-26",
+          "cash": 36678.2284,
+          "total_value": 92242.4753,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-08-02",
+          "cash": 36678.2284,
+          "total_value": 93884.51350000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-08-09",
+          "cash": 36678.2284,
+          "total_value": 94124.34870000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-08-16",
+          "cash": 36678.2284,
+          "total_value": 95777.6916,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-08-23",
+          "cash": 36678.2284,
+          "total_value": 94394.06340000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-08-30",
+          "cash": 36678.2284,
+          "total_value": 93117.29469999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-09-06",
+          "cash": 36678.2284,
+          "total_value": 91442.91010000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-09-13",
+          "cash": 36678.2284,
+          "total_value": 91912.08230000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-09-20",
+          "cash": 36678.2284,
+          "total_value": 90668.18220000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-09-27",
+          "cash": 36678.2284,
+          "total_value": 88323.18689999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-10-04",
+          "cash": 36678.2284,
+          "total_value": 90082.53079999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-10-11",
+          "cash": 36678.2284,
+          "total_value": 87923.1756,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-10-18",
+          "cash": 36678.2284,
+          "total_value": 89276.87240000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-10-25",
+          "cash": 36678.2284,
+          "total_value": 90029.11889999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-11-01",
+          "cash": 36678.2284,
+          "total_value": 91878.99309999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-11-08",
+          "cash": 36678.2284,
+          "total_value": 94146.4697,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-11-15",
+          "cash": 36678.2284,
+          "total_value": 95698.71610000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-11-22",
+          "cash": 36678.2284,
+          "total_value": 96374.43350000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-11-29",
+          "cash": 36678.2284,
+          "total_value": 97083.85300000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-12-06",
+          "cash": 36678.2284,
+          "total_value": 97565.27100000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-12-13",
+          "cash": 36678.2284,
+          "total_value": 98648.37680000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-12-20",
+          "cash": 36678.2284,
+          "total_value": 96414.89540000004,
+          "num_positions": 20
+        },
+        {
+          "date": "2022-12-28",
+          "cash": 36678.2284,
+          "total_value": 96513.96270000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-01-05",
+          "cash": 36678.2284,
+          "total_value": 96966.38659999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-01-12",
+          "cash": 36678.2284,
+          "total_value": 98996.47550000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-01-19",
+          "cash": 36678.2284,
+          "total_value": 98087.60240000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-01-26",
+          "cash": 36678.2284,
+          "total_value": 98918.5404,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-02-02",
+          "cash": 36678.2284,
+          "total_value": 99315.45440000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-02-09",
+          "cash": 36678.2284,
+          "total_value": 98345.99710000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-02-16",
+          "cash": 36678.2284,
+          "total_value": 98570.80559999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-02-23",
+          "cash": 36678.2284,
+          "total_value": 98123.0262,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-03-02",
+          "cash": 36678.2284,
+          "total_value": 99428.41659999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-03-09",
+          "cash": 36678.2284,
+          "total_value": 99516.61519999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-03-16",
+          "cash": 36678.2284,
+          "total_value": 95761.7756,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-03-23",
+          "cash": 36678.2284,
+          "total_value": 96149.5845,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-03-30",
+          "cash": 36678.2284,
+          "total_value": 97331.14029999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-04-06",
+          "cash": 36678.2284,
+          "total_value": 96175.21039999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-04-14",
+          "cash": 36678.2284,
+          "total_value": 97793.84360000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-04-21",
+          "cash": 36678.2284,
+          "total_value": 98627.22639999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-04-28",
+          "cash": 36678.2284,
+          "total_value": 99132.39540000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-05-05",
+          "cash": 36678.2284,
+          "total_value": 99472.2996,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-05-12",
+          "cash": 36678.2284,
+          "total_value": 99713.07659999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-05-19",
+          "cash": 36678.2284,
+          "total_value": 99968.4112,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-05-26",
+          "cash": 36678.2284,
+          "total_value": 98634.50760000004,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-06-02",
+          "cash": 36678.2284,
+          "total_value": 99013.01000000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-06-09",
+          "cash": 36678.2284,
+          "total_value": 99527.74750000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-06-16",
+          "cash": 36678.2284,
+          "total_value": 100566.10739999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-06-23",
+          "cash": 36678.2284,
+          "total_value": 99805.01670000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-06-30",
+          "cash": 36678.2284,
+          "total_value": 101537.65250000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-07-07",
+          "cash": 36678.2284,
+          "total_value": 101045.65119999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-07-14",
+          "cash": 36678.2284,
+          "total_value": 102504.8429,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-07-21",
+          "cash": 36678.2284,
+          "total_value": 102785.1779,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-07-28",
+          "cash": 36678.2284,
+          "total_value": 102435.58240000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-08-04",
+          "cash": 36678.2284,
+          "total_value": 101905.83200000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-08-11",
+          "cash": 36678.2284,
+          "total_value": 102307.63080000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-08-18",
+          "cash": 36678.2284,
+          "total_value": 100693.72090000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-08-25",
+          "cash": 36678.2284,
+          "total_value": 100714.04020000005,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-09-01",
+          "cash": 36678.2284,
+          "total_value": 102031.72240000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-09-08",
+          "cash": 36678.2284,
+          "total_value": 100965.24590000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-09-15",
+          "cash": 36678.2284,
+          "total_value": 101742.36440000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-09-22",
+          "cash": 36678.2284,
+          "total_value": 100920.15849999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-09-29",
+          "cash": 36678.2284,
+          "total_value": 100171.75879999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-10-06",
+          "cash": 36678.2284,
+          "total_value": 99431.50439999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-10-13",
+          "cash": 36678.2284,
+          "total_value": 99953.1259,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-10-20",
+          "cash": 36678.2284,
+          "total_value": 98142.00510000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-10-27",
+          "cash": 36678.2284,
+          "total_value": 96911.59969999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-11-03",
+          "cash": 36678.2284,
+          "total_value": 99510.3518,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-11-10",
+          "cash": 36678.2284,
+          "total_value": 99982.94150000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-11-17",
+          "cash": 36678.2284,
+          "total_value": 102105.4088,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-11-24",
+          "cash": 36678.2284,
+          "total_value": 102402.768,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-12-01",
+          "cash": 36678.2284,
+          "total_value": 103425.30660000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-12-08",
+          "cash": 36678.2284,
+          "total_value": 102941.2361,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-12-15",
+          "cash": 36678.2284,
+          "total_value": 105579.3865,
+          "num_positions": 20
+        },
+        {
+          "date": "2023-12-22",
+          "cash": 36678.2284,
+          "total_value": 107653.00250000006,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-01-02",
+          "cash": 36678.2284,
+          "total_value": 107588.39890000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-01-09",
+          "cash": 36678.2284,
+          "total_value": 107365.80810000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-01-16",
+          "cash": 36678.2284,
+          "total_value": 106953.62430000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-01-23",
+          "cash": 36678.2284,
+          "total_value": 107598.61710000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-01-30",
+          "cash": 36678.2284,
+          "total_value": 108418.93259999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-02-06",
+          "cash": 36678.2284,
+          "total_value": 109515.39000000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-02-13",
+          "cash": 36678.2284,
+          "total_value": 109340.09149999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-02-20",
+          "cash": 36678.2284,
+          "total_value": 110887.79410000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-02-27",
+          "cash": 36678.2284,
+          "total_value": 112113.1793,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-03-05",
+          "cash": 36678.2284,
+          "total_value": 112555.2237,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-03-12",
+          "cash": 36678.2284,
+          "total_value": 114453.47080000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-03-19",
+          "cash": 36678.2284,
+          "total_value": 117476.9539,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-03-26",
+          "cash": 36678.2284,
+          "total_value": 117673.556,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-04-03",
+          "cash": 36678.2284,
+          "total_value": 119322.80419999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-04-10",
+          "cash": 36678.2284,
+          "total_value": 120050.8581,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-04-17",
+          "cash": 36678.2284,
+          "total_value": 118593.10639999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-04-24",
+          "cash": 36678.2284,
+          "total_value": 120948.77679999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-05-01",
+          "cash": 36678.2284,
+          "total_value": 120144.98079999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-05-08",
+          "cash": 36678.2284,
+          "total_value": 123210.22320000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-05-15",
+          "cash": 36678.2284,
+          "total_value": 125198.31680000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-05-22",
+          "cash": 36678.2284,
+          "total_value": 124582.96349999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-05-29",
+          "cash": 36678.2284,
+          "total_value": 124278.30169999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-06-05",
+          "cash": 36678.2284,
+          "total_value": 125320.1289,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-06-12",
+          "cash": 36678.2284,
+          "total_value": 123999.0206,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-06-19",
+          "cash": 36678.2284,
+          "total_value": 124062.11100000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-06-26",
+          "cash": 36678.2284,
+          "total_value": 123151.88860000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-07-03",
+          "cash": 36678.2284,
+          "total_value": 123966.76229999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-07-10",
+          "cash": 36678.2284,
+          "total_value": 123159.12049999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-07-17",
+          "cash": 36678.2284,
+          "total_value": 125183.5012,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-07-24",
+          "cash": 36678.2284,
+          "total_value": 122802.4529,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-07-31",
+          "cash": 36678.2284,
+          "total_value": 124735.4422,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-08-07",
+          "cash": 36678.2284,
+          "total_value": 120864.29989999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-08-14",
+          "cash": 36678.2284,
+          "total_value": 122459.98240000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-08-21",
+          "cash": 36852.2944,
+          "total_value": 124699.84609999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-08-28",
+          "cash": 36852.2944,
+          "total_value": 124896.9031,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-09-04",
+          "cash": 36852.2944,
+          "total_value": 124748.99259999995,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-09-11",
+          "cash": 36852.2944,
+          "total_value": 124904.73569999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-09-18",
+          "cash": 36852.2944,
+          "total_value": 127284.99999999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-09-25",
+          "cash": 36852.2944,
+          "total_value": 129921.53889999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-10-02",
+          "cash": 36852.2944,
+          "total_value": 131564.42750000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-10-09",
+          "cash": 36852.2944,
+          "total_value": 130820.41020000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-10-16",
+          "cash": 36852.2944,
+          "total_value": 131362.97950000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-10-23",
+          "cash": 36852.2944,
+          "total_value": 129981.362,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-10-30",
+          "cash": 36852.2944,
+          "total_value": 128780.6266,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-11-06",
+          "cash": 36852.2944,
+          "total_value": 131965.17590000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-11-13",
+          "cash": 36852.2944,
+          "total_value": 130983.17899999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-11-20",
+          "cash": 36852.2944,
+          "total_value": 134105.44809999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-11-27",
+          "cash": 36852.2944,
+          "total_value": 134215.72019999995,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-12-04",
+          "cash": 36852.2944,
+          "total_value": 134937.05209999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-12-11",
+          "cash": 36852.2944,
+          "total_value": 132545.6131,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-12-18",
+          "cash": 36852.2944,
+          "total_value": 130388.90849999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2024-12-26",
+          "cash": 36852.2944,
+          "total_value": 131983.88669999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-01-03",
+          "cash": 36852.2944,
+          "total_value": 131988.2873,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-01-10",
+          "cash": 36852.2944,
+          "total_value": 130936.6093,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-01-17",
+          "cash": 36852.2944,
+          "total_value": 133736.41879999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-01-24",
+          "cash": 36852.2944,
+          "total_value": 136763.40399999995,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-01-31",
+          "cash": 36852.2944,
+          "total_value": 136419.80869999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-02-07",
+          "cash": 36852.2944,
+          "total_value": 135844.75590000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-02-14",
+          "cash": 36852.2944,
+          "total_value": 136142.4471,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-02-21",
+          "cash": 36852.2944,
+          "total_value": 135604.1367,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-02-28",
+          "cash": 36852.2944,
+          "total_value": 136081.55299999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-03-07",
+          "cash": 36852.2944,
+          "total_value": 135806.9104,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-03-14",
+          "cash": 36852.2944,
+          "total_value": 134481.3605,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-03-21",
+          "cash": 36852.2944,
+          "total_value": 131131.13039999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-03-28",
+          "cash": 36852.2944,
+          "total_value": 130927.77179999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-04-04",
+          "cash": 36852.2944,
+          "total_value": 122845.05890000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-04-11",
+          "cash": 36852.2944,
+          "total_value": 125953.25830000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-04-21",
+          "cash": 36852.2944,
+          "total_value": 125326.8936,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-04-28",
+          "cash": 36852.2944,
+          "total_value": 128443.8153,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-05-05",
+          "cash": 36852.2944,
+          "total_value": 135621.20620000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-05-12",
+          "cash": 36852.2944,
+          "total_value": 142326.9275,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-05-19",
+          "cash": 36852.2944,
+          "total_value": 148979.8618,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-05-26",
+          "cash": 36852.2944,
+          "total_value": 154634.14280000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-06-02",
+          "cash": 36852.2944,
+          "total_value": 154946.5483,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-06-09",
+          "cash": 36852.2944,
+          "total_value": 157691.33090000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-06-16",
+          "cash": 36852.2944,
+          "total_value": 156802.16090000005,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-06-23",
+          "cash": 36852.2944,
+          "total_value": 158313.92260000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-06-30",
+          "cash": 36852.2944,
+          "total_value": 159716.808,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-07-07",
+          "cash": 36852.2944,
+          "total_value": 158894.53699999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-07-14",
+          "cash": 36852.2944,
+          "total_value": 165180.54550000004,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-07-21",
+          "cash": 36852.2944,
+          "total_value": 164824.96680000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-07-28",
+          "cash": 36852.2944,
+          "total_value": 167875.80329999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-08-04",
+          "cash": 36852.2944,
+          "total_value": 165932.3785,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-08-11",
+          "cash": 36852.2944,
+          "total_value": 165870.0464,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-08-18",
+          "cash": 36852.2944,
+          "total_value": 166306.66969999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-08-25",
+          "cash": 36852.2944,
+          "total_value": 167351.27740000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-09-01",
+          "cash": 36852.2944,
+          "total_value": 168081.6282,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-09-08",
+          "cash": 36852.2944,
+          "total_value": 167525.4341,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-09-15",
+          "cash": 36852.2944,
+          "total_value": 168426.4751,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-09-22",
+          "cash": 36852.2944,
+          "total_value": 170944.12470000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-09-29",
+          "cash": 36852.2944,
+          "total_value": 169264.15660000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-10-06",
+          "cash": 36852.2944,
+          "total_value": 171685.10059999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-10-13",
+          "cash": 36852.2944,
+          "total_value": 169003.90740000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-10-20",
+          "cash": 36852.2944,
+          "total_value": 171738.40649999995,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-10-27",
+          "cash": 36852.2944,
+          "total_value": 174203.61019999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-11-03",
+          "cash": 36852.2944,
+          "total_value": 174548.4208,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-11-10",
+          "cash": 36852.2944,
+          "total_value": 181916.88550000003,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-11-17",
+          "cash": 36852.2944,
+          "total_value": 179568.85619999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-11-24",
+          "cash": 36852.2944,
+          "total_value": 179583.30469999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-12-01",
+          "cash": 36852.2944,
+          "total_value": 196186.0836,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-12-08",
+          "cash": 36852.2944,
+          "total_value": 196730.36990000005,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-12-15",
+          "cash": 36852.2944,
+          "total_value": 193384.23639999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-12-22",
+          "cash": 36852.2944,
+          "total_value": 195179.2725,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-12-30",
+          "cash": 36852.2944,
+          "total_value": 195061.15499999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-01-07",
+          "cash": 36852.2944,
+          "total_value": 199365.70159999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-01-14",
+          "cash": 36852.2944,
+          "total_value": 201180.7597,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-01-21",
+          "cash": 36852.2944,
+          "total_value": 205417.88929999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-01-28",
+          "cash": 36852.2944,
+          "total_value": 203437.13569999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-02-04",
+          "cash": 36852.2944,
+          "total_value": 209215.1983,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-02-11",
+          "cash": 36852.2944,
+          "total_value": 212322.7597,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-02-18",
+          "cash": 36852.2944,
+          "total_value": 218196.40539999996,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-02-25",
+          "cash": 36852.2944,
+          "total_value": 224149.27379999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-03-04",
+          "cash": 36852.2944,
+          "total_value": 218331.51829999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-03-11",
+          "cash": 36852.2944,
+          "total_value": 209938.78319999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-03-18",
+          "cash": 36852.2944,
+          "total_value": 219916.18699999995,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-03-25",
+          "cash": 36852.2944,
+          "total_value": 219297.22949999993,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-04-01",
+          "cash": 36852.2944,
+          "total_value": 218564.93619999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-04-09",
+          "cash": 36852.2944,
+          "total_value": 223999.07789999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-04-16",
+          "cash": 36852.2944,
+          "total_value": 222146.18759999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-04-23",
+          "cash": 36852.2944,
+          "total_value": 232747.09709999998,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-04-30",
+          "cash": 36852.2944,
+          "total_value": 238039.86819999997,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-05-07",
+          "cash": 36852.2944,
+          "total_value": 241218.47150000004,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-05-14",
+          "cash": 36852.2944,
+          "total_value": 241596.62170000002,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-05-21",
+          "cash": 36852.2944,
+          "total_value": 241734.5654,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-05-28",
+          "cash": 36852.2944,
+          "total_value": 283669.1923,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-06-04",
+          "cash": 42111.269400000005,
+          "total_value": 283815.7153999999,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-06-11",
+          "cash": 42111.269400000005,
+          "total_value": 275497.1014,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-06-18",
+          "cash": 42111.269400000005,
+          "total_value": 278721.38139999995,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-06-25",
+          "cash": 42111.269400000005,
+          "total_value": 285464.2895,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-06-30",
+          "cash": 42111.269400000005,
+          "total_value": 283036.0695,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-07-05",
+          "cash": 42111.269400000005,
+          "total_value": 284524.9115,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-07-10",
+          "cash": 42111.269400000005,
+          "total_value": 283366.48939999996,
+          "num_positions": 20
         },
         {
           "date": "2026-07-12",
-          "cash": 73690.97000000002,
-          "total_value": 96523.75540000004,
-          "num_positions": 6
-        },
-        {
-          "date": "2026-07-13",
-          "cash": 73690.97000000002,
-          "total_value": 96523.75540000004,
-          "num_positions": 6
+          "cash": 42111.269400000005,
+          "total_value": 283366.48939999996,
+          "num_positions": 20
         }
       ]
     }

@@ -31,3 +31,8 @@
 | BR-1: Broker Stops | FR-8 Stop Orders | US-20 Place Stop | broker_stop_orders | BrokerStopController | — | Phase 2 |
 | BR-1 | FR-8 | US-21 Historical Stops | broker_stop_orders | BrokerStopController | — | Phase 2 |
 | BR-1 | FR-9 Alerts | US-22 Review Alerts | alert_queue | AlertsController | — | Phase 2 |
+| BR-5 | FR-1 | — | stockprices, price_intraday | — | sync_stock_prices.py (YFinanceFetcher → Repository) | Phase 1 |
+| BR-5 | FR-1 | — | stockprices, price_intraday | — | detection_triggers.py (Repository read, --sqlite) | Phase 1 |
+| BR-5 | NFR-4.1.3 | — | stockprices, price_intraday | StockPriceDTO | src/db/stock_price_dto.py | Phase 1 |
+| BR-5 | NFR-4.1.2 | — | stockprices, price_intraday | StockPriceRepository | src/db/sqlite_price_repository.py, mariadb_price_repository.py | Phase 1 |
+| BR-1 | FR-3 Screening | US-5 Run Screen | price_intraday | — | src/db/price_fetcher.py (YFinanceFetcher) | Phase 2 |

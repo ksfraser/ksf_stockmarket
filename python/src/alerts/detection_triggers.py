@@ -30,6 +30,9 @@ logger = logging.getLogger(__name__)
 
 
 def main() -> int:
+    import sys
+    print('DEBUG: main start', flush=True)
+    sys.stdout.flush()
     parser = argparse.ArgumentParser(description="Stock alert detection triggers")
     parser.add_argument("--volume", action="store_true", help="Run volume spike detection")
     parser.add_argument("--natr", action="store_true", help="Run NATR spike detection")
@@ -46,17 +49,21 @@ def main() -> int:
 
     symbols = args.symbols
     if not symbols:
+        print('DEBUG: loading symbols from DB', flush=True)
         conn = _conn_factory()
         try:
             cur = conn.cursor()
             cur.execute("SELECT symbol FROM watchlist_symbols WHERE is_active = 1")
             symbols = [r[0] for r in cur.fetchall()]
+            print('DEBUG: loaded symbols', symbols, flush=True)
         finally:
             conn.close()
 
+    print('DEBUG: starting checks', flush=True)
     alerts_found = 0
 
     for symbol in symbols:
+        print('DEBUG: symbol', symbol, flush=True)
         checks = []
         if run_all or args.volume:
             checks.append(("volume_spike", lambda s=symbol: check_volume_spike(s)))
@@ -67,9 +74,13 @@ def main() -> int:
         if run_all or args.gap:
             checks.append(("gap_up", lambda s=symbol: check_gap_opening(s)))
 
+        print('DEBUG: symbol', symbol, 'checks', [c[0] for c in checks], flush=True)
         for alert_type, check_fn in checks:
+            print('DEBUG: running', alert_type, 'for', symbol, flush=True)
             result = check_fn()
+            print('DEBUG: result', alert_type, symbol, result, flush=True)
             if result is None:
+                print('DEBUG: continuing', alert_type, symbol, flush=True)
                 continue
             from alerts.dto import Alert, DetectionResult
             alert = Alert(

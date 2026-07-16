@@ -147,15 +147,16 @@ See `database-comparison.md` for detailed column-level comparison.
 | FA Module    | FrontAccounting journal entry creation              |
 
 ### Python Layer (Analysis Engine)
-| Component       | Responsibility                                      |
-|-----------------|-----------------------------------------------------|
-| Flask API       | REST endpoints for PHP bridge                       |
-| Backtest Engine | Portfolio simulation, trade execution, metrics      |
-| TA Library      | Candlestick patterns, indicators, Turtle system     |
-| Strategies      | Motley Fool, Buffett, Combined screening            |
-| Data Import     | CSV ingestion, yfinance integration                 |
-| Screener        | TradingView integration, upsert results, name lookup from symbol_master |
-| Reports         | HTML/PDF report generation                          |
+| Component        | Responsibility                                      |
+|------------------|-----------------------------------------------------|
+| Flask API        | REST endpoints for PHP bridge                       |
+| Backtest Engine  | Portfolio simulation, trade execution, metrics      |
+| TA Library       | Candlestick patterns, indicators, Turtle system     |
+| Strategies       | Motley Fool, Buffett, Combined screening            |
+| Fetchers         | yFinance/Google/SEDAR/SEC → normalized DTOs         |
+| Repositories     | DTO ↔ SQLite/MariaDB storage, column mapping        |
+| Detection        | Volume/NATR/RSI/gap triggers read from local DB     |
+| Reports          | HTML/PDF report generation                          |
 
 ### Database Layer
 | Table Group       | Tables                                               |

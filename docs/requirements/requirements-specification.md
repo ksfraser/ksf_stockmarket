@@ -160,6 +160,17 @@ The system shall generate:
 | NFR-4.4 | BABOK-format documentation                           | High            |
 | NFR-4.5 | Migration-based schema management                    | Medium          |
 
+### NFR-4.1: Distributed, Idempotent, DI-based Data Layer
+| ID      | Requirement                                          | Target          |
+|---------|------------------------------------------------------|-----------------|
+| NFR-4.1.1 | Calculators fetch via Repository, never raw yfinance inline | Required |
+| NFR-4.1.2 | Fetchers (yFinance, Google, SEDAR, SEC) return DTOs only, write via Repository | Required |
+| NFR-4.1.3 | DTO domain fields are single source of truth; repos map to schema | Required |
+| NFR-4.1.4 | SQLite `price_intraday` / `alert_queue` for sub-day/ephemeral work | Required |
+| NFR-4.1.5 | MariaDB `stockprices` for daily+ history | Required |
+| NFR-4.1.6 | `Repository.is_stale()` contract: calculator returns `STALE_DATA` if age > threshold | Required |
+| NFR-4.1.7 | Every script is rerunnable with same outcome (idempotent) | Required |
+
 ### NFR-5: Compatibility
 | ID      | Requirement                                          | Priority        |
 |---------|------------------------------------------------------|-----------------|

@@ -171,28 +171,55 @@ def run_advisor_backtest(
         sells = [s for s in signals if s.action == "SELL"]
         buys = [s for s in signals if s.action == "BUY"]
 
+        # Execute auto-sells for positions dropped from the new target list
+        target_symbols = {s.symbol for s in buys}
+        for sym in list(positions.keys()):
+            if sym in target_symbols:
+                continue
+            price = get_price(conn, sym, current_date)
+            if not price or price <= 0:
+                continue
+            pos = positions[sym]
+            qty = pos["shares"]
+            proceeds = qty * price - commission
+            pnl = proceeds - (qty * pos["cost_basis"])
+            cash += proceeds
+            trades.append({
+                "symbol": sym,
+                "trade_type": "SELL",
+                "trade_date": current_date,
+                "price": price,
+                "quantity": qty,
+                "commission": commission,
+                "total_cost": -proceeds,
+                "pnl": pnl,
+                "signal_reasons": "rebalance_out",
+            })
+            del positions[sym]
+
         # Execute sells
         for sig in sells:
-            if sig.symbol in positions:
-                price = get_price(conn, sig.symbol, current_date)
-                if price and price > 0:
-                    pos = positions[sig.symbol]
-                    qty = pos["shares"]
-                    proceeds = qty * price - commission
-                    pnl = proceeds - (qty * pos["cost_basis"])
-                    cash += proceeds
-                    trades.append({
-                        "symbol": sig.symbol,
-                        "trade_type": "SELL",
-                        "trade_date": current_date,
-                        "price": price,
-                        "quantity": qty,
-                        "commission": commission,
-                        "total_cost": -proceeds,
-                        "pnl": pnl,
-                        "signal_reasons": _describe_exit(slug, display_name, strategy_name, sig, pos, price),
-                    })
-                    del positions[sig.symbol]
+            if sig.symbol not in positions:
+                continue
+            price = get_price(conn, sig.symbol, current_date)
+            if price and price > 0:
+                pos = positions[sig.symbol]
+                qty = pos["shares"]
+                proceeds = qty * price - commission
+                pnl = proceeds - (qty * pos["cost_basis"])
+                cash += proceeds
+                trades.append({
+                    "symbol": sig.symbol,
+                    "trade_type": "SELL",
+                    "trade_date": current_date,
+                    "price": price,
+                    "quantity": qty,
+                    "commission": commission,
+                    "total_cost": -proceeds,
+                    "pnl": pnl,
+                    "signal_reasons": _describe_exit(slug, display_name, strategy_name, sig, pos, price),
+                })
+                del positions[sig.symbol]
 
         # Execute buys — equal weight across signals, capped by 1% per position
         target_weight = 1.0 / max(max_positions, 1)

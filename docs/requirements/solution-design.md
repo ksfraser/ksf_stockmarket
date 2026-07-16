@@ -24,22 +24,38 @@
 - Partition pruning for backtest queries (WHERE on date range → only relevant partitions scanned)
 - Per-year backup via `mysqldump --where "YEAR(date)=2025"`
 
-### 2.2 Three-Tier Indicator Architecture
+### 2.2 Data Store Strategy: SQLite for Intraday, MariaDB for Daily+
 
-| Tier | When | How | Storage | Indicators |
+| Store | Purpose | Granularity | Writer | Reader |
 |---|---|---|---|---|
-| 1 | Per INSERT | MySQL trigger | Wide columns in `daily_indicators` | daily_return, gap, SMA-20/50/200, vol_sma_20 |
-| 2 | Daily batch | MySQL event (window functions) | Wide columns in `daily_tier2` | Bollinger, ATR-14, vol ratios, trend |
-| 3 | Daily batch | Python cron (TA-Lib vectorized) | Name-value in `ta_values` | RSI, MACD, candlestick patterns, custom |
+| SQLite `price_intraday` | Ephemeral intraday/sub-day cache | Day-trade bars, 15-min sync | `sync_stock_prices --sqlite`, fetcher crons | detection_triggers, calculators |
+| MariaDB `stockprices` | Daily history, partitioned by year | Daily OHLCV | sync jobs, backfills, migrations | TA, backtest, strategies, UI |
+| SQLite `alert_queue` | Ephemeral alert staging | Trigger-level events | detection_triggers --sqlite | alert dispatcher → MariaDB EOD sync |
+| MariaDB `alert_queue` | Canonical alert log | Historical alerts | EOD sync from SQLite | UI, LLM analysis |
 
-**Rationale**: 
-- Tier 1 is O(1) per row — cheap enough for trigger
-- Tier 2 needs 14-20 row window — expensive per insert, cheap once daily
-- Tier 3 needs full array (250+ rows) — only efficient as batch vectorized operation
+**Rule**: sub-day checks read SQLite. Daily+ lookbacks (>1 day window) read MariaDB.
+If data is stale, calculators return `stale` state; an external fetcher service refreshes SQLite/MariaDB independently.
 
-### 2.3 Scoring System Design
+### 2.4 Fetcher → Repository Pattern
 
-10 scoring tables preserved from legacy, enhanced with LLM integration:
+External data sources (yFinance, Google Finance, SEDAR, SEC) write **only** to DTOs.
+Repositories own all SQL. This separation:
+- Makes every worker idempotent (same DTO save = same DB state)
+- Enables distributed execution (fetcher container → shared DB → calculator container)
+- Centralizes column mapping in one place per backend
+- Lets us add sources without touching calculators
+
+```
+Fetcher (YFinanceFetcher)
+  → List[StockPriceDTO]
+    → Repository.save_all(dtos)  # SQLite intraday or MariaDB daily+
+```
+
+**Staleness contract**: calculators call `repository.is_stale(symbol, max_age_hours)`.
+If stale, they emit `STALE_DATA` event instead of computing; a fetcher worker
+picks it up and refreshes the store. Fetchers never run inline inside calculators.
+
+### 2.4 Scoring System Design
 
 | Table | Purpose | LLM Role |
 |---|---|---|
@@ -63,7 +79,7 @@
 - `human_overridden`: Human changed the LLM's score
 - `human_recommendation`: Human analyst's recommendation
 
-### 2.4 Signal Weight Correlation Design
+### 2.5 Signal Weight Correlation Design
 
 **Problem**: Signals fire at different times — some lead, some lag, some coincide.
 
@@ -100,16 +116,30 @@ effective_weight = base_weight × (1 + correlation × 0.5) × recency_factor
 
 ### 3.3 Data Flow
 
+```text
+Intraday/market-hours:
+  Fetcher cron (every 15 min)
+    → YFinanceFetcher → StockPriceDTOs → SQLitePriceRepository
+    → price_intraday (sub-day cache)
+  Detection cron
+    → detection_triggers --sqlite
+    → reads price_intraday (no yfinance calls)
+    → SQLitePriceRepository.upsert alerts
+    → alert_queue (SQLite)
+
+EOD/historical:
+  Fetcher cron (daily)
+    → YFinanceFetcher → StockPriceDTOs → MariaDBStockPriceRepository
+    → stockprices (daily+ history)
+  Calculator cron
+    → reads stockprices via Repository
+    → writes indicators to MariaDB
+  EOD sync
+    → SQLite alert_queue → MariaDB alert_queue
 ```
-Daily Processing Flow:
-1. Market closes (4 PM ET)
-2. yfinance fetches latest prices → stockprices (trigger fires Tier 1)
-3. MySQL event runs Tier 2 (window functions)
-4. Python cron runs Tier 3 (TA-Lib vectorized batch)
-5. Python cron runs scoring analysis (LLM + fundamental)
-6. Python cron updates signal_weights (correlation analysis)
-7. Results available for UI and monitoring
-```
+
+**Rule**: Fetchers write, calculators read. If a calculator finds stale data,
+it emits `STALE_DATA` and exits. Fetcher workers handle refresh asynchronously.
 
 ## 4. Migration Strategy
 

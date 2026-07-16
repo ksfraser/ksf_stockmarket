@@ -34,7 +34,7 @@ forbidden unless the lower layer publishes an event and the upper layer consumes
 | L3 Portfolio | `python/src/portfolio/` | Portfolio construction, allocation | Screener logic |
 | L4 Risk Mgmt | `python/src/risk/` | Regime, drawdown, correlation | Execute trades |
 | Agents | `python/agents/` | GA/NN/RL training + inference | PHP controllers, alerts |
-| Data | `python/db/`, `python/db_connector.py` | DB adapter, connection lifecycle | None — this is foundational |
+| Data | `python/src/db/` | DTOs, repositories, fetchers | None — this is foundational |
 | Orchestration | `python/src/queue_worker.py`, `python/daily_pipeline.py` | Event handling, scheduled runs | Direct agent training |
 | Alerts | `python/src/alerts/` | Alert detection, dedup, dispatch | Price fetching, TA calculation |
 | API | `python/api/` | HTTP endpoints only | Direct DB writes outside adapter |
@@ -123,22 +123,22 @@ unknown → candidate → pending_backfill → prices_loaded → ta_ready → an
 ```
 python/
   src/
-    db/                    # Adapter + connector (foundation)
-    events/                # Contracts + repository
-    alerts/                # Detection, dedup, dispatch
-    monitoring/            # Volume, price, delisting
-    strategies/            # L1 signal generation
-    risk/                  # L2 + L4 risk
-    portfolio/             # L3 portfolio construction
-    advisors/              # Advisor runner + strategies
-    queue_worker.py        # Event loop
-    database.py            # High-level DB facade if needed
-    symbol_resolver.py     # Canonical yfinance resolver (DB-aware: `exchange_mapping`, `symbol_master`, dual-fetch fallback)
-  agents/                  # GA, NN, RL, Blender, Orchestrator
-  api/                     # Flask/fastapi HTTP adapter
-  daily_pipeline.py        # Scheduled entry point
-  config_loader.py         # Config-driven factory
-  db_connector.py          # Legacy connector (deprecated in favor of python/src/db/)
+    db/                        # DTOs, repositories (SQLite/MariaDB), fetchers (yFinance, etc.)
+    events/                    # Contracts + repository
+    alerts/                    # Detection, dedup, dispatch
+    monitoring/                # Volume, price, delisting
+    strategies/                # L1 signal generation
+    risk/                      # L2 + L4 risk
+    portfolio/                 # L3 portfolio construction
+    advisors/                  # Advisor runner + strategies
+    queue_worker.py            # Event loop
+    database.py                # High-level DB facade if needed
+    symbol_resolver.py         # Canonical yfinance resolver
+  agents/                      # GA, NN, RL, Blender, Orchestrator
+  api/                         # Flask/fastapi HTTP adapter
+  daily_pipeline.py            # Scheduled entry point
+  config_loader.py             # Config-driven factory
+  db_connector.py              # Legacy connector (deprecated in favor of python/src/db/)
 ```
 
 ### 5.2 Import rules

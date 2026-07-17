@@ -510,9 +510,13 @@ case 'strategy_timing':
         $template = 'shared_with_me';
         break;
     case 'etf_performance':
-        $dbPath = '/var/www/stockmarket-app/data/analysis_results.db';
+        $host = 'ksfraser.ca';
+        $db   = 'ksfraser_stock_market';
+        $user = 'ksfraser_stockmarket';
+        $pass = getenv('MYSQL_PASSWORD') ?: '';
+
         $sortField = $_GET['sort'] ?? 'symbol';
-        $sortDir = $_GET['dir'] ?? 'asc';
+        $sortDir   = $_GET['dir'] ?? 'asc';
 
         $perfColumns = [
             '1M' => 'p_1M', '3M' => 'p_3M', '6M' => 'p_6M', '9M' => 'p_9M', '12M' => 'p_12M',
@@ -538,7 +542,7 @@ case 'strategy_timing':
         $nextDir = ($sortDir === 'asc') ? 'desc' : 'asc';
 
         try {
-            $pdo = new PDO('sqlite:' . $dbPath);
+            $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass);
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
@@ -581,7 +585,7 @@ case 'strategy_timing':
         } catch (Exception $e) {
             $rows = [];
             $asOf = '-';
-            $error = 'Failed to load ETF performance: ' . $e->getMessage();
+            $error = 'Failed to load ETF performance (MariaDB): ' . $e->getMessage();
         }
 
         $data = array_merge($data, [

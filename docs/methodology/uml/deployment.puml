@@ -1,0 +1,51 @@
+@startuml Deployment - Context & Infrastructure
+!theme plain
+skinparam backgroundColor #FEFEFF
+skinparam handwritten false
+title ksf_stockmarket System Deployment / Context View\nBABOK: Strategy Analysis, Information Management | PMBOK: Project Scope Management
+
+node "Web Server\n(PHP App)" {
+  component [Frontend\nDashboard]
+}
+
+node "API Server\n(Python API)" {
+  component [REST API]
+  component [Runner\n(Cron)]
+  component [Backtester]
+}
+
+node "Database Server" {
+  database [MariaDB\nPortfolios &\nTransactions]
+}
+
+node "Advisors" {
+  component [Advisor Engine]
+  component [Notifier]
+  component [Strategy\nEvaluator]
+}
+
+node "External\nSystems" {
+  component [SMTP/\nWhatsApp/Discord]
+  component [Market Data\nFeed]
+}
+
+node "Users" {
+  component [Investors]
+}
+
+' Interaction flows
+[Frontend Dashboard] --> [REST API] : HTTPS
+[REST API] --> [MariaDB Portfolios & Transactions] : TCP/3306
+[Runner (Cron)] --> [Advisor Engine] : Process
+[Advisor Engine] --> [Strategy Evaluator] : Rules
+[Advisor Engine] --> [Notifier] : Recommendations
+[Notifier] --> [SMTP/WhatsApp/Discord] : Push
+[Backtester] --> [MariaDB Portfolios & Transactions] : Read-only
+
+[Market Data Feed] --> [REST API] : Live prices
+[Market Data Feed] --> [Backtester] : Historical data
+
+[Investors] --> [Frontend Dashboard] : Browser
+[Investors] --> [Advisor Engine] : Manual query
+
+@enduml

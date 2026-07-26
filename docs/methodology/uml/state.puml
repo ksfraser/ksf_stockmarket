@@ -1,0 +1,45 @@
+@startuml State - Transaction Lifecycle
+!theme plain
+skinparam backgroundColor #FEFEFF
+
+title Transaction State Machine (with T+2 Settlement)\nBABOK: Requirements Analysis, Financial Modeling | PMBOK: Integration Management
+
+[*] --> DRAFT
+
+state "Transaction States" as stack {
+  DRAFT : entry: set created_at
+  DRAFT --> VALIDATED : validation_passed()
+  DRAFT --> REJECTED : validation_failed()
+
+  VALIDATED : entry: authorise fees
+  VALIDATED --> PENDING_EXECUTION : schedule_execution()
+  VALIDATED --> CANCELLED : user_cancel()
+
+  PENDING_EXECUTION --> EXECUTED : broker_confirms()
+  PENDING_EXECUTION --> FAILED : broker_rejects()
+
+  EXECUTED : entry: set execution_date
+  EXECUTED --> SETTLING_T : t_settlement()
+  EXECUTED --> SETTLING_T_PLUS_1 : t_plus_1()
+  EXECUTING --> SETTLING_T_PLUS_1
+
+  SETTLING_T_PLUS_1 --> SETTLING_T_PLUS_2 : t_plus_2()
+  SETTLING_T --> SETTLING_T_PLUS_1
+
+  SETTLING_T_PLUS_2 --> SETTLED : settlement_confirmed()
+  SETTLING_T_PLUS_2 --> SETTLED : auto_settle()
+  SETTLED : entry: update balances, notify user
+
+  SETTLED --> CLOSED : archive()
+
+  FAILED --> DRAFT : retry()
+  FAILED --> ABANDONED : max_retries_exceeded()
+
+  CANCELLED --> CLOSED
+  ABANDONED --> CLOSED
+  REJECTED --> DRAFT : correct_and_resubmit()
+}
+
+CLOSED --> [*]
+
+@enduml

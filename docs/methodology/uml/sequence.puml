@@ -1,0 +1,50 @@
+@startuml Sequence - Advisor Recommendation Flow
+!theme plain
+skinparam backgroundColor #FEFEFF
+
+title Advisor Recommendation Sequence\nBABOK: Solution Delivery | PMBOK: Executing Process Group
+
+participant "Cron Scheduler" as cron
+participant "Runner" as runner
+participant "Advisor Engine" as engine
+participant "Notifier" as notifier
+participant "Strategy Evaluator" as strategy
+participant "Email/SMTP" as email
+participant "Discord" as discord
+participant "WhatsApp" as wa
+
+cron -> runner : Trigger (daily/hourly)
+activate runner
+
+runner -> engine : fetch_active_advisors()
+activate engine
+engine --> runner : [advisor_id list]
+
+loop For each advisor
+  runner -> strategy : evaluate(portfolio, advisor_id)
+  activate strategy
+  strategy --> runner : recommendation{action, asset, confidence}
+  deactivate strategy
+
+  alt confidence >= threshold
+    runner -> engine : store_recommendation()
+    engine --> runner : saved
+  else recommendation generated
+    runner -> notifier : send(recommendation)
+    activate notifier
+    notifier -> email : render_and_send()
+    notifier -> discord : webhook_post()
+    notifier -> wa : api_send()
+    notifier --> runner : delivered
+    deactivate notifier
+  else HOLD
+    runner -> engine : log_hold()
+    engine --> runner : logged
+  end
+end
+
+deactivate engine
+runner -> runner : update_last_run()
+deactivate runner
+
+@enduml

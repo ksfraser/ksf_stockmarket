@@ -1,0 +1,78 @@
+@startuml Class - Core Domain Model
+!theme plain
+hide circle
+skinparam backgroundColor #FEFEFF
+
+title Domain Class Diagram\nBABOK: Requirements Analysis | PMBOK: Solution Scope Management
+
+class Portfolio {
+  -id: UUID
+  -name: str
+  -owner_id: UUID
+  -created_at: datetime
+  -updated_at: datetime
+  +calculate_balance()
+  +get_positions()
+}
+
+class Transaction {
+  -id: UUID
+  -portfolio_id: UUID
+  -asset_code: str
+  -type: Enum{BUY, SELL, DIVIDEND}
+  -quantity: float
+  -price: float
+  -fees: float
+  -status: TransactionStatus
+  -settlement_date: date
+  +settle()
+  +is_t2_complete()
+}
+
+class Strategy {
+  -id: UUID
+  -name: str
+  -portfolio_id: UUID
+  -risk_profile: Enum{conservative, moderate, aggressive}
+  -created_at: datetime
+  +evaluate(date)
+}
+
+class StrategyRule {
+  -id: UUID
+  -strategy_id: UUID
+  -rule_type: str
+  -condition: JSON
+  -action: JSON
+  -priority: int
+  +matches(market_data)
+}
+
+class Advisor {
+  -id: UUID
+  -name: str
+  -strategy_id: UUID
+  -enabled: bool
+  +generate_recommendation()
+}
+
+class Recommendation {
+  -id: UUID
+  -portfolio_id: UUID
+  -advisor_id: UUID
+  -asset_code: str
+  -action: Enum{BUY, SELL, HOLD}
+  -confidence: float
+  -rationale: str
+  -sent_at: datetime
+}
+
+' Relationships
+Portfolio "1" --> "*" Transaction : holds
+Portfolio "1" --> "*" Strategy : composed of
+Strategy "1" --> "*" StrategyRule : contains
+Advisor "1" --> "*" Recommendation : produces
+Portfolio "1" --> "*" Advisor : uses
+Recommendation "1" --> "1" Transaction : may trigger
+
+@enduml

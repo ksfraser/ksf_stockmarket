@@ -252,4 +252,37 @@ class AdminSettingsController {
             $_SESSION['flash_error'] = 'Full price refresh failed: ' . $e->getMessage();
         }
     }
+
+    /** GET/POST /?action=admin_optional_rules - Admin optional KB risk rules editor. */
+    public function optionalRules(): void {
+        $pdo = Database::get();
+        $message = '';
+        $error = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['strategy_name'], $_POST['bucket'], $_POST['optional_rules'])) {
+            $strategy = trim($_POST['strategy_name']);
+            $bucket = trim($_POST['bucket']);
+            $raw = trim($_POST['optional_rules']);
+            json_decode($raw);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $error = 'Invalid JSON: ' . json_last_error_msg();
+            } else {
+                $stmt = $pdo->prepare("UPDATE strategy_rules SET optional_rules = :json WHERE strategy_name = :s AND bucket = :b");
+                $stmt->execute([':json' => $raw, ':s' => $strategy, ':b' => $bucket]);
+                $message = "Optional rules saved for {$strategy}/{$bucket}.";
+            }
+        }
+
+        $rows = $pdo->query("SELECT id, strategy_name, bucket, optional_rules FROM strategy_rules WHERE is_active = 1 ORDER BY strategy_name, bucket")->fetchAll();
+        $data = [
+            'pageTitle' => 'Optional Risk Rules',
+            'template' => 'admin_optional_rules',
+            'rows' => $rows,
+            'message' => $message,
+            'error' => $error,
+            'user' => $this->currentUser,
+        ];
+        include $GLOBALS['APP_ROOT'] . '/templates/layout.php';
+        exit;
+    }
 }

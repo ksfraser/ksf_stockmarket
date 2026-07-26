@@ -11,7 +11,7 @@ This file is just routing + serialization.
 
 import os
 import logging
-from datetime import datetime
+from datetime import datetime, date
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 
@@ -548,3 +548,305 @@ if __name__ == '__main__':
 
     logger.info(f'Starting KSF Stock Market API on port {port}')
     app.run(host='127.0.0.1', port=port, debug=debug)
+
+
+# ─── Advisor Recommendations ──────────────────────────────────────────────────
+
+@app.route('/api/advisor/recommendations', methods=['GET'])
+def list_recommendations():
+    """List recent advisor recommendations for the current user (header X-User-Id)."""
+    user_id = int(request.headers.get('X-User-Id', request.args.get('user_id', 0)))
+    if user_id <= 0:
+        return jsonify({'error': 'user_id required'}), 400
+
+    from python.db_connector import get_connection
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT r.*, a.display_name AS advisor_name, a.slug AS advisor_slug
+        FROM advisor_recommendations r
+        JOIN advisor_accounts a ON a.id = r.advisor_id
+        WHERE r.user_id = %s
+        ORDER BY r.recommended_at DESC
+        LIMIT 100
+    """, (user_id,))
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify({'user_id': user_id, 'recommendations': rows, 'count': len(rows)})
+
+
+@app.route('/api/advisor/preferences', methods=['GET', 'POST'])
+def advisor_preferences():
+    """Get/set advisor notification preferences in user_settings."""
+    from python.src.database import get_connection
+    user_id = int(request.headers.get('X-User-Id', request.args.get('user_id', 0)))
+    if user_id <= 0:
+        return jsonify({'error': 'user_id required'}), 400
+
+    conn = get_connection()
+    try:
+        if request.method == 'POST':
+            data = request.get_json() or {}
+            allowed = {
+                'advisor_notify_email', 'advisor_notify_discord_dm',
+                'advisor_notify_discord_channel', 'advisor_notify_whatsapp',
+                'advisor_discord_user_id', 'advisor_discord_channel_id',
+                'advisor_whatsapp_number',
+            }
+            with conn.cursor() as cur:
+                for key, value in data.items():
+                    if key not in allowed:
+                        continue
+                    cur.execute("""
+                        INSERT INTO user_settings (user_id, setting_key, setting_value)
+                        VALUES (%s, %s, %s)
+                        ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)
+                    """, (user_id, key, str(value)))
+                conn.commit()
+            return jsonify({'status': 'saved', 'user_id': user_id})
+
+        with conn.cursor() as cur:
+            cur.execute("SELECT setting_key, setting_value FROM user_settings WHERE user_id = %s", (user_id,))
+            rows = cur.fetchall()
+        prefs = {r['setting_key']: r['setting_value'] for r in rows}
+        return jsonify({'user_id': user_id, 'preferences': prefs})
+    finally:
+        conn.close()
+
+
+# ─── Advisor Notification: WhatsApp Gateway Framework ──────────
+@app.route('/api/advisor/notifications/whatsapp/send', methods=['POST'])
+def api_advisor_whatsapp_send():
+    """Outbound WhatsApp send via configured gateway provider.
+
+    Expected JSON:
+      {
+        "to": "+15551234567",
+        "text": "message body",
+        "provider_message_id": "optional",
+        "metadata": {}
+      }
+
+    Behavior:
+      - Enforces WHATSAPP_ENABLED=true
+      - POSTs to WHATSAPP_GATEWAY_URL/v1/send with Authorization header
+      - Falls back to WHATSAPP_FROM_NUMBER if provider requires it
+      - Returns 202 Accepted with gateway response details
+
+    Creds not required at build time; wire gateway URL + key later.
+    """
+    from python.src.notifications.advisor_notifier import _send_whatsapp_gateway
+    payload = request.get_json() or {}
+    to = (payload.get('to') or '').strip()
+    text = (payload.get('text') or '').strip()
+    if not to or not text:
+        return jsonify({'status': 'error', 'message': 'to and text required'}), 400
+    result = _send_whatsapp_gateway(to, text, payload.get('provider_message_id'))
+    status_code = 202 if result.get('accepted') else 502
+    return jsonify(result), status_code
+
+
+@app.route('/api/advisor/notifications/whatsapp/status', methods=['POST'])
+def api_advisor_whatsapp_status():
+    """Inbound status callback from WhatsApp gateway provider.
+
+    Provider should POST:
+      {
+        "provider_message_id": "...",
+        "status": "sent|delivered|read|failed",
+        "timestamp": "ISO8601",
+        "error": "..."
+      }
+
+    TODO: connect to advisor_recommendations and user_preferences for audit.
+    """
+    payload = request.get_json() or {}
+    required = ['provider_message_id', 'status']
+    missing = [k for k in required if k not in payload]
+    if missing:
+        return jsonify({'status': 'error', 'message': f'missing fields: {missing}'}), 400
+    # Framework stub — credential backfill will wire audit + retry queue.
+    logger.info('WhatsApp status webhook received: %s', payload)
+    return jsonify({'status': 'accepted', 'stored': False}), 202
+
+
+# =====================================================================
+# REPORTS
+# =====================================================================
+
+@app.route('/api/reports/twror', methods=['GET'])
+def api_report_twror():
+    user_id = int(request.headers.get('X-User-Id', request.args.get('user_id', 0)))
+    if user_id <= 0:
+        return jsonify({'error': 'user_id required'}), 400
+    start = request.args.get('start')
+    end = request.args.get('end')
+    if not start or not end:
+        return jsonify({'error': 'start and end dates required (YYYY-MM-DD)'}), 400
+    from python.src.reports.performance import compute_twror
+    from python.src.database import get_connection
+    conn = get_connection()
+    try:
+        result = compute_twror(conn, user_id, date.fromisoformat(start), date.fromisoformat(end))
+    finally:
+        conn.close()
+    return jsonify(result)
+
+
+@app.route('/api/reports/securities', methods=['GET'])
+def api_report_securities():
+    user_id = int(request.headers.get('X-User-Id', request.args.get('user_id', 0)))
+    if user_id <= 0:
+        return jsonify({'error': 'user_id required'}), 400
+    start = request.args.get('start', '2000-01-01')
+    end = request.args.get('end', str(date.today()))
+    account = request.args.get('account') or None
+    from python.src.reports.performance import securities_performance
+    from python.src.database import get_connection
+    conn = get_connection()
+    try:
+        rows = securities_performance(conn, user_id, date.fromisoformat(start), date.fromisoformat(end), account)
+    finally:
+        conn.close()
+    return jsonify({'count': len(rows), 'securities': rows})
+
+
+@app.route('/api/reports/payments', methods=['GET'])
+def api_report_payments():
+    user_id = int(request.headers.get('X-User-Id', request.args.get('user_id', 0)))
+    if user_id <= 0:
+        return jsonify({'error': 'user_id required'}), 400
+    start = request.args.get('start', str(date.today().replace(year=date.today().year - 1)))
+    end = request.args.get('end', str(date.today()))
+    from python.src.reports.performance import payments_summary
+    from python.src.database import get_connection
+    conn = get_connection()
+    try:
+        summary = payments_summary(conn, user_id, date.fromisoformat(start), date.fromisoformat(end))
+    finally:
+        conn.close()
+    return jsonify(summary)
+
+
+@app.route('/api/reports/tax_lots', methods=['GET'])
+def api_report_tax_lots():
+    user_id = int(request.headers.get('X-User-Id', request.args.get('user_id', 0)))
+    if user_id <= 0:
+        return jsonify({'error': 'user_id required'}), 400
+    symbol = request.args.get('symbol') or None
+    from python.src.reports.performance import tax_lot_summary
+    from python.src.database import get_connection
+    conn = get_connection()
+    try:
+        rows = tax_lot_summary(conn, user_id, symbol)
+    finally:
+        conn.close()
+    return jsonify({'count': len(rows), 'lots': rows})
+
+
+@app.route('/api/reports/heatmap', methods=['GET'])
+def api_report_heatmap():
+    user_id = int(request.headers.get('X-User-Id', request.args.get('user_id', 0)))
+    if user_id <= 0:
+        return jsonify({'error': 'user_id required'}), 400
+    as_of = request.args.get('date') or str(date.today())
+    from python.src.reports.performance import heat_map_data
+    from python.src.database import get_connection
+    conn = get_connection()
+    try:
+        data = heat_map_data(conn, user_id, date.fromisoformat(as_of))
+    finally:
+        conn.close()
+    return jsonify(data)
+
+
+@app.route('/api/reports/rebalance', methods=['GET', 'POST'])
+def api_report_rebalance():
+    user_id = int(request.headers.get('X-User-Id', request.args.get('user_id', 0)))
+    if user_id <= 0:
+        return jsonify({'error': 'user_id required'}), 400
+    from python.src.database import get_connection
+    from python.src.reports.rebalancing import compute_rebalance, list_targets, create_target, update_target, toggle_target, delete_target
+    conn = get_connection()
+    try:
+        if request.method == 'POST':
+            payload = request.get_json() or {}
+            if request.args.get('action') == 'delete' and request.args.get('target_id'):
+                delete_target(conn, int(request.args.get('target_id')))
+                return jsonify({'status': 'deleted'})
+            if request.args.get('action') == 'toggle' and request.args.get('target_id'):
+                toggle_target(conn, int(request.args.get('target_id')), bool(payload.get('active', True)))
+                return jsonify({'status': 'toggled'})
+            name = payload.get('name', 'Unnamed')
+            if not name:
+                return jsonify({'error': 'name required'}), 400
+            target_id = create_target(
+                conn,
+                user_id=user_id,
+                name=name,
+                target_type=payload.get('target_type', 'taxonomy'),
+                target_allocations=payload.get('target_allocations', {}),
+                tolerance_pct=float(payload.get('tolerance_pct', 5) or 5),
+                rebalance_frequency=payload.get('rebalance_frequency', 'monthly'),
+                strategy_name=payload.get('strategy_name'),
+            )
+            return jsonify({'target_id': target_id})
+        # GET: list or compute
+        if request.args.get('action') == 'compute' and request.args.get('target_id'):
+            result = compute_rebalance(conn, user_id, int(request.args.get('target_id')))
+            return jsonify(result)
+        targets = list_targets(conn, user_id, active_only=request.args.get('active') != 'all')
+        return jsonify({'count': len(targets), 'targets': [t.to_dict() for t in targets]})
+    finally:
+        conn.close()
+
+
+@app.route('/api/reports/taxonomies', methods=['GET', 'POST'])
+def api_report_taxonomies():
+    user_id = int(request.headers.get('X-User-Id', request.args.get('user_id', 0)))
+    if user_id <= 0:
+        return jsonify({'error': 'user_id required'}), 400
+    from python.src.database import get_connection
+    from python.src.reports.taxonomies import (
+        list_taxonomies as _list_taxonomies,
+        get_assignments_for_user as _get_assignments,
+        assign_symbol as _assign_symbol,
+        remove_assignment as _remove_assignment,
+        create_taxonomy as _create_taxonomy,
+        update_taxonomy as _update_taxonomy,
+        delete_taxonomy as _delete_taxonomy,
+    )
+    conn = get_connection()
+    try:
+        if request.method == 'POST':
+            payload = request.get_json() or {}
+            action = payload.get('action') or request.args.get('action')
+            if action == 'delete':
+                _delete_taxonomy(conn, int(payload.get('taxonomy_id')))
+                return jsonify({'status': 'deleted'})
+            if action == 'unassign':
+                _remove_assignment(conn, int(payload.get('assignment_id')))
+                return jsonify({'status': 'unassigned'})
+            if payload.get('name'):
+                tid = _create_taxonomy(
+                    conn,
+                    user_id=user_id,
+                    name=payload['name'],
+                    type=payload.get('type', 'custom'),
+                    parent_id=payload.get('parent_id'),
+                )
+                return jsonify({'taxonomy_id': tid})
+            if payload.get('taxonomy_id'):
+                _update_taxonomy(conn, int(payload['taxonomy_id']), **{k: v for k, v in payload.items() if k not in ('action', 'taxonomy_id', 'name')})
+                return jsonify({'status': 'updated'})
+            if payload.get('assign'):
+                tid = int(payload.get('taxonomy_id', 0))
+                sym = str(payload.get('symbol', ''))
+                aid = _assign_symbol(conn, user_id, tid, sym, float(payload.get('weight', 0) or 0), payload.get('notes', ''))
+                return jsonify({'assignment_id': aid})
+        taxonomies = _list_taxonomies(conn, user_id)
+        assignments = _get_assignments(conn, user_id)
+        return jsonify({'taxonomies': [t.to_dict() for t in taxonomies], 'assignments': [a.to_dict() for a in assignments]})
+    finally:
+        conn.close()

@@ -181,7 +181,7 @@ if ($action === 'register') {
 }
 
 // Routes requiring authentication (portfolio, transactions, personal data)
-$protectedRoutes = ['portfolio', 'transactions', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings', 'shared_with_me', 'refresh_price', 'refresh_all_prices'];
+$protectedRoutes = ['portfolio', 'transactions', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings', 'admin_optional_rules', 'shared_with_me', 'refresh_price', 'refresh_all_prices', 'hire_advisors', 'my_advisors', 'strategy_guidance', 'advisor_preferences', 'my_recommendations', 'reports', 'taxonomies', 'rebalancing'];
 if (in_array($action, $protectedRoutes, true) && !AuthController::checkSession()) {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header('Location: ?action=login');
@@ -333,6 +333,12 @@ switch ($action) {
         $pageTitle = 'Admin Settings';
         $template = 'admin_settings';
         break;
+    case 'admin_optional_rules':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdminSettingsController.php';
+        $ctrl = new AdminSettingsController();
+        $ctrl->optionalRules();
+        // optionalRules() handles its own layout + exit
+        break;
     case 'refresh_all_prices':
         require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdminSettingsController.php';
         $ctrl = new AdminSettingsController();
@@ -433,6 +439,80 @@ case 'strategy_timing':
         $data = array_merge($data, $ctrl->trades($runId));
         $pageTitle = 'Advisor Backtest Trades';
         $template = 'advisor_backtest_trades';
+        break;
+    case 'hire_advisors':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdvisorHiringController.php';
+        $ctrl = new AdvisorHiringController();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $ctrl->index(); // handles redirect on POST
+        }
+        $data = array_merge($data, $ctrl->index());
+        $pageTitle = 'Hire an Advisor';
+        $template = 'hire_advisors';
+        break;
+    case 'my_advisors':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdvisorHiringController.php';
+        $ctrl = new AdvisorHiringController();
+        $data = array_merge($data, $ctrl->myAdvisors());
+        $pageTitle = 'My Advisors';
+        $template = 'my_advisors';
+        break;
+    case 'strategy_guidance':
+        $pageTitle = 'Advisor Strategy Guidance';
+        $template = 'advisor_guidance';
+        break;
+    case 'knowledge_base':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/KnowledgeBaseController.php';
+        $ctrl = new KnowledgeBaseController();
+        $data = $ctrl->index();
+        $pageTitle = 'Knowledge Base';
+        $template = 'knowledge_base';
+        break;
+    case 'kb_article':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/KnowledgeBaseController.php';
+        $ctrl = new KnowledgeBaseController();
+        $data = ['article' => $ctrl->article($_GET['slug'] ?? '')];
+        $pageTitle = $data['article']['title'] ?? 'Knowledge Base';
+        $template = 'kb_article';
+        break;
+    case 'atr_methodology':
+        $pageTitle = 'ATR Stop Methodology';
+        $template = 'atr_methodology';
+        break;
+    case 'advisor_preferences':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdvisorNotificationController.php';
+        $ctrl = new AdvisorNotificationController();
+        $data = array_merge($data, $ctrl->preferences());
+        $pageTitle = 'Advisor Notification Preferences';
+        $template = 'notification_preferences';
+        break;
+    case 'my_recommendations':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdvisorNotificationController.php';
+        $ctrl = new AdvisorNotificationController();
+        $data = array_merge($data, $ctrl->myRecommendations());
+        $pageTitle = 'My Advisor Recommendations';
+        $template = 'my_recommendations';
+        break;
+    case 'reports':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/ReportController.php';
+        $ctrl = new ReportController();
+        $data = array_merge($data, $ctrl->index($_GET));
+        $pageTitle = 'Reports';
+        $template = 'reports';
+        break;
+    case 'taxonomies':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/TaxonomyController.php';
+        $ctrl = new TaxonomyController();
+        $data = array_merge($data, $ctrl->index($_GET, $_POST));
+        $pageTitle = 'Taxonomies';
+        $template = 'taxonomies';
+        break;
+    case 'rebalancing':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/RebalancingController.php';
+        $ctrl = new RebalancingController();
+        $data = array_merge($data, $ctrl->index($_GET, $_POST));
+        $pageTitle = 'Rebalancing';
+        $template = 'rebalancing';
         break;
     case 'manual_ohlcv':
         $ctrl = new StockController();

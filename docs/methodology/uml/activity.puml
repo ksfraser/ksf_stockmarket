@@ -1,0 +1,59 @@
+@startuml Activity - Backtest Flow
+!theme plain
+skinparam backgroundColor #FEFEFF
+
+title Backtest Activity Diagram\nBABOK: Solution Evaluation | PMBOK: Monitoring Process
+
+start
+
+:Define backtest parameters;
+note right
+  - portfolio_id
+  - date range (start, end)
+  - strategy_id
+  - capital
+  - fees
+end note
+
+:Load historical market data;
+if (Data available?) then (no)
+  :Log error & abort;
+  stop
+else (yes)
+endif
+
+:Initialise virtual portfolio;
+:Set start capital & fees;
+
+partition Wealth_Calculation_Loop {
+  while (Current date < End date?) is (yes)
+    :Apply strategy rules to market data;
+    :Generate trade signals;
+    if (Signal generated?) then (yes)
+      :Execute trade in virtual portfolio;
+      :Update holdings & cash;
+    else (no / HOLD)
+      :Hold positions;
+    endif
+    :Advance simulated date;
+  endwhile (no)
+}
+
+:Calculate final metrics;
+note right
+  - total return
+  - Sharpe ratio
+  - max drawdown
+  - win rate
+end note
+
+:Generate performance report;
+:Persist results to MariaDB;
+
+if (User requested email?) then (yes)
+  :Send backtest report to user;
+endif
+
+stop
+
+@enduml

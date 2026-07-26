@@ -305,6 +305,69 @@ DECISION FLOW:
 
 ---
 
+## 7.5 Advisor Hiring & Recommendations
+
+### Data Model
+- `user_advisors(user_id, advisor_id, is_active)` — hiring / pause
+- `advisor_recommendations(id, user_id, advisor_id, symbol, action, price, max_price, stop_limit, notes, recommended_at, sent_*)`
+- `user_settings` keeps `advisor_notify_*`, Discord IDs, WhatsApp numbers
+
+### Cron Pipeline
+```
+run_advisor_recommendations.py --date=YYYY-MM-DD [--slug=]
+  for active advisor:
+    generate_signals(date)
+    hired_users = SELECT user_id FROM user_advisors WHERE advisor_id = ? AND is_active=1
+    for user in hired_users:
+      queue advisor_recommendations
+      deliver via user preferences
+```
+
+### Notification Gateway Logic
+1. Load `UserPrefs` from `user_settings` + `users.email`
+2. Format recommendation text with action, symbol, $price, max, stop, notes, confidence, reason
+3. Send via enabled channels only:
+   - **Email** — SMTP (`SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`)
+   - **Discord DM** — bot token DM to `advisor_discord_user_id`
+   - **Discord channel** — same bot to `advisor_discord_channel_id` or `DISCORD_ALERT_WEBHOOK`
+   - **WhatsApp** — placeholder for gateway automation
+4. Mark `sent_*` flags on `advisor_recommendations`
+
+### Activity Diagram
+```
+start
+│
+├─ load active advisors
+├─ for advisor:
+│   ├─ generate signals
+│   ├─ load hiring users for advisor
+│   ├─ for user:
+│   │   ├─ queue recommendation
+│   │   ├─ load notification preferences
+│   │   ├─ send via enabled channels
+│   │   └─ mark sent flags
+│   └─ if no users hired: skip
+│
+└─ end
+```
+
+### Sequence: User hires advisor → recommendation delivered
+```
+User -> PHP: Hire advisor
+PHP -> MariaDB: INSERT user_advisors
+PHP -> User: confirm hired
+...
+Cron -> Python: run_advisor_recommendations.py
+Python -> Advisor: generate_signals()
+Python -> MariaDB: queue advisor_recommendations
+Python -> Notifier: deliver(rec_id)
+Notifier -> MariaDB: load UserPrefs
+Notifier -> Email: SMTP send
+Notifier -> Discord: bot DM/channel post
+Python -> MariaDB: mark sent_*
+```
+
+
 ## 8. PHP Web Dashboard (Built on Correct Data)
 
 ### 8.1 Status: ✅ PHASES 1-3 COMPLETE

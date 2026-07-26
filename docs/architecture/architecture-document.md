@@ -156,7 +156,9 @@ See `database-comparison.md` for detailed column-level comparison.
 | Fetchers         | yFinance/Google/SEDAR/SEC → normalized DTOs         |
 | Repositories     | DTO ↔ SQLite/MariaDB storage, column mapping        |
 | Detection        | Volume/NATR/RSI/gap triggers read from local DB     |
-| Reports          | HTML/PDF report generation                          |
+|| Reports          | HTML/PDF report generation                          |
+|| Advisor Notifier | Email/Discord/WhatsApp recommendation delivery      |
+|| Risk Engine      | Optional rules enforcement in backtest + live        |
 
 ### Database Layer
 | Table Group       | Tables                                               |
@@ -168,7 +170,7 @@ See `database-comparison.md` for detailed column-level comparison.
 | Signal Weights    | signal_weights (per-symbol, evolving)               |
 | Backtesting       | backtest_runs, backtest_trades                      |
 | Users & RBAC      | users, roles, watchlists, watchlist_symbols         |
-| Advisors          | user_settings (strategy, sector, equity, bond_basket), advisor_runs, advisor_signals |
+|| Advisors          | user_advisors, advisor_recommendations, strategy_rules.risk_rules.optional_rules, kb_articles |
 | Alerts            | alerts, alerts_raised                               |
 | Screener          | tradingview_screener_results (preset_name+market+symbol unique), symbol_master |
 | FA Integration    | fa_transfers                                        |
@@ -237,7 +239,11 @@ The existing recipe needs these additions:
 | GET    | /api/data/prices/{symbol}  | ?from=&to=                | { prices: [...] }  |
 | POST   | /api/data/import           | symbols[], source         | { import_log }     |
 | GET    | /api/health                | —                         | { status: "ok" }   |
-| GET    | api_screener               | ?preset=                  | HTML fragment      |
+|| GET    | api_screener               | ?preset=                  | HTML fragment      |
+|| GET    | /api/advisor/recommendations | ?user_id=N              | { recommendations: [...] } |
+|| GET/POST | /api/advisor/preferences | ?user_id=N                | { prefs } |
+|| POST   | /api/advisor/notifications/whatsapp/send | to, message | { message_id } |
+|| POST   | /api/advisor/notifications/whatsapp/status | provider payload | { status } |
 
 ## 7.1 Screener AJAX Flow (Sequence)
 

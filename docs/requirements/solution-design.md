@@ -162,3 +162,45 @@ it emits `STALE_DATA` and exits. Fetcher workers handle refresh asynchronously.
 - Signal weight correlation analysis
 - Backtesting with optimized weights
 - Performance tuning
+
+## 5. Advisor Recommendations & Notifications
+
+### 5.1 Flow
+```
+Cron: run_advisor_recommendations.py --date=YYYY-MM-DD
+  ├─ load_active_advisors()
+  ├─ for advisor in advisors:
+  │   ├─ strategy.generate_signals()
+  │   ├─ users = user_advisors.where(advisor_id, is_active=1)
+  │   ├─ for user in users:
+  │   │   ├─ queue recommendation into advisor_recommendations
+  │   │   ├─ load user_settings notification prefs
+  │   │   ├─ send_email / discord_dm / discord_channel / whatsapp
+  │   │   └─ mark sent flags
+  │   └─ if no users hired: skip
+  └─ log run result
+
+API (python/api/app.py):
+  GET  /api/advisor/recommendations?user_id=N
+  GET/POST /api/advisor/preferences?user_id=N
+  POST /api/advisor/notifications/whatsapp/send
+  POST /api/advisor/notifications/whatsapp/status
+
+### 5.2 Knowledge Base Integration
+- KB articles served via `?action=knowledge_base` and `?action=kb_article&slug=...`
+- Optional risk rules stored in `strategy_rules.risk_rules.optional_rules` JSON:
+  - `min_reward_risk_ratio` — asymmetric risk/reward floor
+  - `emergency_buffer_target_pct` — cash reserve floor
+  - `emergency_buffer_grace_days` — days buffer can stay below target before blocking buys
+  - `max_leverage_ratio` — max (portfolio/cash) before blocking
+  - `max_margin_utilization_pct` — max margin utilization
+  - `margin_call_buffer_pct` — cash floor as % of equity
+  - `margin_call_grace_hours` — hours buffer can stay breached
+  - `blacklist_asset_classes` — excluded asset classes/symbols
+- rules_backtest enforces optional rules before entries; zero values = disabled.
+
+### 5.3 Multi-Gateway Delivery
+- Email: SMTP via advisor_notifier._send_email()
+- Discord: bot token + channel webhook; DM + private channel supported
+- WhatsApp: HTTP POST to {WHATSAPP_GATEWAY_URL}/v1/send with E.164 normalization
+- Recommendation format: "Buy 100 ABC at $12 max 12.45 stop limit 10.92 etc."

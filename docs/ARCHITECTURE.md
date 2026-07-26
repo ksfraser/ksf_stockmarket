@@ -258,6 +258,48 @@ final_weight(symbol) =
 
 ---
 
+### 4.5 Custom Advisor Composer
+
+Users can create new advisors by blending rule sets from existing advisors stored in `strategy_rules`.
+
+```
+User Input: advisor weights (e.g. buffett_quality=0.7, momentum=0.3)
+    ↓
+  composer.py
+    ↓
+  Blended rule JSON → new strategy_rules row
+    ↓
+  rules_backtest.py / pipeline_integration.py
+    ↓
+  backtest_runs + backtest_trades
+```
+
+Components:
+- **`python/src/rules/composer.py`** — CLI + library for blending `strategy_rules` rows by normalized weights. Saves composite strategies in the `composites` bucket.
+- **`python/src/rules/pipeline_integration.py`** — Reuses `strategy_pipeline.py` oscillator/combo/sweep logic inside the advisor stack. Provides `backtest_user_advisor`, `forward_walk`, `run_param_sweep`, `run_combo_sweep`, and `timeframed_candle_score` (1D/1W/1M).
+- **`python/src/rules/rule_engine.py`** — Generic rule parser/evaluator.
+- **`python/src/rules/risk.py`** — ATR stops, `max_pct_portfolio`, `max_risk_pct`, `stop_factor`, daily-loss limit flattening, and confidence-weighted position sizing.
+
+### 4.6 Oscillator & Timeframe Toggles
+
+Indicator toggles live in `strategy_rules.indicators` JSON and are normalized by `pipeline_integration.normalize_indicator_set()`.
+
+Supported toggles:
+- `rsi`, `macd`, `stoch`, `bbands`, `atr`
+- `doji`, `hammer`, `engulfing`
+- `sma_cross`, `donchian`
+
+Candlestick timeframe validation:
+- `default_timeframe` column in `strategy_rules` stores `1D`, `1W`, or `1M`.
+- `timeframed_candle_score()` resamples daily OHLCV into weekly/monthly candles and applies the same pattern scoring, so users can validate signals against larger timeframes without deploying new code.
+
+### 4.7 GA + NN Integration Path
+
+- **`python/ga_optimizer.py`** evolves portfolio weights and continuous risk parameters (`atr_stop_mult`, `risk_per_trade`, `rebalance_pct`, `dca_installments`). It can target any `strategy_rules` record by reading its `risk_rules` JSON and mutating knobs.
+- **`python/agents/nn_agent.py`** trains an LSTM on 60-day windows of 25 features to predict 5-class direction and recommend position weights. Its outputs can write blended weights into a composite `strategy_rules` row for live/forward-walk consumption.
+
+---
+
 ## 5. Backtested Strategy Results (as of 2026-02-01)
 
 | Strategy | Win Rate | Profit Factor | Max Drawdown | Status |
@@ -288,7 +330,11 @@ final_weight(symbol) =
 | `symbol_news` | News articles | symbol, date, title, url, source |
 | `options_snapshot` | Options data | symbol, fetch_date, put_call_ratio, iv |
 | `exchange_mapping` | Symbol→exchange map | symbol, exchange, yahoo_suffix |
-| `transactions` | Transaction history | symbol, trade_date, type, quantity, price, total |
+|| `transactions` | Transaction history | symbol, trade_date, type, quantity, price, total |
+|| `backtest_runs` | Advisor backtest results | user_id, strategy, start_date, end_date, total_return, max_drawdown, num_trades, win_rate |
+|| `backtest_trades` | Backtest executions | backtest_id, symbol, trade_type, trade_date, price, quantity, commission, total_cost, signal_reasons |
+|| `strategy_rules` | Rule definitions for advisors | strategy_name, bucket, entry_rules, exit_rules, risk_rules, bias_criteria, indicators, default_timeframe |
+|| `strategy_composers` | Saved composite rule sets | user_id, name, description, source_advisors, weights, strategy_rules_id |
 
 ---
 
@@ -340,7 +386,7 @@ class DBConnection(ABC):
 
 ## 9. File Locations
 
-| Component | Path |
+|| Component | Path |
 |---|---|
 | PHP workspace | `/var/www/stockmarket-app/` |
 | Apache web root | `/var/www/html/stockmarket/` |
@@ -352,3 +398,12 @@ class DBConnection(ABC):
 | Config | `config.yaml` (Python), `config/database.php` (PHP) |
 | MySQL host | `ksfraser.ca` |
 | DB name | `ksfraser_stock_market` |
+| Rule engine | `python/src/rules/rule_engine.py`, `python/src/rules/risk.py` |
+| Rule composer | `python/src/rules/composer.py` |
+| Pipeline integration | `python/src/rules/pipeline_integration.py` |
+| Rules backtest runner | `python/rules_backtest.py` |
+| Strategy pipeline (standalone) | `strategy_pipeline.py` |
+| GA optimizer | `python/ga_optimizer.py` |
+| NN agent | `python/agents/nn_agent.py` |
+| Strategy rule seeder | `python/scripts/seed_strategy_rules.py` |
+| Rule/ADR docs | `docs/architecture/ADR-rule-engine-pipeline-integration.md` |

@@ -115,7 +115,7 @@ def run_advisor(
     if not dry_run:
         for sig in signals:
             try:
-                _persist_trade(db, sig, run_date)
+                _persist_trade(db, sig, run_date, advisor_id=user_id)
                 trades_executed += 1
             except Exception:
                 logger.exception("Failed to persist trade for %s", sig.symbol)
@@ -130,10 +130,22 @@ def run_advisor(
     instance.on_run_complete(run_date, signals)
 
 
+def _next_business_day(start: date, days: int) -> date:
+    """Add N business days to a date, skipping weekends."""
+    cur = start
+    added = 0
+    while added < days:
+        cur = date(cur.year, cur.month, cur.day + 1)
+        if cur.weekday() < 5:  # Mon-Fri
+            added += 1
+    return cur
+
+
 def _persist_trade(
     db: pymysql.connections.Connection,
     sig: Signal,
     trade_date: date,
+    advisor_id: int | None = None,
 ) -> None:
     with db.cursor() as cur:
         cur.execute(
@@ -145,21 +157,150 @@ def _persist_trade(
         commission = 9.99 if price > 0 else 0.0
         total = price - commission
         notes = f"Advisor {sig.symbol} action={sig.action} weight={sig.weight:.2f} rank={sig.meta.get('rank', '')} confidence={sig.confidence:.2f}"
-        cur.execute(
-            """
-            INSERT INTO transactions
-                (symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, created_at)
-            VALUES (%s, %s, 'BUY', 1, %s, %s, %s, 'MARGIN', %s, 'advisor', NOW())
-            """,
-            (
-                sig.symbol,
-                trade_date,
-                price,
-                total,
-                commission,
-                notes,
-            ),
-        )
+        trade_type = (sig.action or 'BUY').upper()
+        if trade_type not in ('BUY', 'SELL'):
+            trade_type = 'BUY'
+        settlement = _next_business_day(trade_date, 2)
+        if trade_type == 'BUY':
+            # T0: accrual +cash (hold for settlement)
+            cur.execute(
+                """
+                INSERT INTO transactions
+                    (user_id, symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, settlement_date, created_at)
+                VALUES (%s, %s, %s, 'BUY', 0, %s, %s, 0, 'accrual', %s, 'advisor', %s, NOW())
+                """,
+                (
+                    advisor_id,
+                    'CASH',
+                    trade_date.isoformat(),
+                    price,
+                    total,
+                    f"{sig.symbol} buy cash accrual (Buy)",
+                    settlement.isoformat(),
+                ),
+            )
+            # T0: portfolio -cash (reserve now)
+            cur.execute(
+                """
+                INSERT INTO transactions
+                    (user_id, symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, settlement_date, created_at)
+                VALUES (%s, %s, %s, 'BUY', 0, %s, %s, %s, 'portfolio', %s, 'advisor', %s, NOW())
+                """,
+                (
+                    advisor_id,
+                    'CASH',
+                    trade_date.isoformat(),
+                    price,
+                    total,
+                    commission,
+                    f"{sig.symbol} Purchase cash accrual",
+                    settlement.isoformat(),
+                ),
+            )
+            # T2: accrual -cash (release hold)
+            cur.execute(
+                """
+                INSERT INTO transactions
+                    (user_id, symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, settlement_date, created_at)
+                VALUES (%s, %s, %s, 'BUY', 0, %s, %s, 0, 'accrual', %s, 'advisor', %s, NOW())
+                """,
+                (
+                    advisor_id,
+                    'CASH',
+                    settlement.isoformat(),
+                    price,
+                    total,
+                    f"{sig.symbol} Buy settlement",
+                    settlement.isoformat(),
+                ),
+            )
+            # T2: portfolio +symbol (shares delivered)
+            cur.execute(
+                """
+                INSERT INTO transactions
+                    (user_id, symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, settlement_date, created_at)
+                VALUES (%s, %s, %s, 'BUY', 1, %s, %s, 0, 'portfolio', %s, 'advisor', %s, NOW())
+                """,
+                (
+                    advisor_id,
+                    sig.symbol,
+                    settlement.isoformat(),
+                    price,
+                    price,
+                    f"{sig.symbol} buy completed",
+                    settlement.isoformat(),
+                ),
+            )
+        else:
+            # T0: portfolio -symbol (shares removed)
+            cur.execute(
+                """
+                INSERT INTO transactions
+                    (user_id, symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, settlement_date, created_at)
+                VALUES (%s, %s, %s, 'SELL', 1, %s, %s, 0, 'portfolio', %s, 'advisor', %s, NOW())
+                """,
+                (
+                    advisor_id,
+                    sig.symbol,
+                    trade_date.isoformat(),
+                    price,
+                    total,
+                    f"{sig.symbol} sell",
+                    settlement.isoformat(),
+                ),
+            )
+            # T0: accrual +cash (proceeds held)
+            cur.execute(
+                """
+                INSERT INTO transactions
+                    (user_id, symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, settlement_date, created_at)
+                VALUES (%s, %s, %s, 'SELL', 0, %s, %s, 0, 'accrual', %s, 'advisor', %s, NOW())
+                """,
+                (
+                    advisor_id,
+                    'CASH',
+                    trade_date.isoformat(),
+                    price,
+                    total,
+                    f"{sig.symbol} sell cash accrual (Sell)",
+                    settlement.isoformat(),
+                ),
+            )
+            # T2: accrual -cash
+            cur.execute(
+                """
+                INSERT INTO transactions
+                    (user_id, symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, settlement_date, created_at)
+                VALUES (%s, %s, %s, 'SELL', 0, %s, %s, 0, 'accrual', %s, 'advisor', %s, NOW())
+                """,
+                (
+                    advisor_id,
+                    'CASH',
+                    settlement.isoformat(),
+                    price,
+                    total,
+                    f"{sig.symbol} Sell settlement",
+                    settlement.isoformat(),
+                ),
+            )
+            # T2: portfolio +cash
+            cur.execute(
+                """
+                INSERT INTO transactions
+                    (user_id, symbol, trade_date, type, quantity, price, total, commission, account_type, notes, source_file, settlement_date, created_at)
+                VALUES (%s, %s, %s, 'SELL', 0, %s, %s, %s, 'portfolio', %s, 'advisor', %s, NOW())
+                """,
+                (
+                    advisor_id,
+                    'CASH',
+                    settlement.isoformat(),
+                    price,
+                    total,
+                    commission,
+                    f"{sig.symbol} Sell settlement",
+                    settlement.isoformat(),
+                ),
+            )
     db.commit()
 
 

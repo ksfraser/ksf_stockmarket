@@ -165,6 +165,31 @@ def run_advisor_backtest(
             continue
 
         if not signals:
+            # Force-exit all stale positions when advisor returns empty signals
+            target_symbols = set()
+            for sym in list(positions.keys()):
+                if sym in target_symbols:
+                    continue
+                pos = positions[sym]
+                px = get_price(conn, sym, current_date)
+                if not px or px <= 0:
+                    continue
+                qty = pos["shares"]
+                proceeds = qty * px - commission
+                pnl = proceeds - (qty * pos["cost_basis"])
+                cash += proceeds
+                trades.append({
+                    "symbol": sym,
+                    "trade_type": "SELL",
+                    "trade_date": current_date,
+                    "price": px,
+                    "quantity": qty,
+                    "commission": commission,
+                    "total_cost": -proceeds,
+                    "pnl": pnl,
+                    "signal_reasons": "rebalance_out",
+                })
+                del positions[sym]
             history.append(_snapshot(current_date, cash, positions, conn))
             continue
 

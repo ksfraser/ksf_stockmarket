@@ -27,7 +27,17 @@ $error = $data['error'] ?? null;
         <label>Target ID <input type="number" name="target_id" value="<?= htmlspecialchars($data['target_id'] ?? '') ?>"></label>
     <?php endif; ?>
     <button type="submit">Run</button>
+    <a class="button" href="#" onclick="exportCSV('<?= htmlspecialchars($report) ?>')">Export CSV</a>
 </form>
+
+<script>
+function exportCSV(report) {
+    const start = new URLSearchParams(window.location.search).get('start') || '';
+    const end = new URLSearchParams(window.location.search).get('end') || '';
+    const extra = report === 'rebalance' ? '&target_id=' + (new URLSearchParams(window.location.search).get('target_id') || '') : '';
+    window.location.href = '?action=reports&report=' + encodeURIComponent(report) + '&format=csv&start=' + encodeURIComponent(start) + '&end=' + encodeURIComponent(end) + extra;
+}
+</script>
 
 <?php if ($error): ?>
     <div class="alert error"><?= htmlspecialchars($error) ?></div>
@@ -91,16 +101,27 @@ $error = $data['error'] ?? null;
 
     <?php if (isset($result['securities']) && $report === 'heatmap'): ?>
         <div class="heat-grid">
-            <?php foreach ($result['securities'] as $sec): 
-                $max_mom = max(abs($sec['mom_1m']), 0.01);
-                $r = $sec['mom_1m'] > 0 ? min(255, 100 + intval(($sec['mom_1m'] / $max_mom) * 155)) : 80;
-                $g = $sec['mom_1m'] > 0 ? 80 : min(255, 100 + intval((abs($sec['mom_1m']) / $max_mom) * 155));
-                $b = 80;
+            <?php
+                $mom_values = array_column($result['securities'], 'mom_1m');
+                $abs_max = max(abs(max($mom_values)), abs(min($mom_values)), 0.01);
+            ?>
+            <?php foreach ($result['securities'] as $sec):
+                $mom = (float)($sec['mom_1m'] ?? 0);
+                $norm = $mom / $abs_max; // -1..1
+                if ($norm >= 0) {
+                    $r = min(255, 80 + intval($norm * 175));
+                    $g = min(255, 80 + intval($norm * 175));
+                    $b = 80;
+                } else {
+                    $r = 200;
+                    $g = 80;
+                    $b = min(255, 80 + intval(abs($norm) * 175));
+                }
             ?>
                 <div class="heat-cell" style="background:rgb(<?= $r ?>,<?= $g ?>,<?= $b ?>)">
                     <div class="heat-sym"><?= htmlspecialchars($sec['symbol']) ?></div>
-                    <div class="heat-mom"><?= htmlspecialchars($sec['mom_1m']) ?>%</div>
-                    <div class="heat-mv"><?= htmlspecialchars($sec['market_value']) ?></div>
+                    <div class="heat-mom"><?= number_format($mom, 1) ?>%</div>
+                    <div class="heat-mv">$<?= number_format($sec['market_value'] ?? 0, 0) ?></div>
                 </div>
             <?php endforeach; ?>
         </div>

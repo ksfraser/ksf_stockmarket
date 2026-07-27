@@ -1059,6 +1059,7 @@ class StockController {
             'quality_compounder' => ['label' => 'Quality Compunders', 'market' => 'america'],
             'value_stocks' => ['label' => 'Value Stocks (P/E <15)', 'market' => 'america'],
             'canadian_dividends' => ['label' => 'Canadian Dividends (Yield >3%)', 'market' => 'canada'],
+            'ai_stocks' => ['label' => 'AI & Semiconductors', 'market' => 'local'],
         ];
         
         if (!isset($presets[$preset])) {

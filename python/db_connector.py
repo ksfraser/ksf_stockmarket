@@ -142,12 +142,46 @@ def _init_config() -> None:
 
 
 def _connect_mysql() -> Any:
-    """Create a MySQL connection using mysql.connector."""
+    """Create a MySQL connection using mysql.connector with retry on timeout."""
     import mysql.connector
-    try:
-        return mysql.connector.connect(**{k: v for k, v in DB_CONFIG.items() if k != 'backend'})
-    except Exception as exc:
-        raise RuntimeError(f"MariaDB connection failed: {exc}") from exc
+    from mysql.connector import errors as mysql_errors
+
+    last_exc: Optional[Exception] = None
+    conn: Optional[Any] = None
+    for attempt in range(2):
+        try:
+            conn = mysql.connector.connect(
+                **{k: v for k, v in DB_CONFIG.items() if k != 'backend'}
+            )
+            try:
+                conn.ping(reconnect=True, attempts=3, delay=1)
+            except mysql_errors.OperationalError as ping_exc:
+                if attempt == 0:
+                    last_exc = ping_exc
+                    conn.close()
+                    conn = None
+                    continue
+                raise RuntimeError(
+                    f"MariaDB connection lost after reconnect attempt: {ping_exc}"
+                ) from ping_exc
+            return conn
+        except mysql_errors.OperationalError as op_exc:
+            if attempt == 0:
+                last_exc = op_exc
+                if conn:
+                    try:
+                        conn.close()
+                    except Exception:
+                        pass
+                conn = None
+                continue
+            raise RuntimeError(
+                f"MariaDB connection lost after reconnect attempt: {op_exc}"
+            ) from op_exc
+        except Exception as exc:
+            raise RuntimeError(f"MariaDB connection failed: {exc}") from exc
+
+    raise RuntimeError(f"MariaDB connection failed after reconnect: {last_exc}") from last_exc
 
 
 def get_connection():

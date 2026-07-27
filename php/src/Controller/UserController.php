@@ -39,6 +39,9 @@ class UserController {
         // Portfolio summary for My Dashboard
         $portfolioSummary = $this->getPortfolioSummary($pdo, $userId);
 
+        // TTWROR dashboard widget
+        $twror = $this->getTwrorWidget($pdo, $userId);
+
         return [
             'pageTitle' => 'My Dashboard',
             'template' => 'my_dashboard',
@@ -49,8 +52,40 @@ class UserController {
             'portfolio_movers' => $portfolioMovers,
             'portfolio_summary' => $portfolioSummary,
             'coverage' => $coverage,
+            'twror' => $twror,
             'user' => $this->currentUser,
         ];
+    }
+
+    private function getTwrorWidget(PDO $pdo, int $userId): array {
+        try {
+            $start = (new DateTime('-1 year'))->format('Y-m-d');
+            $end = date('Y-m-d');
+            $url = rtrim($_ENV['PYTHON_API_URL'] ?? 'http://localhost:5000', '/') .
+                "/api/reports/twror?start={$start}&end={$end}&user_id={$userId}";
+            $ctx = stream_context_create([
+                'http' => [
+                    'method' => 'GET',
+                    'header' => "X-API-Key: " . ($_ENV['PYTHON_API_KEY'] ?? 'dev_key_change_me') . "\r\n" .
+                                "X-User-Id: {$userId}\r\n",
+                    'timeout' => 10,
+                ]
+            ]);
+            $json = @file_get_contents($url, false, $ctx);
+            $data = json_decode($json, true);
+            if (is_array($data)) {
+                return [
+                    'twror' => $data['twror'] ?? null,
+                    'annualized' => $data['annualized'] ?? null,
+                    'years' => $data['years'] ?? null,
+                    'start' => $start,
+                    'end' => $end,
+                ];
+            }
+        } catch (Throwable $e) {
+            // ignore
+        }
+        return [];
     }
 
     /**

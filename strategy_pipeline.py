@@ -38,6 +38,8 @@ from pathlib import Path
 random.seed(42)
 np.random.seed(42)
 
+RESULTS_TABLE = "strategy_pipeline_results"
+
 # Use modular database connector
 sys.path.insert(0, '/home/ksf_stockmarket/ksf_stockmarket/python')
 from db_connector import get_connection
@@ -46,13 +48,14 @@ from db_connector import get_connection
 # DATA LOADING (reused from run_backtest_v2.py)
 # =========================================================================
 
-def load_prices(symbol, start, end):
-    conn = get_connection()
+def load_prices(symbol, start, end, conn=None):
+    if conn is None:
+        conn = get_connection()
     df = pd.read_sql_query("""
-        SELECT price_date, day_open as open, day_high as high,
-               day_low as low, day_close as close, volume
+        SELECT price_date, open as open, high as high,
+               low as low, close as close, volume
         FROM stockprices
-        WHERE symbol = ? AND price_date BETWEEN ? AND ?
+        WHERE symbol = %s AND price_date BETWEEN %s AND %s
         ORDER BY price_date
     """, conn, params=(symbol, start, end), parse_dates=['price_date'])
     # Note: get_connection() handles pooling, don't close
@@ -491,11 +494,11 @@ def run_backtest(df, signal_col, params, symbol):
     sharpe = (returns.mean() / returns.std() * np.sqrt(252)) if len(returns) > 1 and returns.std() > 0 else 0
 
     # Profit factor
-    gross_profit = sum(t['pnl'] for t in wins)
-    gross_loss = abs(sum(t['pnl'] for t in losses))
-    profit_factor = gross_profit / gross_loss if gross_loss > 0 else float('inf')
+    gross_profit = float(sum(t['pnl'] for t in wins))
+    gross_loss = float(abs(sum(t['pnl'] for t in losses)))
+    profit_factor = gross_profit / gross_loss if gross_loss > 0 else None
 
-    return {
+    result = {
         'symbol': symbol,
         'initial_cash': initial_cash,
         'final_value': round(final_value, 2),
@@ -506,10 +509,15 @@ def run_backtest(df, signal_col, params, symbol):
         'avg_win': round(avg_win, 2),
         'avg_loss': round(avg_loss, 2),
         'expectancy': round(expectancy, 2),
-        'profit_factor': round(profit_factor, 2),
+        'profit_factor': None if profit_factor is None else round(profit_factor, 2),
         'max_drawdown': round(max_dd, 2),
         'sharpe': round(sharpe, 3),
     }
+    # Sanitize inf/nan to None for DB safety
+    for k, v in list(result.items()):
+        if isinstance(v, float) and (v != v or v == float('inf') or v == float('-inf')):
+            result[k] = None
+    return result
 
 
 # =========================================================================
@@ -627,24 +635,28 @@ def run_combo_backtest(df, strategies, params, symbol):
     max_dd = max(((peak - v) / peak * 100 for v in equity if v < peak), default=0)
     returns = eq.pct_change().dropna()
     sharpe = (returns.mean() / returns.std() * np.sqrt(252)) if len(returns) > 1 and returns.std() > 0 else 0
-    gross_profit = sum(t['pnl'] for t in wins)
-    gross_loss = abs(sum(t['pnl'] for t in losses))
-    profit_factor = gross_profit / gross_loss if gross_loss > 0 else float('inf')
+    gross_profit = float(sum(t['pnl'] for t in wins))
+    gross_loss = float(abs(sum(t['pnl'] for t in losses)))
+    profit_factor = gross_profit / gross_loss if gross_loss > 0 else None
 
-    return {
+    res = {
         'symbol': symbol,
         'final_value': round(final_value, 2),
         'total_pnl': round(total_pnl, 2),
         'pnl_pct': round(pnl_pct, 2),
         'n_trades': n_trades,
-        'win_rate': round(win_rate * 100, 1),
+        'win_rate': round(win_rate * 100, 1) if n_trades else 0,
         'avg_win': round(avg_win, 2),
         'avg_loss': round(avg_loss, 2),
         'expectancy': round(expectancy, 2),
-        'profit_factor': round(profit_factor, 2),
+        'profit_factor': None if profit_factor is None else round(profit_factor, 2),
         'max_drawdown': round(max_dd, 2),
         'sharpe': round(sharpe, 3),
     }
+    for k, v in list(res.items()):
+        if isinstance(v, float) and (v != v or v == float('inf') or v == float('-inf')):
+            res[k] = None
+    return res
 
 
 # =========================================================================
@@ -697,13 +709,13 @@ def main():
     if args.symbols:
         symbols = [s.strip() for s in args.symbols.split(',')]
     else:
-        symbols = [r[0] for r in cursor.execute(
-            "SELECT DISTINCT symbol FROM stockprices ORDER BY symbol").fetchall()]
+        cursor.execute("SELECT DISTINCT symbol FROM stockprices ORDER BY symbol")
+        symbols = [r[0] for r in cursor.fetchall()]
 
     # Load data + compute indicators for all symbols (cache for reuse)
     symbol_data = {}
     for sym in symbols:
-        df = load_prices(sym, start_date, end_date)
+        df = load_prices(sym, start_date, end_date, conn=conn)
         if len(df) > 60:
             df = compute_indicators(df)
             symbol_data[sym] = df
@@ -723,31 +735,32 @@ def main():
     print()
 
     # Create results table in DB
-# Create results table in DB (MySQL compatible)
-    conn.execute(f"""
-        CREATE TABLE IF NOT EXISTS {RESULTS_TABLE} (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            run_timestamp DATETIME,
-            strategy VARCHAR(50),
-            combo_size INT DEFAULT 0,
-            combo_names VARCHAR(255),
-            params_json TEXT,
-            symbol VARCHAR(20),
-            initial_cash DOUBLE,
-            final_value DOUBLE,
-            total_pnl DOUBLE,
-            pnl_pct DOUBLE,
-            n_trades INT,
-            win_rate DOUBLE,
-            avg_win DOUBLE,
-            avg_loss DOUBLE,
-            expectancy DOUBLE,
-            profit_factor DOUBLE,
-            max_drawdown DOUBLE,
-            sharpe DOUBLE
-        ) ENGINE=InnoDB
-    """)
-    conn.commit()
+    # Create results table in DB (MySQL compatible)
+    with conn.cursor() as cur:
+        cur.execute(f"""
+            CREATE TABLE IF NOT EXISTS {RESULTS_TABLE} (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                run_timestamp DATETIME,
+                strategy VARCHAR(50),
+                combo_size INT DEFAULT 0,
+                combo_names VARCHAR(255),
+                params_json TEXT,
+                symbol VARCHAR(20),
+                initial_cash DOUBLE,
+                final_value DOUBLE,
+                total_pnl DOUBLE,
+                pnl_pct DOUBLE,
+                n_trades INT,
+                win_rate DOUBLE,
+                avg_win DOUBLE,
+                avg_loss DOUBLE,
+                expectancy DOUBLE,
+                profit_factor DOUBLE,
+                max_drawdown DOUBLE,
+                sharpe DOUBLE
+            ) ENGINE=InnoDB
+        """)
+        conn.commit()
 
     run_ts = pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')
     all_results = []
@@ -807,8 +820,9 @@ def main():
                     result['run_timestamp'] = run_ts
                     all_results.append(result)
 
-                    conn.execute(f"""
-                        INSERT INTO {RESULTS_TABLE}
+                    with conn.cursor() as cur:
+                        cur.execute(f"""
+                            INSERT INTO {RESULTS_TABLE}
                         (run_timestamp, strategy, combo_size, combo_names, params_json, symbol,
                          initial_cash, final_value, total_pnl, pnl_pct, n_trades, win_rate,
                          avg_win, avg_loss, expectancy, profit_factor, max_drawdown, sharpe)
@@ -841,6 +855,17 @@ def main():
                            'initial_cash': 100000, 'commission': 9.95,
                            'atr_stop': True, 'consensus_threshold': 0.5}
 
+        # Reconnect before Phase 2 - MySQL may have dropped after long Phase 1 idle
+        try:
+            conn.ping(reconnect=True, attempts=3, delay=1)
+            print('  DB reconnect/ping OK before Phase 2')
+        except Exception as exc:
+            print(f'  DB ping failed, reopening: {exc}')
+            conn.close()
+            from db_connector import get_connection
+            conn = get_connection()
+            print('  DB reopened before Phase 2')
+
         for combo_size in range(2, min(len(strat_names) + 1, 6)):
             print(f"\n  Combo size: {combo_size}")
             combos = list(itertools.combinations(strat_names, combo_size))
@@ -862,8 +887,9 @@ def main():
                         result['run_timestamp'] = run_ts
                         all_results.append(result)
 
-                        conn.execute(f"""
-                            INSERT INTO {RESULTS_TABLE}
+                        with conn.cursor() as cur:
+                            cur.execute(f"""
+                                INSERT INTO {RESULTS_TABLE}
                             (run_timestamp, strategy, combo_size, combo_names, params_json, symbol,
                              initial_cash, final_value, total_pnl, pnl_pct, n_trades, win_rate,
                              avg_win, avg_loss, expectancy, profit_factor, max_drawdown, sharpe)
@@ -877,7 +903,20 @@ def main():
                     except Exception as e:
                         print(f"    ERROR: {combo_str} / {sym}: {e}")
 
-                conn.commit()
+                try:
+                    conn.commit()
+                except Exception as commit_exc:
+                    print(f"  Phase 2 commit failed, reconnecting: {commit_exc}")
+                    try:
+                        conn.close()
+                    except Exception:
+                        pass
+                    from db_connector import get_connection
+                    conn = get_connection()
+                    try:
+                        conn.commit()
+                    except Exception as commit_exc2:
+                        print(f"  Phase 2 commit failed again: {commit_exc2}")
 
     conn.close()
 

@@ -2,7 +2,7 @@
 """
 parse_pdf_statement.py — CLI wrapper for the shared PDF parser module.
 
-Usage: python3 parse_pdf_statement.py <pdf_path> [--debug]
+Usage: python3 parse_pdf_statement.py <pdf_path> [--debug] [--force-ocr]
 
 Output: JSON to stdout
 """
@@ -18,17 +18,18 @@ from pdf_parser.parsers import parse_statement, extract_text
 
 def main():
     if len(sys.argv) < 2:
-        print(json.dumps({"error": "Usage: parse_pdf_statement.py <pdf_path> [--debug]"}))
+        print(json.dumps({"error": "Usage: parse_pdf_statement.py <pdf_path> [--debug] [--force-ocr]"}))
         sys.exit(1)
 
     pdf_path = sys.argv[1]
     debug_mode = '--debug' in sys.argv
+    force_ocr = '--force-ocr' in sys.argv
 
     if not os.path.exists(pdf_path):
         print(json.dumps({"error": f"File not found: {pdf_path}"}))
         sys.exit(1)
 
-    result = parse_statement(pdf_path, debug=debug_mode)
+    result = parse_statement(pdf_path, debug=debug_mode, force_ocr=force_ocr)
 
     # Write debug file if 0 transactions or debug mode
     if debug_mode or not result['transactions']:
@@ -49,7 +50,7 @@ def main():
                         f.write(sl + "\n")
                 # Also write full text
                 f.write("\n=== FULL TEXT ===\n")
-                text, _ = extract_text(pdf_path)
+                text, _ = extract_text(pdf_path, force_ocr=force_ocr)
                 f.write(text)
         except Exception:
             pass

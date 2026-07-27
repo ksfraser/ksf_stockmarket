@@ -37,6 +37,8 @@ $SAFETY_TOOLTIP = "Dividend Safety Score (0-100): Based on payout ratio, " .
         </select>
     </form>
 
+    <?php include $GLOBALS['APP_ROOT'] . '/templates/partials/trade_guidance.php'; ?>
+
     <!-- Summary stats -->
     <div class="stats-grid" style="margin-bottom:20px">
         <div class="stat-card">
@@ -65,6 +67,10 @@ $SAFETY_TOOLTIP = "Dividend Safety Score (0-100): Based on payout ratio, " .
             </div>
             <div class="stat-label">Annualized Return</div>
         </div>
+        <div class="stat-card">
+            <div class="stat-value">$<?php echo number_format((float)($available_cash ?? 0), 2); ?></div>
+            <div class="stat-label">Available Cash (T+2)</div>
+        </div>
     </div>
 
     <table>
@@ -86,6 +92,8 @@ $SAFETY_TOOLTIP = "Dividend Safety Score (0-100): Based on payout ratio, " .
                 <th>Div Yield</th>
                 <th>Cost Yield</th>
                 <th>Safety</th>
+                <th>Taxonomies</th>
+                <th>Settlement</th>
             </tr>
         </thead>
         <tbody>
@@ -98,7 +106,7 @@ $SAFETY_TOOLTIP = "Dividend Safety Score (0-100): Based on payout ratio, " .
             $allocPct = $totalValue > 0 ? ($currentValue / $totalValue) * 100 : 0;
             $costAllocPct = $totalCost > 0 ? ($costTotal / $totalCost) * 100 : 0;
             $pe = $h['pe'] ?? null;
-            $divYield = $h['div_yield'] !== null ? $h['div_yield'] : null;
+            $divYield = $h['div_yield'] ?? null;
             $costBasisDivYield = $h['cost_basis_div_yield'] ?? null;
             $safety = $h['dividend_safety']['score'] ?? null;
             $safetyRating = $h['dividend_safety']['rating'] ?? null;
@@ -109,6 +117,8 @@ $SAFETY_TOOLTIP = "Dividend Safety Score (0-100): Based on payout ratio, " .
             $atr14 = $h['atr_14'] ?? null;
             $atrMult = $h['atr_multiplier'] ?? 2.0;
             $strategy = $h['strategy'] ?? 'Trailing Stop';
+            $taxonomies = $h['taxonomies'] ?? [];
+            $settlementDate = $h['settlement_date'] ?? null;
 
             // Stop color: green=safe, yellow=within 2%, red=breach
             $stopColor = $stopStatus === 'breach' ? 'var(--red)' : ($stopStatus === 'warning' ? 'var(--yellow)' : 'var(--green)');
@@ -157,17 +167,25 @@ $SAFETY_TOOLTIP = "Dividend Safety Score (0-100): Based on payout ratio, " .
                         </span>
                     <?php else: ?>—<?php endif; ?>
                 </td>
+                <td style="font-size:0.82em">
+                    <?php if (!empty($taxonomies)): ?>
+                        <?php foreach ($taxonomies as $tag): ?>
+                            <span style="display:inline-block;background:var(--bg3);color:var(--text);padding:2px 8px;border-radius:12px;font-size:0.75em;margin:2px 2px 2px 0;border:1px solid var(--border)"><?= htmlspecialchars($tag) ?></span>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </td>
+                <td class="r"><?= $settlementDate ? htmlspecialchars($settlementDate) : '—' ?></td>
             </tr>
         <?php endforeach; ?>
         </tbody>
         <tfoot>
             <tr style="font-weight:700; background:var(--bg3)">
-                <td colspan="5">TOTAL</td>
+                <td colspan="7">TOTAL</td>
                 <td class="r">$<?= number_format($totalValue, 2) ?></td>
                 <td class="r <?= $totalPnl >= 0 ? 'pnl-positive' : 'pnl-negative' ?>"><?= $totalPnl >= 0 ? '+' : '' ?>$<?= number_format($totalPnl, 2) ?></td>
                 <td class="r <?= $totalPnlPct >= 0 ? 'pnl-positive' : 'pnl-negative' ?>"><?= fmt_pct($totalPnlPct) ?></td>
                 <td class="r <?= $totalAnnPnlPct >= 0 ? 'pnl-positive' : 'pnl-negative' ?>"><?= $totalAnnPnlPct >= 0 ? '+' : '' ?><?= number_format($totalAnnPnlPct, 1) ?>%</td>
-                <td colspan="6"></td>
+                <td colspan="8"></td>
             </tr>
         </tfoot>
     </table>

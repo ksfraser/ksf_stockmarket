@@ -832,6 +832,12 @@ class StockController {
         $stmt->execute($params);
         $holdings = $stmt->fetchAll();
 
+        // Taxonomy assignments per user
+        $taxonomies = [];
+        if ($user_id > 0) {
+            $taxonomies = $this->getTaxonomyAssignmentsForUser($user_id);
+        }
+
         $fctrl = new FundamentalsController();
 
         $totalCost = 0;
@@ -909,9 +915,58 @@ class StockController {
             $h['stop_status'] = $stopStatus;
             $h['strategy'] = $strategy;
             $h['atr_multiplier'] = $atrMultiplier;
+            $h['taxonomies'] = $taxonomies[$symbol] ?? [];
+            $h['settlement_date'] = $settlementMap[$symbol] ?? null;
 
             $totalCost += $costTotal;
             $totalValue += $currentValue;
+        }
+
+        // T+2 settlement latest transaction per symbol
+        $settlementMap = [];
+        if ($user_id > 0 && !empty($holdings)) {
+            $symbols = array_column($holdings, 'symbol');
+            $in = implode(',', array_fill(0, count($symbols), '?'));
+            $stmt = $this->pdo->prepare("
+                SELECT symbol, MAX(settlement_date) as settlement_date
+                FROM transactions
+                WHERE user_id = :uid
+                  AND symbol IN ($in)
+                  AND settlement_date IS NOT NULL
+                GROUP BY symbol
+            ");
+            $stmt->execute(array_merge([':uid' => $user_id], $symbols));
+            foreach ($stmt->fetchAll() as $row) {
+                $settlementMap[$row['symbol']] = $row['settlement_date'];
+            }
+        }
+
+        // Available cash = all cash movements (BUY/SELL/DEPOSIT/WITHDRAWAL/etc.)
+        // on the portfolio + accrual accounts that have settled (date <= today)
+        $availableCash = 0.0;
+        if ($user_id > 0) {
+            $stmt = $this->pdo->prepare("
+                SELECT COALESCE(SUM(
+                    CASE type
+                        WHEN 'BUY' THEN -amount
+                        WHEN 'SELL' THEN amount
+                        WHEN 'DEPOSIT' THEN amount
+                        WHEN 'WITHDRAWAL' THEN -amount
+                        WHEN 'DIVIDEND' THEN amount
+                        WHEN 'INTEREST_CHARGE' THEN -amount
+                        WHEN 'TAX' THEN -amount
+                        WHEN 'DELIVERY' THEN -amount
+                        ELSE 0
+                    END
+                ), 0) as cash
+                FROM transactions
+                WHERE user_id = :uid
+                  AND account_type IN ('portfolio','accrual')
+                  AND symbol = 'CASH'
+                  AND date <= CURRENT_DATE()
+            ");
+            $stmt->execute([':uid' => $user_id]);
+            $availableCash = (float)($stmt->fetchColumn() ?: 0);
         }
 
         $totalPnl = $totalValue - $totalCost;
@@ -939,6 +994,9 @@ class StockController {
             'total_annualized_pnl_pct' => $totalAnnualizedPnlPct,
             'account_filter' => $account_filter,
             'account_types' => array_unique(array_column($holdings, 'account_type')),
+            'taxonomies' => array_values($taxonomies),
+            'settlement_dates' => $settlementMap,
+            'available_cash' => $availableCash,
         ];
     }
 
@@ -959,6 +1017,22 @@ class StockController {
         
         if (!$row) return [];
         return json_decode($row['data'] ?: $row[0], true) ?: [];
+    }
+
+    private function getTaxonomyAssignmentsForUser(int $user_id): array {
+        $stmt = $this->pdo->prepare("
+            SELECT ta.symbol, GROUP_CONCAT(t.name ORDER BY t.name SEPARATOR ', ') as taxonomy_names
+            FROM taxonomy_assignments ta
+            JOIN taxonomies t ON t.id = ta.taxonomy_id
+            WHERE ta.user_id = :uid
+            GROUP BY ta.symbol
+        ");
+        $stmt->execute([':uid' => $user_id]);
+        $map = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $map[$row['symbol']] = explode(', ', $row['taxonomy_names']);
+        }
+        return $map;
     }
 
     private function refreshIndicatorsJsonIfStale(string $symbol): void {
@@ -1558,6 +1632,7 @@ class StockController {
             'zacks' => ['label' => 'Zacks-Style Composite', 'market' => 'local'],
             'vectorvest' => ['label' => 'VectorVest Safe Stock', 'market' => 'local'],
             'exit_risk' => ['label' => 'Low Exit Risk', 'market' => 'local'],
+            'ai_stocks' => ['label' => 'AI & Semiconductors', 'market' => 'local'],
         ];
         
         if (!isset($presets[$preset])) {

@@ -7,6 +7,7 @@ Writes to tradingview_screener_results with preset names:
   - zacks
   - vectorvest
   - exit_risk
+  - ai_stocks
 
 Each row JSON includes `score`, `checks`, and supporting metrics.
 """
@@ -500,6 +501,65 @@ def calc_exit_risk(f: dict[str, Any] | None, ind: dict[str, Any] | None, close: 
     }
 
 
+AI_SYMBOLS = {
+    "AMZN","GOOGL","MSFT","NVDA","AMD","MU","AVGO","MRVL","ADI","TXN","NXPI","QCOM","SMCI","PLTR","AI","SOUN",
+    "INTC","STX","WDC"
+}
+AI_KEYWORDS = ["artificial intelligence", "ai ", "semiconductor", "chip", "gpu", "data center", "cloud", "software"]
+
+
+def calc_ai(symbol: str, f: dict[str, Any] | None, ind: dict[str, Any] | None, close: float = 0) -> dict[str, Any]:
+    checks: dict[str, Any] = {}
+    score = 0
+    max_score = 0
+
+    in_universe = symbol in AI_SYMBOLS
+    checks["ai_universe"] = {"passed": in_universe, "label": "Known AI/Semi Symbol", "detail": symbol}
+    max_score += 25
+    if in_universe:
+        score += 25
+
+    sector = (f.get("industry") or f.get("sector") or "").lower() if f else ""
+    sector_match = any(k in sector for k in ["technology", "software", "semiconductor", "computer", "internet"])
+    checks["sector_match"] = {"passed": sector_match, "label": "Tech/Semi Sector", "detail": sector or "N/A"}
+    max_score += 25
+    if sector_match:
+        score += 25
+
+    mcap = 0
+    try:
+        mcap = float(f.get("market_cap") or 0)
+    except (TypeError, ValueError):
+        pass
+    large = mcap >= 50_000_000_000
+    checks["large_cap"] = {"passed": large, "label": "Large Cap ($50B+)", "detail": f"${mcap/1e9:.1f}B"}
+    max_score += 25
+    if large:
+        score += 25
+    elif mcap >= 10_000_000_000:
+        score += 15
+        checks["large_cap"]["detail"] = f"${mcap/1e9:.1f}B (mid-large)"
+
+    eg = 0
+    try:
+        eg = float(f.get("earnings_growth") or f.get("revenue_growth") or 0)
+    except (TypeError, ValueError):
+        pass
+    positive = eg > 0
+    checks["growth_positive"] = {"passed": positive, "label": "Earnings Growth > 0", "detail": f"{eg:.1%}" if positive else f"{eg:.1%}"}
+    max_score += 25
+    if positive:
+        score += 25
+
+    return {
+        "score": score,
+        "checks": checks,
+        "symbol": symbol,
+        "sector": f.get("sector") if f else None,
+        "market_cap": mcap,
+    }
+
+
 def store(preset: str, market: str, symbol: str, payload: dict[str, Any]) -> None:
     db = get_connection()
     cur = db.cursor(dictionary=True)
@@ -538,6 +598,7 @@ def run() -> None:
         zacks = calc_zacks(f, ind, close)
         vectorvest = calc_vectorvest(symbol)
         exit_risk = calc_exit_risk(f, ind, close)
+        ai = calc_ai(symbol, f, ind, close)
 
         buffett_payload = {
             "score": buffett.get("total"),
@@ -576,16 +637,24 @@ def run() -> None:
             "n_signals_total": exit_risk.get("n_signals_total", 0),
             "symbol": symbol,
         }
+        ai_payload = {
+            "score": ai.get("score"),
+            "checks": ai.get("checks", {}),
+            "symbol": symbol,
+            "sector": ai.get("sector"),
+            "market_cap": ai.get("market_cap"),
+        }
 
         store("buffett", MARKET, symbol, buffett_payload)
         store("zacks", MARKET, symbol, zacks_payload)
         store("vectorvest", MARKET, symbol, vv_payload)
         store("exit_risk", MARKET, symbol, exit_payload)
+        store("ai_stocks", MARKET, symbol, ai_payload)
         count += 1
         if count % 100 == 0:
             print(f"  processed {count}/{len(symbols)}...")
 
-    print(f"Done. Populated ratings for {count} symbols across 4 presets.")
+    print(f"Done. Populated ratings for {count} symbols across 5 presets.")
 
 
 if __name__ == "__main__":

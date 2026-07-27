@@ -305,6 +305,7 @@ def compute_for_symbol(symbol, rows):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--symbols', default='ALL')
+    parser.add_argument('--limit', type=int, default=0, help='Max symbols to process in this run')
     parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
 
@@ -386,6 +387,8 @@ def main():
         c.execute(f"SELECT DISTINCT symbol FROM stockprices WHERE symbol IN ({placeholders}) ORDER BY symbol", syms)
 
     symbols = [r['symbol'] for r in c.fetchall()]
+    if args.limit:
+        symbols = symbols[:args.limit]
     print(f"Computing 120 indicators for {len(symbols)} symbols...")
 
     total_rows = 0

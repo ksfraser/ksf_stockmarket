@@ -321,3 +321,44 @@ The worker shells out to `fetch_prices.py` and returns HTTP status.
 
 ### 9.4 Container Deployment (optional)
 `ksf_Infrastructure` defines an optional service `stockmarket-python-worker` on profile `stockmarket`. Enable via Ansible with `enable_stockmarket_python_worker=true` or via Podman Compose with `--profile stockmarket`.
+
+## 10. Methodology Alignment (BABOK / PMBOK)
+
+### 10.1 Knowledge Area Mapping
+
+| System Capability | BABOK Knowledge Area | PMBOK Process Group | Primary Artifacts |
+|-------------------|---------------------|---------------------|-------------------|
+| Portfolio tracking + taxonomies | Business Analysis Planning and Monitoring, Requirements Analysis | Planning, Executing | `requirements-specification.md`, `traceability-matrix.md`, `architecture-document.md` |
+| Advisor hiring + recommendations | Requirements Analysis, Solution Evaluation | Planning, Executing, Monitoring | `business-requirements.md`, `solution-design.md`, advisor migrations/backends |
+| T+2 settlement + cash flow | Requirements Analysis, Solution Assessment and Validation | Executing, Monitoring and Controlling | `strategy_pipeline.py`, `runner.py`, `rules_backtest.py` |
+| Optional risk rules (leverage/buffer/blacklist) | Requirements Analysis, Solution Evaluation | Planning, Executing | `strategy_rules` schema seeds, `AdminSettingsController` |
+| ATR trailing stops + backtest | Requirements Analysis, Solution Assessment and Validation | Planning, Executing | `risk.py`, `rules_backtest.py`, `atr_methodology.php` |
+| Multi-gateway delivery (email/Discord/WhatsApp) | Requirements Analysis, Solution Evaluation | Executing, Monitoring and Controlling | `advisor_notifier.py`, `AdvisorNotificationController` |
+| Heat maps + performance reports | Requirements Analysis, Solution Assessment and Validation | Planning, Executing | `performance.py`, `reports.php` template |
+| Rebalancing workflows | Requirements Analysis, Solution Evaluation | Planning, Executing | `rebalancing.py`, `RebalancingController` |
+
+### 10.2 BABOK Alignment Summary
+
+- **Strategy Analysis**: requirements/BRD, stakeholder elicitation captured in `business-requirements.md` BR-1..BR-8.
+- **Requirements Analysis**: formalized in `requirements-specification.md` with FR/NFR IDs aligned to BR traceability.
+- **Solution Assessment and Validation**: ATR methodology, backtest results, and T+2 settlement validation feed acceptance criteria.
+- **Business Analysis Planning and Monitoring**: documentation versioning, change log, traceability matrix maintained in `docs/`.
+
+### 10.3 PMBOK Alignment Summary
+
+- **Scope Management**: PortfolioPerformance parity target list = formal scope baseline; traceability matrix links requirements to design and tests.
+- **Schedule Management**: nightly cron, weekly backtest cadence, and advisor daily signal cadence modeled as scheduled deliverables.
+- **Cost Management**: backtest simulation validates capital-at-risk rules before live deployment.
+- **Quality Management**: validation scripts (`validate_t2_settlement.py`), syntax checks, and schema migrations enforce build quality.
+- **Risk Management**: emergency buffer, leverage/margin rules, and ATR stops are formal risk response strategies.
+
++### 10.4 Supporting Diagrams
+
++Architecture UML views are in `docs/methodology/uml/`:
++- `deployment.puml` — deployment context
++- `class.puml` — core class diagram
++- `sequence.puml` — advisor recommendation sequence
++- `state.puml` — alert lifecycle state machine
++- `activity.puml` — daily run activity flow
++
++All diagrams map to the knowledge areas and process groups above.

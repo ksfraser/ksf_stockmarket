@@ -38,13 +38,13 @@ def load_symbols_prioritized() -> list[str]:
                 ordered.append(sym)
 
     cur.execute("SELECT DISTINCT symbol FROM portfolio WHERE symbol IS NOT NULL AND symbol <> ''")
-    add([r["symbol"] for r in cur.fetchall()])
+    add([r[0] for r in cur.fetchall()])
 
     cur.execute("SELECT DISTINCT symbol FROM tradingview_screener_results WHERE symbol IS NOT NULL AND symbol <> ''")
-    add([r["symbol"] for r in cur.fetchall()])
+    add([r[0] for r in cur.fetchall()])
 
     cur.execute("SELECT symbol FROM fundamentals GROUP BY symbol ORDER BY COUNT(*) DESC")
-    add([r["symbol"] for r in cur.fetchall()])
+    add([r[0] for r in cur.fetchall()])
 
     cur.close()
     db.close()

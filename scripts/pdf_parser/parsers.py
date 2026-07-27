@@ -16,11 +16,19 @@ import sys
 from datetime import datetime
 from typing import Optional
 
+# Load project .env for OCR/config overrides
+try:
+    from dotenv import load_dotenv
+    _here = os.path.dirname(os.path.abspath(__file__))
+    load_dotenv(os.path.join(_here, "..", "config", ".env"))
+except Exception:
+    pass
+
 
 # ── Text extraction ──────────────────────────────────────────────────────
 
-def extract_text(pdf_path: str) -> tuple[str, int]:
-    """Extract text from PDF using pymupdf (fitz)."""
+def extract_text(pdf_path: str, force_ocr: bool = False) -> tuple[str, int]:
+    """Extract text from PDF using pymupdf (fitz), with optional OCR fallback."""
     import fitz
     doc = fitz.open(pdf_path)
     text = ""
@@ -28,7 +36,33 @@ def extract_text(pdf_path: str) -> tuple[str, int]:
         text += page.get_text("text")
     pages = len(doc)
     doc.close()
+
+    if not text.strip() or force_ocr:
+        text = ocr_pdf(pdf_path) or text
+
     return text, pages
+
+
+def ocr_pdf(pdf_path: str) -> str:
+    """OCR fallback via configured OCR API."""
+    import os
+    import requests
+    host = os.getenv("OCR_HOST", "192.168.1.102")
+    port = os.getenv("OCR_PORT", "8082")
+    api_path = os.getenv("OCR_API_PATH", "/ocr")
+    timeout = int(os.getenv("OCR_TIMEOUT", "60"))
+    url = f"http://{host}:{port}{api_path}"
+    try:
+        with open(pdf_path, "rb") as fh:
+            files = {"file": (os.path.basename(pdf_path), fh, "application/pdf")}
+            resp = requests.post(url, files=files, timeout=timeout)
+        if resp.status_code == 200:
+            data = resp.json() if "json" in resp.headers.get("content-type", "") else {}
+            text = data.get("text") or data.get("data") or resp.text
+            return text if isinstance(text, str) else ""
+    except Exception:
+        pass
+    return ""
 
 
 # ── Format detection ──────────────────────────────────────────────────────
@@ -481,7 +515,7 @@ PARSERS = {
 }
 
 
-def parse_statement(pdf_path: str, debug: bool = False) -> dict:
+def parse_statement(pdf_path: str, debug: bool = False, force_ocr: bool = False) -> dict:
     """
     Parse a brokerage PDF statement and return structured data.
 
@@ -495,7 +529,7 @@ def parse_statement(pdf_path: str, debug: bool = False) -> dict:
             'suspicious_lines': [...], (only if debug or 0 transactions)
         }
     """
-    text, pages = extract_text(pdf_path)
+    text, pages = extract_text(pdf_path, force_ocr=force_ocr)
     fmt = detect_format(text)
     account = extract_account_type(text)
 

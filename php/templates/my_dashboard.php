@@ -10,6 +10,7 @@ $movers = $data['portfolio_movers'] ?? ['gainers' => [], 'losers' => []];
 $coverage = $data['coverage'] ?? ['total' => 0, 'with_prices' => 0, 'with_indicators' => 0, 'total_rows' => 0];
 $settings = $data['settings'] ?? [];
 $portfolioSummary = $data['portfolio_summary'] ?? null;
+$twror = $data['twror'] ?? [];
 ?>
 
 <!-- Portfolio Summary (User's Holdings) -->
@@ -51,6 +52,38 @@ $portfolioSummary = $data['portfolio_summary'] ?? null;
         <div class="stat-card">
             <div class="stat-value" style="font-size:1.1em;"><?php echo number_format($portfolioSummary['worst_pnl_pct'] ?? 0, 1); ?>%</div>
             <div class="stat-label">Worst Performer</div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if (!empty($twror)): ?>
+<div class="card" style="border-color:var(--accent);">
+    <div class="card-header">&#x1F4C8; TTWROR (Trailing 12 Months)</div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value <?php echo ($twror['twror'] ?? 0) >= 0 ? 'pnl-positive' : 'pnl-negative'; ?>">
+                <?php echo ($twror['twror'] ?? 0) >= 0 ? '+' : ''; ?><?php echo number_format($twror['twror'] ?? 0, 2); ?>%
+            </div>
+            <div class="stat-label">TTWROR</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value <?php echo ($twror['annualized'] ?? 0) >= 0 ? 'pnl-positive' : 'pnl-negative'; ?>">
+                <?php echo ($twror['annualized'] ?? 0) >= 0 ? '+' : ''; ?><?php echo number_format($twror['annualized'] ?? 0, 2); ?>%
+            </div>
+            <div class="stat-label">Annualized</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="font-size:1.1em;"><?php echo number_format($twror['years'] ?? 0, 2); ?></div>
+            <div class="stat-label">Period (yrs)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="font-size:1.1em;"><?= htmlspecialchars($twror['start'] ?? '') ?></div>
+            <div class="stat-label">Start</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" style="font-size:1.1em;"><?= htmlspecialchars($twror['end'] ?? '') ?></div>
+            <div class="stat-label">End</div>
         </div>
     </div>
 </div>

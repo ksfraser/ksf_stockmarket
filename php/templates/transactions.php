@@ -57,6 +57,11 @@ $discrepancies = $data['holding_discrepancies'] ?? [];
                 <option value="SELL" <?php echo ($txnForm['type'] ?? '') === 'SELL' ? 'selected' : ''; ?>>SELL</option>
                 <option value="DIVIDEND" <?php echo ($txnForm['type'] ?? '') === 'DIVIDEND' ? 'selected' : ''; ?>>DIVIDEND</option>
                 <option value="SPLIT" <?php echo ($txnForm['type'] ?? '') === 'SPLIT' ? 'selected' : ''; ?>>SPLIT</option>
+                <option value="DEPOSIT" <?php echo ($txnForm['type'] ?? '') === 'DEPOSIT' ? 'selected' : ''; ?>>DEPOSIT</option>
+                <option value="WITHDRAWAL" <?php echo ($txnForm['type'] ?? '') === 'WITHDRAWAL' ? 'selected' : ''; ?>>WITHDRAWAL</option>
+                <option value="DELIVERY" <?php echo ($txnForm['type'] ?? '') === 'DELIVERY' ? 'selected' : ''; ?>>DELIVERY</option>
+                <option value="TAX" <?php echo ($txnForm['type'] ?? '') === 'TAX' ? 'selected' : ''; ?>>TAX</option>
+                <option value="INTEREST_CHARGE" <?php echo ($txnForm['type'] ?? '') === 'INTEREST_CHARGE' ? 'selected' : ''; ?>>INTEREST_CHARGE</option>
             </select>
         </div>
         <div>

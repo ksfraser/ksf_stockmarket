@@ -148,6 +148,31 @@ class AdvisorExecutor:
                 continue
 
             if not signals:
+                # Force-exit all stale positions when advisor returns empty signals
+                target_symbols = set()
+                for sym in list(positions.keys()):
+                    if sym in target_symbols:
+                        continue
+                    pos = positions[sym]
+                    price = self._get_price(db, sym, current_date)
+                    if not price or price <= 0:
+                        continue
+                    qty = pos.shares
+                    proceeds = qty * price - self.commission
+                    pnl = proceeds - (qty * pos.cost_basis)
+                    cash += proceeds
+                    trades.append(Trade(
+                        symbol=sym,
+                        trade_type="SELL",
+                        trade_date=current_date,
+                        price=price,
+                        quantity=qty,
+                        commission=self.commission,
+                        total_cost=-proceeds,
+                        pnl=pnl,
+                        signal_reasons="rebalance_out",
+                    ))
+                    del positions[sym]
                 history.append(self._snapshot(db, current_date, cash, positions))
                 continue
 

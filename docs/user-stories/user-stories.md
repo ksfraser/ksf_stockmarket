@@ -131,6 +131,21 @@
 - [ ] Creates FA revaluation journal entry
 - [ ] Shows before/after comparison
 
+## Valuation
+
+### US-DCF-001: Run DCF Valuation on Stock Detail Page
+**As an** analyst
+**I want to** run a DCF valuation on a symbol from the stock detail page
+**So that** I can evaluate the intrinsic value of a stock using the CFI 8-step DCF framework
+
+**Acceptance Criteria:**
+- [ ] DCF "Intrinsic Value" button available on stock detail page
+- [ ] Model runs using CFI 8-step DCF process (cfi-dcf-methodology.md)
+- [ ] Inputs editable: revenue growth, margin ramp, WACC, terminal growth
+- [ ] Outputs: Equity Value, EV, intrinsic value per share, sensitivity table
+- [ ] Results cached for 24h; refresh button available
+- [ ] Links to valuation approach comparison from cfi-reference.md
+
 ## Administration
 
 ### US-12: Manage Users

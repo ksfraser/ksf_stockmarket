@@ -281,6 +281,67 @@ class StockController {
         $closePrice = $latest['close'] ?? 0;
         $buffettScore = $this->calcBuffettScore($fundamentals, $indicators, $closePrice);
 
+        // ---- WealthSystem methodology deep-dive data ----
+        // Buffett tenets (DB rows, fallback NULL arrays)
+        $buffettTenets = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM tenets WHERE symbol = :sym LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $buffettTenets = $stmt->fetch() ?: [];
+        } catch (\Exception $e) {}
+
+        // Motley Fool criteria (DB rows)
+        $mfCriteria = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM motleyfool WHERE symbol = :sym LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $mfCriteria = $stmt->fetch() ?: [];
+        } catch (\Exception $e) {}
+
+        // Evaluation breakdowns (latest by symbol)
+        $evalBusiness = $this->getLatestRow('evalbusiness', 'symbol', $symbol);
+        $evalFinancial = $this->getLatestRow('evalfinancial', 'symbol', $symbol);
+        $evalManagement = $this->getLatestRow('evalmanagement', 'symbol', $symbol);
+        $evalMarket = $this->getLatestRow('evalmarket', 'symbol', $symbol);
+        $evalSummary = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM evalsummary WHERE symbol = :sym LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $evalSummary = $stmt->fetch() ?: [];
+        } catch (\Exception $e) {}
+
+        // IPlace calc (latest)
+        $iplaceCalc = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM iplace_calc WHERE symbol = :sym ORDER BY date_calculated DESC LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $iplaceCalc = $stmt->fetch() ?: [];
+        } catch (\Exception $e) {}
+
+        // LLM qualitative analysis (latest by symbol)
+        $llmAnalysis = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM llm_analysis WHERE symbol = :sym ORDER BY analysis_date DESC LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $llmAnalysis = $stmt->fetch() ?: [];
+        } catch (\Exception $e) {}
+
+        // Stock fundamentals (if table exists)
+        $stockFundamentals = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM stock_fundamentals WHERE symbol = :sym LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $stockFundamentals = $stmt->fetch() ?: [];
+        } catch (\Exception $e) {}
+
+        // Technical indicators time-series (latest 30)
+        $taHistory = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM stock_technical_indicators WHERE symbol = :sym ORDER BY date DESC LIMIT 30");
+            $stmt->execute([':sym' => $symbol]);
+            $taHistory = array_reverse($stmt->fetchAll());
+        } catch (\Exception $e) {}
+
         // Zacks-style composite score
         $zacksScore = $this->calcZacksStyleScore($fundamentals, $indicators, $closePrice);
 

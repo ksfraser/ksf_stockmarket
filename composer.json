@@ -3,11 +3,18 @@
     "description": "Stock market analysis tool - portfolio tracking, backtesting, technical analysis",
     "type": "project",
     "license": "proprietary",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ksfraser/ksfraser-financial-models"
+        }
+    ],
     "require": {
         "php": "^8.1",
         "ext-pdo": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
+        "ksfraser/financial-models": "dev-main",
         "monolog/monolog": "^3.0",
         "vlucas/phpdotenv": "^5.5",
         "twig/twig": "^3.0"

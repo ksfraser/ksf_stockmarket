@@ -375,6 +375,14 @@ class StockController {
         $result['dividend_safety'] = $result['dividendSafety'];
         $result['exit_signals'] = $result['exitSignals'] ?? [];
         $result['vectorvest'] = $result['vectorVest'] ?? [];
+
+        // WealthSystem detail payloads (may be empty on first run)
+        $wsDetail = $this->loadWealthSystemDetail($symbol);
+        $result['ws_fundamentals'] = $wsDetail['fundamentals'] ?? [];
+        $result['ws_indicators'] = $wsDetail['indicators'] ?? [];
+        $result['ws_llm_analysis'] = $wsDetail['llm_analysis'] ?? [];
+        $result['ws_evaluations'] = $wsDetail['evaluations'] ?? [];
+
         return $result;
     }
 
@@ -1803,5 +1811,127 @@ class StockController {
             'current_sector' => $sector ?? '',
             'current_sort' => $sort ?? '',
         ];
+    }
+
+    /** Load WealthSystem detail payload for a single symbol. */
+    public function loadWealthSystemDetail(string $symbol): array
+    {
+        $symbol = strtoupper($symbol);
+
+        $this->ensureTables(['stock_fundamentals']);
+
+        $stmt = $this->pdo->prepare('SELECT * FROM stock_fundamentals WHERE symbol = :sym LIMIT 1');
+        $stmt->execute([':sym' => $symbol]);
+        $fundamentals = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        $stmt = $this->pdo->prepare('SELECT * FROM stock_technical_indicators WHERE symbol = :sym ORDER BY date DESC LIMIT 1');
+        $stmt->execute([':sym' => $symbol]);
+        $indicators = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        $stmt = $this->pdo->prepare('SELECT * FROM llm_analysis WHERE symbol = :sym ORDER BY analyzed_at DESC LIMIT 1');
+        $stmt->execute([':sym' => $symbol]);
+        $llm = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        $stmt = $this->pdo->prepare('SELECT eval_type, domain, score, max_score, grade, note FROM evaluation_scores WHERE symbol = :sym');
+        $stmt->execute([':sym' => $symbol]);
+        $evals = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $evals[$row['eval_type']][$row['domain']] = $row;
+        }
+
+        return [
+            'symbol' => $symbol,
+            'fundamentals' => $fundamentals,
+            'indicators' => $indicators,
+            'llm_analysis' => $llm,
+            'evaluations' => $evals,
+        ];
+    }
+
+    /** Persist WealthSystem LLM qualitative text. */
+    public function saveLlmAnalysis(string $symbol, ?string $text, ?string $summary, ?string $modelUsed = null, string $editor = 'ui'): bool
+    {
+        $symbol = strtoupper($symbol);
+        $this->ensureTables(['llm_analysis']);
+
+        $stmt = $this->pdo->prepare('
+            INSERT INTO llm_analysis (symbol, analysis_text, summary, model_used, created_by, updated_at, analyzed_at)
+            VALUES (:sym, :text, :summary, :model, :editor, NOW(), NOW())
+            ON DUPLICATE KEY UPDATE
+                analysis_text = VALUES(analysis_text),
+                summary = VALUES(summary),
+                model_used = VALUES(model_used),
+                updated_at = VALUES(updated_at),
+                created_by = VALUES(created_by)
+        ');
+        return $stmt->execute([
+            ':sym' => $symbol,
+            ':text' => $text,
+            ':summary' => $summary,
+            ':model' => $modelUsed,
+            ':editor' => $editor,
+        ]);
+    }
+
+    /** Persist WealthSystem evaluation scores snapshot. */
+    public function saveEvaluationScores(string $symbol, array $scores, ?string $editor = 'ui'): bool
+    {
+        $symbol = strtoupper($symbol);
+        $this->ensureTables(['evaluation_scores']);
+
+        $rows = [];
+        foreach ($scores as $type => $domains) {
+            foreach ($domains as $domain => $row) {
+                $rows[] = [
+                    ':sym' => $symbol,
+                    ':etype' => $type,
+                    ':domain' => $domain,
+                    ':score' => (int)($row['score'] ?? 0),
+                    ':max' => (int)($row['max'] ?? 100),
+                    ':grade' => (string)($row['grade'] ?? 'F'),
+                    ':note' => (string)($row['note'] ?? ''),
+                    ':editor' => $editor,
+                ];
+            }
+        }
+        if (!$rows) return true;
+
+        $this->pdo->beginTransaction();
+        try {
+            $stmt = $this->pdo->prepare('
+                INSERT INTO evaluation_scores (symbol, eval_type, domain, score, max_score, grade, note, created_by, updated_at)
+                VALUES (:sym, :etype, :domain, :score, :max, :grade, :note, :editor, NOW())
+                ON DUPLICATE KEY UPDATE
+                    score = VALUES(score),
+                    max_score = VALUES(max_score),
+                    grade = VALUES(grade),
+                    note = VALUES(note),
+                    updated_at = VALUES(updated_at),
+                    created_by = VALUES(created_by)
+            ');
+            foreach ($rows as $r) {
+                $stmt->execute([
+                    ':sym' => $r[':sym'],
+                    ':etype' => $r[':etype'],
+                    ':domain' => $r[':domain'],
+                    ':score' => $r[':score'],
+                    ':max' => $r[':max'],
+                    ':grade' => $r[':grade'],
+                    ':note' => $r[':note'],
+                    ':editor' => $r[':editor'],
+                ]);
+            }
+            $this->pdo->commit();
+            return true;
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
+
+    private function ensureTables(array $tables): void
+    {
+        // Tables are expected to exist after 016/017.
+        // If not, calls will fail gracefully to empty sets.
     }
 }

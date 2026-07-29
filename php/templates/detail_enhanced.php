@@ -443,4 +443,59 @@ function fmt_large_num($val) {
     if (abs($val) >= 1e6) return number_format($val / 1e6, 1) . 'M';
     return number_format($val, 0);
 }
+
+$buffett_ws = $buffett_score ?? [];
+$motley_ws_raw = [];
+if (!empty($ws_evaluations) && !empty($ws_evaluations['motley'])) {
+    $motley_ws_raw = ['checks' => []];
+    foreach ($ws_evaluations['motley'] as $k => $v) {
+        $motley_ws_raw['checks'][$k] = !empty($v['grade']) && $v['grade'] !== 'F';
+    }
+}
+$eval_ws = ['domains' => []];
+if (!empty($ws_evaluations)) {
+    if (!empty($ws_evaluations['evaluation'])) {
+        $eval_ws['domains'] = $ws_evaluations['evaluation'];
+    } elseif (!empty($ws_evaluations)) {
+        $eval_ws['domains'] = $ws_evaluations;
+    }
+}
+$llm_ws = $ws_llm_analysis;
 ?>
+<?php if (!empty($buffett_ws)): ?>
+<!-- ===== WEALTHSYSTEM BUFFETT TENETS ===== -->
+<div class="card" style="margin-top:12px;">
+    <div class="card-header">Buffett — 12 Tenets</div>
+    <?php include __DIR__ . '/partials/ws/buffett.php'; ?>
+</div>
+<?php endif; ?>
+
+<?php if (!empty($motley_ws_raw['checks'])): ?>
+<!-- ===== WEALTHSYSTEM MOTLEY FOOL 10 ===== -->
+<div class="card" style="margin-top:12px;">
+    <div class="card-header">Motley Fool — 10 Criteria</div>
+    <?php include __DIR__ . '/partials/ws/motley_fool.php'; ?>
+</div>
+<?php endif; ?>
+
+<!-- ===== WEALTHSYSTEM TECHNICAL ANALYSIS ===== -->
+<div class="card" style="margin-top:12px;">
+    <div class="card-header">Technical Analysis — Narrative</div>
+    <?php include __DIR__ . '/partials/ws/technical_analysis.php'; ?>
+</div>
+
+<?php if (!empty($eval_ws['domains'])): ?>
+<!-- ===== WEALTHSYSTEM EVALUATIONS ===== -->
+<div class="card" style="margin-top:12px;">
+    <div class="card-header">Evaluations — 4 Domains</div>
+    <?php include __DIR__ . '/partials/ws/evaluations.php'; ?>
+</div>
+<?php endif; ?>
+
+<?php if (!empty($llm_ws)): ?>
+<!-- ===== WEALTHSYSTEM LLM QUALITATIVE ===== -->
+<div class="card" style="margin-top:12px;">
+    <div class="card-header">LLM Qualitative Analysis</div>
+    <?php include __DIR__ . '/partials/ws/llm_analysis.php'; ?>
+</div>
+<?php endif; ?>

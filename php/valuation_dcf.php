@@ -74,6 +74,12 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Composer autoloader for shared ksfraser-financial-models package
+$autoload = $APP_ROOT . '/vendor/autoload.php';
+if (file_exists($autoload)) {
+    require_once $autoload;
+}
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -197,80 +203,29 @@ function fetch_latest_price(PDO $pdo, string $symbol): ?float {
 }
 
 // ---------------------------------------------------------------------------
-// DCF Calculation
+// DCF Calculation — delegated to ksfraser-financial-models shared package
 // ---------------------------------------------------------------------------
 function calculate_dcf(array $p): array {
-    $baseRevenue   = (float)($p['base_revenue'] ?? 100.0);
-    $cagr          = (float)($p['revenue_cagr'] ?? 0.05);
-    $ebitdaMargin  = (float)($p['ebitda_margin'] ?? 0.30);
-    $daPct         = (float)($p['da_pct'] ?? 0.03);
-    $capexPct      = (float)($p['capex_pct'] ?? 0.04);
-    $nwcPct        = (float)($p['nwc_pct'] ?? 0.01);
-    $taxRate       = (float)($p['tax_rate'] ?? 0.25);
-    $wacc          = (float)($p['wacc'] ?? 0.09);
-    $terminalGrowth= (float)($p['terminal_growth'] ?? 0.025);
-    $netDebt       = (float)($p['net_debt'] ?? 0.0);
-    $sharesOut     = (float)($p['shares_outstanding'] ?? 1.0);
-    $currentPrice  = (float)($p['current_price'] ?? 0.0);
-
-    // Build 5-year FCFs
-    $fcfs = [];
-    $pvFcfs = [];
-    $sumPvFcf = 0.0;
-    $revenue = $baseRevenue;
-
-    for ($year = 1; $year <= 5; $year++) {
-        $revenue *= (1 + $cagr);
-        // FCF = Revenue * [(EBITDA_margin - D&A%)*(1 - tax_rate) + D&A% - capex% - nwc%]
-        $ebit = $revenue * ($ebitdaMargin - $daPct);
-        $nopat = $ebit * (1 - $taxRate);
-        $fcf = $nopat + ($revenue * $daPct) - ($revenue * $capexPct) - ($revenue * $nwcPct);
-        $fcfs[$year] = $fcf;
-
-        $discount = pow(1 + $wacc, $year);
-        $pv = $fcf / $discount;
-        $pvFcfs[$year] = $pv;
-        $sumPvFcf += $pv;
+    if (class_exists(\Ksfraser\Financial\Dcf\DcfEngine::class)) {
+        $engine = new \Ksfraser\Financial\Dcf\DcfEngine();
+        $result = $engine->run(\Ksfraser\Financial\Dcf\Assumptions::fromArray($p));
+        $arr = $result->toArray();
+        // Preserve backward-compatible keys used by the rest of this script
+        $arr['fcf'] = $result->toArray()['fcf'] ?? [];
+        $arr['pv_fcf'] = $arr['pv_fcf'] ?? [];
+        return $arr;
     }
 
-    // Terminal value (Gordon Growth) — only if WACC > terminal_growth
-    if ($wacc > $terminalGrowth && $fcfs[5] > 0) {
-        $terminalValue = $fcfs[5] * (1 + $terminalGrowth) / ($wacc - $terminalGrowth);
-    } else {
-        $terminalValue = 0.0;
-    }
-    $pvTerminal = $terminalValue / pow(1 + $wacc, 5);
-
-    $enterpriseValue = $sumPvFcf + $pvTerminal;
-    $equityValue = $enterpriseValue - $netDebt;
-    $intrinsicPerShare = $sharesOut > 0 ? ($equityValue / $sharesOut) : 0.0;
-
-    if ($currentPrice > 0) {
-        $upsidePct = (($intrinsicPerShare / $currentPrice) - 1.0) * 100.0;
-    } else {
-        $upsidePct = null;
-    }
-
-    $recommendation = 'N/A';
-    if ($upsidePct !== null) {
-        if ($upsidePct > 20) $recommendation = 'Strong Buy';
-        elseif ($upsidePct > 5) $recommendation = 'Buy';
-        elseif ($upsidePct > -10) $recommendation = 'Hold';
-        elseif ($upsidePct > -20) $recommendation = 'Sell';
-        else $recommendation = 'Strong Sell';
-    }
-
+    // Fallback if shared package unavailable
     return [
-        'fcf'            => $fcfs,
-        'pv_fcf'         => $pvFcfs,
-        'terminal_value' => $terminalValue,
-        'pv_terminal'    => $pvTerminal,
-        'sum_pv_fcf'     => $sumPvFcf,
-        'enterprise_value' => $enterpriseValue,
-        'equity_value'   => $equityValue,
-        'intrinsic_per_share' => $intrinsicPerShare,
-        'upside_pct'     => $upsidePct,
-        'recommendation' => $recommendation,
+        'terminal_value' => 0,
+        'pv_fcf' => [1=>0,2=>0,3=>0,4=>0,5=>0],
+        'sum_pv_fcf' => 0,
+        'enterprise_value' => 0,
+        'equity_value' => 0,
+        'intrinsic_per_share' => 0,
+        'upside_pct' => null,
+        'recommendation' => 'N/A',
     ];
 }
 

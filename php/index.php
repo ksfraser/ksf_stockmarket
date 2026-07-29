@@ -181,7 +181,7 @@ if ($action === 'register') {
 }
 
 // Routes requiring authentication (portfolio, transactions, personal data)
-$protectedRoutes = ['portfolio', 'transactions', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings', 'admin_optional_rules', 'shared_with_me', 'refresh_price', 'refresh_all_prices', 'hire_advisors', 'my_advisors', 'strategy_guidance', 'advisor_preferences', 'my_recommendations', 'reports', 'taxonomies', 'rebalancing'];
+$protectedRoutes = ['portfolio', 'portfolio_transfers', 'transactions', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings', 'admin_optional_rules', 'shared_with_me', 'refresh_price', 'refresh_all_prices', 'hire_advisors', 'my_advisors', 'strategy_guidance', 'advisor_preferences', 'my_recommendations', 'reports', 'taxonomies', 'rebalancing'];
 if (in_array($action, $protectedRoutes, true) && !AuthController::checkSession()) {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header('Location: ?action=login');
@@ -270,9 +270,16 @@ switch ($action) {
         break;
     case 'portfolio':
         $ctrl = new StockController();
-        $data = array_merge($data, $ctrl->portfolio($_GET['account'] ?? 'all', $currentUser['id']));
+        $accountId = isset($_GET['account_id']) && $_GET['account_id'] !== '' ? (int)$_GET['account_id'] : null;
+        $data = array_merge($data, $ctrl->portfolio($_GET['account'] ?? 'all', $currentUser['id'], $accountId));
         $pageTitle = 'Portfolio';
         $template = 'portfolio';
+        break;
+    case 'portfolio_transfers':
+        $ctrl = new StockController();
+        $data = array_merge($data, $ctrl->portfolioTransfers($currentUser['id']));
+        $pageTitle = 'Transfer Totals';
+        $template = 'portfolio_transfers';
         break;
     case 'stop_orders':
         $ctrl = new StockController();

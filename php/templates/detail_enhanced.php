@@ -35,6 +35,8 @@ $ws_fundamentals = $data['ws_fundamentals'] ?? [];
 $ws_indicators = $data['ws_indicators'] ?? [];
 $ws_llm_analysis = $data['ws_llm_analysis'] ?? [];
 $ws_evaluations = $data['ws_evaluations'] ?? [];
+$iplace = $data['iplace'] ?? [];
+$vectorvest = $data['vectorvest'] ?? [];
 
 $close = $latest['close'] ?? 0;
 $prevClose = $latest['prev_close'] ?? 0;
@@ -579,6 +581,16 @@ $ws_symbol = htmlspecialchars($sym);
         <button type="submit" class="btn btn-primary">Save LLM Analysis</button>
     </form>
 </div>
+<?php endif; ?>
+
+<?php if (!empty($vectorvest)): ?>
+<!-- ===== VECTORVEST ===== -->
+<?php include __DIR__ . '/partials/ws/vectorvest.php'; ?>
+<?php endif; ?>
+
+<?php if (!empty($iplace)): ?>
+<!-- ===== IPLACE ===== -->
+<?php include __DIR__ . '/partials/ws/iplace.php'; ?>
 <?php endif; ?>
 
 <?php if (!empty($data['ws_message'])): ?>

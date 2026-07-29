@@ -364,7 +364,7 @@ class StockController {
             'analystRatings', 'analystTargets', 'news', 'optionsData',
             'buffettScore', 'zacksScore', 'perf', 'regime', 'exitSignals',
             'recommendations', 'holders', 'financials', 'estimates',
-            'vectorVest'
+            'vectorVest', 'iplaceCalc'
         );
         $result['analyst_ratings'] = $result['analystRatings'];
         $result['analyst_targets'] = $result['analystTargets'];
@@ -375,6 +375,7 @@ class StockController {
         $result['dividend_safety'] = $result['dividendSafety'];
         $result['exit_signals'] = $result['exitSignals'] ?? [];
         $result['vectorvest'] = $result['vectorVest'] ?? [];
+        $result['iplace'] = $result['iplaceCalc'] ?? [];
 
         // WealthSystem detail payloads (may be empty on first run)
         $wsDetail = $this->loadWealthSystemDetail($symbol);
@@ -849,32 +850,98 @@ class StockController {
     }
 
     /**
-     * GET /?action=portfolio — Portfolio holdings.
+     * GET /?action=portfolio_transfers — Transfer totals across accounts.
      */
-    public function portfolio(string $account_filter = 'all', int $user_id = 0): array {
-        // Build account filter
-        $where = '';
-        if ($account_filter !== 'all') {
-            $where = "WHERE p.account_type = " . $this->pdo->quote($account_filter);
+    public function portfolioTransfers(int $user_id = 1): array {
+        // Accounts for user
+        $stmt = $this->pdo->prepare("SELECT id, institution, account_nickname, registration_type, currency FROM portfolio_accounts WHERE user_id = :uid AND is_active = 1 ORDER BY registration_type, institution, account_nickname");
+        $stmt->execute([':uid' => $user_id]);
+        $accounts = $stmt->fetchAll();
+
+        // Totals by account
+        $stmt = $this->pdo->prepare("
+            SELECT p.account_id,
+                   SUM(p.shares * p.cost_basis) as cost_total,
+                   SUM(p.shares * COALESCE(latest.close, p.cost_basis)) as value_total
+            FROM portfolio p
+            LEFT JOIN (
+                SELECT sp1.symbol, sp1.close FROM stockprices sp1
+                INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol) sp2 ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
+            ) latest ON COALESCE(p.price_symbol, p.symbol) = latest.symbol
+            WHERE p.user_id = :uid
+            GROUP BY p.account_id
+        ");
+        $stmt->execute([':uid' => $user_id]);
+        $totals = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $totals[(int)$row['account_id']] = $row;
         }
 
-        // Aggregate across accounts: each symbol appears once with total shares & weighted cost basis
-        $accountJoin = '';
-        $accountWhere = '';
-        $userCondition = '';
-        $params = [];
-        if ($account_filter !== 'all') {
-            $af = $this->pdo->quote($account_filter);
-            $accountWhere = "WHERE p.account_type = $af";
+        // Grand total
+        $costGrand = 0;
+        $valueGrand = 0;
+        foreach ($totals as $t) {
+            $costGrand += (float)$t['cost_total'];
+            $valueGrand += (float)$t['value_total'];
         }
-        if ($user_id > 0) {
-            $userCondition = $accountWhere ? "AND p.user_id = :uid" : "WHERE p.user_id = :uid";
-            $params[':uid'] = $user_id;
+
+        // Transactions with type TRANSFER
+        $transfers = [];
+        $stmt = $this->pdo->prepare("
+            SELECT t.account_id, pa.institution, pa.account_nickname, pa.registration_type,
+                   t.symbol, t.quantity, t.price, t.total, t.date, t.notes
+            FROM transactions t
+            LEFT JOIN portfolio_accounts pa ON t.account_id = pa.id
+            WHERE t.user_id = :uid AND t.type = 'TRANSFER'
+            ORDER BY t.date DESC
+            LIMIT 50
+        ");
+        $stmt->execute([':uid' => $user_id]);
+        foreach ($stmt->fetchAll() as $row) {
+            $transfers[] = $row;
+        }
+
+        return [
+            'accounts' => $accounts,
+            'totals' => $totals,
+            'cost_grand' => $costGrand,
+            'value_grand' => $valueGrand,
+            'transfers' => $transfers,
+        ];
+    }
+
+    /**
+     * GET /?action=portfolio — Portfolio holdings.
+     */
+    public function portfolio(string $account_filter = 'all', int $user_id = 0, ?int $account_id = null): array {
+        // 1=registration type filter (RRSP/TFSA/MARGIN/...), 2=account-level drilldown
+        $regFilter = $account_filter;
+        $acctFilter = $account_id;
+
+        // Load mapped account_id when a legacy registration type is passed as account_filter
+        if ($acctFilter === null && $regFilter !== 'all') {
+            $stmt = $this->pdo->prepare("SELECT id FROM portfolio_accounts WHERE user_id = :uid AND registration_type = :reg AND is_active = 1 LIMIT 1");
+            $stmt->execute([':uid' => $user_id > 0 ? $user_id : 1, ':reg' => $regFilter]);
+            $row = $stmt->fetch();
+            if ($row) $acctFilter = (int)$row['id'];
+        }
+
+        $params = [];
+        $userCondition = 'WHERE p.user_id = :uid';
+        $params[':uid'] = $user_id > 0 ? $user_id : 1;
+
+        if ($acctFilter !== null) {
+            $userCondition .= ' AND p.account_id = :aid';
+            $params[':aid'] = $acctFilter;
+        } elseif ($regFilter !== 'all') {
+            $userCondition .= ' AND pa.registration_type = :reg';
+            $params[':reg'] = $regFilter;
         }
 
         $sql = "
             SELECT p.symbol,
-                   GROUP_CONCAT(DISTINCT p.account_type ORDER BY p.account_type) as accounts,
+                   GROUP_CONCAT(DISTINCT pa.registration_type ORDER BY pa.registration_type) as registration_types,
+                   GROUP_CONCAT(DISTINCT CONCAT(pa.institution, '|', pa.account_nickname) ORDER BY pa.institution SEPARATOR ', ') as accounts,
                    SUM(p.shares) as shares,
                    SUM(p.shares * p.cost_basis) / NULLIF(SUM(p.shares), 0) as cost_basis,
                    MIN(p.entry_date) as entry_date,
@@ -886,6 +953,7 @@ class StockController {
                    latest.volume as current_volume,
                    latest.price_date as price_date
             FROM portfolio p
+            LEFT JOIN portfolio_accounts pa ON p.account_id = pa.id
             LEFT JOIN (
                 SELECT sp1.symbol, sp1.close, sp1.volume, sp1.price_date
                 FROM stockprices sp1
@@ -1062,11 +1130,24 @@ class StockController {
             'total_pnl_pct' => $totalPnlPct,
             'total_annualized_pnl_pct' => $totalAnnualizedPnlPct,
             'account_filter' => $account_filter,
-            'account_types' => array_unique(array_column($holdings, 'account_type')),
+            'account_types' => array_values(array_unique(array_filter(array_column($holdings, 'registration_types')))),
             'taxonomies' => array_values($taxonomies),
             'settlement_dates' => $settlementMap,
             'available_cash' => $availableCash,
+            'portfolio_accounts' => $this->listAccounts($user_id > 0 ? $user_id : 1),
         ];
+    }
+
+    /** List active portfolio accounts for a user. */
+    private function listAccounts(int $user_id = 1): array {
+        $stmt = $this->pdo->prepare("
+            SELECT id, institution, account_nickname, registration_type, currency
+            FROM portfolio_accounts
+            WHERE user_id = :uid AND is_active = 1
+            ORDER BY registration_type, institution, account_nickname
+        ");
+        $stmt->execute([':uid' => $user_id]);
+        return $stmt->fetchAll() ?: [];
     }
 
     /**

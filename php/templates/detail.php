@@ -17,3 +17,8 @@ require_once __DIR__ . '/partials/detail/zacks.php';
 require_once __DIR__ . '/partials/detail/exit_signals.php';
 require_once __DIR__ . '/partials/detail/news.php';
 require_once __DIR__ . '/partials/detail/fundamentals.php';
+require_once __DIR__ . '/partials/ws/technical_analysis.php';
+require_once __DIR__ . '/partials/ws/evaluations.php';
+require_once __DIR__ . '/partials/ws/llm_analysis.php';
+require_once __DIR__ . '/partials/ws/motley_fool.php';
+require_once __DIR__ . '/partials/ws/iplace.php';

@@ -17,6 +17,11 @@ $zacksScore = $data['zacks_score'] ?? [];
 $vectorvest = $data['vectorvest'] ?? [];
 $sectorRank = $data['sector_rank'] ?? [];
 $regime = $data['regime'] ?? [];
+$ws_fundamentals = $data['ws_fundamentals'] ?? [];
+$ws_indicators = $data['ws_indicators'] ?? [];
+$ws_llm_analysis = $data['ws_llm_analysis'] ?? [];
+$ws_evaluations = $data['ws_evaluations'] ?? [];
+$iplace = $data['iplace'] ?? [];
 
 $close = $latest['close'] ?? 0;
 $prevClose = $latest['prev_close'] ?? 0;

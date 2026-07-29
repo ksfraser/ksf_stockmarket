@@ -26,15 +26,33 @@ $SAFETY_TOOLTIP = "Dividend Safety Score (0-100): Based on payout ratio, " .
     <!-- Account filter -->
     <form method="GET" class="search-bar" style="margin-bottom:16px">
         <input type="hidden" name="action" value="portfolio">
-        <label style="font-size:0.85em; color:var(--text3); margin-right:8px">Account:</label>
+        <label style="font-size:0.85em; color:var(--text3); margin-right:8px">Registration:</label>
         <select name="account" onchange="this.form.submit()">
-            <option value="all" <?= $accountFilter === 'all' ? 'selected' : '' ?>>All Accounts</option>
+            <option value="all" <?= $accountFilter === 'all' ? 'selected' : '' ?>>All Registrations</option>
             <?php foreach ($accountTypes as $at): ?>
                 <option value="<?= htmlspecialchars($at) ?>" <?= $accountFilter === $at ? 'selected' : '' ?>>
                     <?= htmlspecialchars($at) ?>
                 </option>
             <?php endforeach; ?>
         </select>
+
+        <?php
+        $accounts = $data['portfolio_accounts'] ?? [];
+        if (!empty($accounts)):
+        ?>
+        &nbsp;
+        <label style="font-size:0.85em; color:var(--text3); margin-right:8px">Account:</label>
+        <select name="account_id" onchange="this.form.submit()">
+            <option value="">All Accounts</option>
+            <?php foreach ($accounts as $a): ?>
+                <option value="<?= (int)$a['id'] ?>" <?= ($_GET['account_id'] ?? '') == $a['id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($a['institution']) ?> — <?= htmlspecialchars($a['account_nickname']) ?> (<?= htmlspecialchars($a['registration_type']) ?>)
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <?php endif; ?>
+
+        <a href="?action=portfolio_transfers" style="float:right; font-size:0.85em;">Transfer totals</a>
     </form>
 
     <?php include $GLOBALS['APP_ROOT'] . '/templates/partials/trade_guidance.php'; ?>
@@ -126,7 +144,14 @@ $SAFETY_TOOLTIP = "Dividend Safety Score (0-100): Based on payout ratio, " .
         ?>
             <tr>
                 <td><strong><a href="?action=detail&symbol=<?= urlencode($h['symbol']) ?>"><?= htmlspecialchars($h['symbol']) ?></a></strong></td>
-                <td><?= htmlspecialchars(str_replace(',', '/', $h['accounts'])) ?></td>
+                <td>
+                    <?php
+                    $parts = explode(', ', $h['accounts']);
+                    echo implode(' | ', array_map(function($p){
+                        return htmlspecialchars(str_replace('|', ' — ', $p));
+                    }, $parts));
+                    ?>
+                </td>
                 <td class="r"><?= number_format($h['shares'], 2) ?></td>
                 <td class="r">$<?= number_format($h['cost_basis'], 2) ?></td>
                 <td class="r"><?= fmt_price($h['current_price'] ?? null) ?></td>

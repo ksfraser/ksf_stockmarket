@@ -1828,7 +1828,8 @@ class StockController {
         $stmt->execute([':sym' => $symbol]);
         $indicators = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
-        $stmt = $this->pdo->prepare('SELECT * FROM llm_analysis WHERE symbol = :sym ORDER BY analyzed_at DESC LIMIT 1');
+        // LLM analysis uses analysis_date/provider/model per migration 016
+        $stmt = $this->pdo->prepare('SELECT * FROM llm_analysis WHERE symbol = :sym ORDER BY analysis_date DESC, created_at DESC LIMIT 1');
         $stmt->execute([':sym' => $symbol]);
         $llm = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
@@ -1839,37 +1840,63 @@ class StockController {
             $evals[$row['eval_type']][$row['domain']] = $row;
         }
 
+        // Buffett tenets from migration 016
+        $buffettTenets = [];
+        try {
+            $stmt = $this->pdo->prepare('SELECT name, passed, detail FROM tenets WHERE symbol = :sym ORDER BY name');
+            $stmt->execute([':sym' => $symbol]);
+            foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                $buffettTenets[] = $row;
+            }
+        } catch (\Throwable $e) {}
+
+        // Motley Fool from migration 016
+        $motley = [];
+        try {
+            $stmt = $this->pdo->prepare('SELECT * FROM motleyfool WHERE symbol = :sym LIMIT 1');
+            $stmt->execute([':sym' => $symbol]);
+            $motley = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+        } catch (\Throwable $e) {}
+
         return [
             'symbol' => $symbol,
             'fundamentals' => $fundamentals,
             'indicators' => $indicators,
             'llm_analysis' => $llm,
             'evaluations' => $evals,
+            'buffett_tenets' => $buffettTenets,
+            'buffett_score' => [
+                'checks' => $buffettTenets,
+                'total' => count($buffettTenets),
+                'max' => 12,
+            ],
+            'motley' => $motley,
         ];
     }
 
     /** Persist WealthSystem LLM qualitative text. */
-    public function saveLlmAnalysis(string $symbol, ?string $text, ?string $summary, ?string $modelUsed = null, string $editor = 'ui'): bool
+    public function saveLlmAnalysis(string $symbol, ?string $summary, ?string $analysisDate = null, ?string $provider = 'ui', ?string $modelUsed = null, string $editor = 'ui'): bool
     {
         $symbol = strtoupper($symbol);
         $this->ensureTables(['llm_analysis']);
 
+        $analysisDate = $analysisDate ?: date('Y-m-d');
+        $modelUsed = $modelUsed ?: 'manual';
+
         $stmt = $this->pdo->prepare('
-            INSERT INTO llm_analysis (symbol, analysis_text, summary, model_used, created_by, updated_at, analyzed_at)
-            VALUES (:sym, :text, :summary, :model, :editor, NOW(), NOW())
+            INSERT INTO llm_analysis (symbol, analysis_date, provider, model, summary, created_at)
+            VALUES (:sym, :adate, :provider, :model, :summary, NOW())
             ON DUPLICATE KEY UPDATE
-                analysis_text = VALUES(analysis_text),
                 summary = VALUES(summary),
-                model_used = VALUES(model_used),
-                updated_at = VALUES(updated_at),
-                created_by = VALUES(created_by)
+                model = VALUES(model),
+                created_at = NOW()
         ');
         return $stmt->execute([
             ':sym' => $symbol,
-            ':text' => $text,
-            ':summary' => $summary,
+            ':adate' => $analysisDate,
+            ':provider' => $provider,
             ':model' => $modelUsed,
-            ':editor' => $editor,
+            ':summary' => $summary,
         ]);
     }
 
@@ -1919,6 +1946,73 @@ class StockController {
                     ':grade' => $r[':grade'],
                     ':note' => $r[':note'],
                     ':editor' => $r[':editor'],
+                ]);
+            }
+            $this->pdo->commit();
+            return true;
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
+
+    /** Persist Motley Fool 10 criteria. */
+    public function saveMotleyFool(string $symbol, array $criteria, string $editor = 'ui'): bool
+    {
+        $symbol = strtoupper($symbol);
+        $this->ensureTables(['motleyfool']);
+
+        $columns = [
+            'simplebusiness' => 'simplebusiness',
+            'reasonablevaluation' => 'reasonablevaluation',
+            'corefocus' => 'corefocus',
+            'doubledigitsales' => 'doubledigitsales',
+            'risingcashflow' => 'risingcashflow',
+            'risingbookvalue' => 'risingbookvalue',
+            'improvingmargins' => 'improvingmargins',
+            'risingroe' => 'risingroe',
+            'insiderownership' => 'insiderownership',
+            'regulardividend' => 'regulardividend',
+        ];
+
+        $sets = [];
+        $params = [':sym' => $symbol];
+        foreach ($columns as $key => $col) {
+            $val = $criteria[$col] ?? 0;
+            $sets[] = "{$col} = :{$key}";
+            $params[":{$key}"] = (int)$val;
+        }
+        $score = array_sum($criteria);
+        $sets[] = 'score = :score';
+        $params[':score'] = $score;
+
+        $sql = "INSERT INTO motleyfool (symbol, " . implode(', ', array_keys($columns)) . ", score, lastupdate) " .
+               "VALUES (:sym, " . implode(', ', array_keys($columns)) . ", :score, NOW()) " .
+               "ON DUPLICATE KEY UPDATE " . implode(', ', $sets) . ", lastupdate = NOW()";
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($params);
+    }
+
+    /** Persist Buffett tenets. */
+    public function saveTenets(string $symbol, array $tenets, string $editor = 'ui'): bool
+    {
+        $symbol = strtoupper($symbol);
+        $this->ensureTables(['tenets']);
+
+        $this->pdo->beginTransaction();
+        try {
+            $stmt = $this->pdo->prepare('
+                INSERT INTO tenets (symbol, name, passed, detail, lasteval)
+                VALUES (:sym, :name, :passed, :detail, NOW())
+                ON DUPLICATE KEY UPDATE passed = VALUES(passed), detail = VALUES(detail), lasteval = VALUES(lasteval)
+            ');
+            foreach ($tenets as $t) {
+                $stmt->execute([
+                    ':sym' => $symbol,
+                    ':name' => $t['name'] ?? '',
+                    ':passed' => !empty($t['passed']) ? 1 : 0,
+                    ':detail' => $t['detail'] ?? '',
                 ]);
             }
             $this->pdo->commit();

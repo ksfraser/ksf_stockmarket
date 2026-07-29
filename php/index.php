@@ -221,6 +221,38 @@ switch ($action) {
         break;
     case 'detail':
         $ctrl = new StockController();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $sub = $_POST['ws_subaction'] ?? '';
+            $symbol = strtoupper(trim($_POST['symbol'] ?? ''));
+            if ($sub === 'save_llm' && $symbol !== '') {
+                $ctrl->saveLlmAnalysis(
+                    $symbol,
+                    $_POST['llm_summary'] ?? null,
+                    date('Y-m-d'),
+                    'ui',
+                    $_POST['llm_model'] ?? 'manual'
+                );
+                $data['ws_message'] = 'LLM analysis saved.';
+            } elseif ($sub === 'save_evals' && $symbol !== '') {
+                $scores = json_decode($_POST['eval_json'] ?? '[]', true) ?: [];
+                $ctrl->saveEvaluationScores($symbol, $scores, 'ui');
+                $data['ws_message'] = 'Evaluation scores saved.';
+            } elseif ($sub === 'save_motley' && $symbol !== '') {
+                $motley = array_map(fn($v) => (int)$v, $_POST['motley'] ?? []);
+                $ctrl->saveMotleyFool($symbol, $motley, 'ui');
+                $data['ws_message'] = 'Motley Fool evaluation saved.';
+            } elseif ($sub === 'save_tenets' && $symbol !== '') {
+                $tenets = array_map(fn($name) => [
+                    'name' => $name,
+                    'passed' => !empty($_POST['tenet_' . md5($name)]),
+                    'detail' => trim((string)($_POST['tenet_detail_' . md5($name)] ?? '')),
+                ], $_POST['tenets_list'] ?? []);
+                $ctrl->saveTenets($symbol, $tenets, 'ui');
+                $data['ws_message'] = 'Buffett tenets saved.';
+            }
+            header('Location: ?action=detail&symbol=' . urlencode($symbol) . ($data['ws_message'] ? '&msg=' . urlencode($data['ws_message']) : ''));
+            exit;
+        }
         $data = array_merge($data, $ctrl->detail($_GET['symbol'] ?? ''));
         $pageTitle = htmlspecialchars($_GET['symbol'] ?? '') . ' - Detail';
         $template = 'detail';

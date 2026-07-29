@@ -31,6 +31,10 @@ $news = $data['news'] ?? [];
 $optionsData = $data['options'] ?? [];
 $buffettScore = $data['buffett_score'] ?? [];
 $sectorRank = $data['sector_rank'] ?? [];
+$ws_fundamentals = $data['ws_fundamentals'] ?? [];
+$ws_indicators = $data['ws_indicators'] ?? [];
+$ws_llm_analysis = $data['ws_llm_analysis'] ?? [];
+$ws_evaluations = $data['ws_evaluations'] ?? [];
 
 $close = $latest['close'] ?? 0;
 $prevClose = $latest['prev_close'] ?? 0;
@@ -444,9 +448,14 @@ function fmt_large_num($val) {
     return number_format($val, 0);
 }
 
-$buffett_ws = $buffett_score ?? [];
+$buffett_ws = $buffett_score ?? ($data['buffett_score'] ?? []);
+if (empty($buffett_ws) && !empty($ws_fundamentals['checks'])) {
+    $buffett_ws = $ws_fundamentals;
+}
 $motley_ws_raw = [];
-if (!empty($ws_evaluations) && !empty($ws_evaluations['motley'])) {
+if (!empty($data['motley'])) {
+    $motley_ws_raw = $data['motley'];
+} elseif (!empty($ws_evaluations['motley'])) {
     $motley_ws_raw = ['checks' => []];
     foreach ($ws_evaluations['motley'] as $k => $v) {
         $motley_ws_raw['checks'][$k] = !empty($v['grade']) && $v['grade'] !== 'F';
@@ -461,20 +470,51 @@ if (!empty($ws_evaluations)) {
     }
 }
 $llm_ws = $ws_llm_analysis;
+$ws_save_url = htmlspecialchars($_SERVER['REQUEST_URI']);
+$ws_symbol = htmlspecialchars($sym);
 ?>
-<?php if (!empty($buffett_ws)): ?>
+<?php if (!empty($buffett_ws) || true): ?>
 <!-- ===== WEALTHSYSTEM BUFFETT TENETS ===== -->
 <div class="card" style="margin-top:12px;">
     <div class="card-header">Buffett — 12 Tenets</div>
     <?php include __DIR__ . '/partials/ws/buffett.php'; ?>
+    <form method="post" action="<?php echo $ws_save_url; ?>" style="padding:10px;border-top:1px solid var(--border);margin-top:8px;">
+        <input type="hidden" name="ws_subaction" value="save_tenets">
+        <input type="hidden" name="symbol" value="<?php echo $ws_symbol; ?>">
+        <input type="hidden" name="tenets_list" value="<?php echo htmlspecialchars(json_encode(['Moat','Management','Capital Allocation','ROE','Debt','Margins','FCF','CAGR','Competitive Advantage','Owner Earnings','Economic Moat','Pricing Power'])); ?>">
+        <?php foreach (['Moat','Management','Capital Allocation','ROE','Debt','Margins','FCF','CAGR','Competitive Advantage','Owner Earnings','Pricing Power'] as $i => $tenet): ?>
+            <div style="display:flex;align-items:center;gap:8px;margin:4px 0;">
+                <input type="checkbox" id="tenet_<?php echo $i; ?>" name="tenet_<?php echo md5($tenet); ?>" value="1" <?php echo (!empty($buffett_ws['checks'][$i]['passed']) || (!empty($buffett_ws['checks']) && !empty($buffett_ws['checks'][$i]['passed']))) ? 'checked' : ''; ?>>
+                <label for="tenet_<?php echo $i; ?>" style="flex:1;cursor:pointer;"><?php echo htmlspecialchars($tenet); ?></label>
+                <input type="text" name="tenet_detail_<?php echo md5($tenet); ?>" placeholder="Note" value="<?php echo htmlspecialchars($buffett_ws['checks'][$i]['detail'] ?? ''); ?>" style="width:220px;">
+            </div>
+        <?php endforeach; ?>
+        <button type="submit" class="btn btn-primary" style="margin-top:8px;">Save Tenets</button>
+    </form>
 </div>
 <?php endif; ?>
 
-<?php if (!empty($motley_ws_raw['checks'])): ?>
+<?php if (!empty($motley_ws_raw) || true): ?>
 <!-- ===== WEALTHSYSTEM MOTLEY FOOL 10 ===== -->
 <div class="card" style="margin-top:12px;">
     <div class="card-header">Motley Fool — 10 Criteria</div>
     <?php include __DIR__ . '/partials/ws/motley_fool.php'; ?>
+    <form method="post" action="<?php echo $ws_save_url; ?>" style="padding:10px;border-top:1px solid var(--border);margin-top:8px;">
+        <input type="hidden" name="ws_subaction" value="save_motley">
+        <input type="hidden" name="symbol" value="<?php echo $ws_symbol; ?>">
+        <?php
+        $mf_keys = ['simplebusiness','reasonablevaluation','corefocus','doubledigitsales','risingcashflow','risingbookvalue','improvingmargins','risingroe','insiderownership','regulardividend'];
+        $mf_labels = ['Simple Business','Reasonable Valuation','Core Focus','Double-Digit Sales','Rising Cash Flow','Rising Book Value','Improving Margins','Rising ROE','Insider Ownership','Regular Dividend'];
+        foreach ($mf_keys as $idx => $k):
+            $checked = (!empty($motley_ws_raw[$k]) || (!empty($motley_ws_raw['checks'][$k]))) ? 'checked' : '';
+        ?>
+            <div style="display:flex;align-items:center;gap:8px;margin:4px 0;">
+                <input type="checkbox" id="mf_<?php echo $k; ?>" name="motley[<?php echo $k; ?>]" value="1" <?php echo $checked; ?>>
+                <label for="mf_<?php echo $k; ?>" style="flex:1;cursor:pointer;"><?php echo htmlspecialchars($mf_labels[$idx]); ?></label>
+            </div>
+        <?php endforeach; ?>
+        <button type="submit" class="btn btn-primary" style="margin-top:8px;">Save Motley</button>
+    </form>
 </div>
 <?php endif; ?>
 
@@ -484,18 +524,90 @@ $llm_ws = $ws_llm_analysis;
     <?php include __DIR__ . '/partials/ws/technical_analysis.php'; ?>
 </div>
 
-<?php if (!empty($eval_ws['domains'])): ?>
+<?php if (!empty($eval_ws['domains']) || true): ?>
 <!-- ===== WEALTHSYSTEM EVALUATIONS ===== -->
 <div class="card" style="margin-top:12px;">
     <div class="card-header">Evaluations — 4 Domains</div>
     <?php include __DIR__ . '/partials/ws/evaluations.php'; ?>
+    <form method="post" action="<?php echo $ws_save_url; ?>" style="padding:10px;border-top:1px solid var(--border);margin-top:8px;">
+        <input type="hidden" name="ws_subaction" value="save_evals">
+        <input type="hidden" name="symbol" value="<?php echo $ws_symbol; ?>">
+        <input type="hidden" name="eval_json" id="eval_json_input" value="<?php echo htmlspecialchars(json_encode($eval_ws['domains'])); ?>">
+        <?php
+        $domains = ['business','financial','management','market'];
+        $labels = ['Business','Financial','Management','Market'];
+        foreach ($domains as $i => $d):
+            $score = $eval_ws['domains'][$d]['score'] ?? 0;
+            $max = $eval_ws['domains'][$d]['max_score'] ?? 100;
+            $grade = $eval_ws['domains'][$d]['grade'] ?? 'F';
+            $note = $eval_ws['domains'][$d]['note'] ?? '';
+        ?>
+            <div style="display:flex;gap:8px;align-items:center;margin:4px 0;flex-wrap:wrap;">
+                <strong><?php echo htmlspecialchars($labels[$i]); ?></strong>
+                <input type="number" data-domain="<?php echo $d; ?>" data-field="score" value="<?php echo (int)$score; ?>" style="width:70px;" class="eval-field">
+                <span>/</span>
+                <input type="number" data-domain="<?php echo $d; ?>" data-field="max" value="<?php echo (int)$max; ?>" style="width:70px;" class="eval-field">
+                <select data-domain="<?php echo $d; ?>" data-field="grade" class="eval-field">
+                    <?php foreach (['A','B','C','D','F'] as $g): ?>
+                        <option value="<?php echo $g; ?>" <?php echo $grade === $g ? 'selected' : ''; ?>><?php echo $g; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <input type="text" data-domain="<?php echo $d; ?>" data-field="note" value="<?php echo htmlspecialchars($note); ?>" placeholder="Note" style="flex:1;min-width:140px;" class="eval-field">
+            </div>
+        <?php endforeach; ?>
+        <button type="submit" class="btn btn-primary" style="margin-top:8px;">Save Evaluations</button>
+    </form>
 </div>
 <?php endif; ?>
 
-<?php if (!empty($llm_ws)): ?>
+<?php if (!empty($llm_ws) || true): ?>
 <!-- ===== WEALTHSYSTEM LLM QUALITATIVE ===== -->
 <div class="card" style="margin-top:12px;">
     <div class="card-header">LLM Qualitative Analysis</div>
     <?php include __DIR__ . '/partials/ws/llm_analysis.php'; ?>
+    <form method="post" action="<?php echo $ws_save_url; ?>" style="padding:10px;border-top:1px solid var(--border);margin-top:8px;">
+        <input type="hidden" name="ws_subaction" value="save_llm">
+        <input type="hidden" name="symbol" value="<?php echo $ws_symbol; ?>">
+        <div style="margin:6px 0;">
+            <label>Summary</label>
+            <textarea name="llm_summary" rows="4" style="width:100%;"><?php echo htmlspecialchars($llm_ws['summary'] ?? ''); ?></textarea>
+        </div>
+        <div style="margin:6px 0;">
+            <label>Model</label>
+            <input type="text" name="llm_model" value="<?php echo htmlspecialchars($llm_ws['model'] ?? 'manual'); ?>">
+        </div>
+        <button type="submit" class="btn btn-primary">Save LLM Analysis</button>
+    </form>
 </div>
 <?php endif; ?>
+
+<?php if (!empty($data['ws_message'])): ?>
+<div class="card" style="margin-top:12px;border-left:4px solid var(--accent);">
+    <div style="padding:10px;"><?php echo htmlspecialchars($data['ws_message']); ?></div>
+</div>
+<?php endif; ?>
+
+<script>
+(function(){
+    var forms = document.querySelectorAll('form[method="post"]');
+    for (var i=0;i<forms.length;i++) {
+        var f = forms[i];
+        if (f.querySelector('input[name="ws_subaction"][value="save_evals"]')) {
+            f.addEventListener('submit', function(){
+                var hidden = this.querySelector('input[name="eval_json"]');
+                if (!hidden) return;
+                var obj = {};
+                var fields = this.querySelectorAll('.eval-field');
+                for (var j=0;j<fields.length;j++) {
+                    var el = fields[j];
+                    var d = el.getAttribute('data-domain');
+                    var k = el.getAttribute('data-field');
+                    if (!obj[d]) obj[d] = {};
+                    obj[d][k] = el.value;
+                }
+                hidden.value = JSON.stringify(obj);
+            });
+        }
+    }
+})();
+</script>

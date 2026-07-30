@@ -20,7 +20,12 @@ import logging
 import os
 from datetime import datetime
 
+import pandas as pd
+
 from python.db_connector import get_connection, get_active_symbols
+from quant.probability import bayesian_update
+from quant.statistics import t_test_significant
+from quant.research import route_hypothesis
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s [%(levelname)s] %(message)s')
@@ -237,6 +242,22 @@ def write_llm_scores(conn, symbol: str, table: str, scores: dict,
     if not scores:
         return
 
+    # Bayesian-update LLM confidence against prior historical accuracy for this table/symbol
+    try:
+        prior_cursor = conn.cursor(dictionary=True)
+        prior_cursor.execute(
+            "SELECT AVG(llm_confidence) FROM {} WHERE symbol = %s AND is_llm_generated = 1".format(table),
+            (symbol,)
+        )
+        prior_row = prior_cursor.fetchone()
+        prior_cursor.close()
+        prior = float(prior_row['llm_confidence']) if prior_row and prior_row.get('llm_confidence') else 0.5
+        likelihood = confidence if confidence >= 0.5 else confidence * 0.5
+        adjusted_confidence = bayesian_update(prior, likelihood, 0.7)
+        confidence = max(0.0, min(1.0, adjusted_confidence))
+    except Exception:
+        pass
+
     cursor = conn.cursor()
 
     table_fields = {
@@ -299,6 +320,45 @@ def write_llm_scores(conn, symbol: str, table: str, scores: dict,
     logger.info(f"Wrote LLM scores for {symbol} to {table} (confidence: {confidence:.2f})")
 
 
+def _fetch_recent_returns(conn, symbol: str, days: int = 252) -> "pd.Series":
+    """Fetch daily returns for a symbol from stockprices."""
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT day_close FROM stockprices
+        WHERE symbol = %s
+        ORDER BY price_date ASC
+        LIMIT %s
+    """, (symbol, days))
+    rows = cursor.fetchall()
+    cursor.close()
+    closes = [r['day_close'] for r in rows if r.get('day_close')]
+    if len(closes) < 30:
+        return pd.Series(dtype=float)
+    return pd.Series(closes).pct_change().dropna()
+
+
+def run_llm_research(conn, symbol: str, scores: dict) -> dict:
+    """
+    Layer 2: run route_hypothesis() on recent returns and merge
+    the ResearchResult JSON into scores so it's persisted alongside
+    the LLM scores.  Falls back to half-Kelly if no test matches.
+    """
+    try:
+        returns = _fetch_recent_returns(conn, symbol)
+        if returns.empty:
+            return scores
+        result = route_hypothesis("Does this asset have a statistically significant mean return?", returns)
+        scores['quant_test'] = result.test_type
+        scores['quant_significant'] = int(result.is_significant)
+        scores['quant_p_value']   = result.p_value
+        scores['quant_metric']    = round(result.metric, 4)
+        scores['quant_detail']    = result.detail
+        scores['quant_recommendation'] = result.recommendation
+    except Exception as e:
+        logger.debug(f"[{symbol}] LLM research route failed: {e}")
+    return scores
+
+
 def run_llm_analysis(table: str, symbols: list = None, model: str = None):
     """Run LLM analysis for a scoring table across symbols."""
     client_type, client = get_llm_client()
@@ -326,7 +386,9 @@ def run_llm_analysis(table: str, symbols: list = None, model: str = None):
         try:
             scores = analyzer(symbol, client_type, client, model)
             confidence = scores.pop('confidence', scores.pop('overall_confidence', 0.5))
+            # Layer 2: LLM deep-dive — auto-route hypothesis test
             if scores:
+                scores = run_llm_research(conn, symbol, scores)
                 write_llm_scores(conn, symbol, table, scores,
                                 'llm_analysis', confidence)
             if (i + 1) % 10 == 0:

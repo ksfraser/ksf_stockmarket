@@ -47,6 +47,8 @@ except ImportError:
     print("WARNING: yfinance not available. MariaDB-only mode.")
 
 from symbol_resolver import resolve_for_yfinance
+from quant.statistics import t_test_significant, jarque_bera_normality, compute_statistical_validation
+from quant.portfolio import sample_covariance, pca_risk_decomposition
 
 # --------------------------------------------------------------------------
 # Configuration — mirrors ta_calculator.py DB_CONFIG pattern
@@ -1692,7 +1694,114 @@ def write_scoring_history(
         logger.debug(f"[{symbol}] scoring_history write error: {e}")
 
 
-# ==========================================================================
+def write_signal_validation(conn, symbol: str, val: dict) -> bool:
+    """
+    Persist statistical validation results to signal_validation table.
+    Uses INSERT ... ON DUPLICATE KEY UPDATE so repeated runs overwrite.
+    """
+    if not val:
+        return False
+    try:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO signal_validation
+                (symbol, run_date, t_stat, p_value, is_significant,
+                 normality_p_value, is_normal,
+                 adf_stat, adf_p_value, is_stationary,
+                 kelly_pct, validation_json)
+            VALUES (%s, CURDATE(), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE
+                t_stat          = VALUES(t_stat),
+                p_value         = VALUES(p_value),
+                is_significant  = VALUES(is_significant),
+                normality_p_value = VALUES(normality_p_value),
+                is_normal       = VALUES(is_normal),
+                adf_stat        = VALUES(adf_stat),
+                adf_p_value     = VALUES(adf_p_value),
+                is_stationary   = VALUES(is_stationary),
+                kelly_pct       = VALUES(kelly_pct),
+                validation_json = VALUES(validation_json)
+            """,
+            (
+                symbol,
+                val['t_stat'], val['p_value'], val['is_significant'],
+                val['normality_p_value'], val['is_normal'],
+                val['adf_stat'], val['adf_p_value'], val['is_stationary'],
+                val['kelly_pct'],
+                json.dumps(val['validation_json']),
+            ),
+        )
+        conn.commit()
+        cursor.close()
+        logger.debug(f"[{symbol}] signal_validation written (kelly={val['kelly_pct']:.2f}%)")
+        return True
+    except Exception as e:
+        logger.debug(f"[{symbol}] signal_validation write error: {e}")
+        try:
+            conn.rollback()
+        except Exception:
+            pass
+        return False
+
+def apply_advisor_stat_rules(conn, symbol: str, strategy_types: list, val_result: dict) -> dict:
+    """
+    Layer 3: advisor/user rules.  Look up rows in advisor_stat_rules for
+    the given strategy_types and flag which tests are pass/fail/warn.
+
+    Returns a dict:
+      rules_passed:  list of (test_type, description) that pass
+      rules_failed:  list of (test_type, description) that fail (required)
+      rules_warned:  list of (test_type, description) that fail (optional)
+    """
+    if not val_result or not strategy_types:
+        return {'rules_passed': [], 'rules_failed': [], 'rules_warned': []}
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+        placeholders = ','.join(['%s'] * len(strategy_types))
+        cursor.execute(
+            f"SELECT strategy_type, test_type, min_p_value, required, description "
+            f"FROM advisor_stat_rules "
+            f"WHERE is_active = 1 AND strategy_type IN ({placeholders})",
+            tuple(strategy_types),
+        )
+        rules = cursor.fetchall()
+        cursor.close()
+    except Exception:
+        return {'rules_passed': [], 'rules_failed': [], 'rules_warned': []}
+
+    p_value_map = {
+        't_test':            val_result.get('p_value'),
+        'jarque_bera':       val_result.get('normality_p_value'),
+        'adf_stationarity':  val_result.get('adf_p_value'),
+        'kelly_position':    0.0,  # half-Kelly always computed — pass if > 0
+    }
+
+    passed, failed, warned = [], [], []
+    kelly_pct = val_result.get('kelly_pct', 0.0) or 0.0
+
+    for rule in rules:
+        tt = rule['test_type']
+        actual_p = p_value_map.get(tt)
+        if tt == 'kelly_position':
+            ok = kelly_pct > 0
+            entry = (tt, rule['description'])
+        elif actual_p is None:
+            continue
+        else:
+            ok = actual_p <= rule['min_p_value']
+            entry = (tt, rule['description'], round(actual_p, 4), round(rule['min_p_value'], 4))
+        if ok:
+            passed.append(entry)
+        elif rule['required']:
+            failed.append(entry)
+        else:
+            warned.append(entry)
+
+    return {'rules_passed': passed, 'rules_failed': failed, 'rules_warned': warned}
+
+
 # QUARTERLY DATA SYNC (from yfinance → quarter_statement)
 # ==========================================================================
 
@@ -1895,9 +2004,12 @@ def score_symbol(conn, symbol: str, yfinance_fallback: bool = True) -> bool:
       3. Compute revenue growth rates
       4. Compute all scoring tables
       5. Write results to MariaDB
+      6. Persist statistical validation (Layer 1 baseline)
 
     Returns True if scoring completed successfully.
     """
+    val_result = None  # Layer 1: statistical validation
+
     logger.info(f"[{symbol}] Starting scoring pipeline...")
 
     # Step 1: Fetch existing quarterly data
@@ -1970,6 +2082,14 @@ def score_symbol(conn, symbol: str, yfinance_fallback: bool = True) -> bool:
         # 4h: Value Assessment
         value_scores = compute_evalvalue(symbol, qtr_df)
 
+        # 4h-b: Statistical validation + half-Kelly (Layer 1 automatic baseline)
+        if not price_df.empty and 'day_close' in price_df.columns:
+            daily_returns = price_df['day_close'].pct_change().dropna()
+            if len(daily_returns) >= 30:
+                val_result = compute_statistical_validation(daily_returns)
+                # Stash into value_scores so evalvalue summary picks up Kelly
+                value_scores['kellyoptimization'] = val_result.get('kelly_pct')
+
         # 4i: Summary
         summary = compute_evalsummary(
             symbol, mf_scores, ip_scores, tenets_scores,
@@ -2003,6 +2123,10 @@ def score_symbol(conn, symbol: str, yfinance_fallback: bool = True) -> bool:
         if not ok:
             logger.warning(f"[{symbol}] Failed to write to {table_name}")
             success = False
+
+    # Write statistical validation results (Layer 1 — automatic baseline)
+    if val_result:
+        write_signal_validation(conn, symbol, val_result)
 
     if success:
         logger.info(f"[{symbol}] Scoring pipeline completed successfully")

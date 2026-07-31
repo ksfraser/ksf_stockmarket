@@ -24,38 +24,22 @@
 - Partition pruning for backtest queries (WHERE on date range → only relevant partitions scanned)
 - Per-year backup via `mysqldump --where "YEAR(date)=2025"`
 
-### 2.2 Data Store Strategy: SQLite for Intraday, MariaDB for Daily+
+### 2.2 Three-Tier Indicator Architecture
 
-| Store | Purpose | Granularity | Writer | Reader |
+| Tier | When | How | Storage | Indicators |
 |---|---|---|---|---|
-| SQLite `price_intraday` | Ephemeral intraday/sub-day cache | Day-trade bars, 15-min sync | `sync_stock_prices --sqlite`, fetcher crons | detection_triggers, calculators |
-| MariaDB `stockprices` | Daily history, partitioned by year | Daily OHLCV | sync jobs, backfills, migrations | TA, backtest, strategies, UI |
-| SQLite `alert_queue` | Ephemeral alert staging | Trigger-level events | detection_triggers --sqlite | alert dispatcher → MariaDB EOD sync |
-| MariaDB `alert_queue` | Canonical alert log | Historical alerts | EOD sync from SQLite | UI, LLM analysis |
+| 1 | Per INSERT | MySQL trigger | Wide columns in `daily_indicators` | daily_return, gap, SMA-20/50/200, vol_sma_20 |
+| 2 | Daily batch | MySQL event (window functions) | Wide columns in `daily_tier2` | Bollinger, ATR-14, vol ratios, trend |
+| 3 | Daily batch | Python cron (TA-Lib vectorized) | Name-value in `ta_values` | RSI, MACD, candlestick patterns, custom |
 
-**Rule**: sub-day checks read SQLite. Daily+ lookbacks (>1 day window) read MariaDB.
-If data is stale, calculators return `stale` state; an external fetcher service refreshes SQLite/MariaDB independently.
+**Rationale**: 
+- Tier 1 is O(1) per row — cheap enough for trigger
+- Tier 2 needs 14-20 row window — expensive per insert, cheap once daily
+- Tier 3 needs full array (250+ rows) — only efficient as batch vectorized operation
 
-### 2.4 Fetcher → Repository Pattern
+### 2.3 Scoring System Design
 
-External data sources (yFinance, Google Finance, SEDAR, SEC) write **only** to DTOs.
-Repositories own all SQL. This separation:
-- Makes every worker idempotent (same DTO save = same DB state)
-- Enables distributed execution (fetcher container → shared DB → calculator container)
-- Centralizes column mapping in one place per backend
-- Lets us add sources without touching calculators
-
-```
-Fetcher (YFinanceFetcher)
-  → List[StockPriceDTO]
-    → Repository.save_all(dtos)  # SQLite intraday or MariaDB daily+
-```
-
-**Staleness contract**: calculators call `repository.is_stale(symbol, max_age_hours)`.
-If stale, they emit `STALE_DATA` event instead of computing; a fetcher worker
-picks it up and refreshes the store. Fetchers never run inline inside calculators.
-
-### 2.4 Scoring System Design
+10 scoring tables preserved from legacy, enhanced with LLM integration:
 
 | Table | Purpose | LLM Role |
 |---|---|---|
@@ -79,7 +63,7 @@ picks it up and refreshes the store. Fetchers never run inline inside calculator
 - `human_overridden`: Human changed the LLM's score
 - `human_recommendation`: Human analyst's recommendation
 
-### 2.5 Signal Weight Correlation Design
+### 2.4 Signal Weight Correlation Design
 
 **Problem**: Signals fire at different times — some lead, some lag, some coincide.
 
@@ -116,30 +100,43 @@ effective_weight = base_weight × (1 + correlation × 0.5) × recency_factor
 
 ### 3.3 Data Flow
 
-```text
-Intraday/market-hours:
-  Fetcher cron (every 15 min)
-    → YFinanceFetcher → StockPriceDTOs → SQLitePriceRepository
-    → price_intraday (sub-day cache)
-  Detection cron
-    → detection_triggers --sqlite
-    → reads price_intraday (no yfinance calls)
-    → SQLitePriceRepository.upsert alerts
-    → alert_queue (SQLite)
-
-EOD/historical:
-  Fetcher cron (daily)
-    → YFinanceFetcher → StockPriceDTOs → MariaDBStockPriceRepository
-    → stockprices (daily+ history)
-  Calculator cron
-    → reads stockprices via Repository
-    → writes indicators to MariaDB
-  EOD sync
-    → SQLite alert_queue → MariaDB alert_queue
+```
+Daily Processing Flow:
+1. Market closes (4 PM ET)
+2. yfinance fetches latest prices → stockprices (trigger fires Tier 1)
+3. MySQL event runs Tier 2 (window functions)
+4. Python cron runs Tier 3 (TA-Lib vectorized batch)
+5. Python cron runs scoring analysis (LLM + fundamental)
+6. Python cron updates signal_weights (correlation analysis)
+7. Results available for UI and monitoring
 ```
 
-**Rule**: Fetchers write, calculators read. If a calculator finds stale data,
-it emits `STALE_DATA` and exits. Fetcher workers handle refresh asynchronously.
+### 3.4 External Provider Auth Architecture
+
+**Pattern**: OAuth 2.0 Authorization Code + PKCE-ready
+
+```
+[Browser] → [Apache/PHP] → Reddit OAuth endpoint
+                ↓
+         [Callback handler]
+                ↓
+         [external_auth_tokens DB]
+                ↓
+         [research_agent.py reads token]
+                ↓
+         [Authenticated Reddit API]
+```
+
+**Security**:
+- Client secrets stored as `password` type in `system_settings`
+- Access/refresh tokens stored as `password` semantics in `external_auth_tokens`
+- Never logged — controller uses `[REDACTED]` in all error messages
+- Unique per user/provider — supports multi-user token isolation
+
+**Extensibility**:
+- Add new provider by extending `ExternalAuthController::$map` (scopes, endpoints)
+- Register new provider in `external_auth.json`
+- Admin adds credentials via Admin Settings
 
 ## 4. Migration Strategy
 
@@ -163,44 +160,9 @@ it emits `STALE_DATA` and exits. Fetcher workers handle refresh asynchronously.
 - Backtesting with optimized weights
 - Performance tuning
 
-## 5. Advisor Recommendations & Notifications
-
-### 5.1 Flow
-```
-Cron: run_advisor_recommendations.py --date=YYYY-MM-DD
-  ├─ load_active_advisors()
-  ├─ for advisor in advisors:
-  │   ├─ strategy.generate_signals()
-  │   ├─ users = user_advisors.where(advisor_id, is_active=1)
-  │   ├─ for user in users:
-  │   │   ├─ queue recommendation into advisor_recommendations
-  │   │   ├─ load user_settings notification prefs
-  │   │   ├─ send_email / discord_dm / discord_channel / whatsapp
-  │   │   └─ mark sent flags
-  │   └─ if no users hired: skip
-  └─ log run result
-
-API (python/api/app.py):
-  GET  /api/advisor/recommendations?user_id=N
-  GET/POST /api/advisor/preferences?user_id=N
-  POST /api/advisor/notifications/whatsapp/send
-  POST /api/advisor/notifications/whatsapp/status
-
-### 5.2 Knowledge Base Integration
-- KB articles served via `?action=knowledge_base` and `?action=kb_article&slug=...`
-- Optional risk rules stored in `strategy_rules.risk_rules.optional_rules` JSON:
-  - `min_reward_risk_ratio` — asymmetric risk/reward floor
-  - `emergency_buffer_target_pct` — cash reserve floor
-  - `emergency_buffer_grace_days` — days buffer can stay below target before blocking buys
-  - `max_leverage_ratio` — max (portfolio/cash) before blocking
-  - `max_margin_utilization_pct` — max margin utilization
-  - `margin_call_buffer_pct` — cash floor as % of equity
-  - `margin_call_grace_hours` — hours buffer can stay breached
-  - `blacklist_asset_classes` — excluded asset classes/symbols
-- rules_backtest enforces optional rules before entries; zero values = disabled.
-
-### 5.3 Multi-Gateway Delivery
-- Email: SMTP via advisor_notifier._send_email()
-- Discord: bot token + channel webhook; DM + private channel supported
-- WhatsApp: HTTP POST to {WHATSAPP_GATEWAY_URL}/v1/send with E.164 normalization
-- Recommendation format: "Buy 100 ABC at $12 max 12.45 stop limit 10.92 etc."
+### Phase 5: Paperclip Zero-Human Trading Firm (2026-07)
+- Research Agent: internal + external brief generation
+- Risk Gate: pre-trade Sharpe/drawdown checks
+- External Provider Auth: Reddit OAuth, TradingView/arXiv API keys
+- Hermes Skill + Nightly Cron: automated brief generation at 02:00
+- Paper-only execution via advisor_backtest.php

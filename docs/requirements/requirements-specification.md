@@ -46,13 +46,6 @@ The system shall generate:
 - Backtest results comparison
 - Seg fund screening reports
 
-### BR-7: Advisor Hiring & Recommendations
-The system shall allow users to hire one or more advisor accounts to generate
-actionable recommendations and deliver them via the user's chosen channels:
-- Email
-- Discord DM or private channel
-- WhatsApp (via gateway)
-
 ## 2. Functional Requirements
 
 ### FR-1: Data Import
@@ -80,92 +73,32 @@ actionable recommendations and deliver them via the user's chosen channels:
 | FR-3.3 | Buffett value investing screen                       | High     |
 | FR-3.4 | ETF screener (Sharpe, return, MER, correlation)     | High     |
 | FR-3.5 | Seg fund screener (MER, guarantee, returns)         | High     |
-| FR-3.6 | Screener preset changes update results without full-page reload (AJAX) | Medium |
 
 ### FR-4: Backtesting
-|| ID     | Requirement                                          | Priority |
-||--------|------------------------------------------------------|----------|
-|| FR-4.1 | Run backtests with configurable date ranges          | High     |
-|| FR-4.2 | Support multiple rebalancing frequencies             | High     |
-|| FR-4.3 | Track per-trade P&L, commissions, position sizing    | High     |
-|| FR-4.4 | Compute Sharpe ratio, max drawdown, win rate        | High     |
-|| FR-4.5 | Queue-based execution to prevent overload            | Medium   |
-|| FR-4.6 | Store results per strategy as separate portfolio     | High     |
-|| FR-4.7 | Compose custom advisors by blending existing rules   | High     |
-|| FR-4.8 | Run multi-strategy combo consensus backtests         | High     |
-|| FR-4.9 | Run parameter sweeps across risk/sizing variables    | High     |
-|| FR-4.10| Forward-walk rolling backtest validation             | Medium   |
-|| FR-4.11| Oscillator/candlestick/ATR toggle controls in rules | High     |
-|| FR-4.12| Timeframe-aware candlestick signals (D/W/M)          | Medium   |
-
-### FR-5: Rule Engine & Custom Advisors
-|| ID     | Requirement                                          | Priority |
-||--------|------------------------------------------------------|----------|
-|| FR-5.1 | Persist rule definitions in `strategy_rules` table   | High     |
-|| FR-5.2 | Load rule-driven signals for any advisor             | High     |
-|| FR-5.3 | Runtime rule editor for stop %, ATR mult, sizing     | High     |
-|| FR-5.4 | Share custom advisors with other users               | High     |
-|| FR-5.5 | Auto-sell stale positions on empty signal sets       | High     |
-|| FR-5.6 | NN/GA/RL agents optimize rule weights via backtest   | Medium   |
-
-### FR-6: Advisor Hiring & Recommendations
 | ID     | Requirement                                          | Priority |
 |--------|------------------------------------------------------|----------|
-| FR-6.1 | Browse available advisors with strategy summary      | High     |
-| FR-6.2 | Hire/pause/fire advisors per user                    | High     |
-| FR-6.3 | Cron generates advisor signals for active hires only | High     |
-| FR-6.4 | Queue recommendations per user per advisor           | High     |
-| FR-6.5 | Deliver recommendations via email, Discord, WhatsApp | High     |
-| FR-6.6 | Recommendations carry notes: action, price, stops, confidence, reason | High |
-| FR-6.7 | User notification preferences UI                     | Medium   |
-| FR-6.8 | API endpoints: recommendations, preferences | Medium |
-| FR-6.9 | WhatsApp gateway: HTTP POST with E.164 normalization | Medium |
-| FR-6.10 | Private Discord recommendation delivery (bot DM / channel webhook) | Medium |
+| FR-4.1 | Run backtests with configurable date ranges          | High     |
+| FR-4.2 | Support multiple rebalancing frequencies             | High     |
+| FR-4.3 | Track per-trade P&L, commissions, position sizing    | High     |
+| FR-4.4 | Compute Sharpe ratio, max drawdown, win rate        | High     |
+| FR-4.5 | Queue-based execution to prevent overload            | Medium   |
+| FR-4.6 | Store results per strategy as separate portfolio     | High     |
 
-### FR-7: User Management & RBAC
+### FR-5: User Management & RBAC
 | ID     | Requirement                                          | Priority |
 |--------|------------------------------------------------------|----------|
-| FR-7.1 | User authentication (username/password)              | High     |
-| FR-7.2 | Role-Based Access Control (admin/trader/viewer)      | High     |
-| FR-7.3 | Watchlists per user                                  | Medium   |
-| FR-7.4 | Session management                                   | High     |
+| FR-5.1 | User authentication (username/password)              | High     |
+| FR-5.2 | Role-Based Access Control (admin/trader/viewer)      | High     |
+| FR-5.3 | Watchlists per user                                  | Medium   |
+| FR-5.4 | Session management                                   | High     |
 
-### FR-8: FrontAccounting Integration
+### FR-6: FA Integration
 | ID     | Requirement                                          | Priority |
 |--------|------------------------------------------------------|----------|
-| FR-8.1 | Record cash → brokerage transfers                   | Medium   |
-| FR-8.2 | Track asset revaluation in FA                        | Medium   |
-| FR-8.3 | Stock data in MariaDB (not FA tables)                | High     |
-| FR-8.4 | UI respects FA RBAC and permissions                  | Medium   |
-
-### FR-9: Shared Advisor Access
-| ID     | Requirement                                          | Priority |
-|--------|------------------------------------------------------|----------|
-| FR-9.1 | Advisor portfolios may be public or shared           | High     |
-| FR-9.2 | Users may browse shared advisor portfolios           | High     |
-| FR-9.3 | Shared portfolio path must auto-select the advisor   | High     |
-| FR-9.4 | Shared transactions tab must preserve advisor selection | High   |
-
-### FR-10: Broker Stop Orders
-| ID     | Requirement                                          | Priority |
-|--------|------------------------------------------------------|----------|
-| FR-10.1 | Place manual stop orders (trailing, stop-loss, stop-limit) | High |
-| FR-10.2 | Support ALL-share or portion-percentage sell       | High     |
-| FR-10.3 | View active stops with distance to trigger          | High     |
-| FR-10.4 | View historical triggered / cancelled / expired stops | Medium |
-
-### FR-11: Alerts / Monitoring
-| ID     | Requirement                                          | Priority |
-|--------|------------------------------------------------------|----------|
-| FR-11.1 | Display alert queue counts (pending / completed / failed) | High |
-| FR-11.2 | Show last 2 trading days of recent alerts           | High     |
-| FR-11.3 | Date-stamp each alert                                | High     |
-| FR-11.4 | Indicate repeat alerts (same symbol+type hit prior day) | Medium |
-
-
-- **FR-103**: The system shall enforce optional knowledge-base-derived risk rules before entries.
-- **FR-104**: Admin UI shall allow editing optional_rules JSON per strategy bucket.
-- **FR-105**: Optional rules include: min reward:risk ratio, emergency buffer target + grace days, leverage cap, margin utilization + buffer + grace hours, asset class blacklist.
+| FR-6.1 | Create FA journal entries for transfers              | Medium   |
+| FR-6.2 | Track asset revaluation in FA                        | Medium   |
+| FR-6.3 | Stock data in MariaDB (not FA tables)                | High     |
+| FR-6.4 | UI respects FA RBAC and permissions                  | Medium   |
 
 ## 3. Non-Functional Requirements
 
@@ -202,22 +135,47 @@ actionable recommendations and deliver them via the user's chosen channels:
 | NFR-4.4 | BABOK-format documentation                           | High            |
 | NFR-4.5 | Migration-based schema management                    | Medium          |
 
-### NFR-4.1: Distributed, Idempotent, DI-based Data Layer
-| ID      | Requirement                                          | Target          |
-|---------|------------------------------------------------------|-----------------|
-| NFR-4.1.1 | Calculators fetch via Repository, never raw yfinance inline | Required |
-| NFR-4.1.2 | Fetchers (yFinance, Google, SEDAR, SEC) return DTOs only, write via Repository | Required |
-| NFR-4.1.3 | DTO domain fields are single source of truth; repos map to schema | Required |
-| NFR-4.1.4 | SQLite `price_intraday` / `alert_queue` for sub-day/ephemeral work | Required |
-| NFR-4.1.5 | MariaDB `stockprices` for daily+ history | Required |
-| NFR-4.1.6 | `Repository.is_stale()` contract: calculator returns `STALE_DATA` if age > threshold | Required |
-| NFR-4.1.7 | Every script is rerunnable with same outcome (idempotent) | Required |
-
 ### NFR-5: Compatibility
-| ID      | Requirement                                          | Priority        |
+|| ID      | Requirement                                          | Priority        |
 |---------|------------------------------------------------------|-----------------|
-| NFR-5.1 | PHP 8.1+                                             | High            |
-| NFR-5.2 | MariaDB 10.6+ / MySQL 8.0+                          | High            |
-| NFR-5.3 | Python 3.11+                                         | High            |
-| NFR-5.4 | Apache 2.4+ with mod_proxy                           | High            |
-| NFR-5.5 | FrontAccounting 2.4+                                 | Medium          |
+|| NFR-5.1 | PHP 8.1+                                             | High            |
+|| NFR-5.2 | MariaDB 10.6+ / MySQL 8.0+                          | High            |
+|| NFR-5.3 | Python 3.11+                                         | High            |
+|| NFR-5.4 | Apache 2.4+ with mod_proxy                           | High            |
+|| NFR-5.5 | FrontAccounting 2.4+                                 | Medium          |
+
+## 4. Paperclip Zero-Human Trading Firm Requirements
+
+### FR-7: Strategy Research Agent
+|| ID      | Requirement                                          | Priority        |
+|---------|------------------------------------------------------|-----------------|
+|| FR-7.1 | Generate daily internal briefs from system data (ATR optimization, evaluation scores, fundamentals) | High |
+|| FR-7.2 | Scan external sources (Reddit, arXiv, TradingView) for new strategy ideas | High |
+|| FR-7.3 | Score external ideas on novelty/feasibility/edge using LLM or heuristic | Medium |
+|| FR-7.4 | Persist briefs to `research_briefs` DB table and markdown/JSON institutional memory | High |
+|| FR-7.5 | Support three modes: internal, external, both | Medium |
+
+### FR-8: External Provider Authentication
+|| ID      | Requirement                                          | Priority        |
+|---------|------------------------------------------------------|-----------------|
+|| FR-8.1 | OAuth 2.0 authorization code flow for Reddit | High |
+|| FR-8.2 | API key storage for TradingView and arXiv | Medium |
+|| FR-8.3 | Store all tokens/credentials as [REDACTED] in `external_auth_tokens` table | High |
+|| FR-8.4 | Automatic token refresh when access_token expires | Medium |
+|| FR-8.5 | Extensible provider registry (add new providers without core changes) | Medium |
+
+### FR-9: Risk Gate & Paper Trading Enforcement
+|| ID      | Requirement                                          | Priority        |
+|---------|------------------------------------------------------|-----------------|
+|| FR-9.1 | Pre-trade risk gate checks Sharpe, drawdown, strategy gates | High |
+|| FR-9.2 | Return verdict: APPROVED, REVIEW, BLOCKED | High |
+|| FR-9.3 | Paper trading default — live trading requires board approval | High |
+|| FR-9.4 | Configurable thresholds in `risk_thresholds.json` | High |
+|| FR-9.5 | Web UI for viewing risk thresholds (`?action=advisor&view=thresholds`) | Medium |
+
+### FR-10: Hermes Skill & Scheduled Automation
+|| ID      | Requirement                                          | Priority        |
+|---------|------------------------------------------------------|-----------------|
+|| FR-10.1 | Nightly cron at 02:00 generates internal research brief | High |
+|| FR-10.2 | Hermes skill wrapper for on-demand brief generation | Medium |
+|| FR-10.3 | Cron output delivered to origin chat | Medium |

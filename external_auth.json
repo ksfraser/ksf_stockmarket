@@ -1,0 +1,20 @@
+{
+  "_notice": "Credentials are REDACTED in logs and version control. Set real values via Admin Settings or environment variables.",
+  "reddit": {
+    "client_id": "__REDACTED__",
+    "client_secret": "__REDACTED__",
+    "redirect_uri": "http://192.168.1.102/stockmarket/?action=external_auth&view=callback&provider=reddit",
+    "scopes": ["read"],
+    "user_agent": "ksf_stockmarket_research_agent/1.0"
+  },
+  "tradingview": {
+    "enabled": false,
+    "api_key": "__REDACTED__",
+    "notes": "TradingView external auth TBD"
+  },
+  "arxiv": {
+    "enabled": false,
+    "api_key": "__REDACTED__",
+    "notes": "arXiv external auth TBD"
+  }
+}

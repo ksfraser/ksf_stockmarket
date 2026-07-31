@@ -6,9 +6,10 @@
 // App root: auto-detect for VPS / shared hosting / flat deploy
 $APP_ROOT = getenv('APP_ROOT');
 if (!$APP_ROOT) {
-    if (is_dir(__DIR__ . '/app/src/Controller')) {
-        $APP_ROOT = realpath(__DIR__ . '/app');
-    } elseif (is_dir(__DIR__ . '/src/Controller')) {
+    // Prefer explicit private app root; only fall back to webroot if it owns vendor
+    if (is_dir('/var/www/stockmarket-app/vendor') && is_dir('/var/www/stockmarket-app/src/Controller')) {
+        $APP_ROOT = '/var/www/stockmarket-app';
+    } elseif (is_dir(__DIR__ . '/vendor')) {
         $APP_ROOT = __DIR__;
     } else {
         $APP_ROOT = '/var/www/stockmarket-app';
@@ -20,9 +21,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Autoload — PSR-4 style for App namespace
+// Autoload — PSR-4 for App namespace + Composer vendor
+require_once $GLOBALS['APP_ROOT'] . '/vendor/autoload.php';
+
 spl_autoload_register(function ($class) {
-    // App\ namespace → src/
+    // App\ namespace → src/ via Composer PSR-4 (fallback for manual includes)
     if (strpos($class, 'App\\') === 0) {
         $relative = str_replace('App\\', '', $class);
         $file = $GLOBALS['APP_ROOT'] . '/src/' . str_replace('\\', '/', $relative) . '.php';
@@ -181,7 +184,7 @@ if ($action === 'register') {
 }
 
 // Routes requiring authentication (portfolio, transactions, personal data)
-$protectedRoutes = ['portfolio', 'transactions', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings', 'shared_with_me', 'refresh_price', 'refresh_all_prices'];
+$protectedRoutes = ['portfolio', 'transactions', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings', 'admin_setup_wizard', 'shared_with_me', 'refresh_price', 'refresh_all_prices'];
 if (in_array($action, $protectedRoutes, true) && !AuthController::checkSession()) {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header('Location: ?action=login');
@@ -311,6 +314,13 @@ switch ($action) {
         $data = array_merge($data, $ctrl->index());
         $pageTitle = 'Admin Settings';
         $template = 'admin_settings';
+        break;
+    case 'admin_setup_wizard':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdminSettingsController.php';
+        $ctrl = new AdminSettingsController();
+        $data = array_merge($data, ['settings' => $ctrl->getSettings(Database::get())]);
+        $pageTitle = 'Setup Wizard';
+        $template = 'admin_setup_wizard';
         break;
     case 'refresh_all_prices':
         require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdminSettingsController.php';
@@ -476,6 +486,47 @@ case 'strategy_timing':
         }
         $pageTitle = 'Risk Manager';
         $template = 'risk';
+        break;
+    case 'advisor':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdvisorController.php';
+        $ctrl = new AdvisorController();
+        $view = $_GET['view'] ?? 'research';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $view === 'gate') {
+            header('Content-Type: application/json');
+            echo json_encode($ctrl->preTradeGate($_POST));
+            exit;
+        }
+        if ($view === 'thresholds') {
+            $data = array_merge($data, $ctrl->thresholdsView());
+            $pageTitle = $data['pageTitle'];
+            $template = $data['template'];
+        } elseif ($view === 'research') {
+            $data = array_merge($data, $ctrl->researchBriefView());
+            $pageTitle = $data['pageTitle'];
+            $template = $data['template'];
+        } else {
+            $data = array_merge($data, $ctrl->researchBriefView());
+            $pageTitle = 'Advisor';
+            $template = 'advisor_research';
+        }
+        break;
+    case 'external_auth':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/ExternalAuthController.php';
+        $ctrl = new ExternalAuthController();
+        $view = $_GET['view'] ?? 'authorize';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data['message'] = $ctrl->saveApp();
+            $pageTitle = 'External Auth';
+            $template = 'external_auth_status';
+        } elseif ($view === 'callback') {
+            $data = array_merge($data, $ctrl->callback());
+            $pageTitle = $data['pageTitle'];
+            $template = $data['template'];
+        } elseif ($view === 'revoke') {
+            $ctrl->revoke();
+        } else {
+            $ctrl->authorize();
+        }
         break;
     case 'seg_funds':
         require_once $GLOBALS['APP_ROOT'] . '/src/Controller/SegFundsController.php';

@@ -1,8 +1,7 @@
 # Investment Agent — Architecture & Specification
 
-> **Version:** 5.1 | **Date:** 2026-07-13 | **Repo:** `ksfraser/ksf_stockmarket`
+> **Version:** 5.0 | **Date:** 2026-06-01 | **Repo:** `ksfraser/ksf_stockmarket`
 > **Status:** Web dashboard complete. Auth, portfolio, transactions, strategies pages live. GA/NN/RL agents in development.
-> **Recent changes:** Unified detail-page ratings overview with buffett/zacks/vectorvest/exit-signal checks and threshold-filtered screener presets; broker stop history + portion-sell modes; alerts page now shows alert-queue counts, last 2 trading days with repeat detection; shared-with-me fixed user-selection propagation; advisor backtest leaderboard hardened against empty results. Nightly population scripts scheduled for analyst ratings and rating scores.
 
 ---
 
@@ -18,7 +17,7 @@
 - TFSA room: $7K/yr, RRSP room: ~$6K/yr
 - Transition income may decline (part-time) — creates RRSP deregistration opportunity
 - 23 portfolio holdings across RRSP, TFSA, MARGIN accounts (~$137K book, ~$384K market)
-- Dynamic universe via `symbol_master` (265+ active symbols Jun-2026), populated from screener data and manual curation
+- 404 symbols tracked in `symbol_master`, 49 with price data (May 2025)
 
 ---
 
@@ -98,9 +97,6 @@ From the 222-indicator correlation study:
 
 **Stack:** PHP 8.1, Apache, PHP-FPM, PDO MySQL, inline CSS/JS (canvas charts), sessions
 
-**Shared Resolver Rule:**
-All ticker-to-yfinance formatting MUST go through `src/Util/SymbolResolver.php` (PHP) or `python/src/symbol_resolver.py` (Python). No controller, script, or template may append `.TO` or normalize `.UN` inline. The resolver checks `exchange_mapping`, `portfolio.price_symbol`, and `symbol_master.exchange` in that order.
-
 **Directory Layout:**
 ```
 /var/www/stockmarket-app/          ← Workspace (authoritative)
@@ -115,7 +111,6 @@ All ticker-to-yfinance formatting MUST go through `src/Util/SymbolResolver.php` 
     SymbolAdminController.php      ← Symbol activation/deactivation
     FundamentalsController.php     ← Fundamental data fetcher
   src/Model/Database.php           ← PDO singleton
-  src/Util/SymbolResolver.php      ← Canonical TSX/US ticker resolver
   src/View/helpers.php             ← Template helpers
   templates/                       ← PHP templates
   config/database.php              ← DB credentials
@@ -137,8 +132,11 @@ All ticker-to-yfinance formatting MUST go through `src/Util/SymbolResolver.php` 
 | `strategy_stock` | StrategyController | Stock selection strategies with backtested results |
 | `strategy_money` | StrategyController | Money/risk management with Kelly criterion, stops, sleeves |
 | `admin_symbols` | SymbolAdminController | Symbol activate/deactivate, exchange mapping |
-| `settings` | UserController | Per-user settings (color scheme, font size, password) |
-| `login` / `logout` | AuthController | Session-based auth with remember-me cookies |
+|| `settings` | UserController | Per-user settings (color scheme, font size, password) |
+|| `advisor` | AdvisorController | Research briefs, risk thresholds, pre-trade gate |
+|| `external_auth` | ExternalAuthController | OAuth/API key auth for Reddit, TradingView, arXiv |
+|| `admin_settings` | AdminSettingsController | System config (Discord, LLM, external auth credentials) |
+|| `login` / `logout` | AuthController | Session-based auth with remember-me cookies |
 
 **Authentication:**
 - Session-based PHP auth with `user_sessions` table for remember-me (30-day cookies)
@@ -226,6 +224,35 @@ For each candidate in each sleeve:
 - VIX > 30 → halve new position sizes
 - VIX > 40 → emergency cash shift
 
+### 3.6 Paperclip Zero-Human Trading Firm Components
+
+Mapped to existing stack to minimize re-architecture:
+
+**Research Agent** (`python/research_agent.py` + `AdvisorController.php`)
+- **Internal brief** (daily 02:00): Aggregates ATR stop optimization leaders, evaluation signals, fundamental scores into `research_briefs` DB table
+- **External brief**: Scans Reddit (`r/algotrading`, `r/quant`, `r/options`, `r/investing`), arXiv quant finance, TradingView ideas
+- **LLM scoring**: Novelty/feasibility/edge 1-10 (heuristic until LLM endpoint wired)
+- **Outputs**: Markdown + JSON in `memory/institutional/`, DB rows in `research_briefs`
+- **Hermes skill**: `stockmarket-research-agent` for on-demand execution
+- **Nightly cron**: `a0fa8b782742` at 02:00 daily
+
+**Risk Gate** (`AdvisorController::preTradeGate()` + `config/risk_thresholds.json`)
+- Pre-trade checks: Sharpe minimum 1.5, max drawdown 15%, strategy gates
+- Verdicts: APPROVED, REVIEW, BLOCKED
+- Paper trading default; live trading requires board approval
+- Thresholds stored in `config/risk_thresholds.json` (editable only by board)
+
+**External Provider Auth** (`ExternalAuthController.php` + `external_auth_tokens` table)
+- OAuth 2.0 authorization code flow for Reddit
+- API key storage for TradingView, arXiv (extensible)
+- Redirect URI: `http://192.168.1.102/stockmarket/?action=external_auth&view=callback&provider=reddit`
+- Tokens stored as [REDACTED] in `external_auth_tokens` (unique per user/provider)
+- Admin configures app credentials in `AdminSettingsController` → stored in `system_settings`
+
+**Execution**
+- Reuses `advisor_backtest.php` for paper-only execution
+- No live broker credentials in system
+
 ---
 
 ## 4. Agent Ensemble
@@ -258,48 +285,6 @@ final_weight(symbol) =
 
 ---
 
-### 4.5 Custom Advisor Composer
-
-Users can create new advisors by blending rule sets from existing advisors stored in `strategy_rules`.
-
-```
-User Input: advisor weights (e.g. buffett_quality=0.7, momentum=0.3)
-    ↓
-  composer.py
-    ↓
-  Blended rule JSON → new strategy_rules row
-    ↓
-  rules_backtest.py / pipeline_integration.py
-    ↓
-  backtest_runs + backtest_trades
-```
-
-Components:
-- **`python/src/rules/composer.py`** — CLI + library for blending `strategy_rules` rows by normalized weights. Saves composite strategies in the `composites` bucket.
-- **`python/src/rules/pipeline_integration.py`** — Reuses `strategy_pipeline.py` oscillator/combo/sweep logic inside the advisor stack. Provides `backtest_user_advisor`, `forward_walk`, `run_param_sweep`, `run_combo_sweep`, and `timeframed_candle_score` (1D/1W/1M).
-- **`python/src/rules/rule_engine.py`** — Generic rule parser/evaluator.
-- **`python/src/rules/risk.py`** — ATR stops, `max_pct_portfolio`, `max_risk_pct`, `stop_factor`, daily-loss limit flattening, and confidence-weighted position sizing.
-
-### 4.6 Oscillator & Timeframe Toggles
-
-Indicator toggles live in `strategy_rules.indicators` JSON and are normalized by `pipeline_integration.normalize_indicator_set()`.
-
-Supported toggles:
-- `rsi`, `macd`, `stoch`, `bbands`, `atr`
-- `doji`, `hammer`, `engulfing`
-- `sma_cross`, `donchian`
-
-Candlestick timeframe validation:
-- `default_timeframe` column in `strategy_rules` stores `1D`, `1W`, or `1M`.
-- `timeframed_candle_score()` resamples daily OHLCV into weekly/monthly candles and applies the same pattern scoring, so users can validate signals against larger timeframes without deploying new code.
-
-### 4.7 GA + NN Integration Path
-
-- **`python/ga_optimizer.py`** evolves portfolio weights and continuous risk parameters (`atr_stop_mult`, `risk_per_trade`, `rebalance_pct`, `dca_installments`). It can target any `strategy_rules` record by reading its `risk_rules` JSON and mutating knobs.
-- **`python/agents/nn_agent.py`** trains an LSTM on 60-day windows of 25 features to predict 5-class direction and recommend position weights. Its outputs can write blended weights into a composite `strategy_rules` row for live/forward-walk consumption.
-
----
-
 ## 5. Backtested Strategy Results (as of 2026-02-01)
 
 | Strategy | Win Rate | Profit Factor | Max Drawdown | Status |
@@ -320,21 +305,23 @@ Candlestick timeframe validation:
 |---|---|---|
 | `stockprices` | OHLCV daily prices | symbol, price_date, close, volume |
 | `indicators_json` | 142 TA indicators per row | symbol, price_date, data (JSON) |
-| `symbol_master` | Symbol universe | symbol, name, exchange, sector, is_active |
+| `symbol_master` | 404-symbol universe | symbol, name, exchange, sector, is_active |
 | `portfolio` | 23 current positions | symbol, account_type, shares, cost_basis, trailing_stop_pct, atr_multiplier |
-| `users` | Authentication | username, password_hash, role, is_active |
-| `user_settings` | Per-user preferences | user_id, setting_key, setting_value |
-| `user_sessions` | Remember-me tokens | id, user_id, expires_at |
-| `fundamentals` | Fundamental data | symbol, fetch_date, pe, div_yield, roe, ... |
-| `analyst_ratings` | Analyst predictions | symbol, date, firm, rating, price_target |
-| `symbol_news` | News articles | symbol, date, title, url, source |
-| `options_snapshot` | Options data | symbol, fetch_date, put_call_ratio, iv |
-| `exchange_mapping` | Symbol→exchange map | symbol, exchange, yahoo_suffix |
+|| `users` | Authentication | username, password_hash, role, is_active |
+|| `user_settings` | Per-user preferences | user_id, setting_key, setting_value |
+|| `user_sessions` | Remember-me tokens | id, user_id, expires_at |
+|| `fundamentals` | Fundamental data | symbol, fetch_date, pe, div_yield, roe, ... |
+|| `analyst_ratings` | Analyst predictions | symbol, date, firm, rating, price_target |
+|| `symbol_news` | News articles | symbol, date, title, url, source |
+|| `options_snapshot` | Options data | symbol, fetch_date, put_call_ratio, iv |
+|| `exchange_mapping` | Symbol→exchange map | symbol, exchange, yahoo_suffix |
 || `transactions` | Transaction history | symbol, trade_date, type, quantity, price, total |
-|| `backtest_runs` | Advisor backtest results | user_id, strategy, start_date, end_date, total_return, max_drawdown, num_trades, win_rate |
-|| `backtest_trades` | Backtest executions | backtest_id, symbol, trade_type, trade_date, price, quantity, commission, total_cost, signal_reasons |
-|| `strategy_rules` | Rule definitions for advisors | strategy_name, bucket, entry_rules, exit_rules, risk_rules, bias_criteria, indicators, default_timeframe |
-|| `strategy_composers` | Saved composite rule sets | user_id, name, description, source_advisors, weights, strategy_rules_id |
+|| `research_briefs` | Strategy research briefs | brief_date, mode, category, title, summary, scores, source_url |
+|| `external_auth_tokens` | OAuth/API tokens for external providers | provider, access_token, refresh_token, expires_at, is_active |
+|| `system_settings` | System-wide config (LLM, Discord, external auth) | setting_key, setting_value, setting_type |
+|| `advisor_recommendations` | Advisor trade recommendations | symbol, account_type, direction, entry_price, stop_price |
+|| `advisor_trades` | Executed paper trades | symbol, trade_date, type, quantity, price, pnl |
+|| `strategy_registry` | Strategy catalog for risk gate | strategy_key, name, category, sleeve, is_active, board_approved_for_live, params |
 
 ---
 
@@ -386,7 +373,7 @@ class DBConnection(ABC):
 
 ## 9. File Locations
 
-|| Component | Path |
+| Component | Path |
 |---|---|
 | PHP workspace | `/var/www/stockmarket-app/` |
 | Apache web root | `/var/www/html/stockmarket/` |
@@ -394,16 +381,10 @@ class DBConnection(ABC):
 | Python project | `/home/ksf_stockmarket/ksf_stockmarket/` |
 | Python DB adapter | `python/db/` |
 | Python pipeline | `python/daily_pipeline.py` |
+| Python research agent | `python/research_agent.py` |
 | Python tests | `tests/unit/test_db_adapter.py` |
 | Config | `config.yaml` (Python), `config/database.php` (PHP) |
+| Risk thresholds | `config/risk_thresholds.json` |
+| External auth config | `config/external_auth.json` |
 | MySQL host | `ksfraser.ca` |
 | DB name | `ksfraser_stock_market` |
-| Rule engine | `python/src/rules/rule_engine.py`, `python/src/rules/risk.py` |
-| Rule composer | `python/src/rules/composer.py` |
-| Pipeline integration | `python/src/rules/pipeline_integration.py` |
-| Rules backtest runner | `python/rules_backtest.py` |
-| Strategy pipeline (standalone) | `strategy_pipeline.py` |
-| GA optimizer | `python/ga_optimizer.py` |
-| NN agent | `python/agents/nn_agent.py` |
-| Strategy rule seeder | `python/scripts/seed_strategy_rules.py` |
-| Rule/ADR docs | `docs/architecture/ADR-rule-engine-pipeline-integration.md` |

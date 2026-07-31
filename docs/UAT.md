@@ -127,3 +127,43 @@
 | NF-5 | DB size | < 500 MB |
 | NF-6 | Code coverage | > 80% |
 | NF-7 | All parameters configurable | 100% in config.yaml |
+
+## UAT-11: Research Agent
+
+| ID | Test | Expected | How to Verify |
+|---|---|---|---|
+| UAT-11.1 | Internal brief generates | `research_briefs` has row for today with mode='internal' | Run `python3 research_agent.py --mode internal` |
+| UAT-11.2 | Brief includes ATR leaders | Summary contains EULIF or other top ATR performer | Read brief markdown |
+| UAT-11.3 | Brief includes eval signals | Summary contains eval symbols | Read brief markdown |
+| UAT-11.4 | Brief includes fundamentals | Summary contains fundamental scores | Read brief markdown |
+| UAT-11.5 | Markdown + JSON outputs created | Files exist in `memory/institutional/` | ls that directory |
+| UAT-11.6 | External brief falls back gracefully | No crash when Reddit returns 403 | Run `--mode external` |
+| UAT-11.7 | External brief uses token when available | Uses oauth.reddit.com when token in DB | Check logs |
+
+## UAT-12: External Provider Authentication
+
+| ID | Test | Expected | How to Verify |
+|---|---|---|---|
+| UAT-12.1 | Admin can save Reddit credentials | `system_settings` has `external_auth_reddit_client_id` | Admin Settings POST |
+| UAT-12.2 | User can initiate Reddit OAuth | Redirect to `reddit.com/api/v1/authorize` | GET `?action=external_auth` |
+| UAT-12.3 | Callback stores token | `external_auth_tokens` has row for user+reddit | Complete OAuth flow |
+| UAT-12.4 | Token is [REDACTED] | No plaintext token in logs or error output | Check logs |
+| UAT-12.5 | Revoke removes token | Row deleted from `external_auth_tokens` | GET `?action=external_auth&view=revoke` |
+
+## UAT-13: Risk Gate & Paper Trading
+
+| ID | Test | Expected | How to Verify |
+|---|---|---|---|
+| UAT-13.1 | Gate returns APPROVED for valid trade | JSON `verdict: APPROVED` | POST `?action=advisor&view=gate` |
+| UAT-13.2 | Gate returns BLOCKED for high drawdown | JSON `verdict: BLOCKED` when drawdown > threshold | POST with bad params |
+| UAT-13.3 | Thresholds readable via UI | `?action=advisor&view=thresholds` renders | HTTP GET |
+| UAT-13.4 | Paper trading default | `paper_trading_default = true` in config | Read `risk_thresholds.json` |
+
+## UAT-14: Hermes Skill & Nightly Cron
+
+| ID | Test | Expected | How to Verify |
+|---|---|---|---|
+| UAT-14.1 | Cron job exists | `cronjob list` shows "Daily Internal Research Brief" | Hermes cron list |
+| UAT-14.2 | Cron schedule is 02:00 daily | `next_run_at` shows 02:00 | Cron metadata |
+| UAT-14.3 | Skill loads correctly | `stockmarket-research-agent` in skills list | Hermes skills list |
+| UAT-14.4 | Skill commands run | `python3 research_agent.py --mode internal` executes | Manual run |

@@ -333,6 +333,13 @@ switch ($action) {
         $pageTitle = 'Admin Settings';
         $template = 'admin_settings';
         break;
+    case 'admin_setup_wizard':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdminSettingsController.php';
+        $ctrl = new AdminSettingsController();
+        $data = array_merge($data, ['settings' => $ctrl->getSettings(Database::get())]);
+        $pageTitle = 'Setup Wizard';
+        $template = 'admin_setup_wizard';
+        break;
     case 'refresh_all_prices':
         require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdminSettingsController.php';
         $ctrl = new AdminSettingsController();
@@ -512,6 +519,47 @@ case 'strategy_timing':
         }
         $pageTitle = 'Risk Manager';
         $template = 'risk';
+        break;
+    case 'advisor':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AdvisorController.php';
+        $ctrl = new AdvisorController();
+        $view = $_GET['view'] ?? 'research';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $view === 'gate') {
+            header('Content-Type: application/json');
+            echo json_encode($ctrl->preTradeGate($_POST));
+            exit;
+        }
+        if ($view === 'thresholds') {
+            $data = array_merge($data, $ctrl->thresholdsView());
+            $pageTitle = $data['pageTitle'];
+            $template = $data['template'];
+        } elseif ($view === 'research') {
+            $data = array_merge($data, $ctrl->researchBriefView());
+            $pageTitle = $data['pageTitle'];
+            $template = $data['template'];
+        } else {
+            $data = array_merge($data, $ctrl->researchBriefView());
+            $pageTitle = 'Advisor';
+            $template = 'advisor_research';
+        }
+        break;
+    case 'external_auth':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/ExternalAuthController.php';
+        $ctrl = new ExternalAuthController();
+        $view = $_GET['view'] ?? 'authorize';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data['message'] = $ctrl->saveApp();
+            $pageTitle = 'External Auth';
+            $template = 'external_auth_status';
+        } elseif ($view === 'callback') {
+            $data = array_merge($data, $ctrl->callback());
+            $pageTitle = $data['pageTitle'];
+            $template = $data['template'];
+        } elseif ($view === 'revoke') {
+            $ctrl->revoke();
+        } else {
+            $ctrl->authorize();
+        }
         break;
     case 'seg_funds':
         require_once $GLOBALS['APP_ROOT'] . '/src/Controller/SegFundsController.php';

@@ -178,6 +178,26 @@ def _should_defer_sell_for_dividend(conn, symbol, current_date, px):
     return True
 
 
+def _process_dividend_deferred_sells(current_date, positions, dividend_deferred_sells):
+    """Clear deferral flags after the ex-dividend date has passed."""
+    for sym in list(dividend_deferred_sells.keys()):
+        if current_date > dividend_deferred_sells[sym]:
+            del dividend_deferred_sells[sym]
+
+
+def _maybe_exec_sell_with_dividend_check(conn, slug, strategy_name, pos, trades, current_date, cash, accrual_cash, commission, reason, pending_settlements, dividend_deferred_sells):
+    """Execute sell unless it should be deferred for dividend capture."""
+    sym = pos["symbol"]
+    px = get_price(conn, sym, current_date)
+    if not px or px <= 0:
+        return cash, accrual_cash, False
+    if _should_defer_sell_for_dividend(conn, sym, current_date, px):
+        dividend_deferred_sells[sym] = _upcoming_ex_dividend_dates(conn, sym, current_date, lookahead_days=3)[0][0]
+        return cash, accrual_cash, False
+    cash, accrual_cash = _exec_sell(conn, slug, strategy_name, pos, trades, current_date, cash, accrual_cash, commission, reason, pending_settlements)
+    return cash, accrual_cash, True
+
+
 def _process_settlements(current_date, cash, accrual_cash, positions, trades, commission, slug, strategy_name, pending):
     due = [s for s in pending if s["settlement_date"] == current_date]
     remaining = [s for s in pending if s["settlement_date"] != current_date]
@@ -278,6 +298,7 @@ def run_rules_backtest(
             current_date, cash, accrual_cash, positions, trades, commission, slug, strategy_name, pending_settlements
         )
         cash = _process_dividends(current_date, cash, positions, trades, conn)
+        _process_dividend_deferred_sells(current_date, positions, dividend_deferred_sells)
         if (current_date - last_rebalance).days < rebalance_days:
             if i % 5 == 0:
                 history.append(_snapshot(current_date, cash, positions, conn))
@@ -295,7 +316,7 @@ def run_rules_backtest(
                 pos = positions[sym]
                 px = get_price(conn, sym, current_date)
                 if px and px > 0:
-                    cash, accrual_cash = _exec_sell(conn, slug, strategy_name, pos, trades, current_date, cash, accrual_cash, commission, f"daily_loss_limit: {reason}", pending_settlements)
+                    _exec_sell(conn, slug, strategy_name, pos, trades, current_date, cash, accrual_cash, commission, f"daily_loss_limit: {reason}", pending_settlements)
             positions.clear()
             if i % 5 == 0:
                 history.append(_snapshot(current_date, cash, positions, conn))
@@ -317,7 +338,7 @@ def run_rules_backtest(
                     pos = positions[sym]
                     px = get_price(conn, sym, current_date)
                     if px and px > 0:
-                        cash, accrual_cash = _exec_sell(conn, slug, strategy_name, pos, trades, current_date, cash, accrual_cash, commission, "emergency_buffer_exceeded", pending_settlements)
+                        _exec_sell(conn, slug, strategy_name, pos, trades, current_date, cash, accrual_cash, commission, "emergency_buffer_exceeded", pending_settlements)
                     if sym in positions:
                         del positions[sym]
                 if i % 5 == 0:
@@ -330,7 +351,7 @@ def run_rules_backtest(
                         pos = positions[sym]
                         px = get_price(conn, sym, current_date)
                         if px and px > 0:
-                            cash, accrual_cash = _exec_sell(conn, slug, strategy_name, pos, trades, current_date, cash, accrual_cash, commission, "leverage_exceeded", pending_settlements)
+                            _exec_sell(conn, slug, strategy_name, pos, trades, current_date, cash, accrual_cash, commission, "leverage_exceeded", pending_settlements)
                         if sym in positions:
                             del positions[sym]
                     if i % 5 == 0:
@@ -343,7 +364,7 @@ def run_rules_backtest(
                         pos = positions[sym]
                         px = get_price(conn, sym, current_date)
                         if px and px > 0:
-                            cash, accrual_cash = _exec_sell(conn, slug, strategy_name, pos, trades, current_date, cash, accrual_cash, commission, "margin_limit_exceeded", pending_settlements)
+                            _exec_sell(conn, slug, strategy_name, pos, trades, current_date, cash, accrual_cash, commission, "margin_limit_exceeded", pending_settlements)
                         if sym in positions:
                             del positions[sym]
                     if i % 5 == 0:
@@ -358,8 +379,9 @@ def run_rules_backtest(
                 continue
             hit, meta = check_atr_exit(conn, sym, current_date, pos, {"stop_pct": stop_pct, "atr_multiplier": atr_mult})
             if hit:
-                cash, accrual_cash = _exec_sell(conn, slug, strategy_name, pos, trades, current_date, cash, accrual_cash, commission, f"atr_exit last={meta.get('last_price')} threshold={meta.get('threshold')}", pending_settlements)
-                del positions[sym]
+                cash, accrual_cash, executed = _maybe_exec_sell_with_dividend_check(conn, slug, strategy_name, pos, trades, current_date, cash, accrual_cash, commission, f"atr_exit last={meta.get('last_price')} threshold={meta.get('threshold')}", pending_settlements, dividend_deferred_sells)
+                if executed:
+                    del positions[sym]
 
         # Advisor signals
         try:
@@ -378,7 +400,11 @@ def run_rules_backtest(
                     continue
                 px = get_price(conn, sym, current_date)
                 if px and px > 0:
-                    _exec_sell(conn, slug, strategy_name, positions[sym], trades, current_date, cash, accrual_cash, commission, "rebalance_out", pending_settlements)
+                    cash, accrual_cash, executed = _maybe_exec_sell_with_dividend_check(conn, slug, strategy_name, positions[sym], trades, current_date, cash, accrual_cash, commission, "rebalance_out", pending_settlements, dividend_deferred_sells)
+                    if not executed:
+                        continue
+                if sym in positions:
+                    del positions[sym]
             positions.clear()
             if i % 5 == 0:
                 history.append(_snapshot(current_date, cash, positions, conn))
@@ -393,7 +419,9 @@ def run_rules_backtest(
                 continue
             px = get_price(conn, sym, current_date)
             if px and px > 0:
-                cash = _exec_sell(conn, slug, strategy_name, positions[sym], trades, current_date, cash, accrual_cash, commission, "rebalance_out", pending_settlements)
+                cash, accrual_cash, executed = _maybe_exec_sell_with_dividend_check(conn, slug, strategy_name, positions[sym], trades, current_date, cash, accrual_cash, commission, "rebalance_out", pending_settlements, dividend_deferred_sells)
+                if not executed:
+                    continue
             if sym in positions:
                 del positions[sym]
 
@@ -403,7 +431,9 @@ def run_rules_backtest(
                 continue
             px = get_price(conn, sym, current_date)
             if px and px > 0:
-                cash, accrual_cash = _exec_sell(conn, slug, strategy_name, positions[sym], trades, current_date, cash, accrual_cash, commission, sig.get("reason", "signal_exit"), pending_settlements)
+                cash, accrual_cash, executed = _maybe_exec_sell_with_dividend_check(conn, slug, strategy_name, positions[sym], trades, current_date, cash, accrual_cash, commission, sig.get("reason", "signal_exit"), pending_settlements, dividend_deferred_sells)
+                if not executed:
+                    continue
             if sym in positions:
                 del positions[sym]
 

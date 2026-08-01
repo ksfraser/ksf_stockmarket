@@ -4,15 +4,18 @@
  */
 class StockController {
     private $pdo;
+    /** @var SymbolResolver */
+    private $resolver;
 
     public function __construct() {
         $this->pdo = Database::get();
+        $this->resolver = new SymbolResolver($this->pdo);
     }
 
     /**
      * GET /?action=list — List all symbols with latest price.
      */
-    public function listSymbols(string $search = '', string $exchange = '', string $sortBy = 'symbol', string $sortDir = 'ASC'): array {
+    public function listSymbols(string $search = '', string $exchange = '', string $sortBy = 'symbol', string $sortDir = 'ASC', int $page = 1, int $perPage = 200): array {
         $allowedSort = ['symbol','close','volume','change_pct','price_date'];
         if (!in_array($sortBy, $allowedSort)) $sortBy = 'symbol';
         $sortDir = strtoupper($sortDir) === 'DESC' ? 'DESC' : 'ASC';
@@ -21,8 +24,9 @@ class StockController {
         $params = [];
 
         if ($search) {
-            $where[] = "(sp.symbol LIKE :search OR sm.name LIKE :search)";
-            $params[':search'] = '%' . $search . '%';
+            $where[] = "(sp.symbol LIKE :search1 OR sm.name LIKE :search2)";
+            $params[':search1'] = '%' . $search . '%';
+            $params[':search2'] = '%' . $search . '%';
         }
         if ($exchange) {
             $where[] = "sm.exchange = :exchange";
@@ -31,7 +35,25 @@ class StockController {
 
         $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-        // Get previous close for change calculation
+        // Total matching symbols
+        $countSql = "SELECT COUNT(DISTINCT sp.symbol)
+                     FROM stockprices sp
+                     LEFT JOIN symbol_master sm ON sp.symbol = sm.symbol
+                     {$whereSql}";
+        $stmt = $this->pdo->prepare($countSql);
+        $stmt->execute($params);
+        $totalAll = (int)$stmt->fetchColumn();
+
+        $page = max(1, $page);
+        $perPage = in_array($perPage, [50, 100, 250, 500, 1000]) ? $perPage : 200;
+        $offset = ($page - 1) * $perPage;
+        $totalPages = max(1, (int)ceil($totalAll / $perPage));
+        if ($page > $totalPages) {
+            $page = $totalPages;
+            $offset = ($page - 1) * $perPage;
+        }
+
+        // Get latest price for each symbol
         $sql = "SELECT sp.symbol, sp.price_date, sp.close, sp.volume, sp.open, sp.high, sp.low,
                        sm.name, sm.exchange, sm.sector, sm.industry,
                        prev.close as prev_close
@@ -46,7 +68,7 @@ class StockController {
                     )
                 {$whereSql}
                 ORDER BY {$sortBy} {$sortDir}
-                LIMIT 200";
+                LIMIT {$perPage} OFFSET {$offset}";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($params);
@@ -61,7 +83,17 @@ class StockController {
             }
         }
 
-        return $rows;
+        return [
+            'symbols'     => $rows,
+            'search'      => $search,
+            'exchange'    => $exchange,
+            'sortBy'      => $sortBy,
+            'sortDir'     => $sortDir,
+            'page'        => $page,
+            'per_page'    => $perPage,
+            'total_all'   => $totalAll,
+            'total_pages' => $totalPages,
+        ];
     }
 
     /**
@@ -69,22 +101,13 @@ class StockController {
      */
     public function detail(string $symbol): array {
         $symbol = strtoupper(trim($symbol));
+        $resolved = $this->resolver->resolve($symbol);
+        // For DB lookups prefer the resolved form, but keep original as fallback
+        $candidates = $this->resolver->candidates($symbol);
 
-        // Latest price info - try .TO suffix for Canadian symbols
-        $stmt = $this->pdo->prepare("
-            SELECT sp.*, sm.name, sm.exchange, sm.sector, sm.industry
-            FROM stockprices sp
-            LEFT JOIN symbol_master sm ON sp.symbol = sm.symbol
-            WHERE sp.symbol = :sym
-            ORDER BY sp.price_date DESC LIMIT 1
-        ");
-        $stmt->execute([':sym' => $symbol]);
-        $latest = $stmt->fetch();
-
-        // If no price, try .TO suffix for Canadian symbols
-        if (!$latest && preg_match('/^[A-Z]/', $symbol)) {
-            // Try alternate symbol format
-            $altSym = $symbol . '.TO';
+        // Latest price info — try candidates in order
+        $latest = null;
+        foreach ($candidates as $candidate) {
             $stmt = $this->pdo->prepare("
                 SELECT sp.*, sm.name, sm.exchange, sm.sector, sm.industry
                 FROM stockprices sp
@@ -92,10 +115,12 @@ class StockController {
                 WHERE sp.symbol = :sym
                 ORDER BY sp.price_date DESC LIMIT 1
             ");
-            $stmt->execute([':sym' => $altSym]);
+            $stmt->execute([':sym' => $candidate]);
             $latest = $stmt->fetch();
-            // Use alternate symbol for subsequent queries
-            if ($latest) $symbol = $altSym;
+            if ($latest) {
+                $symbol = $candidate;
+                break;
+            }
         }
 
         if (!$latest) {
@@ -107,43 +132,27 @@ class StockController {
         $stmt->execute([':sym' => $symbol, ':d' => $latest['price_date']]);
         $latest['prev_close'] = $stmt->fetchColumn();
 
-        // 250 days history
-        $stmt = $this->pdo->prepare("SELECT price_date, open, high, low, close, volume FROM stockprices WHERE symbol = :sym ORDER BY price_date DESC LIMIT 250");
+        // 2 years history — enough to cover dividend ex-dates for the Recent Dividends table
+        $stmt = $this->pdo->prepare("SELECT price_date, open, high, low, close, volume FROM stockprices WHERE symbol = :sym ORDER BY price_date DESC LIMIT 730");
         $stmt->execute([':sym' => $symbol]);
         $history = array_reverse($stmt->fetchAll());
 
-        // Indicators: latest + 60 days for charts — check both symbol formats
+        // Indicators: latest + 60 days for charts — prefer the resolved symbol
+        $this->refreshIndicatorsJsonIfStale($resolved);
         $indHistory = [];
         $indicators = [];
-        
-        // Check if this is a TSX symbol (has .TO variant) and which has more data
-        // Only try alternate suffix if symbol doesn't already have it
-        $hasTO = str_ends_with($symbol, '.TO');
-        $baseSym = $hasTO ? substr($symbol, 0, -3) : $symbol;
-        $altSym = $hasTO ? null : $symbol . '.TO';
-        
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM indicators_json WHERE symbol = :sym");
-        $stmt->execute([':sym' => $symbol]);
-        $mainCount = $stmt->fetchColumn();
-        
-        $altCount = 0;
-        if ($altSym) {
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM indicators_json WHERE symbol = :sym");
-            $stmt->execute([':sym' => $altSym]);
-            $altCount = $stmt->fetchColumn();
-        }
-        
-        // Prefer the format with more data
-        $preferredSym = ($altCount > $mainCount && $altSym) ? $altSym : $symbol;
-        
+
         $indSql = "SELECT price_date, data FROM indicators_json WHERE symbol = :sym ORDER BY price_date DESC LIMIT 60";
         $stmt = $this->pdo->prepare($indSql);
-        $stmt->execute([':sym' => $preferredSym]);
+        $stmt->execute([':sym' => $resolved]);
         $indRows = array_reverse($stmt->fetchAll());
-        
-        // Update symbol for consistency (use the format we're querying)
-        $symbol = $preferredSym;
-        
+
+        if (empty($indRows) && $resolved !== $symbol) {
+            // Fallback to input symbol if resolved form has no data yet
+            $stmt->execute([':sym' => $symbol]);
+            $indRows = array_reverse($stmt->fetchAll());
+        }
+
         foreach ($indRows as $i => $row) {
             $d = json_decode($row['data'], true);
             $d['price_date'] = $row['price_date'];
@@ -151,16 +160,12 @@ class StockController {
         }
         if ($indHistory) $indicators = end($indHistory);
 
-        // Fundamentals — try alternate symbol formats (.TO for Canadian stocks)
-        $fundamentals = [];
+        // Fundamentals — use resolved symbol first, fallback to original
         $stmt = $this->pdo->prepare("SELECT * FROM fundamentals WHERE symbol = :sym ORDER BY fetch_date DESC LIMIT 1");
-        $stmt->execute([':sym' => $symbol]);
+        $stmt->execute([':sym' => $resolved]);
         $fundamentals = $stmt->fetch() ?: [];
-        
-        // If no fundamentals, try .TO suffix for Canadian symbols (only if symbol doesn't already have it)
-        if (!$fundamentals && preg_match('/^[A-Z]/', $symbol) && !str_ends_with($symbol, '.TO')) {
-            $stmt = $this->pdo->prepare("SELECT * FROM fundamentals WHERE symbol = :sym ORDER BY fetch_date DESC LIMIT 1");
-            $stmt->execute([':sym' => $symbol . '.TO']);
+        if (empty($fundamentals) && $resolved !== $symbol) {
+            $stmt->execute([':sym' => $symbol]);
             $fundamentals = $stmt->fetch() ?: [];
         }
 
@@ -173,7 +178,7 @@ class StockController {
         $fctrl = new FundamentalsController();
         $dividendSafety = $fctrl->getDividendSafety($symbol);
         $dividends = $fctrl->getDividends($symbol);
-        
+
         // Calculate current dividend yield (annual dividend / current price)
         $closePrice = $latest['close'] ?? 0;
         $annualDivPerShare = $fundamentals['dividend_rate'] ?? 0;
@@ -188,663 +193,200 @@ class StockController {
             }
         }
 
-        // News
-        $news = $this->getTableData('symbol_news', $symbol, 'date DESC', 10);
+        // Analyst recommendations
+        $recommendations = $this->getTableData('analyst_recommendations', $symbol, 'rec_date DESC', 30);
+
+        // News — use news_feeds table populated by news_monitor.py, fallback to symbol_news
+        $news = [];
+        try {
+            $sql = "SELECT title, url, source, published AS date, summary FROM news_feeds WHERE symbol_filter = :sym ORDER BY published DESC LIMIT 10";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([':sym' => $symbol]);
+            $news = $stmt->fetchAll();
+        } catch (\Exception $e) {
+            $news = [];
+        }
+        if (empty($news)) {
+            $news = $this->getTableData('symbol_news', $symbol, 'date DESC', 10);
+        }
+        // Enrich news with LLM processed summaries
+        $newsProcessed = [];
+        foreach ($news as $n) {
+            $url = $n['url'] ?? '';
+            $date = $n['date'] ?? '';
+            // Try to find a processed record by matching title or url roughly
+            // We map by source_id if we can infer it, otherwise we'll just do a best-effort join
+            // For now, we'll fetch by symbol + nearby date
+            try {
+                $stmt = $this->pdo->prepare("
+                    SELECT np.summary, np.classification, np.sentiment, np.recommendation, np.confidence
+                    FROM news_processed np
+                    WHERE np.symbol = :sym
+                      AND np.processed_at >= DATE_SUB(:dt, INTERVAL 7 DAY)
+                    ORDER BY np.processed_at DESC
+                    LIMIT 10
+                ");
+                $stmt->execute([':sym' => $symbol, ':dt' => $date]);
+                $matched = $stmt->fetchAll();
+                $n['processed'] = $matched ? $matched[0] : null;
+            } catch (\Exception $e) {
+                $n['processed'] = null;
+            }
+            $newsProcessed[] = $n;
+        }
+        $news = $newsProcessed;
 
         // Options snapshot
         $opts = $this->getTableData('options_snapshot', $symbol, 'fetch_date DESC', 1);
-        $optionsData = $opts[0] ?: [];
+        $optionsData = $opts[0] ?? [];
+
+        // Holders
+        $holders = ['major' => [], 'institutional' => []];
+        try {
+            $stmt = $this->pdo->prepare("SELECT holder_name, shares, percent_held, value FROM holders WHERE symbol = :sym AND holder_type = 'major' AND fetch_date = CURDATE() ORDER BY shares DESC");
+            $stmt->execute([':sym' => $symbol]);
+            $holders['major'] = $stmt->fetchAll();
+        } catch (\Exception $e) {}
+        try {
+            $stmt = $this->pdo->prepare("SELECT holder_name, shares, percent_held, value FROM holders WHERE symbol = :sym AND holder_type = 'institutional' AND fetch_date = CURDATE() ORDER BY shares DESC");
+            $stmt->execute([':sym' => $symbol]);
+            $holders['institutional'] = $stmt->fetchAll();
+        } catch (\Exception $e) {}
+
+        // Financial statements
+        $financials = [];
+        foreach (['income', 'balance', 'cashflow'] as $stmtType) {
+            $financials[$stmtType] = ['annual' => [], 'quarterly' => []];
+            foreach (['annual', 'quarterly'] as $period) {
+                try {
+                    $stmt = $this->pdo->prepare("SELECT fiscal_date, raw_data FROM financial_statements WHERE symbol = :sym AND statement_type = :stmt AND period_type = :period ORDER BY fiscal_date DESC LIMIT 8");
+                    $stmt->execute([':sym' => $symbol, ':stmt' => $stmtType, ':period' => $period]);
+                    $financials[$stmtType][$period] = $stmt->fetchAll();
+                } catch (\Exception $e) {}
+            }
+        }
+
+        // Analyst estimates
+        $estimates = [];
+        foreach (['earnings', 'revenue'] as $estType) {
+            $estimates[$estType] = [];
+            try {
+                $stmt = $this->pdo->prepare("SELECT period, low_estimate, high_estimate, avg_estimate, num_analysts FROM analyst_estimates WHERE symbol = :sym AND estimate_type = :est ORDER BY period DESC LIMIT 6");
+                $stmt->execute([':sym' => $symbol, ':est' => $estType]);
+                $estimates[$estType] = $stmt->fetchAll();
+            } catch (\Exception $e) {}
+        }
 
         // Buffett quality score (pass close price since it's in stockprices, not indicators)
         $closePrice = $latest['close'] ?? 0;
         $buffettScore = $this->calcBuffettScore($fundamentals, $indicators, $closePrice);
 
+        // ---- WealthSystem methodology deep-dive data ----
+        // Buffett tenets (DB rows, fallback NULL arrays)
+        $buffettTenets = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM tenets WHERE symbol = :sym LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $buffettTenets = $stmt->fetch() ?: [];
+        } catch (\Exception $e) {}
+
+        // Motley Fool criteria (DB rows)
+        $mfCriteria = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM motleyfool WHERE symbol = :sym LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $mfCriteria = $stmt->fetch() ?: [];
+        } catch (\Exception $e) {}
+
+        // Evaluation breakdowns (latest by symbol)
+        $evalBusiness = $this->getLatestRow('evalbusiness', 'symbol', $symbol);
+        $evalFinancial = $this->getLatestRow('evalfinancial', 'symbol', $symbol);
+        $evalManagement = $this->getLatestRow('evalmanagement', 'symbol', $symbol);
+        $evalMarket = $this->getLatestRow('evalmarket', 'symbol', $symbol);
+        $evalSummary = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM evalsummary WHERE symbol = :sym LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $evalSummary = $stmt->fetch() ?: [];
+        } catch (\Exception $e) {}
+
+        // IPlace calc (latest)
+        $iplaceCalc = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM iplace_calc WHERE symbol = :sym ORDER BY date_calculated DESC LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $iplaceCalc = $stmt->fetch() ?: [];
+        } catch (\Exception $e) {}
+
+        // LLM qualitative analysis (latest by symbol)
+        $llmAnalysis = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM llm_analysis WHERE symbol = :sym ORDER BY analysis_date DESC LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $llmAnalysis = $stmt->fetch() ?: [];
+        } catch (\Exception $e) {}
+
+        // Stock fundamentals (if table exists)
+        $stockFundamentals = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM stock_fundamentals WHERE symbol = :sym LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            $stockFundamentals = $stmt->fetch() ?: [];
+        } catch (\Exception $e) {}
+
+        // Technical indicators time-series (latest 30)
+        $taHistory = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM stock_technical_indicators WHERE symbol = :sym ORDER BY date DESC LIMIT 30");
+            $stmt->execute([':sym' => $symbol]);
+            $taHistory = array_reverse($stmt->fetchAll());
+        } catch (\Exception $e) {}
+
+        // Zacks-style composite score
+        $zacksScore = $this->calcZacksStyleScore($fundamentals, $indicators, $closePrice);
+
         // Performance
         $perf = $this->calcPerformance($symbol);
+        
+        // Markov regime analysis
+        $regime = $this->getRegimeAnalysis($symbol);
 
-        return compact(
+        // Exit signal risk assessment
+        $closePrice = $latest['close'] ?? 0;
+        $exitSignals = $this->calcExitSignals($fundamentals, $indicators, $closePrice);
+
+        // VectorVest 5-point checklist (detail-page lightweight version)
+        $vectorVest = $this->calcVectorVest($history, $fundamentals, $latest, $indicators);
+
+        $result = compact(
             'symbol', 'latest', 'history', 'indicators', 'indHistory',
             'fundamentals', 'portfolio', 'dividendSafety', 'dividends',
             'analystRatings', 'analystTargets', 'news', 'optionsData',
-            'buffettScore', 'perf'
+            'buffettScore', 'zacksScore', 'perf', 'regime', 'exitSignals',
+            'recommendations', 'holders', 'financials', 'estimates',
+            'vectorVest', 'iplaceCalc'
         );
+        $result['analyst_ratings'] = $result['analystRatings'];
+        $result['analyst_targets'] = $result['analystTargets'];
+        $result['buffett_score'] = $result['buffettScore'];
+        $result['zacks_score'] = $result['zacksScore'] ?? [];
+        $result['options'] = $result['optionsData'];
+        $result['ind_history'] = $result['indHistory'];
+        $result['dividend_safety'] = $result['dividendSafety'];
+        $result['exit_signals'] = $result['exitSignals'] ?? [];
+        $result['vectorvest'] = $result['vectorVest'] ?? [];
+        $result['iplace'] = $result['iplaceCalc'] ?? [];
+
+        // WealthSystem detail payloads (may be empty on first run)
+        $wsDetail = $this->loadWealthSystemDetail($symbol);
+        $result['ws_fundamentals'] = $wsDetail['fundamentals'] ?? [];
+        $result['ws_indicators'] = $wsDetail['indicators'] ?? [];
+        $result['ws_llm_analysis'] = $wsDetail['llm_analysis'] ?? [];
+        $result['ws_evaluations'] = $wsDetail['evaluations'] ?? [];
+
+        return $result;
     }
 
-    /**
-     * Helper: get rows from a table (graceful if table doesn't exist).
-     * Tries .TO suffix for Canadian symbols if no direct match.
-     */
-    private function getTableData(string $table, string $symbol, string $order = 'date DESC', int $limit = 10): array {
-        try {
-            $sql = "SELECT * FROM {$table} WHERE symbol = :sym ORDER BY {$order} LIMIT :lim";
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->bindValue(':sym', $symbol);
-            $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
-            $stmt->execute();
-            $result = $stmt->fetchAll();
-            
-            // If no match, try .TO suffix for Canadian symbols (only if symbol doesn't already have it)
-            if (empty($result) && preg_match('/^[A-Z]/', $symbol) && !str_ends_with($symbol, '.TO')) {
-                $stmt = $this->pdo->prepare($sql);
-                $stmt->bindValue(':sym', $symbol . '.TO');
-                $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
-                $stmt->execute();
-                $result = $stmt->fetchAll();
-            }
-            return $result;
-        } catch (\Exception $e) {
-            return [];
-        }
-    }
-
-    /**
-     * Compute Buffett quality score from fundamentals.
-     * "Great Company at a Fair Price" — focuses on business fundamentals (moat, financials).
-     * Price-related checks moved to separate valuation assessment.
-     */
-    private function calcBuffettScore(array $f, array $ind, float $closePrice = 0): array {
-        $checks = [];
-        $score = 0;
-        $maxScore = 100;
-
-        $tests = [
-            ['ROE > 15%',    fn() => ($f['roe'] ?? 0) > 0.15,  15],
-            ['D/E < 0.5',    fn() => ($f['debt_to_equity'] ?? 99) < 0.5, 15],
-            ['Margin > 10%', fn() => ($f['profit_margin'] ?? 0) > 0.10, 10],
-            ['Positive FCF', fn() => ($f['free_cash_flow'] ?? 0) > 0, 15],
-            ['Payout < 60%', fn() => ($f['payout_ratio'] ?? 0) > 0 && ($f['payout_ratio'] ?? 1) < 0.60, 10],
-            ['Rev Growth+',  fn() => ($f['revenue_growth'] ?? 0) > 0, 10],
-            ['CR > 1.5',     fn() => ($f['current_ratio'] ?? 0) > 1.5, 10],
-            ['Beta < 1.2',   fn() => ($f['beta'] ?? 99) > 0 && ($f['beta'] ?? 99) < 1.2, 5],
-            ['P/E < 25x',    fn() => ($f['trailing_pe'] ?? 100) > 0 && ($f['trailing_pe'] ?? 100) < 25, 5],
-        ];
-        foreach ($tests as [$name, $test, $pts]) {
-            $passed = $test();
-            $checks[$name] = $passed;
-            if ($passed) $score += $pts;
-        }
-
-        return ['total' => $score, 'score' => $score, 'max' => $maxScore, 'checks' => $checks];
-    }
-
-    /**
-     * GET /?action=portfolio — Portfolio holdings.
-     */
-    public function portfolio(string $account_filter = 'all'): array {
-        // Build account filter
-        $where = '';
-        if ($account_filter !== 'all') {
-            $where = "WHERE p.account_type = " . $this->pdo->quote($account_filter);
-        }
-
-        // Aggregate across accounts: each symbol appears once with total shares & weighted cost basis
-        $accountJoin = '';
-        $accountWhere = '';
-        if ($account_filter !== 'all') {
-            $af = $this->pdo->quote($account_filter);
-            $accountWhere = "WHERE p.account_type = $af";
-        }
-        $stmt = $this->pdo->query("
-            SELECT p.symbol,
-                   GROUP_CONCAT(DISTINCT p.account_type ORDER BY p.account_type) as accounts,
-                   SUM(p.shares) as shares,
-                   SUM(p.shares * p.cost_basis) / NULLIF(SUM(p.shares), 0) as cost_basis,
-                   MIN(p.entry_date) as entry_date,
-                   AVG(p.trailing_stop_pct) as trailing_stop_pct,
-                   AVG(p.stop_loss_pct) as stop_loss_pct,
-                   p.strategy,
-                   AVG(p.atr_multiplier) as atr_multiplier,
-                   latest.close as current_price,
-                   latest.volume as current_volume,
-                   latest.price_date as price_date
-            FROM portfolio p
-            LEFT JOIN (
-                SELECT sp1.symbol, sp1.close, sp1.volume, sp1.price_date
-                FROM stockprices sp1
-                INNER JOIN (
-                    SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol
-                ) sp2 ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
-            ) latest ON p.symbol = latest.symbol
-            {$accountWhere}
-            GROUP BY p.symbol
-            ORDER BY p.symbol
-        ");
-        $holdings = $stmt->fetchAll();
-
-        $fctrl = new FundamentalsController();
-
-        $totalCost = 0;
-        $totalValue = 0;
-        foreach ($holdings as &$h) {
-            $symbol = $h['symbol'];
-            $currentPrice = $h['current_price'] ?? 0;
-            $costTotal = $h['shares'] * $h['cost_basis'];
-            $currentValue = $h['shares'] * $currentPrice;
-            $pnl = $currentValue - $costTotal;
-            $pnlPct = $costTotal > 0 ? ($pnl / $costTotal) * 100 : 0;
-
-            // Annualized P&L (years held) — only calculate for positions held 30+ days
-            $entryDate = $h['entry_date'] ?? null;
-            if ($entryDate) {
-                $daysHeld = (new DateTime())->diff(new DateTime($entryDate))->days;
-                $yearsHeld = $daysHeld / 365.25;
-                // Only annualize if held 30+ days to avoid explosion with tiny time periods
-                $annualizedPnlPct = $daysHeld >= 30 ? ((pow($currentValue / $costTotal, 1 / $yearsHeld)) - 1) * 100 : null;
-            } else {
-                $daysHeld = null;
-                $annualizedPnlPct = null;
-            }
-
-            // Fundamentals
-            $fund = $fctrl->getSymbol($symbol);
-            $pe = $fund['trailing_pe'] ?? null;
-            $divYield = $fund['dividend_yield'] ?? null;
-
-            // Cost-basis dividend yield (annual income / cost)
-            $annualDivPerShare = ($fund['dividend_rate'] ?? 0);
-            $costBasisDivYield = $h['cost_basis'] > 0 ? ($annualDivPerShare / $h['cost_basis']) * 100 : null;
-            $currentDivYield = $currentPrice > 0 ? ($annualDivPerShare / $currentPrice) * 100 : null;
-
-            // Dividend safety
-            $divSafety = $fctrl->getDividendSafety($symbol);
-
-            // Indicators for stop calculations
-            $indicators = $this->getLatestIndicators($symbol);
-            $atr14 = $indicators['atr_14'] ?? null;
-            $sma200 = $indicators['sma_200'] ?? null;
-
-            // Stop calculations
-            $trailingStopPct = $h['trailing_stop_pct'] ?? 0.10;  // default 10%
-            $stopLossPct = $h['stop_loss_pct'] ?? 0.15;            // default 15%
-            $trailingStopPrice = $currentPrice > 0 ? $currentPrice * (1 - $trailingStopPct) : 0;
-            $stopLossPrice = $h['cost_basis'] * (1 - $stopLossPct);
-            // Effective stop = max(trailing, stop_loss) — trailing overrides when higher
-            $effectiveStopPrice = max($trailingStopPrice, $stopLossPrice);
-            $stopStatus = $currentPrice > 0 ? ($effectiveStopPrice >= $currentPrice ? 'breach' : ($effectiveStopPrice >= $currentPrice * 0.98 ? 'warning' : 'safe')) : 'na';
-
-            // Strategy details
-            $strategy = $h['strategy'] ?? 'Trailing Stop';
-            $atrMultiplier = $h['atr_multiplier'] ?? 2.0;
-
-            $h['cost_total'] = $costTotal;
-            $h['current_value'] = $currentValue;
-            $h['pnl'] = $pnl;
-            $h['pnl_pct'] = $pnlPct;
-            $h['annualized_pnl_pct'] = $annualizedPnlPct;
-            $h['days_held'] = $daysHeld;
-            $h['fundamentals'] = $fund;
-            $h['pe'] = $pe;
-            $h['div_yield'] = $divYield;
-            $h['annual_div_per_share'] = $annualDivPerShare;
-            $h['cost_basis_div_yield'] = $costBasisDivYield;
-            $h['current_div_yield'] = $currentDivYield;
-            $h['dividend_safety'] = $divSafety;
-            $h['atr_14'] = $atr14;
-            $h['sma_200'] = $sma200;
-            $h['trailing_stop_pct'] = $trailingStopPct;
-            $h['trailing_stop_price'] = $trailingStopPrice;
-            $h['stop_loss_pct'] = $stopLossPct;
-            $h['stop_loss_price'] = $stopLossPrice;
-            $h['effective_stop_price'] = $effectiveStopPrice;
-            $h['stop_status'] = $stopStatus;
-            $h['strategy'] = $strategy;
-            $h['atr_multiplier'] = $atrMultiplier;
-
-            $totalCost += $costTotal;
-            $totalValue += $currentValue;
-        }
-
-        $totalPnl = $totalValue - $totalCost;
-        $totalPnlPct = $totalCost > 0 ? ($totalPnl / $totalCost) * 100 : 0;
-
-        // Annualized total
-        // (approximate: use average holding period, only if 30+ day average)
-        $totalDays = 0;
-        $count = 0;
-        foreach ($holdings as $h) {  // not &$h, we don't modify here
-            if ($h['days_held'] >= 30) {
-                $totalDays += $h['days_held'];
-                $count++;
-            }
-        }
-        $avgYears = $count > 0 ? ($totalDays / $count) / 365.25 : 0;
-        $totalAnnualizedPnlPct = $avgYears > 0 && $totalCost > 0 ? ((pow($totalValue / $totalCost, 1 / $avgYears)) - 1) * 100 : 0;
-
-        return [
-            'holdings' => $holdings,
-            'total_cost' => $totalCost,
-            'total_value' => $totalValue,
-            'total_pnl' => $totalPnl,
-            'total_pnl_pct' => $totalPnlPct,
-            'total_annualized_pnl_pct' => $totalAnnualizedPnlPct,
-            'account_filter' => $account_filter,
-            'account_types' => array_unique(array_column($holdings, 'account_type')),
-        ];
-    }
-
-    /**
-     * Get latest technical indicators for a symbol (for stop calculations).
-     * Tries .TO suffix for Canadian symbols if no direct match.
-     */
-    private function getLatestIndicators(string $symbol): array {
-        $stmt = $this->pdo->prepare("
-            SELECT data FROM indicators_json
-            WHERE symbol = :sym
-            ORDER BY price_date DESC LIMIT 1
-        ");
-        $stmt->execute([':sym' => $symbol]);
-        $row = $stmt->fetch();
-        
-        // If no match, try .TO suffix for Canadian symbols (only if symbol doesn't already have it)
-        if (!$row && preg_match('/^[A-Z]/', $symbol) && !str_ends_with($symbol, '.TO')) {
-            $stmt = $this->pdo->prepare("
-                SELECT data FROM indicators_json
-                WHERE symbol = :sym
-                ORDER BY price_date DESC LIMIT 1
-            ");
-            $stmt->execute([':sym' => $symbol . '.TO']);
-            $row = $stmt->fetch();
-        }
-        
-        if (!$row) return [];
-        return json_decode($row['data'] ?: $row[0], true) ?: [];
-    }
-
-    /**
-     * GET /?action=chart&symbol=XXX — Chart data as JSON.
-     */
-    public function chartData(string $symbol, int $days = 250): array {
-        $stmt = $this->pdo->prepare("
-            SELECT price_date, open, high, low, close, volume
-            FROM stockprices
-            WHERE symbol = :sym
-            ORDER BY price_date DESC
-            LIMIT :limit
-        ");
-        $stmt->bindValue(':sym', $symbol);
-        $stmt->bindValue(':limit', $days, PDO::PARAM_INT);
-        $stmt->execute();
-        return array_reverse($stmt->fetchAll());
-    }
-
-    /**
-     * GET /?action=indicators&symbol=XXX — Indicator detail page.
-     */
-    public function indicatorDetail(string $symbol): array {
-        return $this->detail($symbol); // Same data, different template
-    }
-
-    private function calcPerformance(string $symbol): array {
-        $stmt = $this->pdo->prepare("
-            SELECT close, price_date FROM stockprices
-            WHERE symbol = :sym ORDER BY price_date DESC
-        ");
-        $stmt->execute([':sym' => $symbol]);
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        $perf = ['ytd' => null, '1y' => null, '3y' => null, '5y' => null, '10y' => null];
-        if (empty($rows)) return $perf;
-
-        $latest = $rows[0]['close'];
-        $latestDate = $rows[0]['price_date'];
-
-        foreach ($rows as $row) {
-            $daysAgo = (strtotime($latestDate) - strtotime($row['price_date'])) / 86400;
-            if ($perf['1y'] === null && $daysAgo >= 365) {
-                $perf['1y'] = (($latest / $row['close']) - 1) * 100;
-            }
-            if ($perf['3y'] === null && $daysAgo >= 1095) {
-                $perf['3y'] = (($latest / $row['close']) - 1) * 100;
-            }
-            if ($perf['5y'] === null && $daysAgo >= 1825) {
-                $perf['5y'] = (($latest / $row['close']) - 1) * 100;
-            }
-            if ($perf['10y'] === null && $daysAgo >= 3650) {
-                $perf['10y'] = (($latest / $row['close']) - 1) * 100;
-            }
-        }
-
-        // YTD
-        $stmt = $this->pdo->prepare("
-            SELECT close FROM stockprices
-            WHERE symbol = :sym AND price_date <= :yearStart
-            ORDER BY price_date DESC LIMIT 1
-        ");
-        $yearStart = date('Y') . '-01-01';
-        $stmt->execute([':sym' => $symbol, ':yearStart' => $yearStart]);
-        $ytdRow = $stmt->fetch();
-        if ($ytdRow) {
-            $perf['ytd'] = (($latest / $ytdRow['close']) - 1) * 100;
-        }
-
-        return $perf;
-    }
-
-    /**
-     * GET /?action=stop_orders — List stop loss / trailing stop orders with prices.
-     */
-    public function stopOrders(string $account_filter = 'all'): array {
-        $holdings = $this->getHoldingsWithPrices($account_filter);
-        $orders = [];
-
-        foreach ($holdings as $h) {
-            $symbol = $h['symbol'];
-            $currentPrice = $h['current_price'] ?? 0;
-            
-            // Skip if no current price
-            if (!$currentPrice) continue;
-
-            // Get ATR for ATR-based stops
-            $indicators = $this->getLatestIndicators($symbol);
-            $atr14 = $indicators['atr_14'] ?? null;
-
-            // Calculate stop prices
-            $trailingStopPct = $h['trailing_stop_pct'] ?? 0.10;
-            $stopLossPct = $h['stop_loss_pct'] ?? 0.15;
-            $atrMultiplier = $h['atr_multiplier'] ?? 2.0;
-
-            $trailingStopPrice = $currentPrice > 0 ? $currentPrice * (1 - $trailingStopPct) : 0;
-            $stopLossPrice = $h['cost_basis'] * (1 - $stopLossPct);
-            $atrStopPrice = $atr14 ? $currentPrice - ($atr14 * $atrMultiplier) : null;
-
-            // Effective stop = max of trailing and stop_loss
-            $effectiveStopPrice = max($trailingStopPrice, $stopLossPrice);
-
-            // Determine stop status
-            if ($effectiveStopPrice >= $currentPrice) {
-                $stopStatus = 'breach';
-            } elseif ($effectiveStopPrice >= $currentPrice * 0.98) {
-                $stopStatus = 'warning';
-            } else {
-                $stopStatus = 'safe';
-            }
-
-            $orders[] = [
-                'symbol' => $symbol,
-                'accounts' => $h['accounts'],
-                'shares' => $h['shares'],
-                'cost_basis' => $h['cost_basis'],
-                'current_price' => $currentPrice,
-                'market_value' => $h['shares'] * $currentPrice,
-                'trailing_stop_pct' => $trailingStopPct,
-                'trailing_stop_price' => $trailingStopPrice,
-                'stop_loss_pct' => $stopLossPct,
-                'stop_loss_price' => $stopLossPrice,
-                'atr_14' => $atr14,
-                'atr_multiplier' => $atrMultiplier,
-                'atr_stop_price' => $atrStopPrice,
-                'effective_stop_price' => $effectiveStopPrice,
-                'stop_status' => $stopStatus,
-                'strategy' => $h['strategy'] ?? 'Trailing Stop',
-            ];
-        }
-
-        return [
-            'pageTitle' => 'Stop Orders',
-            'template' => 'stop_orders',
-            'orders' => $orders,
-            'total_orders' => count($orders),
-            'account_filter' => $account_filter,
-            'account_types' => array_unique(array_merge(...array_map(fn($o) => explode(',', $o['accounts']), $orders))),
-        ];
-    }
-
-    /**
-     * POST /?action=refresh_prices — Trigger price data refresh from yfinance.
-     * Can refresh all symbols or specific ones via ?symbol=XXX&days=N query params.
-     */
-    public function refreshPrices(string $symbol = '', int $days = 5): array {
-        $symbols = [];
-        
-        if ($symbol) {
-            // Refresh specific symbol
-            $symbols = [strtoupper(trim($symbol))];
-        } else {
-            // Get all active symbols from symbol_master
-            $stmt = $this->pdo->query("SELECT symbol FROM symbol_master WHERE is_active = 1 OR is_active IS NULL");
-            $symbols = array_column($stmt->fetchAll(), 'symbol');
-            
-            // Also get symbols currently in portfolio
-            $stmt = $this->pdo->query("SELECT DISTINCT symbol FROM portfolio");
-            $portfolioSymbols = array_column($stmt->fetchAll(), 'symbol');
-            $symbols = array_unique(array_merge($symbols, $portfolioSymbols));
-        }
-        
-        $refreshed = [];
-        $errors = [];
-        
-        foreach ($symbols as $sym) {
-            $yfSym = $this->normalizeSymbolForYfinance($sym);
-            $result = $this->fetchPriceFromYfinance($sym, $yfSym, $days);
-            if ($result['success']) {
-                $refreshed[] = $sym;
-            } else {
-                $errors[] = $sym . ($result['error'] ? ': ' . $result['error'] : '');
-            }
-        }
-        
-        return [
-            'success' => true,
-            'refreshed_count' => count($refreshed),
-            'refreshed_symbols' => $refreshed,
-            'errors' => $errors,
-            'message' => count($refreshed) . " symbols refreshed. " . count($errors) . " errors.",
-        ];
-    }
-    
-    /**
-     * Normalize symbol for yfinance lookup (add .TO for TSX stocks).
-     */
-    private function normalizeSymbolForYfinance(string $symbol): string {
-        if (strpos($symbol, '.') !== false) return $symbol;
-        $nonTsx = ['CEF', 'RGLD', 'BPF.UN', 'SRV.UN', 'KEG.UN', 'IEV', 'SPEU', 'UL', 'PZA', 'RUS', 'CDZ', 'FEZ'];
-        return in_array($symbol, $nonTsx) ? $symbol : $symbol . '.TO';
-    }
-    
-    /**
-     * Fetch price data for a single symbol from yfinance and update DB.
-     */
-    private function fetchPriceFromYfinance(string $symbol, string $yfSymbol, int $days = 5): array {
-        $script = '/home/ksf_stockmarket/ksf_stockmarket/python/daily_pipeline.py';
-        if (!file_exists($script)) {
-            return ['success' => false, 'error' => 'Fetch script not found'];
-        }
-        
-        // Use daily_pipeline.py with MariaDB backend
-        $cmd = sprintf(
-            'DB_BACKEND=mysql /usr/bin/python3 %s --mode daily 2>&1',
-            escapeshellarg($script)
-        );
-        
-        $output = shell_exec($cmd);
-        
-        if (strpos($output, 'new price rows') !== false || strpos($output, 'fetched') !== false) {
-            return ['success' => true, 'output' => $output];
-        }
-        
-        return ['success' => false, 'error' => 'No data returned', 'output' => $output];
-    }
-
-    /**
-     * Helper: Get holdings with current prices (extracted from portfolio method).
-     */
-    private function getHoldingsWithPrices(string $account_filter = 'all'): array {
-        $accountWhere = '';
-        if ($account_filter !== 'all') {
-            $af = $this->pdo->quote($account_filter);
-            $accountWhere = "WHERE p.account_type = $af";
-        }
-        
-        $stmt = $this->pdo->query("
-            SELECT p.symbol,
-                   GROUP_CONCAT(DISTINCT p.account_type ORDER BY p.account_type) as accounts,
-                   SUM(p.shares) as shares,
-                   SUM(p.shares * p.cost_basis) / NULLIF(SUM(p.shares), 0) as cost_basis,
-                   AVG(p.trailing_stop_pct) as trailing_stop_pct,
-                   AVG(p.stop_loss_pct) as stop_loss_pct,
-                   p.strategy,
-                   AVG(p.atr_multiplier) as atr_multiplier,
-                   latest.close as current_price
-            FROM portfolio p
-            LEFT JOIN (
-                SELECT sp1.symbol, sp1.close
-                FROM stockprices sp1
-                INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol) sp2 ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
-            ) latest ON p.symbol = latest.symbol
-            {$accountWhere}
-            GROUP BY p.symbol
-            HAVING SUM(p.shares) > 0
-            ORDER BY p.symbol
-        ");
-        return $stmt->fetchAll();
-    }
-
-    /**
-     * Compute a Zacks-style composite score using available fundamentals + indicators.
-     * Grades: A=90-100, B=80-89, C=70-79, D=60-69, F=<60
-     * Rank: 1=Strong Buy, 2=Buy, 3=Hold, 4=Sell, 5=Strong Sell
-     */
-    public function calcZacksStyleScore(array $f, array $ind, float $closePrice = 0): array {
-        $checks = [];
-        $maxScore = 100;
-
-        $hasFundamental = false;
-        foreach (['trailing_pe','price_to_book','free_cash_flow','market_cap','debt_to_equity','earnings_growth','revenue_growth','roe','forward_pe','peg_ratio','price_to_sales','book_value','total_revenue'] as $k) {
-            if (isset($f[$k]) && $f[$k] !== null && $f[$k] !== '') {
-                $hasFundamental = true;
-                break;
-            }
-        }
-        if (!$hasFundamental) {
-            return [
-                'rank' => null,
-                'rank_text' => 'N/A',
-                'composite' => null,
-                'value_grade' => 'N/A',
-                'growth_grade' => 'N/A',
-                'momentum_grade' => 'N/A',
-                'vgm_grade' => 'N/A',
-                'value_pct' => null,
-                'growth_pct' => null,
-                'momentum_pct' => null,
-                'vgm_pct' => null,
-                'checks' => ['Fundamental data not available'],
-            ];
-        }
-
-        // Value (40 points): low PE, low PB, high FCF yield, manageable debt
-        $valueScore = 0;
-        $maxValue = 0;
-        if (!empty($f['trailing_pe']) && $f['trailing_pe'] > 0) {
-            $pe = (float)$f['trailing_pe'];
-            $checks['P/E < 20x'] = $pe < 20;
-            $maxValue += 10;
-            if ($pe < 15) $valueScore += 10;
-            elseif ($pe < 20) $valueScore += 7;
-            elseif ($pe < 30) $valueScore += 4;
-        }
-        if (!empty($f['price_to_book']) && $f['price_to_book'] > 0) {
-            $pb = (float)$f['price_to_book'];
-            $checks['P/B < 2.0'] = $pb < 2.0;
-            $maxValue += 10;
-            if ($pb < 1.0) $valueScore += 10;
-            elseif ($pb < 2.0) $valueScore += 7;
-            elseif ($pb < 3.0) $valueScore += 4;
-        }
-        if (!empty($f['free_cash_flow']) && !empty($f['market_cap']) && $f['market_cap'] > 0) {
-            $fcfYield = (float)$f['free_cash_flow'] / (float)$f['market_cap'];
-            $checks['FCF Yield > 3%'] = $fcfYield > 0.03;
-            $maxValue += 10;
-            if ($fcfYield > 0.06) $valueScore += 10;
-            elseif ($fcfYield > 0.03) $valueScore += 7;
-            elseif ($fcfYield > 0.01) $valueScore += 4;
-        }
-        if (!empty($f['debt_to_equity'])) {
-            $de = (float)$f['debt_to_equity'];
-            $checks['D/E < 0.8'] = $de < 0.8;
-            $maxValue += 10;
-            if ($de < 0.3) $valueScore += 10;
-            elseif ($de < 0.8) $valueScore += 7;
-            elseif ($de < 1.5) $valueScore += 4;
-        }
-        $valuePct = $maxValue > 0 ? min(100, ($valueScore / $maxValue) * 100) : 0;
-        $valueGrade = $valuePct >= 90 ? 'A' : ($valuePct >= 80 ? 'B' : ($valuePct >= 70 ? 'C' : ($valuePct >= 60 ? 'D' : 'F')));
-
-        // Growth (30 points): EPS growth, revenue growth
-        $growthScore = 0;
-        $maxGrowth = 0;
-        if (!empty($f['earnings_growth'])) {
-            $eg = (float)$f['earnings_growth'];
-            $checks['EPS Growth > 10%'] = $eg > 0.10;
-            $maxGrowth += 15;
-            if ($eg > 0.20) $growthScore += 15;
-            elseif ($eg > 0.10) $growthScore += 10;
-            elseif ($eg > 0) $growthScore += 5;
-        }
-        if (!empty($f['revenue_growth'])) {
-            $rg = (float)$f['revenue_growth'];
-            $checks['Revenue Growth > 5%'] = $rg > 0.05;
-            $maxGrowth += 15;
-            if ($rg > 0.15) $growthScore += 15;
-            elseif ($rg > 0.05) $growthScore += 10;
-            elseif ($rg > 0) $growthScore += 5;
-        }
-        $growthPct = $maxGrowth > 0 ? min(100, ($growthScore / $maxGrowth) * 100) : 0;
-        $growthGrade = $growthPct >= 90 ? 'A' : ($growthPct >= 80 ? 'B' : ($growthPct >= 70 ? 'C' : ($growthPct >= 60 ? 'D' : 'F')));
-
-        // Momentum (20 points): price vs SMA200, RSI not overbought
-        $momentumScore = 0;
-        if (!empty($ind['sma_200']) && $ind['sma_200'] > 0 && $closePrice > 0) {
-            $vsSMA = $closePrice / (float)$ind['sma_200'];
-            $checks['Price > SMA200'] = $vsSMA > 1.0;
-            if ($vsSMA > 1.05) $momentumScore += 10;
-            elseif ($vsSMA > 1.0) $momentumScore += 7;
-            elseif ($vsSMA > 0.95) $momentumScore += 4;
-        }
-        if (!empty($ind['rsi_14'])) {
-            $rsi = (float)$ind['rsi_14'];
-            $checks['RSI 30-65'] = $rsi >= 30 && $rsi <= 65;
-            if ($rsi >= 40 && $rsi <= 60) $momentumScore += 10;
-            elseif ($rsi >= 30 && $rsi <= 70) $momentumScore += 6;
-            elseif ($rsi >= 20 && $rsi <= 80) $momentumScore += 3;
-        }
-        $momentumPct = min(100, ($momentumScore / 20) * 100);
-        $momentumGrade = $momentumPct >= 90 ? 'A' : ($momentumPct >= 80 ? 'B' : ($momentumPct >= 70 ? 'C' : ($momentumPct >= 60 ? 'D' : 'F')));
-
-        // VGM composite
-        $vgmPct = ($valuePct + $growthPct + $momentumPct) / 3;
-        $vgmGrade = $vgmPct >= 90 ? 'A' : ($vgmPct >= 80 ? 'B' : ($vgmPct >= 70 ? 'C' : ($vgmPct >= 60 ? 'D' : 'F')));
-
-        // Zacks Rank 1-5 from weighted composite
-        $composite = ($valuePct * 0.40) + ($growthPct * 0.30) + ($momentumPct * 0.20) + ($vgmPct * 0.10);
-        $rank = 5;
-        if ($composite >= 90) $rank = 1;
-        elseif ($composite >= 80) $rank = 2;
-        elseif ($composite >= 70) $rank = 3;
-        elseif ($composite >= 60) $rank = 4;
-
-        $rankText = ['1' => 'Strong Buy', '2' => 'Buy', '3' => 'Hold', '4' => 'Sell', '5' => 'Strong Sell'][$rank];
-
-        return [
-            'rank' => $rank,
-            'rank_text' => $rankText,
-            'composite' => round($composite, 1),
-            'value_grade' => $valueGrade,
-            'growth_grade' => $growthGrade,
-            'momentum_grade' => $momentumGrade,
-            'vgm_grade' => $vgmGrade,
-            'value_pct' => round($valuePct, 1),
-            'growth_pct' => round($growthPct, 1),
-            'momentum_pct' => round($momentumPct, 1),
-            'vgm_pct' => round($vgmPct, 1),
-            'checks' => $checks,
-        ];
-    }
-
-    /**
-     * Calculate exit signal risk score based on InvestorsObserver 18 warning signs.
-     * Higher score = higher risk = more reasons to sell.
-     */
     public function calcExitSignals(array $f, array $ind, float $closePrice = 0): array {
         if (!$closePrice || $closePrice <= 0) {
             return ['composite_exit_risk' => 0.5, 'insufficient_data' => true];
@@ -988,6 +530,184 @@ class StockController {
     }
 
     /**
+     * Helper: get rows from a table (graceful if table doesn't exist).
+     * Uses resolver so Canadian symbols hit the canonical DB symbol.
+     */
+    private function getTableData(string $table, string $symbol, string $order = 'date DESC', int $limit = 10): array {
+        try {
+            $resolved = $this->resolver->resolve($symbol);
+            $sql = "SELECT * FROM {$table} WHERE symbol = :sym ORDER BY {$order} LIMIT :lim";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindValue(':sym', $resolved);
+            $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll();
+            return $result;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Compute Buffett quality score from fundamentals.
+     * "Great Company at a Fair Price" — focuses on business fundamentals (moat, financials).
+     * Price-related checks moved to separate valuation assessment.
+     */
+    private function calcBuffettScore(array $f, array $ind, float $closePrice = 0): array {
+        $checks = [];
+        $score = 0;
+        $maxScore = 100;
+
+        $tests = [
+            ['ROE > 15%',    fn() => ($f['roe'] ?? 0) > 0.15,  15],
+            ['D/E < 0.5',    fn() => ($f['debt_to_equity'] ?? 99) < 0.5, 15],
+            ['Margin > 10%', fn() => ($f['profit_margin'] ?? 0) > 0.10, 10],
+            ['Positive FCF', fn() => ($f['free_cash_flow'] ?? 0) > 0, 15],
+            ['Payout < 60%', fn() => ($f['payout_ratio'] ?? 0) > 0 && ($f['payout_ratio'] ?? 1) < 0.60, 10],
+            ['Rev Growth+',  fn() => ($f['revenue_growth'] ?? 0) > 0, 10],
+            ['CR > 1.5',     fn() => ($f['current_ratio'] ?? 0) > 1.5, 10],
+            ['Beta < 1.2',   fn() => ($f['beta'] ?? 99) > 0 && ($f['beta'] ?? 99) < 1.2, 5],
+            ['P/E < 25x',    fn() => ($f['trailing_pe'] ?? 100) > 0 && ($f['trailing_pe'] ?? 100) < 25, 5],
+        ];
+        foreach ($tests as [$name, $test, $pts]) {
+            $passed = $test();
+            $checks[$name] = $passed;
+            if ($passed) $score += $pts;
+        }
+
+        return ['total' => $score, 'score' => $score, 'max' => $maxScore, 'checks' => $checks];
+    }
+
+    /**
+     * Compute VectorVest 5-point checklist for a single symbol on the detail page.
+     *
+     * Criteria (same logic as the Python vectorvest_screener advisor):
+     *  1. Smooth & steady uptrend — linear-regression slope > 0 and R² >= 0.55 on ~1y closes.
+     *  2. Price rising — close > close 20 trading days ago.
+     *  3. Earnings rising — forward_eps > 0 or earnings_growth > 0 or trailing_eps > 0.
+     *  4. Market on your side — requires SPY benchmark; skipped on detail page.
+     *  5. Follow-through — today close > today open AND today close > yesterday close.
+     */
+    private function calcVectorVest(array $history, array $f, array $latest, array $ind): array
+    {
+        $checks = [];
+        $passCount = 0;
+
+        // Need enough history for regression
+        $closes = array_column($history, 'close');
+        $n = count($closes);
+
+        // 1) Smooth uptrend (use up to 250 closes ~= 1y)
+        if ($n >= 60) {
+            $sample = array_slice($closes, -250);
+            [$slope, $r2] = $this->linearRegression($sample);
+            $smooth = $slope > 0 && $r2 >= 0.55;
+            $checks['smooth_uptrend'] = [
+                'passed' => $smooth,
+                'label' => 'Smooth Uptrend',
+                'detail' => "R²=" . round($r2, 2) . ($smooth ? " ✓" : " ✗"),
+            ];
+            if ($smooth) $passCount++;
+        } else {
+            $checks['smooth_uptrend'] = ['passed' => false, 'label' => 'Smooth Uptrend', 'detail' => 'insufficient data'];
+        }
+
+        // 2) Price rising — close > close 20 days ago
+        if ($n > 20) {
+            $priceRising = end($closes) > $closes[$n - 21];
+            $checks['price_rising'] = [
+                'passed' => $priceRising,
+                'label' => 'Price Rising (20d)',
+                'detail' => $priceRising ? 'close > 20d ago ✓' : 'close < 20d ago ✗',
+            ];
+            if ($priceRising) $passCount++;
+        } else {
+            $checks['price_rising'] = ['passed' => false, 'label' => 'Price Rising', 'detail' => 'insufficient data'];
+        }
+
+        // 3) Earnings rising
+        $earningsRising = false;
+        foreach (['forward_eps', 'earnings_growth'] as $k) {
+            if (isset($f[$k]) && $f[$k] !== null && $f[$k] !== '' && (float)$f[$k] > 0) {
+                $earningsRising = true;
+                break;
+            }
+        }
+        if (!$earningsRising && isset($f['trailing_eps']) && $f['trailing_eps'] > 0) {
+            $earningsRising = true;
+        }
+        $checks['earnings_rising'] = [
+            'passed' => $earningsRising,
+            'label' => 'Earnings Rising',
+            'detail' => $earningsRising ? 'positive eps/growth ✓' : 'no positive earnings ✗',
+        ];
+        if ($earningsRising) $passCount++;
+
+        // 4) Market on your side — needs SPY benchmark; omitted here
+        $checks['market_ok'] = [
+            'passed' => null,
+            'label' => 'Market Trend (SPY)',
+            'detail' => 'N/A on detail page',
+        ];
+
+        // 5) Follow-through — close > open AND close > yesterday close
+        $followThrough = false;
+        if (!empty($latest['close']) && !empty($latest['open']) && $n >= 2) {
+            $c = (float)$latest['close'];
+            $o = (float)$latest['open'];
+            $yC = (float)$closes[$n - 2];
+            $followThrough = $c > $o && $c > $yC;
+        }
+        $checks['follow_through'] = [
+            'passed' => $followThrough,
+            'label' => 'Follow-Through',
+            'detail' => $followThrough ? 'close > open & > yday ✓' : 'no follow-through ✗',
+        ];
+        if ($followThrough) $passCount++;
+
+        $score = $passCount * 20; // 5/5 = 100
+        $passed = $passCount >= 4;
+
+        return [
+            'checks' => $checks,
+            'pass_count' => $passCount,
+            'max' => 5,
+            'score' => $score,
+            'passed' => $passed,
+            'note' => 'Market trend check requires screener run with SPY data',
+        ];
+    }
+
+    /** Ordinary least-squares: returns [slope, r2]. */
+    private function linearRegression(array $y): array
+    {
+        $n = count($y);
+        if ($n < 2) return [0.0, 0.0];
+        $x = range(0, $n - 1);
+        $sx = array_sum($x);
+        $sy = array_sum($y);
+        $sxy = 0;
+        $sxx = 0;
+        for ($i = 0; $i < $n; $i++) {
+            $sxy += $x[$i] * $y[$i];
+            $sxx += $x[$i] * $x[$i];
+        }
+        $den = $n * $sxx - $sx * $sx;
+        if ($den == 0) return [0.0, 0.0];
+        $slope = ($n * $sxy - $sx * $sy) / $den;
+        $intercept = ($sy - $slope * $sx) / $n;
+        $ssRes = 0;
+        $ssTot = 0;
+        $meanY = $sy / $n;
+        for ($i = 0; $i < $n; $i++) {
+            $ssRes += ($y[$i] - ($slope * $x[$i] + $intercept)) ** 2;
+            $ssTot += ($y[$i] - $meanY) ** 2;
+        }
+        $r2 = $ssTot > 0 ? 1 - $ssRes / $ssTot : 0.0;
+        return [(float)$slope, (float)$r2];
+    }
+
+    /**
      * Compute a Zacks-style composite score using available fundamentals + indicators.
      * Grades: A=90-100, B=80-89, C=70-79, D=60-69, F=<60
      * Rank: 1=Strong Buy, 2=Buy, 3=Hold, 4=Sell, 5=Strong Sell
@@ -1127,5 +847,1354 @@ class StockController {
             'vgm_pct' => round($vgmPct, 1),
             'checks' => $checks,
         ];
+    }
+
+    /**
+     * GET /?action=portfolio_transfers — Transfer totals across accounts.
+     */
+    public function portfolioTransfers(int $user_id = 1): array {
+        // Accounts for user
+        $stmt = $this->pdo->prepare("SELECT id, institution, account_nickname, registration_type, currency FROM portfolio_accounts WHERE user_id = :uid AND is_active = 1 ORDER BY registration_type, institution, account_nickname");
+        $stmt->execute([':uid' => $user_id]);
+        $accounts = $stmt->fetchAll();
+
+        // Totals by account
+        $stmt = $this->pdo->prepare("
+            SELECT p.account_id,
+                   SUM(p.shares * p.cost_basis) as cost_total,
+                   SUM(p.shares * COALESCE(latest.close, p.cost_basis)) as value_total
+            FROM portfolio p
+            LEFT JOIN (
+                SELECT sp1.symbol, sp1.close FROM stockprices sp1
+                INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol) sp2 ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
+            ) latest ON COALESCE(p.price_symbol, p.symbol) = latest.symbol
+            WHERE p.user_id = :uid
+            GROUP BY p.account_id
+        ");
+        $stmt->execute([':uid' => $user_id]);
+        $totals = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $totals[(int)$row['account_id']] = $row;
+        }
+
+        // Grand total
+        $costGrand = 0;
+        $valueGrand = 0;
+        foreach ($totals as $t) {
+            $costGrand += (float)$t['cost_total'];
+            $valueGrand += (float)$t['value_total'];
+        }
+
+        // Transactions with type TRANSFER
+        $transfers = [];
+        $stmt = $this->pdo->prepare("
+            SELECT t.account_id, pa.institution, pa.account_nickname, pa.registration_type,
+                   t.symbol, t.quantity, t.price, t.total, t.date, t.notes
+            FROM transactions t
+            LEFT JOIN portfolio_accounts pa ON t.account_id = pa.id
+            WHERE t.user_id = :uid AND t.type = 'TRANSFER'
+            ORDER BY t.date DESC
+            LIMIT 50
+        ");
+        $stmt->execute([':uid' => $user_id]);
+        foreach ($stmt->fetchAll() as $row) {
+            $transfers[] = $row;
+        }
+
+        return [
+            'accounts' => $accounts,
+            'totals' => $totals,
+            'cost_grand' => $costGrand,
+            'value_grand' => $valueGrand,
+            'transfers' => $transfers,
+        ];
+    }
+
+    /**
+     * GET /?action=portfolio — Portfolio holdings.
+     */
+    public function portfolio(string $account_filter = 'all', int $user_id = 0, ?int $account_id = null): array {
+        // 1=registration type filter (RRSP/TFSA/MARGIN/...), 2=account-level drilldown
+        $regFilter = $account_filter;
+        $acctFilter = $account_id;
+
+        // Load mapped account_id when a legacy registration type is passed as account_filter
+        if ($acctFilter === null && $regFilter !== 'all') {
+            $stmt = $this->pdo->prepare("SELECT id FROM portfolio_accounts WHERE user_id = :uid AND registration_type = :reg AND is_active = 1 LIMIT 1");
+            $stmt->execute([':uid' => $user_id > 0 ? $user_id : 1, ':reg' => $regFilter]);
+            $row = $stmt->fetch();
+            if ($row) $acctFilter = (int)$row['id'];
+        }
+
+        $params = [];
+        $userCondition = 'WHERE p.user_id = :uid';
+        $params[':uid'] = $user_id > 0 ? $user_id : 1;
+
+        if ($acctFilter !== null) {
+            $userCondition .= ' AND p.account_id = :aid';
+            $params[':aid'] = $acctFilter;
+        } elseif ($regFilter !== 'all') {
+            $userCondition .= ' AND pa.registration_type = :reg';
+            $params[':reg'] = $regFilter;
+        }
+
+        $sql = "
+            SELECT p.symbol,
+                   GROUP_CONCAT(DISTINCT pa.registration_type ORDER BY pa.registration_type) as registration_types,
+                   GROUP_CONCAT(DISTINCT CONCAT(pa.institution, '|', pa.account_nickname) ORDER BY pa.institution SEPARATOR ', ') as accounts,
+                   SUM(p.shares) as shares,
+                   SUM(p.shares * p.cost_basis) / NULLIF(SUM(p.shares), 0) as cost_basis,
+                   MIN(p.entry_date) as entry_date,
+                   AVG(p.trailing_stop_pct) as trailing_stop_pct,
+                   AVG(p.stop_loss_pct) as stop_loss_pct,
+                   p.strategy,
+                   AVG(p.atr_multiplier) as atr_multiplier,
+                   latest.close as current_price,
+                   latest.volume as current_volume,
+                   latest.price_date as price_date
+            FROM portfolio p
+            LEFT JOIN portfolio_accounts pa ON p.account_id = pa.id
+            LEFT JOIN (
+                SELECT sp1.symbol, sp1.close, sp1.volume, sp1.price_date
+                FROM stockprices sp1
+                INNER JOIN (
+                    SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol
+                ) sp2 ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
+            ) latest ON COALESCE(p.price_symbol, p.symbol) = latest.symbol
+            $userCondition
+            GROUP BY p.symbol
+            ORDER BY p.symbol
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        $holdings = $stmt->fetchAll();
+
+        // Taxonomy assignments per user
+        $taxonomies = [];
+        if ($user_id > 0) {
+            $taxonomies = $this->getTaxonomyAssignmentsForUser($user_id);
+        }
+
+        $fctrl = new FundamentalsController();
+
+        $totalCost = 0;
+        $totalValue = 0;
+        foreach ($holdings as &$h) {
+            $symbol = $h['symbol'];
+            $currentPrice = $h['current_price'] ?? 0;
+            $costTotal = $h['shares'] * $h['cost_basis'];
+            $currentValue = $h['shares'] * $currentPrice;
+            $pnl = $currentValue - $costTotal;
+            $pnlPct = $costTotal > 0 ? ($pnl / $costTotal) * 100 : 0;
+
+            // Annualized P&L (years held)
+            $entryDate = $h['entry_date'] ?? null;
+            if ($entryDate) {
+                $daysHeld = max(1, (new DateTime())->diff(new DateTime($entryDate))->days);
+                $yearsHeld = $daysHeld / 365.25;
+                $annualizedPnlPct = $yearsHeld > 0 ? ((pow($currentValue / $costTotal, 1 / $yearsHeld)) - 1) * 100 : 0;
+            } else {
+                $daysHeld = null;
+                $annualizedPnlPct = null;
+            }
+
+            // Fundamentals
+            $fund = $fctrl->getSymbol($symbol);
+            $pe = $fund['trailing_pe'] ?? null;
+            $divYield = $fund['dividend_yield'] ?? null;
+
+            // Cost-basis dividend yield (annual income / cost)
+            $annualDivPerShare = ($fund['dividend_rate'] ?? 0);
+            $costBasisDivYield = $h['cost_basis'] > 0 ? ($annualDivPerShare / $h['cost_basis']) * 100 : null;
+            $currentDivYield = $currentPrice > 0 ? ($annualDivPerShare / $currentPrice) * 100 : null;
+
+            // Dividend safety
+            $divSafety = $fctrl->getDividendSafety($symbol);
+
+            // Indicators for stop calculations
+            $indicators = $this->getLatestIndicators($symbol);
+            $atr14 = $indicators['atr_14'] ?? null;
+            $sma200 = $indicators['sma_200'] ?? null;
+
+            // Stop calculations
+            $trailingStopPct = $h['trailing_stop_pct'] ?? 0.10;  // default 10%
+            $stopLossPct = $h['stop_loss_pct'] ?? 0.15;            // default 15%
+            $trailingStopPrice = $currentPrice > 0 ? $currentPrice * (1 - $trailingStopPct) : 0;
+            $stopLossPrice = $h['cost_basis'] * (1 - $stopLossPct);
+            // Effective stop = max(trailing, stop_loss) — trailing overrides when higher
+            $effectiveStopPrice = max($trailingStopPrice, $stopLossPrice);
+            $stopStatus = $currentPrice > 0 ? ($effectiveStopPrice >= $currentPrice ? 'breach' : ($effectiveStopPrice >= $currentPrice * 0.98 ? 'warning' : 'safe')) : 'na';
+
+            // Strategy details
+            $strategy = $h['strategy'] ?? 'Trailing Stop';
+            $atrMultiplier = $h['atr_multiplier'] ?? 2.0;
+
+            $h['cost_total'] = $costTotal;
+            $h['current_value'] = $currentValue;
+            $h['pnl'] = $pnl;
+            $h['pnl_pct'] = $pnlPct;
+            $h['annualized_pnl_pct'] = $annualizedPnlPct;
+            $h['days_held'] = $daysHeld;
+            $h['fundamentals'] = $fund;
+            $h['pe'] = $pe;
+            $h['div_yield'] = $divYield;
+            $h['annual_div_per_share'] = $annualDivPerShare;
+            $h['cost_basis_div_yield'] = $costBasisDivYield;
+            $h['current_div_yield'] = $currentDivYield;
+            $h['dividend_safety'] = $divSafety;
+            $h['atr_14'] = $atr14;
+            $h['sma_200'] = $sma200;
+            $h['trailing_stop_pct'] = $trailingStopPct;
+            $h['trailing_stop_price'] = $trailingStopPrice;
+            $h['stop_loss_pct'] = $stopLossPct;
+            $h['stop_loss_price'] = $stopLossPrice;
+            $h['effective_stop_price'] = $effectiveStopPrice;
+            $h['stop_status'] = $stopStatus;
+            $h['strategy'] = $strategy;
+            $h['atr_multiplier'] = $atrMultiplier;
+            $h['taxonomies'] = $taxonomies[$symbol] ?? [];
+            $h['settlement_date'] = $settlementMap[$symbol] ?? null;
+
+            $totalCost += $costTotal;
+            $totalValue += $currentValue;
+        }
+
+        // T+2 settlement latest transaction per symbol
+        $settlementMap = [];
+        if ($user_id > 0 && !empty($holdings)) {
+            $symbols = array_column($holdings, 'symbol');
+            $in = implode(',', array_fill(0, count($symbols), '?'));
+            $stmt = $this->pdo->prepare("
+                SELECT symbol, MAX(settlement_date) as settlement_date
+                FROM transactions
+                WHERE user_id = :uid
+                  AND symbol IN ($in)
+                  AND settlement_date IS NOT NULL
+                GROUP BY symbol
+            ");
+            $stmt->execute(array_merge([':uid' => $user_id], $symbols));
+            foreach ($stmt->fetchAll() as $row) {
+                $settlementMap[$row['symbol']] = $row['settlement_date'];
+            }
+        }
+
+        // Available cash = all cash movements (BUY/SELL/DEPOSIT/WITHDRAWAL/etc.)
+        // on the portfolio + accrual accounts that have settled (date <= today)
+        $availableCash = 0.0;
+        if ($user_id > 0) {
+            $stmt = $this->pdo->prepare("
+                SELECT COALESCE(SUM(
+                    CASE type
+                        WHEN 'BUY' THEN -amount
+                        WHEN 'SELL' THEN amount
+                        WHEN 'DEPOSIT' THEN amount
+                        WHEN 'WITHDRAWAL' THEN -amount
+                        WHEN 'DIVIDEND' THEN amount
+                        WHEN 'INTEREST_CHARGE' THEN -amount
+                        WHEN 'TAX' THEN -amount
+                        WHEN 'DELIVERY' THEN -amount
+                        ELSE 0
+                    END
+                ), 0) as cash
+                FROM transactions
+                WHERE user_id = :uid
+                  AND account_type IN ('portfolio','accrual')
+                  AND symbol = 'CASH'
+                  AND date <= CURRENT_DATE()
+            ");
+            $stmt->execute([':uid' => $user_id]);
+            $availableCash = (float)($stmt->fetchColumn() ?: 0);
+        }
+
+        $totalPnl = $totalValue - $totalCost;
+        $totalPnlPct = $totalCost > 0 ? ($totalPnl / $totalCost) * 100 : 0;
+
+        // Annualized total
+        // (approximate: use average holding period)
+        $totalDays = 0;
+        $count = 0;
+        foreach ($holdings as $h) {  // not &$h, we don't modify here
+            if ($h['days_held']) {
+                $totalDays += $h['days_held'];
+                $count++;
+            }
+        }
+        $avgYears = $count > 0 ? ($totalDays / $count) / 365.25 : 0;
+        $totalAnnualizedPnlPct = $avgYears > 0 && $totalCost > 0 ? ((pow($totalValue / $totalCost, 1 / $avgYears)) - 1) * 100 : 0;
+
+        return [
+            'holdings' => $holdings,
+            'total_cost' => $totalCost,
+            'total_value' => $totalValue,
+            'total_pnl' => $totalPnl,
+            'total_pnl_pct' => $totalPnlPct,
+            'total_annualized_pnl_pct' => $totalAnnualizedPnlPct,
+            'account_filter' => $account_filter,
+            'account_types' => array_values(array_unique(array_filter(array_column($holdings, 'registration_types')))),
+            'taxonomies' => array_values($taxonomies),
+            'settlement_dates' => $settlementMap,
+            'available_cash' => $availableCash,
+            'portfolio_accounts' => $this->listAccounts($user_id > 0 ? $user_id : 1),
+        ];
+    }
+
+    /** List active portfolio accounts for a user. */
+    private function listAccounts(int $user_id = 1): array {
+        $stmt = $this->pdo->prepare("
+            SELECT id, institution, account_nickname, registration_type, currency
+            FROM portfolio_accounts
+            WHERE user_id = :uid AND is_active = 1
+            ORDER BY registration_type, institution, account_nickname
+        ");
+        $stmt->execute([':uid' => $user_id]);
+        return $stmt->fetchAll() ?: [];
+    }
+
+    /**
+     * Get latest technical indicators for a symbol (for stop calculations).
+     * Uses resolver so Canadian symbols hit the canonical DB symbol.
+     */
+    private function getLatestIndicators(string $symbol): array {
+        $this->refreshIndicatorsJsonIfStale($symbol);
+        $resolved = $this->resolver->resolve($symbol);
+        $stmt = $this->pdo->prepare("
+            SELECT data FROM indicators_json
+            WHERE symbol = :sym
+            ORDER BY price_date DESC LIMIT 1
+        ");
+        $stmt->execute([':sym' => $resolved]);
+        $row = $stmt->fetch();
+        
+        if (!$row) return [];
+        return json_decode($row['data'] ?: $row[0], true) ?: [];
+    }
+
+    private function getTaxonomyAssignmentsForUser(int $user_id): array {
+        $stmt = $this->pdo->prepare("
+            SELECT ta.symbol, GROUP_CONCAT(t.name ORDER BY t.name SEPARATOR ', ') as taxonomy_names
+            FROM taxonomy_assignments ta
+            JOIN taxonomies t ON t.id = ta.taxonomy_id
+            WHERE ta.user_id = :uid
+            GROUP BY ta.symbol
+        ");
+        $stmt->execute([':uid' => $user_id]);
+        $map = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $map[$row['symbol']] = explode(', ', $row['taxonomy_names']);
+        }
+        return $map;
+    }
+
+    private function refreshIndicatorsJsonIfStale(string $symbol): void {
+        $resolved = $this->resolver->resolve($symbol);
+        $stmt = $this->pdo->prepare("
+            SELECT updated_date FROM indicators_json
+            WHERE symbol = :sym
+            ORDER BY price_date DESC LIMIT 1
+        ");
+        $stmt->execute([':sym' => $resolved]);
+        $row = $stmt->fetch();
+
+        $today = date('Y-m-d');
+        $last = $row ? substr($row['updated_date'], 0, 10) : '';
+        if ($last !== $today) {
+            $this->refreshIndicatorsJson($resolved);
+            if ($resolved !== $symbol) {
+                $this->refreshIndicatorsJson($symbol);
+            }
+        }
+    }
+
+    private function refreshIndicatorsJson(string $symbol): void {
+        $stmt = $this->pdo->prepare("
+            SELECT * FROM indicators WHERE symbol = :sym ORDER BY price_date DESC LIMIT 1
+        ");
+        $stmt->execute([':sym' => $symbol]);
+        $row = $stmt->fetch();
+        if (!$row) return;
+
+        $data = $row;
+        unset($data['id'], $data['symbol'], $data['price_date']);
+        $pdate = $row['price_date'];
+
+        $up = $this->pdo->prepare("
+            INSERT INTO indicators_json (symbol, price_date, data)
+            VALUES (:sym, :pdate, :data)
+            ON DUPLICATE KEY UPDATE data = VALUES(data), updated_date = NOW()
+        ");
+        $up->execute([
+            ':sym' => $symbol,
+            ':pdate' => $pdate,
+            ':data' => json_encode($data),
+        ]);
+    }
+
+    /**
+     * GET /?action=chart&symbol=XXX — Chart data as JSON.
+     */
+    public function chartData(string $symbol, int $days = 250): array {
+        $stmt = $this->pdo->prepare("
+            SELECT price_date, open, high, low, close, volume
+            FROM stockprices
+            WHERE symbol = :sym
+            ORDER BY price_date DESC
+            LIMIT :limit
+        ");
+        $stmt->bindValue(':sym', $symbol);
+        $stmt->bindValue(':limit', $days, PDO::PARAM_INT);
+        $stmt->execute();
+        return array_reverse($stmt->fetchAll());
+    }
+
+    /**
+     * GET /?action=indicators&symbol=XXX — Indicator detail page.
+     */
+    public function indicatorDetail(string $symbol): array {
+        return $this->detail($symbol); // Same data, different template
+    }
+
+    private function calcPerformance(string $symbol): array {
+        $stmt = $this->pdo->prepare("
+            SELECT close, price_date FROM stockprices
+            WHERE symbol = :sym ORDER BY price_date DESC
+        ");
+        $stmt->execute([':sym' => $symbol]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $perf = ['ytd' => null, '1y' => null, '3y' => null, '5y' => null, '10y' => null];
+        if (empty($rows)) return $perf;
+
+        $latest = $rows[0]['close'];
+        $latestDate = $rows[0]['price_date'];
+
+        foreach ($rows as $row) {
+            $daysAgo = (strtotime($latestDate) - strtotime($row['price_date'])) / 86400;
+            if ($perf['1y'] === null && $daysAgo >= 365) {
+                $perf['1y'] = (($latest / $row['close']) - 1) * 100;
+            }
+            if ($perf['3y'] === null && $daysAgo >= 1095) {
+                $perf['3y'] = (($latest / $row['close']) - 1) * 100;
+            }
+            if ($perf['5y'] === null && $daysAgo >= 1825) {
+                $perf['5y'] = (($latest / $row['close']) - 1) * 100;
+            }
+            if ($perf['10y'] === null && $daysAgo >= 3650) {
+                $perf['10y'] = (($latest / $row['close']) - 1) * 100;
+            }
+        }
+
+        // YTD
+        $stmt = $this->pdo->prepare("
+            SELECT close FROM stockprices
+            WHERE symbol = :sym AND price_date <= :yearStart
+            ORDER BY price_date DESC LIMIT 1
+        ");
+        $yearStart = date('Y') . '-01-01';
+        $stmt->execute([':sym' => $symbol, ':yearStart' => $yearStart]);
+        $ytdRow = $stmt->fetch();
+        if ($ytdRow) {
+            $perf['ytd'] = (($latest / $ytdRow['close']) - 1) * 100;
+        }
+
+        return $perf;
+    }
+
+    /**
+     * GET /?action=stop_orders — List stop loss / trailing stop orders with prices.
+     */
+    public function stopOrders(string $account_filter = 'all'): array {
+        $holdings = $this->getHoldingsWithPrices($account_filter);
+        $orders = [];
+        $totalMarketValue = 0;
+
+        foreach ($holdings as $h) {
+            $symbol = $h['symbol'];
+            $currentPrice = $h['current_price'] ?? 0;
+            $shares = $h['shares'] ?? 0;
+            
+            // Skip if no current price
+            if (!$currentPrice) continue;
+            $totalMarketValue += $shares * $currentPrice;
+
+            // Get ATR for ATR-based stops
+            $indicators = $this->getLatestIndicators($symbol);
+            $atr14 = $indicators['atr_14'] ?? null;
+            $high60 = $indicators['high_60'] ?? null;
+            $sma200 = $indicators['sma_200'] ?? null;
+            $rsi14 = $indicators['rsi_14'] ?? null;
+            $macd = $indicators['macd'] ?? null;
+            $macdSignal = $indicators['macd_signal'] ?? null;
+            $bbUpper = $indicators['bb_20_2_0_upper'] ?? null;
+            $bbLower = $indicators['bb_20_2_0_lower'] ?? null;
+
+            // Calculate stop prices
+            $trailingStopPct = $h['trailing_stop_pct'] ?? 0.10;
+            $stopLossPct = $h['stop_loss_pct'] ?? 0.15;
+            $atrMultiplier = $h['atr_multiplier'] ?? 2.0;
+
+            $trailingStopPrice = $currentPrice > 0 ? $currentPrice * (1 - $trailingStopPct) : 0;
+            $stopLossPrice = $h['cost_basis'] * (1 - $stopLossPct);
+            $atrStopPrice = $atr14 ? $currentPrice - ($atr14 * $atrMultiplier) : null;
+
+            // Effective stop = max of trailing and stop_loss (tightest of the two)
+            $effectiveStopPrice = max($trailingStopPrice, $stopLossPrice);
+            if ($atrStopPrice !== null) {
+                $effectiveStopPrice = max($effectiveStopPrice, $atrStopPrice);
+            }
+
+            // Stop status
+            $stopStatus = 'safe';
+            if ($effectiveStopPrice >= $currentPrice) {
+                $stopStatus = 'breach';
+            } elseif ($effectiveStopPrice >= $currentPrice * 0.98) {
+                $stopStatus = 'warning';
+            }
+
+            // --- New enhanced stop analytics ---
+
+            // 1. Suggested stop expiry: tie to ATR period / strategy horizon
+            $suggestedTimeStopDays = 14; // default: 2-week expiry for 14-day ATR
+            if ($atr14 > 0 && $currentPrice > 0) {
+                // If ATR is > 5% of price, market is volatile → shorter expiry
+                $atrPct = $atr14 / $currentPrice;
+                if ($atrPct > 0.05) {
+                    $suggestedTimeStopDays = 7;  // 1 week in high vol
+                } elseif ($atrPct < 0.015) {
+                    $suggestedTimeStopDays = 21; // 3 weeks in low vol
+                }
+            }
+
+            // 2. Suggested position sizing: risk-based
+            $maxRiskPerTrade = 0.01; // 1% of portfolio
+            $riskPerShare = $currentPrice - $effectiveStopPrice;
+            $suggestedShares = 0;
+            if ($riskPerShare > 0 && $totalMarketValue > 0) {
+                $riskBudget = $totalMarketValue * $maxRiskPerTrade;
+                $suggestedShares = floor($riskBudget / $riskPerShare);
+            }
+
+            // 3. All-out stop: catastrophic level (5× ATR below current)
+            $allOutStopPrice = $atr14 ? ($currentPrice - (5 * $atr14)) : null;
+
+            // 4. Trend exhaustion: price has dropped > 3× ATR from recent high
+            $trendExhaustion = false;
+            if ($high60 && $atr14) {
+                $dropFromHigh = $high60 - $currentPrice;
+                if ($dropFromHigh > (3 * $atr14)) {
+                    $trendExhaustion = true;
+                }
+            }
+            // Also flag if ATR stop is extremely far away (>4× ATR below current)
+            if (!$trendExhaustion && $atrStopPrice !== null && $atr14 > 0) {
+                $atrStopDistance = ($currentPrice - $atrStopPrice) / $atr14;
+                if ($atrStopDistance > 4.0) {
+                    $trendExhaustion = true;
+                }
+            }
+
+            // 5. Exit urgency score (0-100) from oscillator crossings + ATR multiple
+            $exitUrgency = 0;
+            // ATR multiple distance (higher = more urgent)
+            if ($atrStopPrice !== null && $atr14 > 0) {
+                $atrStopDist = ($currentPrice - $atrStopPrice) / $atr14;
+                $exitUrgency += min(30, max(0, ($atrStopDist - 1.0) * 10));
+            }
+            // RSI extreme
+            if ($rsi14 !== null) {
+                if ($rsi14 < 30) $exitUrgency += 20;
+                elseif ($rsi14 < 40) $exitUrgency += 10;
+                elseif ($rsi14 > 70) $exitUrgency += 5; // overbought but not yet exit
+            }
+            // MACD bearish cross
+            if ($macd !== null && $macdSignal !== null) {
+                if ($macd < $macdSignal) $exitUrgency += 15;
+            }
+            // Bollinger Band lower touch
+            if ($bbLower && $currentPrice <= $bbLower) {
+                $exitUrgency += 15;
+            }
+            // Below SMA200
+            if ($sma200 && $currentPrice < $sma200) {
+                $exitUrgency += 10;
+            }
+            $exitUrgency = min(100, max(0, $exitUrgency));
+
+            $orders[] = [
+                'symbol' => $symbol,
+                'accounts' => $h['accounts'],
+                'shares' => $shares,
+                'cost_basis' => $h['cost_basis'],
+                'current_price' => $currentPrice,
+                'price_date' => $h['price_date'],
+                'market_value' => $shares * $currentPrice,
+                'trailing_stop_pct' => $trailingStopPct,
+                'trailing_stop_price' => $trailingStopPrice,
+                'stop_loss_pct' => $stopLossPct,
+                'stop_loss_price' => $stopLossPrice,
+                'atr_14' => $atr14,
+                'atr_multiplier' => $atrMultiplier,
+                'atr_stop_price' => $atrStopPrice,
+                'effective_stop_price' => $effectiveStopPrice,
+                'stop_status' => $stopStatus,
+                'strategy' => $strategy,
+                // Enhanced fields
+                'suggested_time_stop_days' => $suggestedTimeStopDays,
+                'suggested_shares' => $suggestedShares,
+                'all_out_stop_price' => $allOutStopPrice,
+                'trend_exhaustion' => $trendExhaustion,
+                'exit_urgency_score' => $exitUrgency,
+            ];
+        }
+
+        return [
+            'pageTitle' => 'Stop Orders',
+            'template' => 'stop_orders',
+            'orders' => $orders,
+            'total_orders' => count($orders),
+            'portfolio_value' => $totalMarketValue,
+            'account_filter' => $account_filter,
+            'account_types' => array_unique(array_merge(...array_map(fn($o) => explode(',', $o['accounts']), $orders))),
+        ];
+    }
+
+    /**
+     * Helper: Get holdings with current prices (extracted from portfolio method).
+     */
+    private function getHoldingsWithPrices(string $account_filter = 'all'): array {
+        $accountWhere = '';
+        if ($account_filter !== 'all') {
+            $af = $this->pdo->quote($account_filter);
+            $accountWhere = "WHERE p.account_type = $af";
+        }
+        
+        $stmt = $this->pdo->query("
+            SELECT p.symbol,
+                   GROUP_CONCAT(DISTINCT p.account_type ORDER BY p.account_type) as accounts,
+                   SUM(p.shares) as shares,
+                   SUM(p.shares * p.cost_basis) / NULLIF(SUM(p.shares), 0) as cost_basis,
+                   AVG(p.trailing_stop_pct) as trailing_stop_pct,
+                   AVG(p.stop_loss_pct) as stop_loss_pct,
+                   p.strategy,
+                   AVG(p.atr_multiplier) as atr_multiplier,
+                   latest.close as current_price,
+                   latest.price_date as price_date
+            FROM portfolio p
+            LEFT JOIN (
+                SELECT sp1.symbol, sp1.close, sp1.price_date
+                FROM stockprices sp1
+                INNER JOIN (
+                    SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol
+                ) sp2 ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
+            ) latest ON p.symbol = latest.symbol
+            {$accountWhere}
+            GROUP BY p.symbol
+            HAVING SUM(p.shares) > 0
+            ORDER BY p.symbol
+        ");
+        return $stmt->fetchAll();
+    }
+    
+    /**
+     * Markov regime analysis — compute transition matrix from price data.
+     */
+    private function getRegimeAnalysis(string $symbol): array {
+        // Get 252 days of close prices
+        $stmt = $this->pdo->prepare("SELECT price_date, close FROM stockprices WHERE symbol = :sym ORDER BY price_date DESC LIMIT 252");
+        $stmt->execute([':sym' => $symbol]);
+        $rows = array_reverse($stmt->fetchAll());
+        
+        if (count($rows) < 252) {
+            return ['current_regime' => null, 'transition_matrix' => [], 'stationary_distribution' => []];
+        }
+        
+        // Compute regimes (20-day rolling return threshold 5%)
+        $closes = array_column($rows, 'close');
+        $regimes = [];
+        
+        for ($i = 20; $i < count($closes); $i++) {
+            $windowReturn = ($closes[$i] - $closes[$i - 20]) / $closes[$i - 20];
+            if ($windowReturn > 0.05) {
+                $regimes[] = 2; // Bull
+            } elseif ($windowReturn < -0.05) {
+                $regimes[] = 0; // Bear
+            } else {
+                $regimes[] = 1; // Sideways
+            }
+        }
+        
+        if (empty($regimes)) {
+            return ['current_regime' => null, 'transition_matrix' => [], 'stationary_distribution' => []];
+        }
+        
+        // Build 3x3 transition matrix
+        $matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+        for ($i = 1; $i < count($regimes); $i++) {
+            $from = $regimes[$i - 1];
+            $to = $regimes[$i];
+            $matrix[$from][$to]++;
+        }
+        
+        // Convert to probabilities
+        $transitionMatrix = [];
+        $stateLabels = ['Bear', 'Sideways', 'Bull'];
+        foreach ([0, 1, 2] as $from) {
+            $rowSum = array_sum($matrix[$from]);
+            if ($rowSum > 0) {
+                foreach ([0, 1, 2] as $to) {
+                    $transitionMatrix[$stateLabels[$from]][$stateLabels[$to]] = round($matrix[$from][$to] / $rowSum, 4);
+                }
+            }
+        }
+        
+        // Compute stationary distribution (eigendecomposition)
+        // For 3x3 matrix, use power iteration
+        $pi = [0.33, 0.33, 0.34]; // Initial guess
+        $P = $transitionMatrix;
+        
+        // Convert to numeric matrix for calculation
+        $Pnum = [
+            [(float)($P['Bear']['Bear'] ?? 0), (float)($P['Bear']['Sideways'] ?? 0), (float)($P['Bear']['Bull'] ?? 0)],
+            [(float)($P['Sideways']['Bear'] ?? 0), (float)($P['Sideways']['Sideways'] ?? 0), (float)($P['Sideways']['Bull'] ?? 0)],
+            [(float)($P['Bull']['Bear'] ?? 0), (float)($P['Bull']['Sideways'] ?? 0), (float)($P['Bull']['Bull'] ?? 0)]
+        ];
+        
+        // 50 iterations of P^n
+        for ($iter = 0; $iter < 50; $iter++) {
+            $newPi = [0, 0, 0];
+            foreach ([0, 1, 2] as $to) {
+                foreach ([0, 1, 2] as $from) {
+                    $newPi[$to] += $pi[$from] * $Pnum[$from][$to];
+                }
+            }
+            $pi = $newPi;
+        }
+        
+        $stationary = [
+            'Bear' => round($pi[0], 4),
+            'Sideways' => round($pi[1], 4),
+            'Bull' => round($pi[2], 4)
+        ];
+        return [
+            'current_regime' => $stateLabels[end($regimes)],
+            'transition_matrix' => $transitionMatrix,
+            'stationary_distribution' => $stationary
+        ];
+    }
+
+    private function runPythonRefresh(string $symbol, ?bool $fullHistory, ?int $days): void
+    {
+        $workerUrl = rtrim((string) ($_ENV['PYTHON_WORKER_URL'] ?? ''), '/');
+        if ($workerUrl === '') {
+            throw new RuntimeException('PYTHON_WORKER_URL is not configured for Python update.');
+        }
+
+        $payload = [
+            'symbol' => $symbol,
+            'full_history' => $fullHistory ? 1 : 0,
+            'days' => $days,
+        ];
+
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $workerUrl . '/worker/refresh_prices',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+            CURLOPT_TIMEOUT => 90,
+        ]);
+        $raw = curl_exec($ch);
+        if ($raw === false) {
+            $err = curl_error($ch);
+            curl_close($ch);
+            throw new RuntimeException('Python worker request failed: ' . $err);
+        }
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($code < 200 || $code >= 300) {
+            throw new RuntimeException('Python worker responded with status ' . $code . ': ' . substr((string) $raw, 0, 200));
+        }
+    }
+
+    /**
+     * GET /?action=refresh_price&symbol=SU.TO — Trigger price refresh for one symbol.
+     */
+    public function refreshPrice(string $symbol): array {
+        $symbol = $this->resolver->resolve(strtoupper(trim($symbol)));
+        if (!preg_match('/^[A-Z][A-Z0-9\\\\.\\\\-]*$/', $symbol)) {
+            $_SESSION['flash_error'] = 'Invalid symbol.';
+            header('Location: /stockmarket/?action=overview');
+            exit;
+        }
+
+        $script = __DIR__ . '/../../../python/fetch_prices.py';
+        if (!file_exists($script)) {
+            $_SESSION['flash_error'] = 'Price fetcher not found.';
+            header('Location: /stockmarket/?action=detail&symbol=' . urlencode($symbol));
+            exit;
+        }
+
+        $fullHistory = isset($_REQUEST['full_history']) && $_REQUEST['full_history'] == '1';
+        $startDate = null;
+
+        if (!$fullHistory) {
+            try {
+                $stmt = $this->pdo->prepare("SELECT MAX(price_date) as last_date FROM stockprices WHERE symbol = :sym");
+                $stmt->execute([':sym' => $symbol]);
+                $lastDate = $stmt->fetchColumn();
+                if ($lastDate) {
+                    $last = new DateTime($lastDate);
+                    $now = new DateTime();
+                    $diff = $now->diff($last);
+                    $daysSince = (int)$diff->format('%a');
+                    if ($daysSince < 1) {
+                        $daysSince = 1;
+                    }
+                    $startDate = (new DateTime("-$daysSince days"))->format('Y-m-d');
+                    $_SESSION['flash_message'] = "Refreshing last {$daysSince} day(s) of data for {$symbol} (since {$lastDate}).";
+                } else {
+                    $fullHistory = true;
+                    $_SESSION['flash_message'] = "No existing data found. Fetching full history for {$symbol}.";
+                }
+            } catch (Exception $e) {
+                $fullHistory = true;
+            }
+        }
+
+        $cmd = [
+            PHP_BINARY,
+            $script,
+            '--symbols', $symbol,
+        ];
+
+        if ($fullHistory) {
+            $cmd[] = '--full-history';
+        } elseif ($daysSince > 0) {
+            $cmd[] = '--days';
+            $cmd[] = (string)$daysSince;
+        }
+
+        try {
+            $proc = proc_open(
+                $cmd,
+                [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']],
+                $pipes,
+                dirname($script),
+                null,
+                ['bypass_shell' => true]
+            );
+            if (is_resource($proc)) {
+                fclose($pipes[0]);
+                stream_set_blocking($pipes[1], false);
+                stream_set_blocking($pipes[2], false);
+                $stdout = stream_get_contents($pipes[1]);
+                $stderr = stream_get_contents($pipes[2]);
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                $rc = proc_close($proc);
+                if ($rc === 0) {
+                    // flash already set above
+                } else {
+                    $_SESSION['flash_error'] = "Price refresh failed for {$symbol}: " . substr($stderr ?: $stdout, 0, 200);
+                }
+            } else {
+                $_SESSION['flash_error'] = 'Could not start price refresh process.';
+            }
+        } catch (Exception $e) {
+            $this->runPythonRefresh($symbol, $fullHistory, $daysSince > 0 ? $daysSince : null);
+            $_SESSION['flash_message'] = "Updated last " . ($daysSince > 0 ? $daysSince . ' day(s)' : 'window') . " of data for {$symbol}.";
+        }
+
+        $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
+        if ($isAjax) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => empty($_SESSION['flash_error']),
+                'message' => $_SESSION['flash_message'] ?? '',
+                'error' => $_SESSION['flash_error'] ?? '',
+                'symbol' => $symbol,
+            ]);
+            exit;
+        }
+
+        header('Location: /stockmarket/?action=detail&symbol=' . urlencode($symbol));
+        exit;
+    }
+
+    /**
+     * GET/POST /?action=manual_ohlcv — Manual OHLCV entry + CSV import.
+     */
+    public function manualOhlcv(): array {
+        $message = '';
+        $error = '';
+        $imported = 0;
+        $skipped = 0;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Single-row form submission
+            if (!empty($_POST['single_symbol'])) {
+                $rawSym = strtoupper(trim($_POST['single_symbol'] ?? ''));
+                $sym = $this->resolver->resolve($rawSym);
+                $row = [
+                    'symbol' => $sym,
+                    'date'   => trim($_POST['single_date'] ?? ''),
+                    'open'   => $_POST['single_open'] !== '' ? (float)$_POST['single_open'] : null,
+                    'high'   => $_POST['single_high'] !== '' ? (float)$_POST['single_high'] : null,
+                    'low'    => $_POST['single_low'] !== '' ? (float)$_POST['single_low'] : null,
+                    'close'  => $_POST['single_close'] !== '' ? (float)$_POST['single_close'] : null,
+                    'volume' => $_POST['single_volume'] !== '' ? (int)$_POST['single_volume'] : null,
+                    'adj_close' => $_POST['single_adj_close'] !== '' ? (float)$_POST['single_adj_close'] : null,
+                    'dividend'  => $_POST['single_dividend'] !== '' ? (float)$_POST['single_dividend'] : 0,
+                    'split_ratio' => $_POST['single_split'] !== '' ? (float)$_POST['single_split'] : 1,
+                ];
+                if (!preg_match('/^[A-Z][A-Z0-9\\.\\-]*$/', $sym) || !preg_match('/^\\d{4}-\\d{2}-\\d{2}$/', $row['date'])) {
+                    $error = 'Invalid symbol or date (YYYY-MM-DD).';
+                } else {
+                    try {
+                        $stmt = $this->pdo->prepare('INSERT IGNORE INTO stockprices (symbol,price_date,open,high,low,close,volume,adj_close,dividend,split_ratio) VALUES (:s,:d,:o,:h,:l,:c,:v,:a,:div,:split)');
+                        $stmt->execute([
+                            ':s' => $row['symbol'], ':d' => $row['date'],
+                            ':o' => $row['open'], ':h' => $row['high'], ':l' => $row['low'],
+                            ':c' => $row['close'], ':v' => $row['volume'], ':a' => $row['adj_close'] ?? $row['close'],
+                            ':div' => $row['dividend'], ':split' => $row['split_ratio'],
+                        ]);
+                        if ($stmt->rowCount() > 0) {
+                            $imported = 1;
+                            $message = "Inserted 1 row for {$row['symbol']} on {$row['date']}.";
+                        } else {
+                            $skipped = 1;
+                            $error = "Duplicate: {$row['symbol']} on {$row['date']} already exists.";
+                        }
+                    } catch (Exception $e) {
+                        $error = 'DB error: ' . $e->getMessage();
+                    }
+                }
+            }
+
+            // CSV upload
+            if (!empty($_FILES['csv_file']['tmp_name'])) {
+                $handle = fopen($_FILES['csv_file']['tmp_name'], 'r');
+                if ($handle) {
+                    $headers = fgetcsv($handle);
+                    $map = $this->mapCsvHeaders($headers);
+                    if (!$map['symbol'] || !$map['date']) {
+                        $error .= ($error ? ' | ' : '') . 'CSV must contain a symbol and date column.';
+                    } else {
+                        $batch = [];
+                        while (($row = fgetcsv($handle)) !== false) {
+                            if (count($row) < count($headers)) continue;
+                            $data = [];
+                            foreach ($headers as $idx => $h) {
+                                $field = $map[$h] ?? null;
+                                if ($field) $data[$field] = $row[$idx];
+                            }
+                            if (empty($data['symbol']) || empty($data['date'])) continue;
+                            $data['symbol'] = strtoupper($data['symbol']);
+                            $data['open']   = isset($data['open']) && $data['open'] !== '' ? (float)$data['open'] : null;
+                            $data['high']   = isset($data['high']) && $data['high'] !== '' ? (float)$data['high'] : null;
+                            $data['low']    = isset($data['low']) && $data['low'] !== '' ? (float)$data['low'] : null;
+                            $data['close']  = isset($data['close']) && $data['close'] !== '' ? (float)$data['close'] : null;
+                            $data['volume'] = isset($data['volume']) && $data['volume'] !== '' ? (int)$data['volume'] : null;
+                            $data['adj_close'] = isset($data['adj_close']) && $data['adj_close'] !== '' ? (float)$data['adj_close'] : ($data['close'] ?? null);
+                            $data['dividend']  = isset($data['dividend']) && $data['dividend'] !== '' ? (float)$data['dividend'] : 0;
+                            $data['split_ratio'] = isset($data['split_ratio']) && $data['split_ratio'] !== '' ? (float)$data['split_ratio'] : 1;
+                            if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $data['date'])) continue;
+                            $batch[] = $data;
+                        }
+                        fclose($handle);
+                        if ($batch) {
+                            try {
+                                $this->pdo->beginTransaction();
+                                $stmt = $this->pdo->prepare('INSERT IGNORE INTO stockprices (symbol,price_date,open,high,low,close,volume,adj_close,dividend,split_ratio) VALUES (:s,:d,:o,:h,:l,:c,:v,:a,:div,:split)');
+                                foreach ($batch as $r) {
+                                    $stmt->execute([
+                                        ':s' => $r['symbol'], ':d' => $r['date'],
+                                        ':o' => $r['open'], ':h' => $r['high'], ':l' => $r['low'],
+                                        ':c' => $r['close'], ':v' => $r['volume'], ':a' => $r['adj_close'],
+                                        ':div' => $r['dividend'], ':split' => $r['split_ratio'],
+                                    ]);
+                                    if ($stmt->rowCount() > 0) $imported++;
+                                    else $skipped++;
+                                }
+                                $this->pdo->commit();
+                                $message .= ($message ? ' | ' : '') . "CSV imported: {$imported} rows inserted, {$skipped} duplicates skipped.";
+                            } catch (Exception $e) {
+                                $this->pdo->rollBack();
+                                $error .= ($error ? ' | ' : '') . 'Import failed: ' . $e->getMessage();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return [
+            'message' => $message,
+            'error' => $error,
+            'imported' => $imported,
+            'skipped' => $skipped,
+        ];
+    }
+
+    private function mapCsvHeaders(array $headers): array {
+        $map = [];
+        foreach ($headers as $h) {
+            $h = strtolower(trim($h));
+            if (!$h) continue;
+            if (str_starts_with($h, 'adj') || $h === 'adjusted close' || $h === 'adj_close' || $h === 'adjclose') $map[$h] = 'adj_close';
+            elseif (str_contains($h, 'split')) $map[$h] = 'split_ratio';
+            elseif (str_contains($h, 'dividend') || $h === 'div') $map[$h] = 'dividend';
+            elseif (str_contains($h, 'volume') || $h === 'vol') $map[$h] = 'volume';
+            elseif (str_contains($h, 'open')) $map[$h] = 'open';
+            elseif (str_contains($h, 'high')) $map[$h] = 'high';
+            elseif (str_contains($h, 'low')) $map[$h] = 'low';
+            elseif (str_contains($h, 'close') || $h === 'last') $map[$h] = 'close';
+            elseif (str_contains($h, 'symbol') || str_contains($h, 'ticker') || $h === 'sym') $map[$h] = 'symbol';
+            elseif (str_contains($h, 'date') || str_contains($h, 'time') || str_contains($h, 'day') || $h === 'datetime') $map[$h] = 'date';
+        }
+        return $map;
+    }
+
+    /**
+     * GET /?action=screener — Display TradingView screener results.
+     */
+    public function screener(string $preset = 'dividend_stocks', ?string $sort = null, ?string $sector = null): array {
+        // Available presets with markets
+        $presets = [
+            'dividend_stocks' => ['label' => 'Dividend Stocks (Yield >3%)', 'market' => 'america'],
+            'quality_compounder' => ['label' => 'Quality Compunders', 'market' => 'america'],
+            'value_stocks' => ['label' => 'Value Stocks (P/E <15)', 'market' => 'america'],
+            'canadian_dividends' => ['label' => 'Canadian Dividends (Yield >3%)', 'market' => 'canada'],
+            'low_cost_index_funds' => ['label' => 'Low-Cost Index Funds', 'market' => 'canada'],
+            'buffett' => ['label' => 'Buffett Quality Score', 'market' => 'local'],
+            'zacks' => ['label' => 'Zacks-Style Composite', 'market' => 'local'],
+            'vectorvest' => ['label' => 'VectorVest Safe Stock', 'market' => 'local'],
+            'exit_risk' => ['label' => 'Low Exit Risk', 'market' => 'local'],
+            'ai_stocks' => ['label' => 'AI & Semiconductors', 'market' => 'local'],
+        ];
+        
+        if (!isset($presets[$preset])) {
+            $preset = 'dividend_stocks';
+        }
+        
+        $market = $presets[$preset]['market'];
+        
+        // Get latest results from DB
+        $stmt = $this->pdo->prepare("
+            SELECT symbol, data, run_at, market
+            FROM tradingview_screener_results 
+            WHERE preset_name = :preset AND market = :market
+            ORDER BY symbol
+            LIMIT 100
+        ");
+        $stmt->execute([':preset' => $preset, ':market' => $market]);
+        $results = $stmt->fetchAll();
+        
+        // Decode JSON data
+        foreach ($results as &$r) {
+            $r['metrics'] = json_decode($r['data'], true) ?: [];
+        }
+
+        // Threshold filter for rating-based presets
+        $minScore = isset($_GET['min_score']) ? (float) $_GET['min_score'] : null;
+        if ($minScore !== null && $minScore > 0) {
+            $results = array_values(array_filter($results, function($r) use ($preset, $minScore) {
+                $m = $r['metrics'] ?? [];
+                if ($preset === 'exit_risk') {
+                    $score = isset($m['composite_exit_risk']) ? ((float)$m['composite_exit_risk']) : null;
+                    if ($score === null) return false;
+                    // Invert: stored exit risk is 0-1; lower is better.
+                    return ((1 - $score) * 100) >= $minScore;
+                }
+                $score = isset($m['score']) ? (float)$m['score'] : null;
+                if ($score === null) return false;
+                return $score >= $minScore;
+            }));
+        }
+
+        // Override name from symbol_master when available
+        $symbols = [];
+        foreach ($results as $r) {
+            $symbols[] = $r['symbol'];
+        }
+        if ($symbols) {
+            $in = implode(',', array_fill(0, count($symbols), '?'));
+            $stmt2 = $this->pdo->prepare("SELECT symbol, name FROM symbol_master WHERE symbol IN ($in)");
+            $stmt2->execute($symbols);
+            $names = [];
+            while ($row = $stmt2->fetch(PDO::FETCH_ASSOC)) {
+                $names[$row['symbol']] = $row['name'];
+            }
+            foreach ($results as &$r) {
+                $sym = $r['symbol'];
+                if (!empty($names[$sym])) {
+                    $r['metrics']['name'] = $names[$sym];
+                }
+            }
+            unset($r);
+        }
+        
+        // Client-side sector filter
+        if ($sector !== null && $sector !== '') {
+            $results = array_values(array_filter($results, function($r) use ($sector) {
+                $m = $r['metrics'] ?? [];
+                return ($m['sector'] ?? '') === $sector;
+            }));
+        }
+        
+        // Client-side sort
+        $allowedSort = [
+            'symbol' => fn($a,$b)=>strcmp($a['symbol'],$b['symbol']),
+            'name' => fn($a,$b)=>strcmp($a['metrics']['name']??'',$b['metrics']['name']??''),
+            'close' => fn($a,$b)=>($a['metrics']['close']??0)<=>($b['metrics']['close']??0),
+            'change' => fn($a,$b)=>($a['metrics']['change']??0)<=>($b['metrics']['change']??0),
+            'Perf.Y' => fn($a,$b)=>($a['metrics']['Perf.Y']??0)<=>($b['metrics']['Perf.Y']??0),
+            'dividends_yield_current' => fn($a,$b)=>($a['metrics']['dividends_yield_current']??0)<=>($b['metrics']['dividends_yield_current']??0),
+            'price_earnings_ttm' => fn($a,$b)=>($a['metrics']['price_earnings_ttm']??0)<=>($b['metrics']['price_earnings_ttm']??0),
+            'return_on_equity' => fn($a,$b)=>($a['metrics']['return_on_equity']??0)<=>($b['metrics']['return_on_equity']??0),
+            'gross_margin_ttm' => fn($a,$b)=>($a['metrics']['gross_margin_ttm']??0)<=>($b['metrics']['gross_margin_ttm']??0),
+            'sector' => fn($a,$b)=>strcmp($a['metrics']['sector']??'',$b['metrics']['sector']??''),
+            'vv_pass_count' => fn($a,$b)=>($b['metrics']['pass_count']??0)<=>($a['metrics']['pass_count']??0),
+            'vv_score' => fn($a,$b)=>($b['metrics']['score']??0)<=>($a['metrics']['score']??0),
+        ];
+        if ($sort !== null && isset($allowedSort[$sort])) {
+            usort($results, $allowedSort[$sort]);
+        }
+
+        // Build unique sector list for filter dropdown
+        $sectors = [];
+        foreach ($results as $r) {
+            $sec = $r['metrics']['sector'] ?? '';
+            if ($sec !== '' && !in_array($sec, $sectors, true)) {
+                $sectors[] = $sec;
+            }
+        }
+        sort($sectors);
+        
+        return [
+            'preset_name' => $preset,
+            'preset_label' => $presets[$preset]['label'],
+            'presets' => $presets,
+            'screener_results' => $results,
+            'sectors' => $sectors,
+            'current_sector' => $sector ?? '',
+            'current_sort' => $sort ?? '',
+        ];
+    }
+
+    /** Load WealthSystem detail payload for a single symbol. */
+    public function loadWealthSystemDetail(string $symbol): array
+    {
+        $symbol = strtoupper($symbol);
+
+        $this->ensureTables(['stock_fundamentals']);
+
+        $stmt = $this->pdo->prepare('SELECT * FROM stock_fundamentals WHERE symbol = :sym LIMIT 1');
+        $stmt->execute([':sym' => $symbol]);
+        $fundamentals = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        $stmt = $this->pdo->prepare('SELECT * FROM stock_technical_indicators WHERE symbol = :sym ORDER BY date DESC LIMIT 1');
+        $stmt->execute([':sym' => $symbol]);
+        $indicators = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        // LLM analysis uses analysis_date/provider/model per migration 016
+        $stmt = $this->pdo->prepare('SELECT * FROM llm_analysis WHERE symbol = :sym ORDER BY analysis_date DESC, created_at DESC LIMIT 1');
+        $stmt->execute([':sym' => $symbol]);
+        $llm = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        $stmt = $this->pdo->prepare('SELECT eval_type, domain, score, max_score, grade, note FROM evaluation_scores WHERE symbol = :sym');
+        $stmt->execute([':sym' => $symbol]);
+        $evals = [];
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $evals[$row['eval_type']][$row['domain']] = $row;
+        }
+
+        // Buffett tenets from migration 016
+        $buffettTenets = [];
+        try {
+            $stmt = $this->pdo->prepare('SELECT name, passed, detail FROM tenets WHERE symbol = :sym ORDER BY name');
+            $stmt->execute([':sym' => $symbol]);
+            foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+                $buffettTenets[] = $row;
+            }
+        } catch (\Throwable $e) {}
+
+        // Motley Fool from migration 016
+        $motley = [];
+        try {
+            $stmt = $this->pdo->prepare('SELECT * FROM motleyfool WHERE symbol = :sym LIMIT 1');
+            $stmt->execute([':sym' => $symbol]);
+            $motley = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+        } catch (\Throwable $e) {}
+
+        return [
+            'symbol' => $symbol,
+            'fundamentals' => $fundamentals,
+            'indicators' => $indicators,
+            'llm_analysis' => $llm,
+            'evaluations' => $evals,
+            'buffett_tenets' => $buffettTenets,
+            'buffett_score' => [
+                'checks' => $buffettTenets,
+                'total' => count($buffettTenets),
+                'max' => 12,
+            ],
+            'motley' => $motley,
+        ];
+    }
+
+    /** Persist WealthSystem LLM qualitative text. */
+    public function saveLlmAnalysis(string $symbol, ?string $summary, ?string $analysisDate = null, ?string $provider = 'ui', ?string $modelUsed = null, string $editor = 'ui'): bool
+    {
+        $symbol = strtoupper($symbol);
+        $this->ensureTables(['llm_analysis']);
+
+        $analysisDate = $analysisDate ?: date('Y-m-d');
+        $modelUsed = $modelUsed ?: 'manual';
+
+        $stmt = $this->pdo->prepare('
+            INSERT INTO llm_analysis (symbol, analysis_date, provider, model, summary, created_at)
+            VALUES (:sym, :adate, :provider, :model, :summary, NOW())
+            ON DUPLICATE KEY UPDATE
+                summary = VALUES(summary),
+                model = VALUES(model),
+                created_at = NOW()
+        ');
+        return $stmt->execute([
+            ':sym' => $symbol,
+            ':adate' => $analysisDate,
+            ':provider' => $provider,
+            ':model' => $modelUsed,
+            ':summary' => $summary,
+        ]);
+    }
+
+    /** Persist WealthSystem evaluation scores snapshot. */
+    public function saveEvaluationScores(string $symbol, array $scores, ?string $editor = 'ui'): bool
+    {
+        $symbol = strtoupper($symbol);
+        $this->ensureTables(['evaluation_scores']);
+
+        $rows = [];
+        foreach ($scores as $type => $domains) {
+            foreach ($domains as $domain => $row) {
+                $rows[] = [
+                    ':sym' => $symbol,
+                    ':etype' => $type,
+                    ':domain' => $domain,
+                    ':score' => (int)($row['score'] ?? 0),
+                    ':max' => (int)($row['max'] ?? 100),
+                    ':grade' => (string)($row['grade'] ?? 'F'),
+                    ':note' => (string)($row['note'] ?? ''),
+                    ':editor' => $editor,
+                ];
+            }
+        }
+        if (!$rows) return true;
+
+        $this->pdo->beginTransaction();
+        try {
+            $stmt = $this->pdo->prepare('
+                INSERT INTO evaluation_scores (symbol, eval_type, domain, score, max_score, grade, note, created_by, updated_at)
+                VALUES (:sym, :etype, :domain, :score, :max, :grade, :note, :editor, NOW())
+                ON DUPLICATE KEY UPDATE
+                    score = VALUES(score),
+                    max_score = VALUES(max_score),
+                    grade = VALUES(grade),
+                    note = VALUES(note),
+                    updated_at = VALUES(updated_at),
+                    created_by = VALUES(created_by)
+            ');
+            foreach ($rows as $r) {
+                $stmt->execute([
+                    ':sym' => $r[':sym'],
+                    ':etype' => $r[':etype'],
+                    ':domain' => $r[':domain'],
+                    ':score' => $r[':score'],
+                    ':max' => $r[':max'],
+                    ':grade' => $r[':grade'],
+                    ':note' => $r[':note'],
+                    ':editor' => $r[':editor'],
+                ]);
+            }
+            $this->pdo->commit();
+            return true;
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
+
+    /** Persist Motley Fool 10 criteria. */
+    public function saveMotleyFool(string $symbol, array $criteria, string $editor = 'ui'): bool
+    {
+        $symbol = strtoupper($symbol);
+        $this->ensureTables(['motleyfool']);
+
+        $columns = [
+            'simplebusiness' => 'simplebusiness',
+            'reasonablevaluation' => 'reasonablevaluation',
+            'corefocus' => 'corefocus',
+            'doubledigitsales' => 'doubledigitsales',
+            'risingcashflow' => 'risingcashflow',
+            'risingbookvalue' => 'risingbookvalue',
+            'improvingmargins' => 'improvingmargins',
+            'risingroe' => 'risingroe',
+            'insiderownership' => 'insiderownership',
+            'regulardividend' => 'regulardividend',
+        ];
+
+        $sets = [];
+        $params = [':sym' => $symbol];
+        foreach ($columns as $key => $col) {
+            $val = $criteria[$col] ?? 0;
+            $sets[] = "{$col} = :{$key}";
+            $params[":{$key}"] = (int)$val;
+        }
+        $score = array_sum($criteria);
+        $sets[] = 'score = :score';
+        $params[':score'] = $score;
+
+        $sql = "INSERT INTO motleyfool (symbol, " . implode(', ', array_keys($columns)) . ", score, lastupdate) " .
+               "VALUES (:sym, " . implode(', ', array_keys($columns)) . ", :score, NOW()) " .
+               "ON DUPLICATE KEY UPDATE " . implode(', ', $sets) . ", lastupdate = NOW()";
+
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute($params);
+    }
+
+    /** Persist Buffett tenets. */
+    public function saveTenets(string $symbol, array $tenets, string $editor = 'ui'): bool
+    {
+        $symbol = strtoupper($symbol);
+        $this->ensureTables(['tenets']);
+
+        $this->pdo->beginTransaction();
+        try {
+            $stmt = $this->pdo->prepare('
+                INSERT INTO tenets (symbol, name, passed, detail, lasteval)
+                VALUES (:sym, :name, :passed, :detail, NOW())
+                ON DUPLICATE KEY UPDATE passed = VALUES(passed), detail = VALUES(detail), lasteval = VALUES(lasteval)
+            ');
+            foreach ($tenets as $t) {
+                $stmt->execute([
+                    ':sym' => $symbol,
+                    ':name' => $t['name'] ?? '',
+                    ':passed' => !empty($t['passed']) ? 1 : 0,
+                    ':detail' => $t['detail'] ?? '',
+                ]);
+            }
+            $this->pdo->commit();
+            return true;
+        } catch (\Throwable $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
+    }
+
+    private function ensureTables(array $tables): void
+    {
+        // Tables are expected to exist after 016/017.
+        // If not, calls will fail gracefully to empty sets.
     }
 }

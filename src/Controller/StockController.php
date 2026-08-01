@@ -1364,17 +1364,32 @@ class StockController {
                 }
             }
 
-            // 2. Suggested position sizing: risk-based
-            $maxRiskPerTrade = 0.01; // 1% of portfolio
+            // 2. Suggested position sizing: constrained by both risk budget and max position
+            $sizingCfg = $this->loadStrategySizing($this->normalizeStrategyKey($h['strategy'] ?? ''));
+            $maxRiskPerTrade = $sizingCfg['max_risk_per_trade'] ?? 0.01;
+            $maxSinglePosition = $sizingCfg['max_single_position'] ?? 0.20;
+
             $riskPerShare = $currentPrice - $effectiveStopPrice;
             $suggestedShares = 0;
+            $maxAllowedShares = 0;
+
             if ($riskPerShare > 0 && $totalMarketValue > 0) {
+                // Risk-based sizing: 1% portfolio risk / risk per share
                 $riskBudget = $totalMarketValue * $maxRiskPerTrade;
-                $suggestedShares = floor($riskBudget / $riskPerShare);
+                $suggestedShares = (int) floor($riskBudget / $riskPerShare);
+
+                // Max position sizing: can't exceed X% of portfolio
+                $maxPositionValue = $totalMarketValue * $maxSinglePosition;
+                $maxAllowedShares = (int) floor($maxPositionValue / $currentPrice);
+
+                // Take the more restrictive bound
+                $suggestedShares = min($suggestedShares, $maxAllowedShares);
             }
 
-            // 3. All-out stop: catastrophic level (5× ATR below current)
-            $allOutStopPrice = $atr14 ? ($currentPrice - (5 * $atr14)) : null;
+            // 3. All-out stop: catastrophic level anchored to recent high, NOT current price
+            //    This prevents the all-out from sliding lower every day after a trigger.
+            $catastropheAnchor = max($currentPrice, $high60 ?? 0);
+            $allOutStopPrice = $atr14 ? ($catastropheAnchor - (5 * $atr14)) : null;
 
             // 4. Trend exhaustion: price has dropped > 3× ATR from recent high
             $trendExhaustion = false;
@@ -1455,6 +1470,45 @@ class StockController {
             'account_filter' => $account_filter,
             'account_types' => array_unique(array_merge(...array_map(fn($o) => explode(',', $o['accounts']), $orders))),
         ];
+    }
+
+    /**
+     * Helper: Load strategy sizing config from config.yaml.
+     */
+    private function loadStrategySizing(string $strategy): array {
+        static $cache = null;
+        if ($cache === null) {
+            $cfgPath = __DIR__ . '/../../config/config.yaml';
+            $cache = [];
+            if (file_exists($cfgPath)) {
+                $yaml = yaml_parse_file($cfgPath);
+                $cache = $yaml['strategy_sizing'] ?? [];
+            }
+        }
+        $key = strtolower(trim($strategy));
+        if ($key === '' || !isset($cache[$key])) {
+            return $cache['defaults'] ?? ['max_risk_per_trade' => 0.01, 'max_single_position' => 0.20];
+        }
+        return $cache[$key];
+    }
+
+    /**
+     * Helper: Normalize portfolio strategy names to config.yaml strategy keys.
+     */
+    private function normalizeStrategyKey(string $strategy): string {
+        $s = strtolower(trim($strategy));
+        $map = [
+            'rebuilt' => 'atr_trailing_stop',
+            'cash' => 'cash',
+            'buffett' => 'buffett_screen',
+            'buffett_screen' => 'buffett_screen',
+            'atr_trailing_stop' => 'atr_trailing_stop',
+            'kelly' => 'kelly_position_sizing',
+            'kelly_position_sizing' => 'kelly_position_sizing',
+            'ensemble' => 'ensemble_blend',
+            'ensemble_blend' => 'ensemble_blend',
+        ];
+        return $map[$s] ?? $s;
     }
 
     /**

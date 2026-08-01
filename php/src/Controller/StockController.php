@@ -1305,17 +1305,27 @@ class StockController {
     public function stopOrders(string $account_filter = 'all'): array {
         $holdings = $this->getHoldingsWithPrices($account_filter);
         $orders = [];
+        $totalMarketValue = 0;
 
         foreach ($holdings as $h) {
             $symbol = $h['symbol'];
             $currentPrice = $h['current_price'] ?? 0;
+            $shares = $h['shares'] ?? 0;
             
             // Skip if no current price
             if (!$currentPrice) continue;
+            $totalMarketValue += $shares * $currentPrice;
 
             // Get ATR for ATR-based stops
             $indicators = $this->getLatestIndicators($symbol);
             $atr14 = $indicators['atr_14'] ?? null;
+            $high60 = $indicators['high_60'] ?? null;
+            $sma200 = $indicators['sma_200'] ?? null;
+            $rsi14 = $indicators['rsi_14'] ?? null;
+            $macd = $indicators['macd'] ?? null;
+            $macdSignal = $indicators['macd_signal'] ?? null;
+            $bbUpper = $indicators['bb_20_2_0_upper'] ?? null;
+            $bbLower = $indicators['bb_20_2_0_lower'] ?? null;
 
             // Calculate stop prices
             $trailingStopPct = $h['trailing_stop_pct'] ?? 0.10;
@@ -1326,26 +1336,112 @@ class StockController {
             $stopLossPrice = $h['cost_basis'] * (1 - $stopLossPct);
             $atrStopPrice = $atr14 ? $currentPrice - ($atr14 * $atrMultiplier) : null;
 
-            // Effective stop = max of trailing and stop_loss
+            // Effective stop = max of trailing and stop_loss (tightest of the two)
             $effectiveStopPrice = max($trailingStopPrice, $stopLossPrice);
+            if ($atrStopPrice !== null) {
+                $effectiveStopPrice = max($effectiveStopPrice, $atrStopPrice);
+            }
 
-            // Determine stop status
+            // Stop status
+            $stopStatus = 'safe';
             if ($effectiveStopPrice >= $currentPrice) {
                 $stopStatus = 'breach';
             } elseif ($effectiveStopPrice >= $currentPrice * 0.98) {
                 $stopStatus = 'warning';
-            } else {
-                $stopStatus = 'safe';
             }
+
+            // --- New enhanced stop analytics ---
+
+            // 1. Suggested stop expiry: tie to ATR period / strategy horizon
+            $suggestedTimeStopDays = 14; // default: 2-week expiry for 14-day ATR
+            if ($atr14 > 0 && $currentPrice > 0) {
+                // If ATR is > 5% of price, market is volatile → shorter expiry
+                $atrPct = $atr14 / $currentPrice;
+                if ($atrPct > 0.05) {
+                    $suggestedTimeStopDays = 7;  // 1 week in high vol
+                } elseif ($atrPct < 0.015) {
+                    $suggestedTimeStopDays = 21; // 3 weeks in low vol
+                }
+            }
+
+            // 2. Suggested position sizing: constrained by both risk budget and max position
+            $sizingCfg = $this->loadStrategySizing($this->normalizeStrategyKey($h['strategy'] ?? ''));
+            $maxRiskPerTrade = $sizingCfg['max_risk_per_trade'] ?? 0.01;
+            $maxSinglePosition = $sizingCfg['max_single_position'] ?? 0.20;
+
+            $riskPerShare = $currentPrice - $effectiveStopPrice;
+            $suggestedShares = 0;
+            $maxAllowedShares = 0;
+
+            if ($riskPerShare > 0 && $totalMarketValue > 0) {
+                // Risk-based sizing: 1% portfolio risk / risk per share
+                $riskBudget = $totalMarketValue * $maxRiskPerTrade;
+                $suggestedShares = (int) floor($riskBudget / $riskPerShare);
+
+                // Max position sizing: can't exceed X% of portfolio
+                $maxPositionValue = $totalMarketValue * $maxSinglePosition;
+                $maxAllowedShares = (int) floor($maxPositionValue / $currentPrice);
+
+                // Take the more restrictive bound
+                $suggestedShares = min($suggestedShares, $maxAllowedShares);
+            }
+
+            // 3. All-out stop: catastrophic level anchored to recent high, NOT current price
+            //    This prevents the all-out from sliding lower every day after a trigger.
+            $catastropheAnchor = max($currentPrice, $high60 ?? 0);
+            $allOutStopPrice = $atr14 ? ($catastropheAnchor - (5 * $atr14)) : null;
+
+            // 4. Trend exhaustion: price has dropped > 3× ATR from recent high
+            $trendExhaustion = false;
+            if ($high60 && $atr14) {
+                $dropFromHigh = $high60 - $currentPrice;
+                if ($dropFromHigh > (3 * $atr14)) {
+                    $trendExhaustion = true;
+                }
+            }
+            // Also flag if ATR stop is extremely far away (>4× ATR below current)
+            if (!$trendExhaustion && $atrStopPrice !== null && $atr14 > 0) {
+                $atrStopDistance = ($currentPrice - $atrStopPrice) / $atr14;
+                if ($atrStopDistance > 4.0) {
+                    $trendExhaustion = true;
+                }
+            }
+
+            // 5. Exit urgency score (0-100) from oscillator crossings + ATR multiple
+            $exitUrgency = 0;
+            // ATR multiple distance (higher = more urgent)
+            if ($atrStopPrice !== null && $atr14 > 0) {
+                $atrStopDist = ($currentPrice - $atrStopPrice) / $atr14;
+                $exitUrgency += min(30, max(0, ($atrStopDist - 1.0) * 10));
+            }
+            // RSI extreme
+            if ($rsi14 !== null) {
+                if ($rsi14 < 30) $exitUrgency += 20;
+                elseif ($rsi14 < 40) $exitUrgency += 10;
+                elseif ($rsi14 > 70) $exitUrgency += 5; // overbought but not yet exit
+            }
+            // MACD bearish cross
+            if ($macd !== null && $macdSignal !== null) {
+                if ($macd < $macdSignal) $exitUrgency += 15;
+            }
+            // Bollinger Band lower touch
+            if ($bbLower && $currentPrice <= $bbLower) {
+                $exitUrgency += 15;
+            }
+            // Below SMA200
+            if ($sma200 && $currentPrice < $sma200) {
+                $exitUrgency += 10;
+            }
+            $exitUrgency = min(100, max(0, $exitUrgency));
 
             $orders[] = [
                 'symbol' => $symbol,
                 'accounts' => $h['accounts'],
-                'shares' => $h['shares'],
+                'shares' => $shares,
                 'cost_basis' => $h['cost_basis'],
                 'current_price' => $currentPrice,
                 'price_date' => $h['price_date'],
-                'market_value' => $h['shares'] * $currentPrice,
+                'market_value' => $shares * $currentPrice,
                 'trailing_stop_pct' => $trailingStopPct,
                 'trailing_stop_price' => $trailingStopPrice,
                 'stop_loss_pct' => $stopLossPct,
@@ -1353,9 +1449,15 @@ class StockController {
                 'atr_14' => $atr14,
                 'atr_multiplier' => $atrMultiplier,
                 'atr_stop_price' => $atrStopPrice,
-                'effective_stop_price' => max($effectiveStopPrice, $atrStopPrice ?: 0),
+                'effective_stop_price' => $effectiveStopPrice,
                 'stop_status' => $stopStatus,
-                'strategy' => $h['strategy'] ?? 'Trailing Stop',
+                'strategy' => $strategy,
+                // Enhanced fields
+                'suggested_time_stop_days' => $suggestedTimeStopDays,
+                'suggested_shares' => $suggestedShares,
+                'all_out_stop_price' => $allOutStopPrice,
+                'trend_exhaustion' => $trendExhaustion,
+                'exit_urgency_score' => $exitUrgency,
             ];
         }
 
@@ -1364,9 +1466,49 @@ class StockController {
             'template' => 'stop_orders',
             'orders' => $orders,
             'total_orders' => count($orders),
+            'portfolio_value' => $totalMarketValue,
             'account_filter' => $account_filter,
             'account_types' => array_unique(array_merge(...array_map(fn($o) => explode(',', $o['accounts']), $orders))),
         ];
+    }
+
+    /**
+     * Helper: Load strategy sizing config from config.yaml.
+     */
+    private function loadStrategySizing(string $strategy): array {
+        static $cache = null;
+        if ($cache === null) {
+            $cfgPath = __DIR__ . '/../../config/config.yaml';
+            $cache = [];
+            if (file_exists($cfgPath)) {
+                $yaml = yaml_parse_file($cfgPath);
+                $cache = $yaml['strategy_sizing'] ?? [];
+            }
+        }
+        $key = strtolower(trim($strategy));
+        if ($key === '' || !isset($cache[$key])) {
+            return $cache['defaults'] ?? ['max_risk_per_trade' => 0.01, 'max_single_position' => 0.20];
+        }
+        return $cache[$key];
+    }
+
+    /**
+     * Helper: Normalize portfolio strategy names to config.yaml strategy keys.
+     */
+    private function normalizeStrategyKey(string $strategy): string {
+        $s = strtolower(trim($strategy));
+        $map = [
+            'rebuilt' => 'atr_trailing_stop',
+            'cash' => 'cash',
+            'buffett' => 'buffett_screen',
+            'buffett_screen' => 'buffett_screen',
+            'atr_trailing_stop' => 'atr_trailing_stop',
+            'kelly' => 'kelly_position_sizing',
+            'kelly_position_sizing' => 'kelly_position_sizing',
+            'ensemble' => 'ensemble_blend',
+            'ensemble_blend' => 'ensemble_blend',
+        ];
+        return $map[$s] ?? $s;
     }
 
     /**

@@ -64,7 +64,7 @@ def _next_business_day(start: date, days: int) -> date:
     cur = start
     added = 0
     while added < days:
-        cur = date(cur.year, cur.month, cur.day + 1)
+        cur = cur + timedelta(days=1)
         if cur.weekday() < 5:
             added += 1
     return cur

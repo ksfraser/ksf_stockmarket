@@ -70,6 +70,114 @@ def _next_business_day(start: date, days: int) -> date:
     return cur
 
 
+def _process_dividends(current_date, cash, positions, trades, conn):
+    """Credit dividends to cash for positions held on the ex-dividend date."""
+    if not positions:
+        return cash
+    syms = list(positions.keys())
+    placeholders = ', '.join(['%s'] * len(syms))
+    with conn.cursor() as cur:
+        cur.execute(
+            f"SELECT symbol, amount FROM dividends WHERE ex_date = %s AND symbol IN ({placeholders})",
+            [current_date] + syms,
+        )
+        divs = {r['symbol']: float(r['amount']) for r in cur.fetchall()}
+    # Fallback: stockprices.dividend column (same date)
+    if syms:
+        with conn.cursor() as cur:
+            cur.execute(
+                f"SELECT symbol, dividend FROM stockprices WHERE price_date = %s AND dividend > 0 AND symbol IN ({placeholders})",
+                [current_date] + syms,
+            )
+            for r in cur.fetchall():
+                sym = r['symbol']
+                if sym not in divs:
+                    divs[sym] = float(r['dividend'])
+    for sym, amount_per_share in divs.items():
+        pos = positions.get(sym)
+        if not pos:
+            continue
+        shares = float(pos.get('shares', 0))
+        if shares <= 0:
+            continue
+        dividend = shares * amount_per_share
+        cash += dividend
+        trades.append({
+            'symbol': sym,
+            'trade_type': 'DIVIDEND',
+            'trade_date': current_date,
+            'price': amount_per_share,
+            'quantity': shares,
+            'commission': 0.0,
+            'total_cost': dividend,
+            'pnl': dividend,
+            'signal_reasons': f'Dividend {sym}: {shares:.0f} shares x ${amount_per_share:.4f} = ${dividend:.2f}',
+        })
+    return cash
+
+
+def _upcoming_ex_dividend_dates(conn, symbol, current_date, lookahead_days=5):
+    """Return list of (ex_date, amount) for ex-dividend dates within lookahead window."""
+    end = current_date + timedelta(days=lookahead_days)
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT ex_date, amount FROM dividends WHERE symbol = %s AND ex_date > %s AND ex_date <= %s ORDER BY ex_date ASC",
+            (symbol, current_date, end),
+        )
+        return [(r['ex_date'], float(r['amount'])) for r in cur.fetchall()]
+
+
+def _dividend_price_impact(conn, symbol, ex_date):
+    """Return True if price historically dropped by LESS than the dividend amount on ex-date.
+    This means capturing the dividend is beneficial.
+    """
+    # Get previous close
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT close FROM stockprices WHERE symbol = %s AND price_date < %s ORDER BY price_date DESC LIMIT 1",
+            (symbol, ex_date),
+        )
+        prev = cur.fetchone()
+    if not prev:
+        return False
+    prev_close = float(prev['close'])
+    # Get ex-date close
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT close, dividend FROM stockprices WHERE symbol = %s AND price_date = %s LIMIT 1",
+            (symbol, ex_date),
+        )
+        ex_row = cur.fetchone()
+    if not ex_row:
+        return False
+    ex_close = float(ex_row['close'])
+    dividend = float(ex_row.get('dividend') or 0)
+    if dividend <= 0:
+        return False
+    # Calculate actual price drop
+    drop = prev_close - ex_close
+    # If drop is significantly less than dividend (e.g., < 80% of dividend), it's beneficial
+    return drop < (dividend * 0.8)
+
+
+def _should_defer_sell_for_dividend(conn, symbol, current_date, px):
+    """Return True if we should defer selling to capture an upcoming dividend."""
+    if px <= 0:
+        return False
+    upcoming = _upcoming_ex_dividend_dates(conn, symbol, current_date, lookahead_days=3)
+    if not upcoming:
+        return False
+    # Check the nearest upcoming ex-date
+    ex_date, amount = upcoming[0]
+    # Only defer if dividend is material (> 0.5% of price)
+    if amount / px < 0.005:
+        return False
+    # Only defer if price historically doesn't drop by the full dividend
+    if not _dividend_price_impact(conn, symbol, ex_date):
+        return False
+    return True
+
+
 def _process_settlements(current_date, cash, accrual_cash, positions, trades, commission, slug, strategy_name, pending):
     due = [s for s in pending if s["settlement_date"] == current_date]
     remaining = [s for s in pending if s["settlement_date"] != current_date]
@@ -150,6 +258,7 @@ def run_rules_backtest(
     history: list[dict[str, Any]] = []
     days_below_buffer = 0
     pending_settlements: list[dict[str, Any]] = []
+    dividend_deferred_sells: dict[str, date] = {}
 
     dates = trading_dates(conn, start_date, end_date)
     if not dates:
@@ -168,6 +277,7 @@ def run_rules_backtest(
         cash, accrual_cash, positions, pending_settlements = _process_settlements(
             current_date, cash, accrual_cash, positions, trades, commission, slug, strategy_name, pending_settlements
         )
+        cash = _process_dividends(current_date, cash, positions, trades, conn)
         if (current_date - last_rebalance).days < rebalance_days:
             if i % 5 == 0:
                 history.append(_snapshot(current_date, cash, positions, conn))
@@ -705,15 +815,15 @@ def _exec_sell(conn, slug, strategy_name, pos, trades, current_date, cash, accru
         "shares": 0,
     })
     trades.append({
-        "symbol": sym,
-        "trade_type": "SELL",
-        "trade_date": current_date,
-        "price": px,
-        "quantity": qty,
-        "commission": commission,
-        "total_cost": -proceeds,
-        "pnl": pnl,
-        "signal_reasons": f"Rule {strategy_name} ({slug}): SELL {sym} at ${px:.2f} triggered by {reason}. ATR/stop/rules applied.",
+        'symbol': sym,
+        'trade_type': 'SELL',
+        'trade_date': current_date,
+        'price': px,
+        'quantity': qty,
+        'commission': commission,
+        'total_cost': trade_amount,
+        'pnl': pnl,
+        'signal_reasons': f"Rule {strategy_name} ({slug}): SELL {sym} at ${px:.2f} triggered by {reason}. ATR/stop/rules applied.",
     })
     return cash, accrual_cash
 
@@ -741,14 +851,14 @@ def _exec_buy(conn, slug, strategy_name, symbol, price, shares, commission, cash
         "trigger_reason": reason,
     }
     trades.append({
-        "symbol": symbol,
-        "trade_type": "BUY",
-        "trade_date": current_date,
-        "price": price,
-        "quantity": shares,
-        "commission": commission,
-        "total_cost": cost,
-        "signal_reasons": f"Rule {strategy_name} ({slug}): BUY {symbol} at ${price:.2f} {reason} confidence atr_mult={atr_mult} max_positions={max_positions} stop_pct={stop_pct:.0%}",
+        'symbol': symbol,
+        'trade_type': 'BUY',
+        'trade_date': current_date,
+        'price': price,
+        'quantity': shares,
+        'commission': commission,
+        'total_cost': trade_amount,
+        'signal_reasons': f"Rule {strategy_name} ({slug}): BUY {symbol} at ${price:.2f} {reason} confidence atr_mult={atr_mult} max_positions={max_positions} stop_pct={stop_pct:.0%}",
     })
     return cash, accrual_cash, positions, pending_settlements
 

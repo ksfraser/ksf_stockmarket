@@ -21,13 +21,13 @@ try:
 except ImportError:
     print("TA-Lib not installed. Run: pip3 install ta-lib"); sys.exit(1)
 
-# Credentials loaded from Ansible Vault via config_loader
+# Credentials loaded from Ansible Vault via config_loader, fallback to env
 _cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config.yaml')
 _cfg = Config(_cfg_path) if os.path.exists(_cfg_path) else Config()
 MYSQL = dict(
     host=_cfg.data.db_host,
     user=_cfg.data.db_user,
-    password=_cfg.db_password,
+    password=getattr(_cfg, 'db_password', None) or os.getenv('DB_PASSWORD', ''),
     database=_cfg.data.db_name,
     charset='utf8mb4',
     cursorclass=pymysql.cursors.DictCursor

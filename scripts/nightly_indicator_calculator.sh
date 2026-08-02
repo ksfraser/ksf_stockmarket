@@ -13,8 +13,8 @@ if [ -f ".env" ]; then
     export DB_CHARSET="$(grep '^DB_CHARSET=' .env | cut -d= -f2)"
 fi
 
-export PYTHONPATH="/home/ksf_stockmarket/ksf_stockmarket:python:python/src"
+export PYTHONPATH="/home/ksf_stockmarket/ksf_stockmarket:python:python.src"
 
 echo "$(date): Starting nightly indicator calculator"
-python3 python/indicator_calculator.py --verbose 2>&1 | tee /tmp/nightly_indicator_calculator.log
+python3.10 python/indicator_calculator.py --limit 5 --verbose 2>&1 | tee /tmp/nightly_indicator_calculator.log
 echo "$(date): Nightly indicator calculator complete" | tee -a /tmp/nightly_indicator_calculator.log

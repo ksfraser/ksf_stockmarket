@@ -214,8 +214,10 @@ def main() -> int:
             print("No valid candidate symbols")
             return 0
 
+        existing = _existing_symbols(conn)
+        new_symbols = {sym for sym in candidates if sym not in existing}
         updated_symbols = _upsert_symbol_master(conn, list(candidates.items()))
-        print(f"Symbol master updated: {updated_symbols} rows affected")
+        print(f"Symbol master: {len(new_symbols)} new, {updated_symbols - len(new_symbols)} updated (total rows affected: {updated_symbols})")
 
         pending, source_map = _pending_price_symbols(conn, candidates.keys())
         if not pending:

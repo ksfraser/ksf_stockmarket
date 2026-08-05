@@ -1,15 +1,8 @@
 #!/bin/sh
+# LEGACY — original paths (/mnt/2/development/...) no longer exist.
+# Modern equivalent: python/scripts/daily_pipeline.py / daily_run.py
+# Kept for reference only; do not schedule without updating paths.
 
-# This script is to download historical stock prices from Yahoo
-
-#Download all prices for any stocks we don't already have anything for
-#and then upload the resulting data into the database
-echo "Running Getmissing"
-php getmissing.php
-./insertprices.sh
-
-#Now get any data for the stocks in the database since the last
-#time they have been downloaded
-echo "Running Getnewest"
-php getnewest.php
-./insertprices.sh
+echo "LEGACY: prices/prices.sh references removed paths."
+echo "Use python/scripts/daily_run.py --stages ingest_prices instead."
+exit 1

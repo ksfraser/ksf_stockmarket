@@ -4,8 +4,20 @@
 # 2. Advisor signals + alert watcher + notifications via unified daily runner
 # 3. Legacy walk-forward backtest (heavy — consider moving to weekly cron)
 
-export PYTHONPATH="/home/ksf_stockmarket/ksf_stockmarket:python:python/src"
-cd /home/ksf_stockmarket/ksf_stockmarket
+REPO_DIR="/home/ksf_stockmarket/ksf_stockmarket"
+
+# Source DB credentials from .env
+if [[ -f "${REPO_DIR}/.env" ]]; then
+    export DB_HOST="$(grep '^DB_HOST=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_NAME="$(grep '^DB_NAME=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_USER="$(grep '^DB_USER=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_PASS="$(grep '^DB_PASS=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_PASSWORD="$(grep '^DB_PASS=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_CHARSET="$(grep '^DB_CHARSET=' "${REPO_DIR}/.env" | cut -d= -f2)"
+fi
+
+export PYTHONPATH="${REPO_DIR}:python:python/src"
+cd "${REPO_DIR}"
 
 echo "$(date): Starting daily_run stages"
 python3 python/scripts/daily_run.py --stages ingest_prices,calc_indicators,advisor_signals,alert_watcher \

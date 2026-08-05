@@ -1,5 +1,6 @@
 #!/bin/sh
+# LEGACY — original paths (/mnt/2/development/...) no longer exist.
+# Kept for reference only; do not schedule without updating paths.
 
-php checkcandlesticks.php
-#Calculate the heikan ashi candlestick data for stocks
-php fill_heikanashi.php
+echo "LEGACY: candlestick/candlestick.sh references removed paths."
+exit 1

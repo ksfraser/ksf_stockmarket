@@ -1,3 +1,6 @@
 #!/bin/sh
+# LEGACY — original paths (/mnt/2/development/...) no longer exist.
+# Kept for reference only; do not schedule without updating paths.
 
-php getbondrates.php
+echo "LEGACY: bond/bond.sh references removed paths."
+exit 1

@@ -1,19 +1,20 @@
 #!/bin/bash
 set -euo pipefail
 
-cd /home/ksf_stockmarket/ksf_stockmarket
+REPO_DIR="/home/ksf_stockmarket/ksf_stockmarket"
 
-# Source environment variables
-if [ -f ".env" ]; then
-    export DB_HOST="$(grep '^DB_HOST=' .env | cut -d= -f2)"
-    export DB_NAME="$(grep '^DB_NAME=' .env | cut -d= -f2)"
-    export DB_USER="$(grep '^DB_USER=' .env | cut -d= -f2)"
-    export DB_PASS="$(grep '^DB_PASS=' .env | cut -d= -f2)"
-    export DB_PASSWORD="$(grep '^DB_PASS=' .env | cut -d= -f2)"
-    export DB_CHARSET="$(grep '^DB_CHARSET=' .env | cut -d= -f2)"
+# Source DB credentials
+if [[ -f "${REPO_DIR}/.env" ]]; then
+    export DB_HOST="$(grep '^DB_HOST=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_NAME="$(grep '^DB_NAME=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_USER="$(grep '^DB_USER=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_PASS="$(grep '^DB_PASS=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_PASSWORD="$(grep '^DB_PASS=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_CHARSET="$(grep '^DB_CHARSET=' "${REPO_DIR}/.env" | cut -d= -f2)"
 fi
 
-export PYTHONPATH="/home/ksf_stockmarket/ksf_stockmarket:python:python.src"
+cd "${REPO_DIR}"
+export PYTHONPATH="${REPO_DIR}:python:python/src"
 
 echo "$(date): Starting nightly indicator calculator"
 python3.10 python/indicator_calculator.py --limit 5 --verbose 2>&1 | tee /tmp/nightly_indicator_calculator.log

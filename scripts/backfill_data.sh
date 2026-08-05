@@ -1,19 +1,38 @@
 #!/bin/bash
 # backfill_data.sh — Fetch historical data for all symbols missing from the DB.
+# Modern replacement: uses daily_pipeline.py with DB credentials from .env
 
-LOG="/home/ksf_stockmarket/ksf_stockmarket/data_fetch_progress.log"
-PY="/usr/bin/python3"
-DIR="/home/ksf_stockmarket/ksf_stockmarket"
+set -euo pipefail
+
+REPO_DIR="/home/ksf_stockmarket/ksf_stockmarket"
+LOG="${REPO_DIR}/data_fetch_progress.log"
+PYTHON="/usr/bin/python3.10"
+
+# Source DB credentials
+if [[ -f "${REPO_DIR}/.env" ]]; then
+    export DB_HOST="$(grep '^DB_HOST=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_NAME="$(grep '^DB_NAME=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_USER="$(grep '^DB_USER=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_PASS="$(grep '^DB_PASS=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_PASSWORD="$(grep '^DB_PASS=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_CHARSET="$(grep '^DB_CHARSET=' "${REPO_DIR}/.env" | cut -d= -f2)"
+fi
+
+cd "${REPO_DIR}"
+export PYTHONPATH="${REPO_DIR}:python:python/src"
+
 BATCH=10
 SLEEPPERBATCH=30
 MAXRETRIES=3
 
-echo "===== Data Backfill Started: $(date) ====" >> $LOG
+echo "===== Data Backfill Started: $(date) ====" >> "${LOG}"
 
-# Get symbols without any price data
-SYMS=$($PY -c "
-import pymysql
-conn = pymysql.connect(host='ksfraser.ca', user='ksfraser_stockmarket', password='Zaqwsx9sm1@', database='ksfraser_stock_market', cursorclass=pymysql.cursors.DictCursor)
+# Get symbols without any price data via Python (no hardcoded credentials)
+SYMS=$(${PYTHON} -c "
+import sys
+sys.path.insert(0, '${REPO_DIR}')
+from python.db_connector import get_connection
+conn = get_connection()
 c = conn.cursor()
 c.execute('''
     SELECT sm.symbol FROM symbol_master sm

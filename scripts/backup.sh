@@ -13,10 +13,26 @@
 
 set -euo pipefail
 
-DB_NAME="ksf_stockmarket"
-DB_USER="ksf_stockmarket"
-DB_PASS="${DB_PASS:-ksfuser2024!}"
-BACKUP_BASE="/backup/ksf_stockmarket"
+REPO_DIR="/home/ksf_stockmarket/ksf_stockmarket"
+
+# Source DB credentials from .env (required — no hardcoded fallback)
+if [[ -f "${REPO_DIR}/.env" ]]; then
+    export DB_HOST="$(grep '^DB_HOST=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_NAME="$(grep '^DB_NAME=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_USER="$(grep '^DB_USER=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_PASS="$(grep '^DB_PASS=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_PASSWORD="$(grep '^DB_PASS=' "${REPO_DIR}/.env" | cut -d= -f2)"
+    export DB_CHARSET="$(grep '^DB_CHARSET=' "${REPO_DIR}/.env" | cut -d= -f2)"
+fi
+
+if [[ -z "${DB_PASS:-}" ]]; then
+    echo "ERROR: DB_PASS not set in ${REPO_DIR}/.env" >&2
+    exit 1
+fi
+
+DB_NAME="${DB_NAME:-ksfraser_stock_market}"
+DB_USER="${DB_USER:-ksfraser_stockmarket}"
+BACKUP_BASE="${BACKUP_BASE:-/backup/ksf_stockmarket}"
 DATE=$(date +%Y%m%d)
 BACKUP_DIR="${BACKUP_BASE}/${DATE}"
 RETENTION_DAYS=30

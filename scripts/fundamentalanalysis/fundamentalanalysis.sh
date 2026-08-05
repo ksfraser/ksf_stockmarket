@@ -1,3 +1,6 @@
 #!/bin/sh
+# LEGACY — original paths (/mnt/2/development/...) no longer exist.
+# Kept for reference only; do not schedule without updating paths.
 
-php calciplacecalc.php
+echo "LEGACY: fundamentalanalysis/fundamentalanalysis.sh references removed paths."
+exit 1

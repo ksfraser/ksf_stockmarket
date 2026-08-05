@@ -13,7 +13,7 @@ if [ -f ".env" ]; then
     export DB_CHARSET="$(grep '^DB_CHARSET=' .env | cut -d= -f2)"
 fi
 
-export PYTHONPATH="/home/ksf_stockmarket/ksf_stockmarket:python:python.src"
+export PYTHONPATH="${REPO_DIR}:python:python/src"
 
 echo "$(date): Starting nightly analyst ratings population"
 python3.10 python/populate_analyst_ratings.py 2>&1 | tee /tmp/populate_analyst_ratings.log

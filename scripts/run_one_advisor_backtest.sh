@@ -25,6 +25,16 @@ fi
 
 tail -n +2 "$QUEUE_FILE" > "${QUEUE_FILE}.tmp" && mv "${QUEUE_FILE}.tmp" "$QUEUE_FILE"
 
+# Source DB credentials from repo .env so db_connector/config_loader can find them
+if [[ -f "$REPO_DIR/.env" ]]; then
+    export DB_HOST="$(grep '^DB_HOST=' "$REPO_DIR/.env" | cut -d= -f2)"
+    export DB_NAME="$(grep '^DB_NAME=' "$REPO_DIR/.env" | cut -d= -f2)"
+    export DB_USER="$(grep '^DB_USER=' "$REPO_DIR/.env" | cut -d= -f2)"
+    export DB_PASS="$(grep '^DB_PASS=' "$REPO_DIR/.env" | cut -d= -f2)"
+    export DB_PASSWORD="$(grep '^DB_PASS=' "$REPO_DIR/.env" | cut -d= -f2)"
+    export DB_CHARSET="$(grep '^DB_CHARSET=' "$REPO_DIR/.env" | cut -d= -f2)"
+fi
+
 LOG_FILE="${LOG_DIR}/advisor_backtest_${SLUG}_$(date +%Y%m%d_%H%M%S).log"
 cd "$REPO_DIR"
 PYTHONPATH=".:python:python/src" python3 python/advisor_backtest.py \

@@ -1,0 +1,803 @@
+Format: cibc
+Account: RESP
+Pages: 7
+Transactions found: 0
+
+=== TEXT PREVIEW ===
+069468
+ CAN)
+HRI-*04010500*
+account  # 571-65131
+page 1 of 3
+SEE OVER»
+$
+$
+$
+$
+$
+$
+$
+$
+Canadian Imperial Bank of Commerce logo (C,I,B,C)
+Investor's Edge Investment Account
+December 1-December 31, 2020
+ (previous statement November 30, 2020)
+Account # 571-65131
+Order Execution Only Account
+KEVIN S FRASER
+ 747 WINDRIDGE RD SW
+ AIRDRIE AB
+ T4B 2R1
+To Contact Us:
+1-800-567-3343
+www.investorsedge.cibc.com
+Account Activity — Canadian Dollars
+date
+ activity
+ description
+Dec  1
+—
+Opening cash balance
+Dec 31 —
+Closing cash balance
+Account Activity — U.S. Dollars
+date
+ activity
+ description
+Dec  1
+—
+Opening cash balance
+Dec 31 —
+Closing cash balance
+Canadian dollar equivalent
+($1.00 U.S. equals $1.27350
+Total closing cash balance in Canadian dollars
+069468
+Portfolio Overview - C$ equivalent
+percentage of
+ market value
+market value
+ at dec 31
+Cash & Cash Equivalents
+4%
+$990.89
+Fixed Income
+—
+—
+Equities
+96%
+$26,167.66
+Mutual Funds
+—
+—
+Other
+—
+—
+total portfolio
+100%
+$27,158.55
+Income Summary
+Canadian Dollars
+this month
+year to date
+Dividends
+—
+$541.28
+quantity
+price
+amount
+—
+—
+$982.66
+—
+—
+$982.66
+quantity
+price
+amount
+—
+—
+$6.46
+—
+—
+$6.46
+$8.23
+—
+—
+$990.89IIROC | Regulated by 
+Investor's Edge Investment Account
+December 1-December 31, 2020
+(previous statement November 30, 2020)
+account  # 571-65131
+page 2 of 3
+069468
+$
+$
+$
+$
+$
+$
+Portfolio Assets — Canadian Dollars
+description
+quantity
+book value
+current
+ price
+market value
+ at dec 31
+segregation
+ †custody
+Cash & Cash Equivalents
+CASH
+—
+$982.66
+—
+$982.66
+—
+Equities
+TFI INTL INC  COM
+ (TFII/TSX)
+282
+$3,918.81
+65.530
+$18,479.46
+282
+UNILEVER PLC  SPONSORED ADR
+ (UL/US)
+100
+$5,459.16
+76.882
+$7,688.20
+100
+subtotal
+$9,377.97
+$26,167.66
+subtotal for Canadian Dollars
+$10,360.63
+$27,150.32
+Portfolio Assets — U.S. Dollars
+description
+quantity
+book value
+current
+ price
+market value
+ at dec 31
+segregation
+ †custody
+Cash & Cash Equivalents
+CASH
+—
+$6.46
+—
+$6.46
+—
+subtotal for U.S. Dollars
+$6.46
+$6.46
+Canadian dollar equivalent
+ ($1.00 U.S. equals $1.27350 CAN)
+$8.23
+$8.23
+total portfolio in Canadian dollars
+$10,368.86
+$27,158.55
+Disclosures
+The following abbreviations may appear on your statement: Non-Vtg for Non-Voting Shares; Res Vtg for Restricted Voting Shares; Sub Vtg for
+ Subordinate Voting Shares.
+ †
+ These securities are held in segregation and cannot be used in the conduct of our business.
+We  are  responsible  for  properly  processing
+ your  transactions  and  for  safeguarding  and
+ accounting for your assets that are under our
+ control.  You  are  responsible  for  reading  all
+ documents provided to you by our firm and its
+ representatives and for promptly notifying us
+ of  any  errors,  omissions
+ or  unauthorised
+ discretionary transactions.
+If  this  statement  is  not  in  accordance  with
+ your records, please notify us in writing within
+ 45 days of the statement date.  We reserve the
+ right to adjust this statement for errors and
+ omissions.
+ Notice  should  be  addressed  to
+ Customer
+ Satisfaction,
+ CIB
+
+
+=== FULL TEXT ===
+069468
+ CAN)
+HRI-*04010500*
+account  # 571-65131
+page 1 of 3
+SEE OVER»
+$
+$
+$
+$
+$
+$
+$
+$
+Canadian Imperial Bank of Commerce logo (C,I,B,C)
+Investor's Edge Investment Account
+December 1-December 31, 2020
+ (previous statement November 30, 2020)
+Account # 571-65131
+Order Execution Only Account
+KEVIN S FRASER
+ 747 WINDRIDGE RD SW
+ AIRDRIE AB
+ T4B 2R1
+To Contact Us:
+1-800-567-3343
+www.investorsedge.cibc.com
+Account Activity — Canadian Dollars
+date
+ activity
+ description
+Dec  1
+—
+Opening cash balance
+Dec 31 —
+Closing cash balance
+Account Activity — U.S. Dollars
+date
+ activity
+ description
+Dec  1
+—
+Opening cash balance
+Dec 31 —
+Closing cash balance
+Canadian dollar equivalent
+($1.00 U.S. equals $1.27350
+Total closing cash balance in Canadian dollars
+069468
+Portfolio Overview - C$ equivalent
+percentage of
+ market value
+market value
+ at dec 31
+Cash & Cash Equivalents
+4%
+$990.89
+Fixed Income
+—
+—
+Equities
+96%
+$26,167.66
+Mutual Funds
+—
+—
+Other
+—
+—
+total portfolio
+100%
+$27,158.55
+Income Summary
+Canadian Dollars
+this month
+year to date
+Dividends
+—
+$541.28
+quantity
+price
+amount
+—
+—
+$982.66
+—
+—
+$982.66
+quantity
+price
+amount
+—
+—
+$6.46
+—
+—
+$6.46
+$8.23
+—
+—
+$990.89IIROC | Regulated by 
+Investor's Edge Investment Account
+December 1-December 31, 2020
+(previous statement November 30, 2020)
+account  # 571-65131
+page 2 of 3
+069468
+$
+$
+$
+$
+$
+$
+Portfolio Assets — Canadian Dollars
+description
+quantity
+book value
+current
+ price
+market value
+ at dec 31
+segregation
+ †custody
+Cash & Cash Equivalents
+CASH
+—
+$982.66
+—
+$982.66
+—
+Equities
+TFI INTL INC  COM
+ (TFII/TSX)
+282
+$3,918.81
+65.530
+$18,479.46
+282
+UNILEVER PLC  SPONSORED ADR
+ (UL/US)
+100
+$5,459.16
+76.882
+$7,688.20
+100
+subtotal
+$9,377.97
+$26,167.66
+subtotal for Canadian Dollars
+$10,360.63
+$27,150.32
+Portfolio Assets — U.S. Dollars
+description
+quantity
+book value
+current
+ price
+market value
+ at dec 31
+segregation
+ †custody
+Cash & Cash Equivalents
+CASH
+—
+$6.46
+—
+$6.46
+—
+subtotal for U.S. Dollars
+$6.46
+$6.46
+Canadian dollar equivalent
+ ($1.00 U.S. equals $1.27350 CAN)
+$8.23
+$8.23
+total portfolio in Canadian dollars
+$10,368.86
+$27,158.55
+Disclosures
+The following abbreviations may appear on your statement: Non-Vtg for Non-Voting Shares; Res Vtg for Restricted Voting Shares; Sub Vtg for
+ Subordinate Voting Shares.
+ †
+ These securities are held in segregation and cannot be used in the conduct of our business.
+We  are  responsible  for  properly  processing
+ your  transactions  and  for  safeguarding  and
+ accounting for your assets that are under our
+ control.  You  are  responsible  for  reading  all
+ documents provided to you by our firm and its
+ representatives and for promptly notifying us
+ of  any  errors,  omissions
+ or  unauthorised
+ discretionary transactions.
+If  this  statement  is  not  in  accordance  with
+ your records, please notify us in writing within
+ 45 days of the statement date.  We reserve the
+ right to adjust this statement for errors and
+ omissions.
+ Notice  should  be  addressed  to
+ Customer
+ Satisfaction,
+ CIBC
+ Investors
+ Services Inc., 800 Bay St., 2nd Floor, Toronto,
+ Ontario, M5S 3A9 or call 1-800-567-3343.
+Customers’  accounts  are  protected  by  the
+ Canadian  Investor  Protection  Fund
+ within
+ specified  limits.  A  brochure  describing  the
+ nature and limits of coverage is available upon
+ request. Our statement of financial conditions
+ and  list  of  Partners,  Directors  and  Senior
+ Officers are available upon request.
+Securities  transactions  are  disclosed  to  the
+ Canada  Revenue  Agency  on  a  yearly  basis.
+ Please  retain  this  statement  for  income  tax
+ purposes.  GST/HST  #  89531  9382  RT0001.
+ QST # 1018887017 TQ0001.
+Interest on debit and credit balances will  be
+ calculated separately at the appropriate tiered
+ rates,  which  rates
+ are  subject  to
+ change
+ without  notice.  Interest  is  calculated  based
+ upon your average daily cash credit or debit
+ balance and paid mid-month. Interest paid or
+ charged on accounts is subject to minimum
+ dollar amounts.
+A
+ free
+ credit
+ balance
+ in
+ your
+ account
+ represents funds  payable on  demand.  These
+ funds are not segregated from other funds and
+ may be used in the conduct of our business.
+Debt  securities  are  purchased  for  you  from
+ CIBC World Markets Inc. or CIBC.
+For  US  transactions  placed  by  CIBC  World
+ Markets  Inc.  on  behalf  of  Investors  Edge,
+ CIBC
+ World
+ Markets
+ Inc.
+ may
+ receive
+ remuneration  from  the  broker/dealer,  which
+ may  be  an  affiliate  of  CIBC  World  Markets
+ Inc.,  through
+ whom
+ the
+ transactions
+ are
+ executed. The amount of such  remuneration
+ will be disclosed upon request.
+CIBC Investor Services Inc. Self Directed Plan
+ assets are held in trust by the trustee,  CIBC
+ Trust Corporation.
+Cash balances held in registered accounts are
+ held in trust by CIBC Trust Corporation.
+CIBC logo is a registered trademark of CIBC.
+Investor's Edge Investment Account
+December 1-December 31, 2020
+(previous statement November 30, 2020)
+HRI-*04020600*
+account  # 571-65131
+page 3 of 3
+069468
+CIBC Investor  Services  Inc.  (CIBC ISI)  and
+ CIBC
+ World
+ Markets
+ Inc.
+ (WM)
+ are
+ subsidiaries of CIBC.  We are required by the
+ regulators
+ to
+ inform
+ you  that
+ WM  (the
+ carrying  broker)  provides  certain  back-office
+ services to CIBC ISI (the introducing broker)
+ including trade execution, settlement, custody
+ of  cash
+ and
+ securities,
+ bookkeeping
+ and
+ financing
+ of
+ customer
+ positions.
+ For
+ regulatory purposes, you are a client of WM.
+ CIBC ISI is responsible for supervising your
+ account.
+CIBC Investor’s Edge  is  a division of  CIBC
+ Investor Services Inc.
+CIBC Investor Services Inc. does not provide
+ you with any legal, tax, or accounting advice or
+ advice regarding the suitability or profitability
+ of  a  security  or
+ investment
+ in
+ a  CIBC
+ Investor’s  Edge  account.
+ You  assume  full
+ responsibility for  transactions  in  your  CIBC
+ Investor’s
+ Edge
+ account
+ and
+ for
+ your
+ investment decisions.
+DSC, BE and ACC are abbreviated references
+ to mutual fund deferred sales charges. Consult
+ the  mutual  fund  simplified  prospectus  for
+ further details.
+The book value is defined as the total amount
+ paid  to  purchase  a  security,  including  any
+ transaction  charges  related  to  the  purchase,
+ adjusted for reinvested distributions,  returns
+ of capital and corporate reorganizations.
+If a security was not purchased through this
+ firm,  the  book  value  will  be  based  upon
+ information provided by the transferring firm,
+ or if none is  provided then  based upon the
+ market value of the security as at the date of
+ transfer  in.
+ Accordingly,  the  stated  book
+ value may not be appropriate for tax reporting
+ purposes.
+Due to processing cut-off times, mutual fund
+ distributions
+ paid  by  fund
+ companies  on
+ December  31,  2020  do  not  appear  on  your
+ December
+ month-end
+ statement;
+ these
+ distributions will be processed in early January
+ and
+ will  appear
+ on
+ your
+ January
+ 2021
+ month-end statement.
+$
+$
+Disclosures — (continued)
+HRI-*04030700*
+2020 Year-end Account Report
+page 1 of 4
+069468
+Investor's Edge
+Your Year-end Account Report
+Your Year-end Account Report provides a clear picture of how your investment accounts are
+ performing and what they cost you. It contains information which you can use to assess
+ your progress towards your investment goals.
+Account performance
+Your report shows the change in your account considering deposits and withdrawals in
+ addition to the change in value. This measure of performance is called the individual rate of
+ return and is unique to your accounts. It is a useful tool to help you see if you are on track to
+ meeting your goals.
+Account fees
+Your report also summarizes all fees related to your account that CIBC Investor’s Edge
+ earned during the year. It clearly identifies fees we received from you and any fees we may
+ have received from others related to investment products and services provided to you over
+ the year. We value having you as a client, and we hope you value the advice and the service
+ we provide.
+If you have questions about your Year-end Account Report, please contact us.
+Thank you for choosing CIBC Investor’s Edge. We appreciate your business and look
+ forward to continuing to work with you.
+Jimmy Ha
+ Senior Director,
+ ISI Contact Centres
+Contact Us
+Phone
+1 800 567 3343
+Website
+www.investorsedge.cibc.com
+Investor's Edge
+85,000
+68,000
+51,000
+34,000
+17,000
+0
+!!!!!
+!
+!!!!!
+!
+...............................................................................................................................................
+!!!!!
+!
+!!!!!
+!
+. 
+.
+.
+.
+. 
+. 
+.
+.
+2020 Year-end Account Report
+page 2 of 4
+069468
+The Performance of Your Investment Account #571-65131
+How Your Account's Market Value Has Changed
+Market Value on
+ Jan. 1, 2016*
+$80,610.77
+Market Value on
+ Dec. 31, 2020
+$27,157.20
+This year
+Since
+ Jan. 1, 2016* (CAD)
+Opening Market Value
+$20,286.90
+$80,610.77
++  Deposits**
+0.00
+0.00
+-
+Withdrawals**
+0.00
+-69,191.34
++  Change in Value †
+6,870.30
+15,737.76
+=  Closing Market Value
+$27,157.20
+$27,157.20
+Q:  The Closing Market Value
+ on my Account Performance
+ Report doesn't match the
+ December month-end value on
+ my statement. Why?
+A:  Your Account Performance
+ Report includes accrued dividends,
+ distributions, and interest related to
+ your account. As these amounts
+ have not yet been paid, they are not
+ included in your December
+ month-end statement value. Instead,
+ they will be included in the
+ statement for the month you receive
+ them.
+How Your Account Has Performed
+YOUR AVERAGE ANNUAL INDIVIDUAL RATES OF RETURN
+This year
+3 years
+5 years
+Since
+ Jan. 1, 2016*
+Per Year
+33.87%
+15.56%
+6.77%
+6.77%
+The percentages in this table are your  individual rates of return  calculated using a money-weighted
+ rate of return after fees have been deducted  The calculation considers the performance of the
+ investment(s) in your account, including both realized and unrealized gains and losses and any
+ income from the investment(s), as well as any deposits to or withdrawals from your account
+ Contact us for more details about this calculation
+*
+ Although the first transaction in your account occurred prior to January 1, 2016, the start date for your individual rate of return is
+ January 1, 2016
+**
+ Deposits include the total market value of all deposits, contributions, internal and external transfers of cash and securities into the
+ account during the reporting period  Withdrawals include the total market value of all withdrawals, de-registrations, internal and
+ external transfers of cash and securities out of the account during the reporting period  Due to the way we process certain transfers
+ between accounts and transaction cancellations, the Deposit and Withdrawal values may differ from the actual amounts added to or
+ deducted from your account
+ †
+ Change in Value of your investments includes income (dividends, interest) and distributions, including reinvested income or
+ distributions, realized and unrealized capital gains or losses in the account, changes in dividend receivables and interest accruals, as well
+ as operating and transaction charges you have paid
+Investor's Edge
+!!!!!
+!
+!!!!!
+!
+...............................................................................................................................................
+...............................................................................................................................................
+...............................................................................................................................................
+HRI-*04040801*
+2020 Year-end Account Report
+page 3 of 4
+069468
+The Cost of Your Investment Account #571-65131
+Fees You Paid
+This Year (CAD)
+Total Account Operation Fees
+ $0.00
+Total Transaction Fees
+ $0.00
+Total Fees You Paid
+ $0.00
+Q: Is this an invoice?
+A:  No, these fees have already been
+ paid. For more information about
+ fees, please contact us.
+Q: What is an Account
+ Operation Fee?
+A:  Account Operation Fees are
+ charges associated with the
+ administration and non-trade related
+ activities in your account and will
+ vary dependent upon the account
+ type, investments, and type of
+ activities in your account.
+Q: What is a Transaction
+ Fee?
+A:  Transaction Fees are expenses
+ incurred when you buy or sell
+ securities. Transaction fees include
+ compensation and other costs.
+ Transaction fees also reflect the
+ payments that the dealer receives for
+ their work in processing these
+ transactions.
+Investor's Edge
+.
+.
+!
+!
+2020 Year-end Account Report
+page 4 of 4
+069468
+Additional Information About Your Report
+•
+For more information about fees applicable to your account, go to
+https://www.investorsedge.cibc.com/en/pricing.html
+•
+The definition of the total percentage return is the cumulative realized and unrealized
+ capital gains and losses of an investment, plus income from the investment, over a specified
+ period of time, expressed as a percentage.
+•
+If the market value for a particular security position is not determinable, the security
+ position will be assigned a value of zero at that time for the performance calculation.
+ Therefore, if the market value for any of your securities becomes not determinable during
+ the reporting period, it may have a negative impact on the performance of your account. If
+ the market value for any of your securities is not determinable, and subsequently becomes
+ determinable during the reporting period, it may have a positive impact on the performance
+ of your account.
+•
+Performance calculations and fees are based on the original process date of the transaction.
+ Subsequent corrections or adjustments processed after year-end do not appear in this
+ report. They will appear in the report for the period in which the transaction is processed.
+ For Money Weighted Rate of Return calculations, all cash corrections or adjustments
+ processed during the year will be reflected as of the processing date.
+•
+Performance calculations are inclusive of accrued, but not paid interest/dividends, and may
+ not be reflective of displayed Market Values.
+•
+CIBC Investor’s Edge is a division of CIBC Investor Services Inc., a subsidiary of CIBC and
+ a member of the Canadian Investor Protection Fund and Investment Industry Regulatory
+ Organization of Canada.
+•
+This report reflects all fees charged or credited in relation to your account during the
+ previous calendar year and is considered accurate at the time of printing. This report is
+ provided for information purposes only and should not be considered an official tax
+ document. You should consult your tax advisor regarding your own particular tax
+ circumstances and the deductibility of fees for your accounts.
+•
+If your account was opened during this past calendar year, performance will be calculated
+ from the date of account opening and not annualized as suggested by the rate of return
+ table.
+Do you have any questions
+ about what you're seeing here?
+For more details, contact us or visit
+ our Performance and Cost Report
+ webpage at
+www cibc com/investmentreport
+Q:  How is the individual rate
+ of return calculated?
+A:  Individual rate of return is
+ calculated based on the performance
+ of your investment(s) in your
+ account and also includes the
+ amount and timing of any cash
+ flows into or out of the account.
+ This calculation is also known as the
+ money-weighted, or Internal Rate of
+ Return (IRR).

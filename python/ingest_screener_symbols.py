@@ -34,7 +34,7 @@ BASE_CONFIG = {
     "cursorclass": pymysql.cursors.DictCursor,
 }
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+REPO_ROOT = Path(__file__).resolve().parents[1]
 FETCH_PRICES_SCRIPT = REPO_ROOT / "python" / "fetch_prices.py"
 
 
@@ -170,15 +170,16 @@ def _trigger_price_sync(symbols: List[str]) -> bool:
     if not FETCH_PRICES_SCRIPT.exists():
         return False
 
-    # Call with limited max and optional start-from; batch up to avoid excessive runtime.
+    # Call with the explicit pending symbol list so fetch_prices.py force-fetches
+    # exactly the screened symbols that need prices. Using --start-from instead
+    # would let fetch_prices.py re-derive its own pending set from the whole DB
+    # and silently fetch an unrelated (possibly delisted) symbol.
     sym_arg = ",".join(symbols[:50])
     cmd = [
         sys.executable,
         str(FETCH_PRICES_SCRIPT),
-        "--start-from",
-        symbols[0],
-        "--max",
-        str(min(len(symbols), 50)),
+        "--symbols",
+        sym_arg,
     ]
     try:
         proc = subprocess.run(

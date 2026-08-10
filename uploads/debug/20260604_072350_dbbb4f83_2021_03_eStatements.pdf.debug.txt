@@ -1,0 +1,606 @@
+Format: cibc
+Account: RESP
+Pages: 3
+Transactions found: 0
+
+=== TEXT PREVIEW ===
+073453
+HRI-*02019500*
+account  # 571-65131
+page 1 of 3
+SEE OVER»
+073453
+$
+$
+$
+$
+$
+$
+Canadian Imperial Bank of Commerce logo (C,I,B,C)
+Investor's Edge Investment Account
+March 1-March 31, 2021
+ (previous statement January 29, 2021)
+Account # 571-65131
+Order Execution Only Account
+KEVIN S FRASER
+ 747 WINDRIDGE RD SW
+ AIRDRIE AB
+ T4B 2R1
+To Contact Us:
+1-800-567-3343
+www.investorsedge.cibc.com
+Items For Your Attention:
+•  Take advantage of our online resources  and
+ 
+ up  to  date
+ with
+ the  latest
+ trends
+ by
+ visiting
+ Learn
+ at
+www.investorsedge.cibc.com/en/learn.html
+keep
+•  Change notice: Agreements and  Disclosures
+ The
+ CIBC
+ Investor's
+ Edge
+ Account
+ Agreements and Disclosures Booklet and the
+ Commission
+ and
+ Fees
+ Schedule
+ will
+ be
+ updated in June 2021. Once updated, you'll be
+ able to view the summary online, along with
+ the full agreements.
+Portfolio Overview - C$ equivalent
+percentage of
+ market value
+market value
+ at mar 31
+Cash & Cash Equivalents
+3%
+$1,135.82
+Fixed Income
+—
+—
+Equities
+97%
+$33,578.20
+Mutual Funds
+—
+—
+Other
+—
+—
+total portfolio
+100%
+$34,714.02
+Income Summary
+Canadian Dollars
+this month
+year to date
+Dividends
+$63.26
+$145.04
+Account Activity — Canadian Dollars
+date
+activity
+description
+quantity
+price
+amount
+Mar  1
+—
+Opening cash balance
+—
+—
+$1,064.44
+Mar 17 Dividend
+UNILEVER PLC
+ SPONSORED ADR
+ CASH DIV ON 100 SHS
+ REC FEB 26 2021
+ PAY MAR 17 2021
+—
+—
+$63.26
+Mar 31 —
+Closing cash balance
+—
+—
+$1,127.70IIROC | Regulated by I
+Investor's Edge Investment Account
+March 1-March 31, 2021
+(previous statement January 29, 2021)
+account  # 571-65131
+page 2 of 3
+073453
+$
+$
+$
+$
+$
+$
+$
+$
+Account Activity — U.S. Dollars
+date
+activity
+description
+quantity
+price
+amount
+Mar  1
+—
+Opening cash balance
+—
+—
+$6.46
+Mar 31 —
+Closing cash balance
+—
+—
+$6.46
+Canadian dollar equivalent
+ ($1.00 U.S. equals $1.25750 CAN)
+$8.12
+Total closing cash balance in Canadian dollars
+—
+—
+$1,135.82
+Portfolio Assets — Canadian Dollars
+description
+quantity
+book value
+current
+ price
+market value
+ at mar 31
+segregation
+ †custody
+Cash & Cash Equivalents
+CASH
+—
+$1,127.70
+—
+$1,127.70
+—
+Equities
+TFI INTL INC  COM
+ (TFII/TSX)
+282
+$3,918.81
+94.200
+$26,564.40
+282
+UNILEVER PLC  SPONSORED ADR
+ (UL/US)
+100
+$5,459.16
+70.138
+$7,013.80
+100
+subtotal
+$9,377.97
+$33,578.20
+subtotal for Canadian Dollars
+$10,505.67
+$34,705.90
+Portfolio Assets — U.S. Dollars
+description
+quantity
+book value
+current
+ price
+market value
+ at mar 31
+segregation
+ †custody
+Cash & Cash Equivalents
+CASH
+—
+$6.46
+—
+$6.46
+—
+subtotal for U.S. Dollars
+$6.46
+$6.46
+Canadian dollar equivalent
+ ($1.00 U.S. equals $1.25750 CAN)
+$8.12
+$8.12
+total portfolio in Canadian dollars
+$10,513.79
+$34,714.02
+Disclosures
+The following abbreviations may appear on your statement: Non-Vtg for Non-Voting Shares; Res Vtg for Restricted Voting Shares; Sub Vtg for
+ Subordinate Voting Shares.
+ †
+ These securities are held in segregation and cannot be used in the conduct of our business.
+We  are  responsible  for  properly  processing
+ your  t
+
+
+=== FULL TEXT ===
+073453
+HRI-*02019500*
+account  # 571-65131
+page 1 of 3
+SEE OVER»
+073453
+$
+$
+$
+$
+$
+$
+Canadian Imperial Bank of Commerce logo (C,I,B,C)
+Investor's Edge Investment Account
+March 1-March 31, 2021
+ (previous statement January 29, 2021)
+Account # 571-65131
+Order Execution Only Account
+KEVIN S FRASER
+ 747 WINDRIDGE RD SW
+ AIRDRIE AB
+ T4B 2R1
+To Contact Us:
+1-800-567-3343
+www.investorsedge.cibc.com
+Items For Your Attention:
+•  Take advantage of our online resources  and
+ 
+ up  to  date
+ with
+ the  latest
+ trends
+ by
+ visiting
+ Learn
+ at
+www.investorsedge.cibc.com/en/learn.html
+keep
+•  Change notice: Agreements and  Disclosures
+ The
+ CIBC
+ Investor's
+ Edge
+ Account
+ Agreements and Disclosures Booklet and the
+ Commission
+ and
+ Fees
+ Schedule
+ will
+ be
+ updated in June 2021. Once updated, you'll be
+ able to view the summary online, along with
+ the full agreements.
+Portfolio Overview - C$ equivalent
+percentage of
+ market value
+market value
+ at mar 31
+Cash & Cash Equivalents
+3%
+$1,135.82
+Fixed Income
+—
+—
+Equities
+97%
+$33,578.20
+Mutual Funds
+—
+—
+Other
+—
+—
+total portfolio
+100%
+$34,714.02
+Income Summary
+Canadian Dollars
+this month
+year to date
+Dividends
+$63.26
+$145.04
+Account Activity — Canadian Dollars
+date
+activity
+description
+quantity
+price
+amount
+Mar  1
+—
+Opening cash balance
+—
+—
+$1,064.44
+Mar 17 Dividend
+UNILEVER PLC
+ SPONSORED ADR
+ CASH DIV ON 100 SHS
+ REC FEB 26 2021
+ PAY MAR 17 2021
+—
+—
+$63.26
+Mar 31 —
+Closing cash balance
+—
+—
+$1,127.70IIROC | Regulated by I
+Investor's Edge Investment Account
+March 1-March 31, 2021
+(previous statement January 29, 2021)
+account  # 571-65131
+page 2 of 3
+073453
+$
+$
+$
+$
+$
+$
+$
+$
+Account Activity — U.S. Dollars
+date
+activity
+description
+quantity
+price
+amount
+Mar  1
+—
+Opening cash balance
+—
+—
+$6.46
+Mar 31 —
+Closing cash balance
+—
+—
+$6.46
+Canadian dollar equivalent
+ ($1.00 U.S. equals $1.25750 CAN)
+$8.12
+Total closing cash balance in Canadian dollars
+—
+—
+$1,135.82
+Portfolio Assets — Canadian Dollars
+description
+quantity
+book value
+current
+ price
+market value
+ at mar 31
+segregation
+ †custody
+Cash & Cash Equivalents
+CASH
+—
+$1,127.70
+—
+$1,127.70
+—
+Equities
+TFI INTL INC  COM
+ (TFII/TSX)
+282
+$3,918.81
+94.200
+$26,564.40
+282
+UNILEVER PLC  SPONSORED ADR
+ (UL/US)
+100
+$5,459.16
+70.138
+$7,013.80
+100
+subtotal
+$9,377.97
+$33,578.20
+subtotal for Canadian Dollars
+$10,505.67
+$34,705.90
+Portfolio Assets — U.S. Dollars
+description
+quantity
+book value
+current
+ price
+market value
+ at mar 31
+segregation
+ †custody
+Cash & Cash Equivalents
+CASH
+—
+$6.46
+—
+$6.46
+—
+subtotal for U.S. Dollars
+$6.46
+$6.46
+Canadian dollar equivalent
+ ($1.00 U.S. equals $1.25750 CAN)
+$8.12
+$8.12
+total portfolio in Canadian dollars
+$10,513.79
+$34,714.02
+Disclosures
+The following abbreviations may appear on your statement: Non-Vtg for Non-Voting Shares; Res Vtg for Restricted Voting Shares; Sub Vtg for
+ Subordinate Voting Shares.
+ †
+ These securities are held in segregation and cannot be used in the conduct of our business.
+We  are  responsible  for  properly  processing
+ your  transactions  and  for  safeguarding  and
+ accounting for your assets that are under our
+ control.  You  are  responsible  for  reading  all
+ documents provided to you by our firm and its
+ representatives and for promptly notifying us
+ of  any  errors,  omissions
+ or  unauthorised
+ discretionary transactions.
+If  this  statement  is  not  in  accordance  with
+ your records, please notify us in writing within
+ 45 days of the statement date.  We reserve the
+ right to adjust this statement for errors and
+ omissions.
+ Notice  should  be  addressed  to
+ Customer
+ Satisfaction,
+ CIBC
+ Investors
+ Services Inc., 800 Bay St., 2nd Floor, Toronto,
+ Ontario, M5S 3A9 or call 1-800-567-3343.
+Customers’  accounts  are  protected  by  the
+ Canadian  Investor  Protection  Fund
+ within
+ specified  limits.  A  brochure  describing  the
+ nature and limits of coverage is available upon
+ request. Our statement of financial conditions
+ and  list  of  Partners,  Directors  and  Senior
+ Officers are available upon request.
+Securities  transactions  are  disclosed  to  the
+ Canada  Revenue  Agency  on  a  yearly  basis.
+ Please  retain  this  statement  for  income  tax
+ purposes.  GST/HST  #  89531  9382  RT0001.
+ QST # 1018887017 TQ0001.
+Investor's Edge Investment Account
+March 1-March 31, 2021
+(previous statement January 29, 2021)
+HRI-*02029601*
+account  # 571-65131
+page 3 of 3
+073453
+Interest on debit and credit balances will  be
+ calculated separately at the appropriate tiered
+ rates,  which  rates
+ are  subject  to
+ change
+ without  notice.  Interest  is  calculated  based
+ upon your average daily cash credit or debit
+ balance and paid mid-month. Interest paid or
+ charged on accounts is subject to minimum
+ dollar amounts.
+A
+ free
+ credit
+ balance
+ in
+ your
+ account
+ represents funds  payable on  demand.  These
+ funds are not segregated from other funds and
+ may be used in the conduct of our business.
+Debt  securities  are  purchased  for  you  from
+ CIBC World Markets Inc. or CIBC.
+For  US  transactions  placed  by  CIBC  World
+ Markets  Inc.  on  behalf  of  Investors  Edge,
+ CIBC
+ World
+ Markets
+ Inc.
+ may
+ receive
+ remuneration  from  the  broker/dealer,  which
+ may  be  an  affiliate  of  CIBC  World  Markets
+ Inc.,  through
+ whom
+ the
+ transactions
+ are
+ executed. The amount of such  remuneration
+ will be disclosed upon request.
+CIBC Investor Services Inc. Self Directed Plan
+ assets are held in trust by the trustee,  CIBC
+ Trust Corporation.
+Cash balances held in registered accounts are
+ held in trust by CIBC Trust Corporation.
+CIBC logo is a registered trademark of CIBC.
+CIBC Investor  Services  Inc.  (CIBC ISI)  and
+ CIBC
+ World
+ Markets
+ Inc.
+ (WM)
+ are
+ subsidiaries of CIBC.  We are required by the
+ regulators
+ to
+ inform
+ you  that
+ WM  (the
+ carrying  broker)  provides  certain  back-office
+ services to CIBC ISI (the introducing broker)
+ including trade execution, settlement, custody
+ of  cash
+ and
+ securities,
+ bookkeeping
+ and
+ financing
+ of
+ customer
+ positions.
+ For
+ regulatory purposes, you are a client of WM.
+ CIBC ISI is responsible for supervising your
+ account.
+CIBC Investor’s Edge  is  a division of  CIBC
+ Investor Services Inc.
+CIBC Investor Services Inc. does not provide
+ you with any legal, tax, or accounting advice or
+ advice regarding the suitability or profitability
+ of  a  security  or
+ investment
+ in
+ a  CIBC
+ Investor’s  Edge  account.
+ You  assume  full
+ responsibility for  transactions  in  your  CIBC
+ Investor’s
+ Edge
+ account
+ and
+ for
+ your
+ investment decisions.
+DSC, BE and ACC are abbreviated references
+ to mutual fund deferred sales charges. Consult
+ the  mutual  fund  simplified  prospectus  for
+ further details.
+The book value is defined as the total amount
+ paid  to  purchase  a  security,  including  any
+ transaction  charges  related  to  the  purchase,
+ adjusted for reinvested distributions,  returns
+ of capital and corporate reorganizations.
+If a security was not purchased through this
+ firm,  the  book  value  will  be  based  upon
+ information provided by the transferring firm,
+ or if none is  provided then  based upon the
+ market value of the security as at the date of
+ transfer  in.
+ Accordingly,  the  stated  book
+ value may not be appropriate for tax reporting
+ purposes.
+$
+$
+Disclosures — (continued)

@@ -1,0 +1,631 @@
+Format: cibc
+Account: TFSA
+Pages: 3
+Transactions found: 1
+
+=== TEXT PREVIEW ===
+037765
+HRI-*02013900*
+account  # 571-65131
+page 1 of 3
+SEE OVER»
+037765
+$
+$
+$
+$
+$
+$
+$
+$
+Canadian Imperial Bank of Commerce logo (C,I,B,C)
+Investor's Edge Investment Account
+April 1-April 30, 2020
+ (previous statement March 31, 2020)
+Account # 571-65131
+Order Execution Only Account
+KEVIN S FRASER
+ 747 WINDRIDGE RD SW
+ AIRDRIE AB
+ T4B 2R1
+To Contact Us:
+1-800-567-3343
+www.investorsedge.cibc.com
+Items For Your Attention:
+•  We're here to support your investing needs in
+ these challenging times. One way we can help
+ is with the variety of online tools and self-serve
+ features we've made available to you. Visit our
+ website  for  more  details  and  thank  you  for
+ choosing Investor's Edge.
+•  Make  the  most  of  your  Tax-Free
+ Savings
+ Account.
+ Use
+ your
+ tax
+ refund
+ to
+ take
+ advantage  of  the  increased  TFSA  limit  for
+ 2020. You can now contribute up to $6,000
+ with the flexibility to withdraw funds tax-free
+ at any time. Plus, pay only $6.95 per online
+ equity  trade  in  your  CIBC  Investor's  Edge
+ TFSA.
+Portfolio Overview - C$ equivalent
+percentage of
+ market value
+market value
+ at apr 30
+Cash & Cash Equivalents
+4%
+$661.74
+Fixed Income
+—
+—
+Equities
+96%
+$18,116.50
+Mutual Funds
+—
+—
+Other
+—
+—
+total portfolio
+100%
+$18,778.24
+Income Summary
+Canadian Dollars
+this month
+year to date
+Dividends
+$73.32
+$211.37
+Account Activity — Canadian Dollars
+date
+activity
+description
+quantity
+price
+amount
+Apr  1
+—
+Opening cash balance
+—
+—
+$579.43
+Apr 15
+Dividend
+TFI INTL INC
+ COM  CASH DIV ON 282 SHS
+ REC MAR 31 2020
+ PAY APR 15 2020
+—
+—
+$73.32
+Apr 30
+—
+Closing cash balance
+—
+—
+$652.75
+Account Activity — U.S. Dollars
+date
+activity
+description
+quantity
+price
+amount
+Apr  1
+—
+Opening cash balance
+—
+—
+$6.46
+Apr 30
+—
+Closing cash balance
+—
+—
+$6.46
+Canadian dollar equivalent
+ ($1.00 U.S. equals $1.39200 CAN)
+$8.99
+Total closing cash balance in Canadian dollars
+—
+—
+$661.74IIROC | Regulated by 
+Investor's Edge Investment Account
+April 1-April 30, 2020
+(previous statement March 31, 2020)
+account  # 571-65131
+page 2 of 3
+037765
+$
+$
+$
+$
+$
+$
+Portfolio Assets — Canadian Dollars
+description
+quantity
+book value
+current
+ price
+market value
+ at apr 30
+segregation
+ †custody
+Cash & Cash Equivalents
+CASH
+—
+$652.75
+—
+$652.75
+—
+Equities
+TFI INTL INC  COM
+ (TFII/TSX)
+282
+$3,918.81
+38.600
+$10,885.20
+282
+UNILEVER PLC  SPONSORED ADR
+ (UL/US)
+100
+$5,459.16
+72.313
+$7,231.30
+100
+subtotal
+$9,377.97
+$18,116.50
+subtotal for Canadian Dollars
+$10,030.72
+$18,769.25
+Portfolio Assets — U.S. Dollars
+description
+quantity
+book value
+current
+ price
+market value
+ at apr 30
+segregation
+ †custody
+Cash & Cash Equivalents
+CASH
+—
+$6.46
+—
+$6.46
+—
+subtotal for U.S. Dollars
+$6.46
+$6.46
+Canadian dollar equivalent
+ ($1.00 U.S. equals $1.39200 CAN)
+$8.99
+$8.99
+total portfolio in Canadian dollars
+$10,039.71
+$18,778.24
+Disclosures
+The following abbreviations may appear on your statement: Non-Vtg for Non-Voting Shares; Res Vtg for Restricted Voting Shares; Sub Vtg for
+ Subordinate Voting Shares.
+ †
+ These securi
+
+
+=== FULL TEXT ===
+037765
+HRI-*02013900*
+account  # 571-65131
+page 1 of 3
+SEE OVER»
+037765
+$
+$
+$
+$
+$
+$
+$
+$
+Canadian Imperial Bank of Commerce logo (C,I,B,C)
+Investor's Edge Investment Account
+April 1-April 30, 2020
+ (previous statement March 31, 2020)
+Account # 571-65131
+Order Execution Only Account
+KEVIN S FRASER
+ 747 WINDRIDGE RD SW
+ AIRDRIE AB
+ T4B 2R1
+To Contact Us:
+1-800-567-3343
+www.investorsedge.cibc.com
+Items For Your Attention:
+•  We're here to support your investing needs in
+ these challenging times. One way we can help
+ is with the variety of online tools and self-serve
+ features we've made available to you. Visit our
+ website  for  more  details  and  thank  you  for
+ choosing Investor's Edge.
+•  Make  the  most  of  your  Tax-Free
+ Savings
+ Account.
+ Use
+ your
+ tax
+ refund
+ to
+ take
+ advantage  of  the  increased  TFSA  limit  for
+ 2020. You can now contribute up to $6,000
+ with the flexibility to withdraw funds tax-free
+ at any time. Plus, pay only $6.95 per online
+ equity  trade  in  your  CIBC  Investor's  Edge
+ TFSA.
+Portfolio Overview - C$ equivalent
+percentage of
+ market value
+market value
+ at apr 30
+Cash & Cash Equivalents
+4%
+$661.74
+Fixed Income
+—
+—
+Equities
+96%
+$18,116.50
+Mutual Funds
+—
+—
+Other
+—
+—
+total portfolio
+100%
+$18,778.24
+Income Summary
+Canadian Dollars
+this month
+year to date
+Dividends
+$73.32
+$211.37
+Account Activity — Canadian Dollars
+date
+activity
+description
+quantity
+price
+amount
+Apr  1
+—
+Opening cash balance
+—
+—
+$579.43
+Apr 15
+Dividend
+TFI INTL INC
+ COM  CASH DIV ON 282 SHS
+ REC MAR 31 2020
+ PAY APR 15 2020
+—
+—
+$73.32
+Apr 30
+—
+Closing cash balance
+—
+—
+$652.75
+Account Activity — U.S. Dollars
+date
+activity
+description
+quantity
+price
+amount
+Apr  1
+—
+Opening cash balance
+—
+—
+$6.46
+Apr 30
+—
+Closing cash balance
+—
+—
+$6.46
+Canadian dollar equivalent
+ ($1.00 U.S. equals $1.39200 CAN)
+$8.99
+Total closing cash balance in Canadian dollars
+—
+—
+$661.74IIROC | Regulated by 
+Investor's Edge Investment Account
+April 1-April 30, 2020
+(previous statement March 31, 2020)
+account  # 571-65131
+page 2 of 3
+037765
+$
+$
+$
+$
+$
+$
+Portfolio Assets — Canadian Dollars
+description
+quantity
+book value
+current
+ price
+market value
+ at apr 30
+segregation
+ †custody
+Cash & Cash Equivalents
+CASH
+—
+$652.75
+—
+$652.75
+—
+Equities
+TFI INTL INC  COM
+ (TFII/TSX)
+282
+$3,918.81
+38.600
+$10,885.20
+282
+UNILEVER PLC  SPONSORED ADR
+ (UL/US)
+100
+$5,459.16
+72.313
+$7,231.30
+100
+subtotal
+$9,377.97
+$18,116.50
+subtotal for Canadian Dollars
+$10,030.72
+$18,769.25
+Portfolio Assets — U.S. Dollars
+description
+quantity
+book value
+current
+ price
+market value
+ at apr 30
+segregation
+ †custody
+Cash & Cash Equivalents
+CASH
+—
+$6.46
+—
+$6.46
+—
+subtotal for U.S. Dollars
+$6.46
+$6.46
+Canadian dollar equivalent
+ ($1.00 U.S. equals $1.39200 CAN)
+$8.99
+$8.99
+total portfolio in Canadian dollars
+$10,039.71
+$18,778.24
+Disclosures
+The following abbreviations may appear on your statement: Non-Vtg for Non-Voting Shares; Res Vtg for Restricted Voting Shares; Sub Vtg for
+ Subordinate Voting Shares.
+ †
+ These securities are held in segregation and cannot be used in the conduct of our business.
+We  are  responsible  for  properly  processing
+ your  transactions  and  for  safeguarding  and
+ accounting for your assets that are under our
+ control.  You  are  responsible  for  reading  all
+ documents provided to you by our firm and its
+ representatives and for promptly notifying us
+ of  any  errors,  omissions
+ or  unauthorised
+ discretionary transactions.
+If  this  statement  is  not  in  accordance  with
+ your records, please notify us in writing within
+ 45 days of the statement date.  We reserve the
+ right to adjust this statement for errors and
+ omissions.
+ Notice  should  be  addressed  to
+ Customer
+ Satisfaction,
+ CIBC
+ Investors
+ Services Inc., 800 Bay St., 2nd Floor, Toronto,
+ Ontario, M5S 3A9 or call 1-800-567-3343.
+Customers’  accounts  are  protected  by  the
+ Canadian  Investor  Protection  Fund
+ within
+ specified  limits.  A  brochure  describing  the
+ nature and limits of coverage is available upon
+ request. Our statement of financial conditions
+ and  list  of  Partners,  Directors  and  Senior
+ Officers are available upon request.
+Securities  transactions  are  disclosed  to  the
+ Canada  Revenue  Agency  on  a  yearly  basis.
+ Please  retain  this  statement  for  income  tax
+ purposes.  GST/HST  #  89531  9382  RT0001.
+ QST # 1018887017 TQ0001.
+Interest on debit and credit balances will  be
+ calculated separately at the appropriate tiered
+ rates,  which  rates
+ are  subject  to
+ change
+ without  notice.  Interest  is  calculated  based
+ upon your average daily cash credit or debit
+ balance and paid mid-month. Interest paid or
+ charged on accounts is subject to minimum
+ dollar amounts.
+A
+ free
+ credit
+ balance
+ in
+ your
+ account
+ represents funds  payable on  demand.  These
+ funds are not segregated from other funds and
+ may be used in the conduct of our business.
+Debt  securities  are  purchased  for  you  from
+ CIBC World Markets Inc. or CIBC.
+For  US  transactions  placed  by  CIBC  World
+ Markets  Inc.  on  behalf  of  Investors  Edge,
+ CIBC
+ World
+ Markets
+ Inc.
+ may
+ receive
+ remuneration  from  the  broker/dealer,  which
+ may  be  an  affiliate  of  CIBC  World  Markets
+ Inc.,  through
+ whom
+ the
+ transactions
+ are
+ executed. The amount of such  remuneration
+ will be disclosed upon request.
+CIBC Investor Services Inc. Self Directed Plan
+ assets are held in trust by the trustee,  CIBC
+ Trust Corporation.
+Cash balances held in registered accounts are
+ held in trust by CIBC Trust Corporation.
+CIBC logo is a registered trademark of CIBC.
+Investor's Edge Investment Account
+April 1-April 30, 2020
+(previous statement March 31, 2020)
+HRI-*02024001*
+account  # 571-65131
+page 3 of 3
+037765
+CIBC Investor  Services  Inc.  (CIBC ISI)  and
+ CIBC
+ World
+ Markets
+ Inc.
+ (WM)
+ are
+ subsidiaries of CIBC.  We are required by the
+ regulators
+ to
+ inform
+ you  that
+ WM  (the
+ carrying  broker)  provides  certain  back-office
+ services to CIBC ISI (the introducing broker)
+ including trade execution, settlement, custody
+ of  cash
+ and
+ securities,
+ bookkeeping
+ and
+ financing
+ of
+ customer
+ positions.
+ For
+ regulatory purposes, you are a client of WM.
+ CIBC ISI is responsible for supervising your
+ account.
+CIBC Investor’s Edge  is  a division of  CIBC
+ Investor Services Inc.
+CIBC Investor Services Inc. does not provide
+ you with any legal, tax, or accounting advice or
+ advice regarding the suitability or profitability
+ of  a  security  or
+ investment
+ in
+ a  CIBC
+ Investor’s  Edge  account.
+ You  assume  full
+ responsibility for  transactions  in  your  CIBC
+ Investor’s
+ Edge
+ account
+ and
+ for
+ your
+ investment decisions.
+CIBC  World  Markets  Inc.  or  an
+ affiliate
+ thereof owns or controls an equity interest in
+ TMX Group Limited ("TMX Group") and has a
+ nominee director serving on the TMX Group’s
+ board of directors.
+No person or company is required to  obtain
+ products or services from TMX Group or its
+ affiliates  as  a  condition
+ of  CIBC  World
+ Markets  Inc.
+ supplying  or
+ continuing
+ to
+ supply a product or service.
+In
+ addition,
+ notwithstanding
+ CIBC  World
+ Markets  Inc.’s  ownership  interest  in  TMX
+ Group,
+ CIBC
+ World
+ Markets
+ Inc.
+ acknowledges that it is subject to a number of
+ regulatory
+ requirements,
+ including
+ requirements  relating  to  the  handling  and
+ execution  of
+ orders,
+ that
+ supersede
+ any
+ interest CIBC World Markets Inc. has in TMX
+ Group.
+DSC, BE and ACC are abbreviated references
+ to mutual fund deferred sales charges. Consult
+ the  mutual  fund  simplified  prospectus  for
+ further details.
+The book value is defined as the total amount
+ paid  to  purchase  a  security,  including  any
+ transaction  charges  related  to  the  purchase,
+ adjusted for reinvested distributions,  returns
+ of capital and corporate reorganizations.
+If a security was not purchased through this
+ firm,  the  book  value  will  be  based  upon
+ information provided by the transferring firm,
+ or if none is  provided then  based upon the
+ market value of the security as at the date of
+ transfer  in.
+ Accordingly,  the  stated  book
+ value may not be appropriate for tax reporting
+ purposes.
+$
+$
+Disclosures — (continued)

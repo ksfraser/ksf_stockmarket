@@ -1,1683 +1,3241 @@
 {
-  "generated_at": "2026-07-16",
+  "generated_at": "2026-08-05",
   "start": "2022-01-01",
   "end": "2026-07-12",
   "initial_capital": 100000.0,
   "advisors": [
     {
-      "run_id": 24,
-      "slug": "sector-transportation",
-      "display_name": "Transportation Advisor",
-      "strategy": "sector",
+      "run_id": 65,
+      "slug": "vectorvest_safe",
+      "display_name": "VectorVest Safe Stock",
+      "strategy": "vectorvest_safe",
       "start_date": "2022-01-01",
       "end_date": "2026-07-12",
       "initial_capital": 100000.0,
-      "final_value": 283366.49,
-      "total_return": 183.37,
-      "annualized_return": 25.88,
-      "max_drawdown": 13.01,
-      "num_trades": 24,
-      "win_rate": 4.17,
+      "final_value": 232973.27,
+      "total_return": 132.97,
+      "annualized_return": 20.55,
+      "max_drawdown": 11.2,
+      "num_trades": 160,
+      "win_rate": 40.0,
       "trades": [
         {
-          "symbol": "CAT",
+          "symbol": "AAVMY",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 191.3455,
-          "quantity": 26,
+          "price": 10.5399,
+          "quantity": 474,
           "commission": 9.95,
-          "total_cost": 4984.932999999999,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY CAT at $191.35 on threshold confidence=1.00 score=459426660352.0 rank=1. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 5005.8625999999995,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY AAVMY at $10.54 on threshold confidence=1.00 score=1.0 rank=2. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "GE",
+          "symbol": "ALIZF",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 58.7117,
-          "quantity": 80,
+          "price": 187.4493,
+          "quantity": 25,
           "commission": 9.95,
-          "total_cost": 4706.8859999999995,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY GE at $58.71 on threshold confidence=1.00 score=385542127616.0 rank=2. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
-        },
-        {
-          "symbol": "CP.TO",
-          "trade_type": "BUY",
-          "trade_date": "2022-01-03",
-          "price": 88.0675,
-          "quantity": 51,
-          "commission": 9.95,
-          "total_cost": 4501.3925,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY CP.TO at $88.07 on threshold confidence=1.00 score=110461034496.0 rank=3. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
-        },
-        {
-          "symbol": "CNR.TO",
-          "trade_type": "BUY",
-          "trade_date": "2022-01-03",
-          "price": 141.8032,
-          "quantity": 30,
-          "commission": 9.95,
-          "total_cost": 4264.046,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY CNR.TO at $141.80 on threshold confidence=1.00 score=103728603136.0 rank=4. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
-        },
-        {
-          "symbol": "ATLKY",
-          "trade_type": "BUY",
-          "trade_date": "2022-01-03",
-          "price": 15.7918,
-          "quantity": 258,
-          "commission": 9.95,
-          "total_cost": 4084.2344,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY ATLKY at $15.79 on threshold confidence=1.00 score=94840389632.0 rank=5. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
-        },
-        {
-          "symbol": "EMR",
-          "trade_type": "BUY",
-          "trade_date": "2022-01-03",
-          "price": 83.8429,
-          "quantity": 46,
-          "commission": 9.95,
-          "total_cost": 3866.7234,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY EMR at $83.84 on threshold confidence=1.00 score=80368746496.0 rank=6. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
-        },
-        {
-          "symbol": "CTAS",
-          "trade_type": "BUY",
-          "trade_date": "2022-01-03",
-          "price": 101.6748,
-          "quantity": 36,
-          "commission": 9.95,
-          "total_cost": 3670.2428,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY CTAS at $101.67 on threshold confidence=1.00 score=68783529984.0 rank=7. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 4696.1825,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ALIZF at $187.45 on threshold confidence=1.00 score=1.0 rank=3. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
           "symbol": "ANNSF",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
           "price": 14.0108,
-          "quantity": 249,
+          "quantity": 322,
           "commission": 9.95,
-          "total_cost": 3498.6391999999996,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY ANNSF at $14.01 on threshold confidence=1.00 score=46475309056.0 rank=8. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 4521.4276,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ANNSF at $14.01 on threshold confidence=1.00 score=1.0 rank=5. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "AMKAF",
+          "symbol": "CB",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 1959.3419,
-          "quantity": 1,
+          "price": 181.0611,
+          "quantity": 23,
           "commission": 9.95,
-          "total_cost": 1969.2919,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY AMKAF at $1959.34 on threshold confidence=1.00 score=34768678912.0 rank=9. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 4174.3553,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CB at $181.06 on threshold confidence=1.00 score=1.0 rank=7. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "DOV",
+          "symbol": "CCOEY",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 168.6241,
-          "quantity": 19,
+          "price": 5.7826,
+          "quantity": 705,
           "commission": 9.95,
-          "total_cost": 3213.8079,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY DOV at $168.62 on threshold confidence=1.00 score=30428092416.0 rank=10. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 4086.683,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CCOEY at $5.78 on threshold confidence=1.00 score=1.0 rank=8. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "CICOY",
+          "symbol": "CTAS",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 4.7503,
-          "quantity": 644,
+          "price": 101.6748,
+          "quantity": 38,
           "commission": 9.95,
-          "total_cost": 3069.1432,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY CICOY at $4.75 on threshold confidence=1.00 score=25588822016.0 rank=12. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 3873.5924,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CTAS at $101.67 on threshold confidence=1.00 score=1.0 rank=9. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "CICOF",
+          "symbol": "DSCSY",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 0.9725,
-          "quantity": 2990,
+          "price": 10.0848,
+          "quantity": 365,
           "commission": 9.95,
-          "total_cost": 2917.725,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY CICOF at $0.97 on threshold confidence=1.00 score=25344536576.0 rank=13. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 3690.9019999999996,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY DSCSY at $10.08 on threshold confidence=1.00 score=1.0 rank=11. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "CJPRY",
+          "symbol": "E.TO",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 13.2176,
-          "quantity": 209,
+          "price": 0.31,
+          "quantity": 11282,
           "commission": 9.95,
-          "total_cost": 2772.4284,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY CJPRY at $13.22 on threshold confidence=1.00 score=20132896768.0 rank=14. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 3507.37,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY E.TO at $0.31 on threshold confidence=1.00 score=1.0 rank=12. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "BXBLY",
+          "symbol": "ED",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 13.7596,
-          "quantity": 190,
+          "price": 72.9237,
+          "quantity": 45,
           "commission": 9.95,
-          "total_cost": 2624.274,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY BXBLY at $13.76 on threshold confidence=1.00 score=18152157184.0 rank=15. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 3291.5164999999997,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ED at $72.92 on threshold confidence=1.00 score=1.0 rank=13. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "IEX",
+          "symbol": "ETR",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 217.5431,
-          "quantity": 11,
+          "price": 47.5072,
+          "quantity": 66,
           "commission": 9.95,
-          "total_cost": 2402.9240999999997,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY IEX at $217.54 on threshold confidence=1.00 score=16815480832.0 rank=16. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 3145.4251999999997,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ETR at $47.51 on threshold confidence=1.00 score=1.0 rank=14. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "CPCAY",
+          "symbol": "FFDF",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 3.4138,
-          "quantity": 695,
+          "price": 24.8676,
+          "quantity": 120,
           "commission": 9.95,
-          "total_cost": 2382.5409999999997,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY CPCAY at $3.41 on threshold confidence=1.00 score=9936564224.0 rank=17. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 2994.062,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY FFDF at $24.87 on threshold confidence=1.00 score=1.0 rank=15. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "AKAAF",
+          "symbol": "GE",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 5.8764,
-          "quantity": 383,
+          "price": 59.9591,
+          "quantity": 47,
           "commission": 9.95,
-          "total_cost": 2260.6112,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY AKAAF at $5.88 on threshold confidence=1.00 score=8595269632.0 rank=18. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 2828.0276999999996,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY GE at $59.96 on threshold confidence=1.00 score=1.0 rank=16. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "CMHHF",
+          "symbol": "GOOG",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 1.365,
-          "quantity": 1568,
+          "price": 145.0745,
+          "quantity": 18,
           "commission": 9.95,
-          "total_cost": 2150.27,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY CMHHF at $1.36 on threshold confidence=1.00 score=7052655104.0 rank=19. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 2621.2909999999997,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY GOOG at $145.07 on threshold confidence=1.00 score=1.0 rank=18. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "CCOHF",
+          "symbol": "GRMN",
           "trade_type": "BUY",
           "trade_date": "2022-01-03",
-          "price": 0.8657,
-          "quantity": 2348,
+          "price": 121.5886,
+          "quantity": 21,
           "commission": 9.95,
-          "total_cost": 2042.6136000000001,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY CCOHF at $0.87 on threshold confidence=1.00 score=6866881024.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 2563.3106,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY GRMN at $121.59 on threshold confidence=1.00 score=1.0 rank=19. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "ICTEF",
+          "symbol": "GWO.TO",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-03",
+          "price": 37.96,
+          "quantity": 64,
+          "commission": 9.95,
+          "total_cost": 2439.39,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY GWO.TO at $37.96 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "FFDF",
+          "trade_type": "SELL",
+          "trade_date": "2022-01-10",
+          "price": 24.8762,
+          "quantity": 120,
+          "commission": 9.95,
+          "total_cost": -2975.1940000000004,
+          "pnl": -8.917999999999665,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "IAG.TO",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-10",
+          "price": 66.9725,
+          "quantity": 36,
+          "commission": 9.95,
+          "total_cost": 2420.9599999999996,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY IAG.TO at $66.97 on threshold confidence=0.80 score=0.8 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "IAG.TO",
+          "trade_type": "SELL",
+          "trade_date": "2022-01-31",
+          "price": 71.6783,
+          "quantity": 36,
+          "commission": 9.95,
+          "total_cost": -2570.4688,
+          "pnl": 159.45880000000034,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "BICEY",
+          "trade_type": "BUY",
+          "trade_date": "2022-01-31",
+          "price": 22.3521,
+          "quantity": 111,
+          "commission": 9.95,
+          "total_cost": 2491.0330999999996,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY BICEY at $22.35 on threshold confidence=0.80 score=0.8 rank=7. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "GWO.TO",
+          "trade_type": "SELL",
+          "trade_date": "2022-03-21",
+          "price": 35.6,
+          "quantity": 64,
+          "commission": 9.95,
+          "total_cost": -2268.4500000000003,
+          "pnl": -160.98999999999978,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "AMZN",
           "trade_type": "BUY",
           "trade_date": "2022-03-21",
-          "price": 3.6398,
-          "quantity": 530,
+          "price": 161.4915,
+          "quantity": 15,
           "commission": 9.95,
-          "total_cost": 1939.044,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY ICTEF at $3.64 on threshold confidence=1.00 score=30111959040.0 rank=11. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 2432.3224999999998,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY AMZN at $161.49 on threshold confidence=1.00 score=1.0 rank=4. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "IEX",
+          "symbol": "GRMN",
           "trade_type": "SELL",
+          "trade_date": "2022-04-04",
+          "price": 108.7779,
+          "quantity": 21,
+          "commission": 9.95,
+          "total_cost": -2274.3859,
+          "pnl": -278.97469999999976,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "CAKE",
+          "trade_type": "BUY",
+          "trade_date": "2022-04-04",
+          "price": 34.7168,
+          "quantity": 71,
+          "commission": 9.95,
+          "total_cost": 2474.8428,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CAKE at $34.72 on threshold confidence=1.00 score=1.0 rank=9. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "GOOG",
+          "trade_type": "SELL",
+          "trade_date": "2022-05-09",
+          "price": 113.084,
+          "quantity": 18,
+          "commission": 9.95,
+          "total_cost": -2025.5620000000001,
+          "pnl": -585.7789999999998,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "CM.TO",
+          "trade_type": "BUY",
+          "trade_date": "2022-05-09",
+          "price": 69.655,
+          "quantity": 35,
+          "commission": 9.95,
+          "total_cost": 2447.875,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CM.TO at $69.66 on threshold confidence=0.80 score=0.8 rank=12. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "EBAY",
+          "trade_type": "BUY",
+          "trade_date": "2022-07-04",
+          "price": 39.843,
+          "quantity": 58,
+          "commission": 9.95,
+          "total_cost": 2320.844,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY EBAY at $39.84 on threshold confidence=0.80 score=0.8 rank=17. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "AAPL.TO",
+          "trade_type": "BUY",
+          "trade_date": "2022-08-01",
+          "price": 24.64,
+          "quantity": 89,
+          "commission": 9.95,
+          "total_cost": 2202.91,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY AAPL.TO at $24.64 on threshold confidence=1.00 score=1.0 rank=1. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "AMZN.TO",
+          "trade_type": "BUY",
+          "trade_date": "2022-08-01",
+          "price": 16.68,
+          "quantity": 125,
+          "commission": 9.95,
+          "total_cost": 2094.95,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY AMZN.TO at $16.68 on threshold confidence=1.00 score=1.0 rank=5. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "GE",
+          "trade_type": "SELL",
+          "trade_date": "2022-11-28",
+          "price": 53.2493,
+          "quantity": 47,
+          "commission": 9.95,
+          "total_cost": -2492.7671,
+          "pnl": -325.3105999999998,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ERH",
+          "trade_type": "BUY",
+          "trade_date": "2022-11-28",
+          "price": 8.4168,
+          "quantity": 251,
+          "commission": 9.95,
+          "total_cost": 2122.5668,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ERH at $8.42 on threshold confidence=1.00 score=1.0 rank=19. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "BAM.TO",
+          "trade_type": "BUY",
+          "trade_date": "2022-12-05",
+          "price": 42.71,
+          "quantity": 47,
+          "commission": 9.95,
+          "total_cost": 2017.3200000000002,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY BAM.TO at $42.71 on threshold confidence=1.00 score=1.0 rank=7. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ETR",
+          "trade_type": "SELL",
+          "trade_date": "2023-01-03",
+          "price": 48.2569,
+          "quantity": 66,
+          "commission": 9.95,
+          "total_cost": -3175.0054000000005,
+          "pnl": 39.530200000000605,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ERH",
+          "trade_type": "SELL",
+          "trade_date": "2023-01-03",
+          "price": 8.465,
+          "quantity": 251,
+          "commission": 9.95,
+          "total_cost": -2114.7650000000003,
+          "pnl": 2.148200000000088,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "BMO.TO",
+          "trade_type": "BUY",
+          "trade_date": "2023-01-03",
+          "price": 124.46,
+          "quantity": 17,
+          "commission": 9.95,
+          "total_cost": 2125.7699999999995,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY BMO.TO at $124.46 on threshold confidence=0.80 score=0.8 rank=9. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ENB.TO",
+          "trade_type": "BUY",
+          "trade_date": "2023-01-03",
+          "price": 53.33,
+          "quantity": 38,
+          "commission": 9.95,
+          "total_cost": 2036.49,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ENB.TO at $53.33 on threshold confidence=0.80 score=0.8 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ENB.TO",
+          "trade_type": "SELL",
+          "trade_date": "2023-01-10",
+          "price": 55.04,
+          "quantity": 38,
+          "commission": 9.95,
+          "total_cost": -2081.57,
+          "pnl": 55.0300000000002,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "AGF-B.TO",
+          "trade_type": "BUY",
+          "trade_date": "2023-01-10",
+          "price": 7.36,
+          "quantity": 280,
+          "commission": 9.95,
+          "total_cost": 2070.75,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY AGF-B.TO at $7.36 on threshold confidence=0.80 score=0.8 rank=3. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "BICEY",
+          "trade_type": "SELL",
+          "trade_date": "2023-02-07",
+          "price": 29.993,
+          "quantity": 111,
+          "commission": 9.95,
+          "total_cost": -3319.273,
+          "pnl": 838.1899000000003,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ENB.TO",
+          "trade_type": "BUY",
+          "trade_date": "2023-02-07",
+          "price": 54.63,
+          "quantity": 38,
+          "commission": 9.95,
+          "total_cost": 2085.89,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ENB.TO at $54.63 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CCOEY",
+          "trade_type": "SELL",
+          "trade_date": "2023-03-14",
+          "price": 8.059,
+          "quantity": 705,
+          "commission": 9.95,
+          "total_cost": -5671.6449999999995,
+          "pnl": 1594.9119999999994,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ENBP",
+          "trade_type": "BUY",
+          "trade_date": "2023-03-14",
+          "price": 13.3023,
+          "quantity": 173,
+          "commission": 9.95,
+          "total_cost": 2311.2479,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ENBP at $13.30 on threshold confidence=0.80 score=0.8 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "E.TO",
+          "trade_type": "SELL",
+          "trade_date": "2023-03-21",
+          "price": 0.4,
+          "quantity": 11282,
+          "commission": 9.95,
+          "total_cost": -4502.85,
+          "pnl": 1005.4300000000003,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ERH",
+          "trade_type": "BUY",
+          "trade_date": "2023-03-21",
+          "price": 8.0711,
+          "quantity": 299,
+          "commission": 9.95,
+          "total_cost": 2423.2088999999996,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ERH at $8.07 on threshold confidence=0.80 score=0.8 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "AGF-B.TO",
+          "trade_type": "SELL",
+          "trade_date": "2023-03-28",
+          "price": 7.74,
+          "quantity": 280,
+          "commission": 9.95,
+          "total_cost": -2157.2500000000005,
+          "pnl": 96.45000000000027,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ETR",
+          "trade_type": "BUY",
+          "trade_date": "2023-03-28",
+          "price": 46.9416,
+          "quantity": 51,
+          "commission": 9.95,
+          "total_cost": 2403.9716,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ETR at $46.94 on threshold confidence=0.80 score=0.8 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ETR",
+          "trade_type": "SELL",
+          "trade_date": "2023-04-18",
+          "price": 48.5051,
+          "quantity": 51,
+          "commission": 9.95,
+          "total_cost": -2463.8101,
+          "pnl": 69.78850000000011,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "BNS.TO",
+          "trade_type": "BUY",
+          "trade_date": "2023-04-18",
+          "price": 69.05,
+          "quantity": 34,
+          "commission": 9.95,
+          "total_cost": 2357.6499999999996,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY BNS.TO at $69.05 on threshold confidence=1.00 score=1.0 rank=9. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ERH",
+          "trade_type": "SELL",
+          "trade_date": "2023-09-26",
+          "price": 7.2072,
+          "quantity": 299,
+          "commission": 9.95,
+          "total_cost": -2145.0028,
+          "pnl": -268.2560999999996,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "CNRD",
+          "trade_type": "BUY",
+          "trade_date": "2023-09-26",
+          "price": 8.85,
+          "quantity": 270,
+          "commission": 9.95,
+          "total_cost": 2399.45,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CNRD at $8.85 on threshold confidence=0.80 score=0.8 rank=13. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ENBP",
+          "trade_type": "SELL",
+          "trade_date": "2023-10-31",
+          "price": 11.6978,
+          "quantity": 173,
+          "commission": 9.95,
+          "total_cost": -2013.7694000000001,
+          "pnl": -287.5284999999999,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "CPKF",
+          "trade_type": "BUY",
+          "trade_date": "2023-10-31",
+          "price": 16.0365,
+          "quantity": 148,
+          "commission": 9.95,
+          "total_cost": 2383.352,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CPKF at $16.04 on threshold confidence=0.80 score=0.8 rank=14. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ENB.TO",
+          "trade_type": "SELL",
+          "trade_date": "2023-11-28",
+          "price": 46.37,
+          "quantity": 38,
+          "commission": 9.95,
+          "total_cost": -1752.11,
+          "pnl": -323.83000000000015,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "CU.TO",
+          "trade_type": "BUY",
+          "trade_date": "2023-11-28",
+          "price": 30.38,
+          "quantity": 77,
+          "commission": 9.95,
+          "total_cost": 2349.2099999999996,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CU.TO at $30.38 on threshold confidence=1.00 score=1.0 rank=16. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "DSCSY",
+          "trade_type": "SELL",
+          "trade_date": "2023-12-12",
+          "price": 21.0222,
+          "quantity": 365,
+          "commission": 9.95,
+          "total_cost": -7663.153000000001,
+          "pnl": 3982.2010000000014,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ENB.TO",
+          "trade_type": "BUY",
+          "trade_date": "2023-12-12",
+          "price": 47.14,
+          "quantity": 55,
+          "commission": 9.95,
+          "total_cost": 2602.6499999999996,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ENB.TO at $47.14 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ENB.TO",
+          "trade_type": "SELL",
+          "trade_date": "2023-12-19",
+          "price": 47.9,
+          "quantity": 55,
+          "commission": 9.95,
+          "total_cost": -2624.55,
+          "pnl": 31.850000000000364,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "AGF-B.TO",
+          "trade_type": "BUY",
+          "trade_date": "2023-12-19",
+          "price": 7.59,
+          "quantity": 344,
+          "commission": 9.95,
+          "total_cost": 2620.91,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY AGF-B.TO at $7.59 on threshold confidence=1.00 score=1.0 rank=3. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "BAM.TO",
+          "trade_type": "SELL",
+          "trade_date": "2024-01-09",
+          "price": 51.88,
+          "quantity": 47,
+          "commission": 9.95,
+          "total_cost": -2428.4100000000003,
+          "pnl": 421.0400000000002,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ENB.TO",
+          "trade_type": "BUY",
+          "trade_date": "2024-01-09",
+          "price": 49.18,
+          "quantity": 52,
+          "commission": 9.95,
+          "total_cost": 2567.31,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ENB.TO at $49.18 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CTAS",
+          "trade_type": "SELL",
+          "trade_date": "2024-01-16",
+          "price": 144.0565,
+          "quantity": 38,
+          "commission": 9.95,
+          "total_cost": -5464.197,
+          "pnl": 1600.5546,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ACO-X.TO",
+          "trade_type": "BUY",
+          "trade_date": "2024-01-16",
+          "price": 38.59,
+          "quantity": 71,
+          "commission": 9.95,
+          "total_cost": 2749.84,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ACO-X.TO at $38.59 on threshold confidence=1.00 score=1.0 rank=3. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "AGF-B.TO",
+          "trade_type": "SELL",
+          "trade_date": "2024-07-30",
+          "price": 8.11,
+          "quantity": 344,
+          "commission": 9.95,
+          "total_cost": -2779.89,
+          "pnl": 168.92999999999984,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ENBP",
+          "trade_type": "BUY",
+          "trade_date": "2024-07-30",
+          "price": 15.5494,
+          "quantity": 176,
+          "commission": 9.95,
+          "total_cost": 2746.6443999999997,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ENBP at $15.55 on threshold confidence=0.80 score=0.8 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "DLICY",
+          "trade_type": "BUY",
           "trade_date": "2024-08-20",
-          "price": 193.9996,
+          "price": 13.5387,
+          "quantity": 193,
+          "commission": 9.95,
+          "total_cost": 2622.9191,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY DLICY at $13.54 on threshold confidence=1.00 score=1.0 rank=16. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "AMZN.TO",
+          "trade_type": "SELL",
+          "trade_date": "2024-11-12",
+          "price": 24.93,
+          "quantity": 125,
+          "commission": 9.95,
+          "total_cost": -3106.3,
+          "pnl": 1021.3000000000002,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ERH",
+          "trade_type": "BUY",
+          "trade_date": "2024-11-12",
+          "price": 9.4329,
+          "quantity": 279,
+          "commission": 9.95,
+          "total_cost": 2641.7291,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ERH at $9.43 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "AAPL.TO",
+          "trade_type": "SELL",
+          "trade_date": "2024-12-17",
+          "price": 37.1,
+          "quantity": 89,
+          "commission": 9.95,
+          "total_cost": -3291.9500000000003,
+          "pnl": 1098.9900000000002,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ETR",
+          "trade_type": "BUY",
+          "trade_date": "2024-12-17",
+          "price": 71.9196,
+          "quantity": 37,
+          "commission": 9.95,
+          "total_cost": 2670.9752,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ETR at $71.92 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ED",
+          "trade_type": "SELL",
+          "trade_date": "2025-01-14",
+          "price": 85.0033,
+          "quantity": 45,
+          "commission": 9.95,
+          "total_cost": -3815.1985,
+          "pnl": 533.6320000000001,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "FFDF",
+          "trade_type": "BUY",
+          "trade_date": "2025-01-14",
+          "price": 31.3183,
+          "quantity": 87,
+          "commission": 9.95,
+          "total_cost": 2734.6421,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY FFDF at $31.32 on threshold confidence=0.80 score=0.8 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ACO-X.TO",
+          "trade_type": "SELL",
+          "trade_date": "2025-02-11",
+          "price": 46.97,
+          "quantity": 71,
+          "commission": 9.95,
+          "total_cost": -3324.92,
+          "pnl": 585.0299999999997,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "GDV.TO",
+          "trade_type": "BUY",
+          "trade_date": "2025-02-11",
+          "price": 9.3217,
+          "quantity": 295,
+          "commission": 9.95,
+          "total_cost": 2759.8514999999998,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY GDV.TO at $9.32 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "AMZN",
+          "trade_type": "SELL",
+          "trade_date": "2025-02-18",
+          "price": 226.65,
+          "quantity": 15,
+          "commission": 9.95,
+          "total_cost": -3389.8,
+          "pnl": 967.4275000000002,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "GE",
+          "trade_type": "BUY",
+          "trade_date": "2025-02-18",
+          "price": 210.08,
+          "quantity": 13,
+          "commission": 9.95,
+          "total_cost": 2740.99,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY GE at $210.08 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "GE",
+          "trade_type": "SELL",
+          "trade_date": "2025-04-08",
+          "price": 169.37,
+          "quantity": 13,
+          "commission": 9.95,
+          "total_cost": -2191.86,
+          "pnl": -539.1799999999998,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "DSCSY",
+          "trade_type": "BUY",
+          "trade_date": "2025-04-08",
+          "price": 17.34,
+          "quantity": 159,
+          "commission": 9.95,
+          "total_cost": 2767.0099999999998,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY DSCSY at $17.34 on threshold confidence=0.80 score=0.8 rank=13. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CB",
+          "trade_type": "SELL",
+          "trade_date": "2025-04-22",
+          "price": 288.5943,
+          "quantity": 23,
+          "commission": 9.95,
+          "total_cost": -6627.7189,
+          "pnl": 2463.3135999999995,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ET.TO",
+          "trade_type": "BUY",
+          "trade_date": "2025-04-22",
+          "price": 10.57,
+          "quantity": 279,
+          "commission": 9.95,
+          "total_cost": 2958.98,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ET.TO at $10.57 on threshold confidence=0.80 score=0.8 rank=17. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CAKE",
+          "trade_type": "SELL",
+          "trade_date": "2025-05-06",
+          "price": 48.2867,
+          "quantity": 71,
+          "commission": 9.95,
+          "total_cost": -3418.4057000000003,
+          "pnl": 953.5129000000002,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "GE",
+          "trade_type": "BUY",
+          "trade_date": "2025-05-06",
+          "price": 208.6,
+          "quantity": 14,
+          "commission": 9.95,
+          "total_cost": 2930.35,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY GE at $208.60 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "GE",
+          "trade_type": "SELL",
+          "trade_date": "2025-06-10",
+          "price": 242.0,
+          "quantity": 14,
+          "commission": 9.95,
+          "total_cost": -3378.05,
+          "pnl": 457.6500000000001,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "CB",
+          "trade_type": "BUY",
+          "trade_date": "2025-06-10",
+          "price": 284.4505,
+          "quantity": 10,
+          "commission": 9.95,
+          "total_cost": 2854.4549999999995,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CB at $284.45 on threshold confidence=1.00 score=1.0 rank=6. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "GDV.TO",
+          "trade_type": "SELL",
+          "trade_date": "2025-09-16",
+          "price": 10.0174,
+          "quantity": 295,
+          "commission": 9.95,
+          "total_cost": -2945.1830000000004,
+          "pnl": 195.2815000000005,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "AAPL.TO",
+          "trade_type": "BUY",
+          "trade_date": "2025-09-16",
+          "price": 34.25,
+          "quantity": 87,
+          "commission": 9.95,
+          "total_cost": 2989.7,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY AAPL.TO at $34.25 on threshold confidence=1.00 score=1.0 rank=1. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "ANNSF",
+          "trade_type": "SELL",
+          "trade_date": "2025-11-04",
+          "price": 27.125,
+          "quantity": 322,
+          "commission": 9.95,
+          "total_cost": -8724.3,
+          "pnl": 4212.822399999999,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "GDV.TO",
+          "trade_type": "BUY",
+          "trade_date": "2025-11-04",
+          "price": 10.2087,
+          "quantity": 322,
+          "commission": 9.95,
+          "total_cost": 3297.1513999999997,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY GDV.TO at $10.21 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CNRD",
+          "trade_type": "SELL",
+          "trade_date": "2026-01-20",
+          "price": 26.1,
+          "quantity": 270,
+          "commission": 9.95,
+          "total_cost": -7037.05,
+          "pnl": 4647.55,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "GE",
+          "trade_type": "BUY",
+          "trade_date": "2026-01-20",
+          "price": 312.34,
           "quantity": 11,
           "commission": 9.95,
-          "total_cost": -2124.0456,
-          "pnl": -268.9285,
+          "total_cost": 3445.6899999999996,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY GE at $312.34 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "EBAY",
+          "trade_type": "SELL",
+          "trade_date": "2026-01-27",
+          "price": 94.6205,
+          "quantity": 58,
+          "commission": 9.95,
+          "total_cost": -5478.039000000001,
+          "pnl": 3167.1450000000004,
           "signal_reasons": "rebalance_out"
         },
         {
-          "symbol": "GAERF",
+          "symbol": "DISPF",
           "trade_type": "BUY",
-          "trade_date": "2024-08-20",
-          "price": 0.4247,
-          "quantity": 4568,
+          "trade_date": "2026-01-27",
+          "price": 25.3768,
+          "quantity": 141,
           "commission": 9.95,
-          "total_cost": 1949.9796000000001,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY GAERF at $0.42 on threshold confidence=1.00 score=5657382400.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 3588.0788,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY DISPF at $25.38 on threshold confidence=1.00 score=1.0 rank=10. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
         },
         {
-          "symbol": "ICTEF",
+          "symbol": "ALIZF",
+          "trade_type": "SELL",
+          "trade_date": "2026-02-10",
+          "price": 430.7264,
+          "quantity": 25,
+          "commission": 9.95,
+          "total_cost": -10758.21,
+          "pnl": 6071.977499999999,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ERH",
+          "trade_type": "SELL",
+          "trade_date": "2026-02-10",
+          "price": 11.6415,
+          "quantity": 279,
+          "commission": 9.95,
+          "total_cost": -3238.0285000000003,
+          "pnl": 606.2494000000002,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ED",
+          "trade_type": "BUY",
+          "trade_date": "2026-02-10",
+          "price": 106.6911,
+          "quantity": 38,
+          "commission": 9.95,
+          "total_cost": 4064.2118,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY ED at $106.69 on threshold confidence=0.80 score=0.8 rank=12. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "GMINF",
+          "trade_type": "BUY",
+          "trade_date": "2026-02-10",
+          "price": 35.19,
+          "quantity": 110,
+          "commission": 9.95,
+          "total_cost": 3880.8499999999995,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY GMINF at $35.19 on threshold confidence=0.80 score=0.8 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "GE",
+          "trade_type": "SELL",
+          "trade_date": "2026-03-03",
+          "price": 334.14,
+          "quantity": 11,
+          "commission": 9.95,
+          "total_cost": -3665.59,
+          "pnl": 229.85000000000036,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "GOOG",
+          "trade_type": "BUY",
+          "trade_date": "2026-03-03",
+          "price": 303.56,
+          "quantity": 12,
+          "commission": 9.95,
+          "total_cost": 3652.67,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY GOOG at $303.56 on threshold confidence=0.80 score=0.8 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "AAPL.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-04-21",
+          "price": 37.94,
+          "quantity": 87,
+          "commission": 9.95,
+          "total_cost": -3290.83,
+          "pnl": 311.0799999999999,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "GWO.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-04-21",
+          "price": 70.85,
+          "quantity": 54,
+          "commission": 9.95,
+          "total_cost": 3835.8499999999995,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY GWO.TO at $70.85 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "GMINF",
+          "trade_type": "SELL",
+          "trade_date": "2026-04-28",
+          "price": 35.76,
+          "quantity": 110,
+          "commission": 9.95,
+          "total_cost": -3923.65,
+          "pnl": 52.750000000000455,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "HCBC",
+          "trade_type": "BUY",
+          "trade_date": "2026-04-28",
+          "price": 37.3033,
+          "quantity": 103,
+          "commission": 9.95,
+          "total_cost": 3852.1899,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY HCBC at $37.30 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CU.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-05-12",
+          "price": 48.35,
+          "quantity": 77,
+          "commission": 9.95,
+          "total_cost": -3713.0000000000005,
+          "pnl": 1373.7400000000007,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ETR",
+          "trade_type": "SELL",
+          "trade_date": "2026-05-12",
+          "price": 112.93,
+          "quantity": 37,
+          "commission": 9.95,
+          "total_cost": -4168.46,
+          "pnl": 1507.4348,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "FFDF",
+          "trade_type": "SELL",
+          "trade_date": "2026-05-12",
+          "price": 45.0,
+          "quantity": 87,
+          "commission": 9.95,
+          "total_cost": -3905.05,
+          "pnl": 1180.3579,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "CB",
+          "trade_type": "SELL",
+          "trade_date": "2026-05-12",
+          "price": 322.04,
+          "quantity": 10,
+          "commission": 9.95,
+          "total_cost": -3210.4500000000003,
+          "pnl": 365.9450000000006,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ED",
+          "trade_type": "SELL",
+          "trade_date": "2026-05-12",
+          "price": 106.012,
+          "quantity": 38,
+          "commission": 9.95,
+          "total_cost": -4018.5060000000003,
+          "pnl": -35.75579999999991,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "MFC.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-05-12",
+          "price": 54.82,
+          "quantity": 84,
+          "commission": 9.95,
+          "total_cost": 4614.83,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY MFC.TO at $54.82 on threshold confidence=1.00 score=1.0 rank=16. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "MG.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-05-12",
+          "price": 85.33,
+          "quantity": 51,
+          "commission": 9.95,
+          "total_cost": 4361.78,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY MG.TO at $85.33 on threshold confidence=1.00 score=1.0 rank=17. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "MS",
+          "trade_type": "BUY",
+          "trade_date": "2026-05-12",
+          "price": 191.88,
+          "quantity": 21,
+          "commission": 9.95,
+          "total_cost": 4039.43,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY MS at $191.88 on threshold confidence=1.00 score=1.0 rank=18. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "MSWV",
+          "trade_type": "BUY",
+          "trade_date": "2026-05-12",
+          "price": 19.27,
+          "quantity": 206,
+          "commission": 9.95,
+          "total_cost": 3979.5699999999997,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY MSWV at $19.27 on threshold confidence=1.00 score=1.0 rank=19. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "MTL.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-05-12",
+          "price": 20.99,
+          "quantity": 180,
+          "commission": 9.95,
+          "total_cost": 3788.1499999999996,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY MTL.TO at $20.99 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CPKF",
           "trade_type": "SELL",
           "trade_date": "2026-06-02",
-          "price": 14.1375,
-          "quantity": 530,
+          "price": 34.96,
+          "quantity": 148,
           "commission": 9.95,
-          "total_cost": -7482.925,
-          "pnl": 5553.831,
+          "total_cost": -5164.13,
+          "pnl": 2790.728,
           "signal_reasons": "rebalance_out"
         },
         {
-          "symbol": "EJTTF",
+          "symbol": "ENBP",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-02",
+          "price": 26.0,
+          "quantity": 176,
+          "commission": 9.95,
+          "total_cost": -4566.05,
+          "pnl": 1829.3556000000003,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "DISPF",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-02",
+          "price": 398.262,
+          "quantity": 141,
+          "commission": 9.95,
+          "total_cost": -56144.992000000006,
+          "pnl": 52566.86320000001,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "HCBC",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-02",
+          "price": 39.5,
+          "quantity": 103,
+          "commission": 9.95,
+          "total_cost": -4058.55,
+          "pnl": 216.31010000000015,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "POW.TO",
           "trade_type": "BUY",
           "trade_date": "2026-06-02",
-          "price": 6.15,
-          "quantity": 360,
+          "price": 83.9,
+          "quantity": 84,
           "commission": 9.95,
-          "total_cost": 2223.95,
-          "signal_reasons": "Strategy sector (sector-transportation): BUY EJTTF at $6.15 on threshold confidence=1.00 score=5217733120.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+          "total_cost": 7057.55,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY POW.TO at $83.90 on threshold confidence=1.00 score=1.0 rank=17. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "RY.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-02",
+          "price": 264.56,
+          "quantity": 25,
+          "commission": 9.95,
+          "total_cost": 6623.95,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY RY.TO at $264.56 on threshold confidence=1.00 score=1.0 rank=18. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "SBC.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-02",
+          "price": 13.95,
+          "quantity": 459,
+          "commission": 9.95,
+          "total_cost": 6412.999999999999,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY SBC.TO at $13.95 on threshold confidence=1.00 score=1.0 rank=19. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "SCBFY",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-02",
+          "price": 56.58,
+          "quantity": 107,
+          "commission": 9.95,
+          "total_cost": 6064.009999999999,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY SCBFY at $56.58 on threshold confidence=1.00 score=1.0 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "SBC.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-09",
+          "price": 14.54,
+          "quantity": 459,
+          "commission": 9.95,
+          "total_cost": -6663.91,
+          "pnl": 260.8600000000006,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "SLF.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-09",
+          "price": 103.08,
+          "quantity": 59,
+          "commission": 9.95,
+          "total_cost": 6091.67,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY SLF.TO at $103.08 on threshold confidence=0.80 score=0.8 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "AAVMY",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-16",
+          "price": 41.95,
+          "quantity": 474,
+          "commission": 9.95,
+          "total_cost": -19874.350000000002,
+          "pnl": 14878.437400000003,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "DLICY",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-16",
+          "price": 22.35,
+          "quantity": 193,
+          "commission": 9.95,
+          "total_cost": -4303.6,
+          "pnl": 1690.6309,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "DSCSY",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-16",
+          "price": 50.11,
+          "quantity": 159,
+          "commission": 9.95,
+          "total_cost": -7957.54,
+          "pnl": 5200.48,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ET.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-16",
+          "price": 16.03,
+          "quantity": 279,
+          "commission": 9.95,
+          "total_cost": -4462.42,
+          "pnl": 1513.3899999999999,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "GDV.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-16",
+          "price": 12.08,
+          "quantity": 322,
+          "commission": 9.95,
+          "total_cost": -3879.8100000000004,
+          "pnl": 592.6086000000005,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "GOOG",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-16",
+          "price": 371.1,
+          "quantity": 12,
+          "commission": 9.95,
+          "total_cost": -4443.250000000001,
+          "pnl": 800.5300000000007,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "MS",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-16",
+          "price": 220.83,
+          "quantity": 21,
+          "commission": 9.95,
+          "total_cost": -4627.4800000000005,
+          "pnl": 598.0000000000005,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "MSWV",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-16",
+          "price": 20.07,
+          "quantity": 206,
+          "commission": 9.95,
+          "total_cost": -4124.47,
+          "pnl": 154.85000000000036,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "MTL.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-16",
+          "price": 22.46,
+          "quantity": 180,
+          "commission": 9.95,
+          "total_cost": -4032.8500000000004,
+          "pnl": 254.65000000000055,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "SCBFY",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-16",
+          "price": 53.58,
+          "quantity": 107,
+          "commission": 9.95,
+          "total_cost": -5723.11,
+          "pnl": -330.9499999999998,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "TD.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-16",
+          "price": 165.46,
+          "quantity": 54,
+          "commission": 9.95,
+          "total_cost": 8944.79,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY TD.TO at $165.46 on threshold confidence=1.00 score=1.0 rank=11. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "TRP.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-16",
+          "price": 96.42,
+          "quantity": 88,
+          "commission": 9.95,
+          "total_cost": 8494.910000000002,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY TRP.TO at $96.42 on threshold confidence=1.00 score=1.0 rank=12. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CDZ.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-16",
+          "price": 46.03,
+          "quantity": 176,
+          "commission": 9.95,
+          "total_cost": 8111.2300000000005,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CDZ.TO at $46.03 on threshold confidence=0.80 score=0.8 rank=13. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CM",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-16",
+          "price": 114.18,
+          "quantity": 67,
+          "commission": 9.95,
+          "total_cost": 7660.01,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CM at $114.18 on threshold confidence=0.80 score=0.8 rank=14. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CNR.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-16",
+          "price": 164.88,
+          "quantity": 44,
+          "commission": 9.95,
+          "total_cost": 7264.669999999999,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CNR.TO at $164.88 on threshold confidence=0.80 score=0.8 rank=15. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CP.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-16",
+          "price": 124.8,
+          "quantity": 55,
+          "commission": 9.95,
+          "total_cost": 6873.95,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY CP.TO at $124.80 on threshold confidence=0.80 score=0.8 rank=16. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "FIE.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-16",
+          "price": 11.11,
+          "quantity": 595,
+          "commission": 9.95,
+          "total_cost": 6620.4,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY FIE.TO at $11.11 on threshold confidence=0.80 score=0.8 rank=17. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "FTS.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-16",
+          "price": 79.98,
+          "quantity": 78,
+          "commission": 9.95,
+          "total_cost": 6248.39,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY FTS.TO at $79.98 on threshold confidence=0.80 score=0.8 rank=18. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "HR-UN.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-16",
+          "price": 11.13,
+          "quantity": 536,
+          "commission": 9.95,
+          "total_cost": 5975.63,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY HR-UN.TO at $11.13 on threshold confidence=0.80 score=0.8 rank=19. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "HXT.TO",
+          "trade_type": "BUY",
+          "trade_date": "2026-06-16",
+          "price": 93.41,
+          "quantity": 60,
+          "commission": 9.95,
+          "total_cost": 5614.549999999999,
+          "signal_reasons": "Strategy vectorvest_safe (vectorvest_safe): BUY HXT.TO at $93.41 on threshold confidence=0.80 score=0.8 rank=20. Applied position sizing=equal_weight, sizing pct=1%, risk mitigation=20-name diversification, rebalance schedule=daily."
+        },
+        {
+          "symbol": "CM.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 163.15,
+          "quantity": 35,
+          "commission": 9.95,
+          "total_cost": -5700.3,
+          "pnl": 3262.375,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "BMO.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 246.16,
+          "quantity": 17,
+          "commission": 9.95,
+          "total_cost": -4174.77,
+          "pnl": 2058.9500000000007,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "BNS.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 122.66,
+          "quantity": 34,
+          "commission": 9.95,
+          "total_cost": -4160.49,
+          "pnl": 1812.79,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "ENB.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 79.23,
+          "quantity": 52,
+          "commission": 9.95,
+          "total_cost": -4110.01,
+          "pnl": 1552.65,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "GWO.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 87.63,
+          "quantity": 54,
+          "commission": 9.95,
+          "total_cost": -4722.07,
+          "pnl": 896.1700000000001,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "MFC.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 57.05,
+          "quantity": 84,
+          "commission": 9.95,
+          "total_cost": -4782.25,
+          "pnl": 177.3699999999999,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "MG.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 91.59,
+          "quantity": 51,
+          "commission": 9.95,
+          "total_cost": -4661.14,
+          "pnl": 309.3100000000004,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "POW.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 87.62,
+          "quantity": 84,
+          "commission": 9.95,
+          "total_cost": -7350.13,
+          "pnl": 302.52999999999975,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "RY.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 288.41,
+          "quantity": 25,
+          "commission": 9.95,
+          "total_cost": -7200.300000000001,
+          "pnl": 586.3000000000011,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "SLF.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 110.28,
+          "quantity": 59,
+          "commission": 9.95,
+          "total_cost": -6496.570000000001,
+          "pnl": 414.85000000000036,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "TD.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 169.84,
+          "quantity": 54,
+          "commission": 9.95,
+          "total_cost": -9161.41,
+          "pnl": 226.5699999999997,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "TRP.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 98.73,
+          "quantity": 88,
+          "commission": 9.95,
+          "total_cost": -8678.289999999999,
+          "pnl": 193.3299999999981,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "CDZ.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 45.93,
+          "quantity": 176,
+          "commission": 9.95,
+          "total_cost": -8073.7300000000005,
+          "pnl": -27.550000000000182,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "CM",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 114.84,
+          "quantity": 67,
+          "commission": 9.95,
+          "total_cost": -7684.330000000001,
+          "pnl": 34.27000000000044,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "CNR.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 163.27,
+          "quantity": 44,
+          "commission": 9.95,
+          "total_cost": -7173.93,
+          "pnl": -80.78999999999905,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "CP.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 121.27,
+          "quantity": 55,
+          "commission": 9.95,
+          "total_cost": -6659.9,
+          "pnl": -204.10000000000036,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "FIE.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 11.22,
+          "quantity": 595,
+          "commission": 9.95,
+          "total_cost": -6665.950000000001,
+          "pnl": 55.50000000000091,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "FTS.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 80.55,
+          "quantity": 78,
+          "commission": 9.95,
+          "total_cost": -6272.95,
+          "pnl": 34.50999999999931,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "HR-UN.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 11.04,
+          "quantity": 536,
+          "commission": 9.95,
+          "total_cost": -5907.49,
+          "pnl": -58.19000000000051,
+          "signal_reasons": "rebalance_out"
+        },
+        {
+          "symbol": "HXT.TO",
+          "trade_type": "SELL",
+          "trade_date": "2026-06-23",
+          "price": 92.77,
+          "quantity": 60,
+          "commission": 9.95,
+          "total_cost": -5556.25,
+          "pnl": -48.349999999999454,
+          "signal_reasons": "rebalance_out"
         }
       ],
       "portfolio_history": [
         {
           "date": "2022-01-03",
-          "cash": 38617.2724,
-          "total_value": 99810.94999999998,
-          "num_positions": 19
+          "cash": 46560.60160000004,
+          "total_value": 99850.75000000001,
+          "num_positions": 15
         },
         {
           "date": "2022-01-10",
-          "cash": 38617.2724,
-          "total_value": 100116.80790000001,
-          "num_positions": 19
+          "cash": 47114.83560000004,
+          "total_value": 100399.97560000005,
+          "num_positions": 15
         },
         {
           "date": "2022-01-17",
-          "cash": 38617.2724,
-          "total_value": 101070.87599999999,
-          "num_positions": 19
+          "cash": 47114.83560000004,
+          "total_value": 100963.83120000003,
+          "num_positions": 15
         },
         {
           "date": "2022-01-24",
-          "cash": 38617.2724,
-          "total_value": 98367.60269999999,
-          "num_positions": 19
+          "cash": 47114.83560000004,
+          "total_value": 99145.43550000005,
+          "num_positions": 15
         },
         {
           "date": "2022-01-31",
-          "cash": 38617.2724,
-          "total_value": 97706.65410000001,
-          "num_positions": 19
+          "cash": 47194.271300000044,
+          "total_value": 100416.68280000005,
+          "num_positions": 15
         },
         {
           "date": "2022-02-07",
-          "cash": 38617.2724,
-          "total_value": 97086.3483,
-          "num_positions": 19
+          "cash": 47194.271300000044,
+          "total_value": 101970.65930000004,
+          "num_positions": 15
         },
         {
           "date": "2022-02-14",
-          "cash": 38617.2724,
-          "total_value": 97436.7528,
-          "num_positions": 19
+          "cash": 47194.271300000044,
+          "total_value": 100419.10170000004,
+          "num_positions": 15
         },
         {
           "date": "2022-02-21",
-          "cash": 38617.2724,
-          "total_value": 97467.1791,
-          "num_positions": 19
+          "cash": 47194.271300000044,
+          "total_value": 99465.70570000003,
+          "num_positions": 15
         },
         {
           "date": "2022-02-28",
-          "cash": 38617.2724,
-          "total_value": 96549.6946,
-          "num_positions": 19
+          "cash": 47194.271300000044,
+          "total_value": 98354.57000000004,
+          "num_positions": 15
         },
         {
           "date": "2022-03-07",
-          "cash": 38617.2724,
-          "total_value": 96014.52189999998,
-          "num_positions": 19
+          "cash": 47194.271300000044,
+          "total_value": 95100.03860000004,
+          "num_positions": 15
         },
         {
           "date": "2022-03-14",
-          "cash": 38617.2724,
-          "total_value": 96158.46240000002,
-          "num_positions": 19
+          "cash": 47194.271300000044,
+          "total_value": 96851.93930000006,
+          "num_positions": 15
         },
         {
           "date": "2022-03-21",
-          "cash": 36678.2284,
-          "total_value": 99396.64290000002,
-          "num_positions": 20
+          "cash": 47030.39880000004,
+          "total_value": 98750.71930000003,
+          "num_positions": 15
         },
         {
           "date": "2022-03-28",
-          "cash": 36678.2284,
-          "total_value": 98636.48159999998,
-          "num_positions": 20
+          "cash": 47030.39880000004,
+          "total_value": 99987.34380000006,
+          "num_positions": 15
         },
         {
           "date": "2022-04-04",
-          "cash": 36678.2284,
-          "total_value": 98320.56880000004,
-          "num_positions": 20
+          "cash": 46829.94190000004,
+          "total_value": 100132.50890000003,
+          "num_positions": 15
         },
         {
           "date": "2022-04-11",
-          "cash": 36678.2284,
-          "total_value": 95886.9042,
-          "num_positions": 20
+          "cash": 46829.94190000004,
+          "total_value": 98783.08900000007,
+          "num_positions": 15
         },
         {
           "date": "2022-04-19",
-          "cash": 36678.2284,
-          "total_value": 97349.36960000002,
-          "num_positions": 20
+          "cash": 46829.94190000004,
+          "total_value": 99245.50980000004,
+          "num_positions": 15
         },
         {
           "date": "2022-04-26",
-          "cash": 36678.2284,
-          "total_value": 94775.97540000001,
-          "num_positions": 20
+          "cash": 46829.94190000004,
+          "total_value": 97809.98250000006,
+          "num_positions": 15
         },
         {
           "date": "2022-05-03",
-          "cash": 36678.2284,
-          "total_value": 94664.5939,
-          "num_positions": 20
+          "cash": 46829.94190000004,
+          "total_value": 98119.58030000005,
+          "num_positions": 15
         },
         {
           "date": "2022-05-10",
-          "cash": 36678.2284,
-          "total_value": 92572.67929999999,
-          "num_positions": 20
+          "cash": 46407.62890000004,
+          "total_value": 95635.18890000002,
+          "num_positions": 15
         },
         {
           "date": "2022-05-17",
-          "cash": 36678.2284,
-          "total_value": 94006.10129999998,
-          "num_positions": 20
+          "cash": 46407.62890000004,
+          "total_value": 98158.58380000004,
+          "num_positions": 15
         },
         {
           "date": "2022-05-24",
-          "cash": 36678.2284,
-          "total_value": 93498.04840000003,
-          "num_positions": 20
+          "cash": 46407.62890000004,
+          "total_value": 97432.10100000007,
+          "num_positions": 15
         },
         {
           "date": "2022-05-31",
-          "cash": 36678.2284,
-          "total_value": 95167.291,
-          "num_positions": 20
+          "cash": 46407.62890000004,
+          "total_value": 98758.94730000003,
+          "num_positions": 15
         },
         {
           "date": "2022-06-07",
-          "cash": 36678.2284,
-          "total_value": 96175.94150000003,
-          "num_positions": 20
+          "cash": 46407.62890000004,
+          "total_value": 98347.22070000003,
+          "num_positions": 15
         },
         {
           "date": "2022-06-14",
-          "cash": 36678.2284,
-          "total_value": 91381.72060000003,
-          "num_positions": 20
+          "cash": 46407.62890000004,
+          "total_value": 93929.80590000002,
+          "num_positions": 15
         },
         {
           "date": "2022-06-21",
-          "cash": 36678.2284,
-          "total_value": 91022.25749999999,
-          "num_positions": 20
+          "cash": 46407.62890000004,
+          "total_value": 94329.84860000006,
+          "num_positions": 15
         },
         {
           "date": "2022-06-28",
-          "cash": 36678.2284,
-          "total_value": 91038.13290000001,
-          "num_positions": 20
+          "cash": 46407.62890000004,
+          "total_value": 94724.94290000004,
+          "num_positions": 15
         },
         {
           "date": "2022-07-05",
-          "cash": 36678.2284,
-          "total_value": 90079.9155,
-          "num_positions": 20
+          "cash": 44086.78490000004,
+          "total_value": 93492.21260000004,
+          "num_positions": 16
         },
         {
           "date": "2022-07-12",
-          "cash": 36678.2284,
-          "total_value": 89817.90110000002,
-          "num_positions": 20
+          "cash": 44086.78490000004,
+          "total_value": 92859.27370000003,
+          "num_positions": 16
         },
         {
           "date": "2022-07-19",
-          "cash": 36678.2284,
-          "total_value": 91699.6719,
-          "num_positions": 20
+          "cash": 44086.78490000004,
+          "total_value": 93661.11030000003,
+          "num_positions": 16
         },
         {
           "date": "2022-07-26",
-          "cash": 36678.2284,
-          "total_value": 92242.4753,
-          "num_positions": 20
+          "cash": 44086.78490000004,
+          "total_value": 94290.55290000004,
+          "num_positions": 16
         },
         {
           "date": "2022-08-02",
-          "cash": 36678.2284,
-          "total_value": 93884.51350000002,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 95875.37560000003,
+          "num_positions": 18
         },
         {
           "date": "2022-08-09",
-          "cash": 36678.2284,
-          "total_value": 94124.34870000003,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 96843.62240000002,
+          "num_positions": 18
         },
         {
           "date": "2022-08-16",
-          "cash": 36678.2284,
-          "total_value": 95777.6916,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 98644.46100000005,
+          "num_positions": 18
         },
         {
           "date": "2022-08-23",
-          "cash": 36678.2284,
-          "total_value": 94394.06340000003,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 96702.17190000003,
+          "num_positions": 18
         },
         {
           "date": "2022-08-30",
-          "cash": 36678.2284,
-          "total_value": 93117.29469999998,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 95283.36020000002,
+          "num_positions": 18
         },
         {
           "date": "2022-09-06",
-          "cash": 36678.2284,
-          "total_value": 91442.91010000002,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 93941.66390000006,
+          "num_positions": 18
         },
         {
           "date": "2022-09-13",
-          "cash": 36678.2284,
-          "total_value": 91912.08230000001,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 94949.43160000005,
+          "num_positions": 18
         },
         {
           "date": "2022-09-20",
-          "cash": 36678.2284,
-          "total_value": 90668.18220000001,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 94057.27640000006,
+          "num_positions": 18
         },
         {
           "date": "2022-09-27",
-          "cash": 36678.2284,
-          "total_value": 88323.18689999999,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 91295.29350000003,
+          "num_positions": 18
         },
         {
           "date": "2022-10-04",
-          "cash": 36678.2284,
-          "total_value": 90082.53079999998,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 92833.33250000006,
+          "num_positions": 18
         },
         {
           "date": "2022-10-11",
-          "cash": 36678.2284,
-          "total_value": 87923.1756,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 90552.29110000002,
+          "num_positions": 18
         },
         {
           "date": "2022-10-18",
-          "cash": 36678.2284,
-          "total_value": 89276.87240000001,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 92629.29040000004,
+          "num_positions": 18
         },
         {
           "date": "2022-10-25",
-          "cash": 36678.2284,
-          "total_value": 90029.11889999997,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 93696.23340000003,
+          "num_positions": 18
         },
         {
           "date": "2022-11-01",
-          "cash": 36678.2284,
-          "total_value": 91878.99309999998,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 94641.26970000003,
+          "num_positions": 18
         },
         {
           "date": "2022-11-08",
-          "cash": 36678.2284,
-          "total_value": 94146.4697,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 95410.12820000006,
+          "num_positions": 18
         },
         {
           "date": "2022-11-15",
-          "cash": 36678.2284,
-          "total_value": 95698.71610000002,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 98906.43910000005,
+          "num_positions": 18
         },
         {
           "date": "2022-11-22",
-          "cash": 36678.2284,
-          "total_value": 96374.43350000003,
-          "num_positions": 20
+          "cash": 39788.92490000004,
+          "total_value": 99321.07240000005,
+          "num_positions": 18
         },
         {
           "date": "2022-11-29",
-          "cash": 36678.2284,
-          "total_value": 97083.85300000003,
-          "num_positions": 20
+          "cash": 40159.12520000004,
+          "total_value": 99122.22720000004,
+          "num_positions": 18
         },
         {
           "date": "2022-12-06",
-          "cash": 36678.2284,
-          "total_value": 97565.27100000002,
-          "num_positions": 20
+          "cash": 38141.80520000004,
+          "total_value": 98942.3864,
+          "num_positions": 19
         },
         {
           "date": "2022-12-13",
-          "cash": 36678.2284,
-          "total_value": 98648.37680000001,
-          "num_positions": 20
+          "cash": 38141.80520000004,
+          "total_value": 100043.22440000005,
+          "num_positions": 19
         },
         {
           "date": "2022-12-20",
-          "cash": 36678.2284,
-          "total_value": 96414.89540000004,
-          "num_positions": 20
+          "cash": 38141.80520000004,
+          "total_value": 98106.76160000004,
+          "num_positions": 19
         },
         {
           "date": "2022-12-28",
-          "cash": 36678.2284,
-          "total_value": 96513.96270000002,
-          "num_positions": 20
+          "cash": 38141.80520000004,
+          "total_value": 97541.21800000004,
+          "num_positions": 19
         },
         {
           "date": "2023-01-05",
-          "cash": 36678.2284,
-          "total_value": 96966.38659999998,
-          "num_positions": 20
+          "cash": 39269.315600000045,
+          "total_value": 98593.89770000006,
+          "num_positions": 19
         },
         {
           "date": "2023-01-12",
-          "cash": 36678.2284,
-          "total_value": 98996.47550000003,
-          "num_positions": 20
+          "cash": 39280.135600000045,
+          "total_value": 101331.10260000004,
+          "num_positions": 19
         },
         {
           "date": "2023-01-19",
-          "cash": 36678.2284,
-          "total_value": 98087.60240000002,
-          "num_positions": 20
+          "cash": 39280.135600000045,
+          "total_value": 101186.77250000006,
+          "num_positions": 19
         },
         {
           "date": "2023-01-26",
-          "cash": 36678.2284,
-          "total_value": 98918.5404,
-          "num_positions": 20
+          "cash": 39280.135600000045,
+          "total_value": 103279.82970000006,
+          "num_positions": 19
         },
         {
           "date": "2023-02-02",
-          "cash": 36678.2284,
-          "total_value": 99315.45440000002,
-          "num_positions": 20
+          "cash": 39280.135600000045,
+          "total_value": 104221.23830000004,
+          "num_positions": 19
         },
         {
           "date": "2023-02-09",
-          "cash": 36678.2284,
-          "total_value": 98345.99710000001,
-          "num_positions": 20
+          "cash": 40513.51860000005,
+          "total_value": 103663.14730000003,
+          "num_positions": 19
         },
         {
           "date": "2023-02-16",
-          "cash": 36678.2284,
-          "total_value": 98570.80559999998,
-          "num_positions": 20
+          "cash": 40513.51860000005,
+          "total_value": 104005.45180000002,
+          "num_positions": 19
         },
         {
           "date": "2023-02-23",
-          "cash": 36678.2284,
-          "total_value": 98123.0262,
-          "num_positions": 20
+          "cash": 40513.51860000005,
+          "total_value": 103053.53360000007,
+          "num_positions": 19
         },
         {
           "date": "2023-03-02",
-          "cash": 36678.2284,
-          "total_value": 99428.41659999998,
-          "num_positions": 20
+          "cash": 40513.51860000005,
+          "total_value": 102523.87700000004,
+          "num_positions": 19
         },
         {
           "date": "2023-03-09",
-          "cash": 36678.2284,
-          "total_value": 99516.61519999999,
-          "num_positions": 20
+          "cash": 40513.51860000005,
+          "total_value": 102929.63270000003,
+          "num_positions": 19
         },
         {
           "date": "2023-03-16",
-          "cash": 36678.2284,
-          "total_value": 95761.7756,
-          "num_positions": 20
+          "cash": 43873.91570000004,
+          "total_value": 101154.52220000006,
+          "num_positions": 19
         },
         {
           "date": "2023-03-23",
-          "cash": 36678.2284,
-          "total_value": 96149.5845,
-          "num_positions": 20
+          "cash": 45953.55680000004,
+          "total_value": 100844.99870000001,
+          "num_positions": 19
         },
         {
           "date": "2023-03-30",
-          "cash": 36678.2284,
-          "total_value": 97331.14029999998,
-          "num_positions": 20
+          "cash": 45706.835200000045,
+          "total_value": 102564.88020000004,
+          "num_positions": 19
         },
         {
           "date": "2023-04-06",
-          "cash": 36678.2284,
-          "total_value": 96175.21039999998,
-          "num_positions": 20
+          "cash": 45706.835200000045,
+          "total_value": 102499.90350000004,
+          "num_positions": 19
         },
         {
           "date": "2023-04-14",
-          "cash": 36678.2284,
-          "total_value": 97793.84360000002,
-          "num_positions": 20
+          "cash": 45706.835200000045,
+          "total_value": 102660.98580000005,
+          "num_positions": 19
         },
         {
           "date": "2023-04-21",
-          "cash": 36678.2284,
-          "total_value": 98627.22639999999,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 103839.94730000007,
+          "num_positions": 19
         },
         {
           "date": "2023-04-28",
-          "cash": 36678.2284,
-          "total_value": 99132.39540000002,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 103877.14580000004,
+          "num_positions": 19
         },
         {
           "date": "2023-05-05",
-          "cash": 36678.2284,
-          "total_value": 99472.2996,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 103894.36710000008,
+          "num_positions": 19
         },
         {
           "date": "2023-05-12",
-          "cash": 36678.2284,
-          "total_value": 99713.07659999999,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 103580.10840000001,
+          "num_positions": 19
         },
         {
           "date": "2023-05-19",
-          "cash": 36678.2284,
-          "total_value": 99968.4112,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 104045.22880000006,
+          "num_positions": 19
         },
         {
           "date": "2023-05-26",
-          "cash": 36678.2284,
-          "total_value": 98634.50760000004,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 103787.28670000003,
+          "num_positions": 19
         },
         {
           "date": "2023-06-02",
-          "cash": 36678.2284,
-          "total_value": 99013.01000000001,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 104224.63790000006,
+          "num_positions": 19
         },
         {
           "date": "2023-06-09",
-          "cash": 36678.2284,
-          "total_value": 99527.74750000003,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 104451.19300000004,
+          "num_positions": 19
         },
         {
           "date": "2023-06-16",
-          "cash": 36678.2284,
-          "total_value": 100566.10739999998,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 105702.59220000006,
+          "num_positions": 19
         },
         {
           "date": "2023-06-23",
-          "cash": 36678.2284,
-          "total_value": 99805.01670000002,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 104198.38980000005,
+          "num_positions": 19
         },
         {
           "date": "2023-06-30",
-          "cash": 36678.2284,
-          "total_value": 101537.65250000001,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 105632.28470000006,
+          "num_positions": 19
         },
         {
           "date": "2023-07-07",
-          "cash": 36678.2284,
-          "total_value": 101045.65119999998,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 105597.32610000003,
+          "num_positions": 19
         },
         {
           "date": "2023-07-14",
-          "cash": 36678.2284,
-          "total_value": 102504.8429,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 107319.48040000006,
+          "num_positions": 19
         },
         {
           "date": "2023-07-21",
-          "cash": 36678.2284,
-          "total_value": 102785.1779,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 107676.36860000003,
+          "num_positions": 19
         },
         {
           "date": "2023-07-28",
-          "cash": 36678.2284,
-          "total_value": 102435.58240000001,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 108434.84270000005,
+          "num_positions": 19
         },
         {
           "date": "2023-08-04",
-          "cash": 36678.2284,
-          "total_value": 101905.83200000001,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 107474.45690000006,
+          "num_positions": 19
         },
         {
           "date": "2023-08-11",
-          "cash": 36678.2284,
-          "total_value": 102307.63080000001,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 107039.47560000006,
+          "num_positions": 19
         },
         {
           "date": "2023-08-18",
-          "cash": 36678.2284,
-          "total_value": 100693.72090000001,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 105390.72650000006,
+          "num_positions": 19
         },
         {
           "date": "2023-08-25",
-          "cash": 36678.2284,
-          "total_value": 100714.04020000005,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 105477.72170000002,
+          "num_positions": 19
         },
         {
           "date": "2023-09-01",
-          "cash": 36678.2284,
-          "total_value": 102031.72240000003,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 107191.47910000007,
+          "num_positions": 19
         },
         {
           "date": "2023-09-08",
-          "cash": 36678.2284,
-          "total_value": 100965.24590000002,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 106058.10070000004,
+          "num_positions": 19
         },
         {
           "date": "2023-09-15",
-          "cash": 36678.2284,
-          "total_value": 101742.36440000002,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 106938.50310000005,
+          "num_positions": 19
         },
         {
           "date": "2023-09-22",
-          "cash": 36678.2284,
-          "total_value": 100920.15849999999,
-          "num_positions": 20
+          "cash": 45812.995300000046,
+          "total_value": 105345.65000000005,
+          "num_positions": 19
         },
         {
           "date": "2023-09-29",
-          "cash": 36678.2284,
-          "total_value": 100171.75879999998,
-          "num_positions": 20
+          "cash": 45558.54810000005,
+          "total_value": 104781.53960000006,
+          "num_positions": 19
         },
         {
           "date": "2023-10-06",
-          "cash": 36678.2284,
-          "total_value": 99431.50439999999,
-          "num_positions": 20
+          "cash": 45558.54810000005,
+          "total_value": 104377.29250000004,
+          "num_positions": 19
         },
         {
           "date": "2023-10-13",
-          "cash": 36678.2284,
-          "total_value": 99953.1259,
-          "num_positions": 20
+          "cash": 45558.54810000005,
+          "total_value": 104550.44130000003,
+          "num_positions": 19
         },
         {
           "date": "2023-10-20",
-          "cash": 36678.2284,
-          "total_value": 98142.00510000001,
-          "num_positions": 20
+          "cash": 45558.54810000005,
+          "total_value": 103184.25610000004,
+          "num_positions": 19
         },
         {
           "date": "2023-10-27",
-          "cash": 36678.2284,
-          "total_value": 96911.59969999998,
-          "num_positions": 20
+          "cash": 45558.54810000005,
+          "total_value": 102517.92620000006,
+          "num_positions": 19
         },
         {
           "date": "2023-11-03",
-          "cash": 36678.2284,
-          "total_value": 99510.3518,
-          "num_positions": 20
+          "cash": 45188.96550000005,
+          "total_value": 105505.94570000007,
+          "num_positions": 19
         },
         {
           "date": "2023-11-10",
-          "cash": 36678.2284,
-          "total_value": 99982.94150000003,
-          "num_positions": 20
+          "cash": 45188.96550000005,
+          "total_value": 105595.57890000004,
+          "num_positions": 19
         },
         {
           "date": "2023-11-17",
-          "cash": 36678.2284,
-          "total_value": 102105.4088,
-          "num_positions": 20
+          "cash": 45188.96550000005,
+          "total_value": 107660.98800000004,
+          "num_positions": 19
         },
         {
           "date": "2023-11-24",
-          "cash": 36678.2284,
-          "total_value": 102402.768,
-          "num_positions": 20
+          "cash": 45188.96550000005,
+          "total_value": 108321.42800000006,
+          "num_positions": 19
         },
         {
           "date": "2023-12-01",
-          "cash": 36678.2284,
-          "total_value": 103425.30660000001,
-          "num_positions": 20
+          "cash": 44591.86550000005,
+          "total_value": 108679.29220000007,
+          "num_positions": 19
         },
         {
           "date": "2023-12-08",
-          "cash": 36678.2284,
-          "total_value": 102941.2361,
-          "num_positions": 20
+          "cash": 44591.86550000005,
+          "total_value": 109218.73800000007,
+          "num_positions": 19
         },
         {
           "date": "2023-12-15",
-          "cash": 36678.2284,
-          "total_value": 105579.3865,
-          "num_positions": 20
+          "cash": 49652.36850000005,
+          "total_value": 110387.68130000003,
+          "num_positions": 19
         },
         {
           "date": "2023-12-22",
-          "cash": 36678.2284,
-          "total_value": 107653.00250000006,
-          "num_positions": 20
+          "cash": 49656.008500000054,
+          "total_value": 112280.18620000007,
+          "num_positions": 19
         },
         {
           "date": "2024-01-02",
-          "cash": 36678.2284,
-          "total_value": 107588.39890000003,
-          "num_positions": 20
+          "cash": 49656.008500000054,
+          "total_value": 112180.80760000006,
+          "num_positions": 19
         },
         {
           "date": "2024-01-09",
-          "cash": 36678.2284,
-          "total_value": 107365.80810000002,
-          "num_positions": 20
+          "cash": 49517.10850000006,
+          "total_value": 111927.39010000005,
+          "num_positions": 19
         },
         {
           "date": "2024-01-16",
-          "cash": 36678.2284,
-          "total_value": 106953.62430000001,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 111692.49290000004,
+          "num_positions": 19
         },
         {
           "date": "2024-01-23",
-          "cash": 36678.2284,
-          "total_value": 107598.61710000002,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 111798.11770000005,
+          "num_positions": 19
         },
         {
           "date": "2024-01-30",
-          "cash": 36678.2284,
-          "total_value": 108418.93259999999,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 112156.24870000005,
+          "num_positions": 19
         },
         {
           "date": "2024-02-06",
-          "cash": 36678.2284,
-          "total_value": 109515.39000000001,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 112073.61410000004,
+          "num_positions": 19
         },
         {
           "date": "2024-02-13",
-          "cash": 36678.2284,
-          "total_value": 109340.09149999998,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 111057.71600000007,
+          "num_positions": 19
         },
         {
           "date": "2024-02-20",
-          "cash": 36678.2284,
-          "total_value": 110887.79410000001,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 112466.27630000006,
+          "num_positions": 19
         },
         {
           "date": "2024-02-27",
-          "cash": 36678.2284,
-          "total_value": 112113.1793,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 112958.69120000004,
+          "num_positions": 19
         },
         {
           "date": "2024-03-05",
-          "cash": 36678.2284,
-          "total_value": 112555.2237,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 113912.50510000007,
+          "num_positions": 19
         },
         {
           "date": "2024-03-12",
-          "cash": 36678.2284,
-          "total_value": 114453.47080000001,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 115158.87050000006,
+          "num_positions": 19
         },
         {
           "date": "2024-03-19",
-          "cash": 36678.2284,
-          "total_value": 117476.9539,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 115282.90550000005,
+          "num_positions": 19
         },
         {
           "date": "2024-03-26",
-          "cash": 36678.2284,
-          "total_value": 117673.556,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 115392.78640000007,
+          "num_positions": 19
         },
         {
           "date": "2024-04-03",
-          "cash": 36678.2284,
-          "total_value": 119322.80419999998,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 115784.39570000007,
+          "num_positions": 19
         },
         {
           "date": "2024-04-10",
-          "cash": 36678.2284,
-          "total_value": 120050.8581,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 114949.27460000008,
+          "num_positions": 19
         },
         {
           "date": "2024-04-17",
-          "cash": 36678.2284,
-          "total_value": 118593.10639999999,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 113168.62180000007,
+          "num_positions": 19
         },
         {
           "date": "2024-04-24",
-          "cash": 36678.2284,
-          "total_value": 120948.77679999999,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 114267.09040000009,
+          "num_positions": 19
         },
         {
           "date": "2024-05-01",
-          "cash": 36678.2284,
-          "total_value": 120144.98079999998,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 113985.77090000006,
+          "num_positions": 19
         },
         {
           "date": "2024-05-08",
-          "cash": 36678.2284,
-          "total_value": 123210.22320000002,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 116558.45100000004,
+          "num_positions": 19
         },
         {
           "date": "2024-05-15",
-          "cash": 36678.2284,
-          "total_value": 125198.31680000002,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 117544.23620000007,
+          "num_positions": 19
         },
         {
           "date": "2024-05-22",
-          "cash": 36678.2284,
-          "total_value": 124582.96349999998,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 118101.77640000008,
+          "num_positions": 19
         },
         {
           "date": "2024-05-29",
-          "cash": 36678.2284,
-          "total_value": 124278.30169999998,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 117073.71500000007,
+          "num_positions": 19
         },
         {
           "date": "2024-06-05",
-          "cash": 36678.2284,
-          "total_value": 125320.1289,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 117875.00650000003,
+          "num_positions": 19
         },
         {
           "date": "2024-06-12",
-          "cash": 36678.2284,
-          "total_value": 123999.0206,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 118002.39390000008,
+          "num_positions": 19
         },
         {
           "date": "2024-06-19",
-          "cash": 36678.2284,
-          "total_value": 124062.11100000003,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 117060.31860000003,
+          "num_positions": 19
         },
         {
           "date": "2024-06-26",
-          "cash": 36678.2284,
-          "total_value": 123151.88860000002,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 117232.45280000004,
+          "num_positions": 19
         },
         {
           "date": "2024-07-03",
-          "cash": 36678.2284,
-          "total_value": 123966.76229999999,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 117894.65490000007,
+          "num_positions": 19
         },
         {
           "date": "2024-07-10",
-          "cash": 36678.2284,
-          "total_value": 123159.12049999998,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 118453.28950000006,
+          "num_positions": 19
         },
         {
           "date": "2024-07-17",
-          "cash": 36678.2284,
-          "total_value": 125183.5012,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 119258.73960000006,
+          "num_positions": 19
         },
         {
           "date": "2024-07-24",
-          "cash": 36678.2284,
-          "total_value": 122802.4529,
-          "num_positions": 20
+          "cash": 52231.465500000064,
+          "total_value": 118421.67610000008,
+          "num_positions": 19
         },
         {
           "date": "2024-07-31",
-          "cash": 36678.2284,
-          "total_value": 124735.4422,
-          "num_positions": 20
+          "cash": 52264.711100000066,
+          "total_value": 119405.57470000006,
+          "num_positions": 19
         },
         {
           "date": "2024-08-07",
-          "cash": 36678.2284,
-          "total_value": 120864.29989999998,
-          "num_positions": 20
+          "cash": 52264.711100000066,
+          "total_value": 116934.77040000005,
+          "num_positions": 19
         },
         {
           "date": "2024-08-14",
-          "cash": 36678.2284,
-          "total_value": 122459.98240000001,
-          "num_positions": 20
+          "cash": 52264.711100000066,
+          "total_value": 118572.02750000008,
+          "num_positions": 19
         },
         {
           "date": "2024-08-21",
-          "cash": 36852.2944,
-          "total_value": 124699.84609999998,
+          "cash": 49641.79200000007,
+          "total_value": 120619.53240000004,
           "num_positions": 20
         },
         {
           "date": "2024-08-28",
-          "cash": 36852.2944,
-          "total_value": 124896.9031,
+          "cash": 49641.79200000007,
+          "total_value": 121255.70710000007,
           "num_positions": 20
         },
         {
           "date": "2024-09-04",
-          "cash": 36852.2944,
-          "total_value": 124748.99259999995,
+          "cash": 49641.79200000007,
+          "total_value": 122021.15770000007,
           "num_positions": 20
         },
         {
           "date": "2024-09-11",
-          "cash": 36852.2944,
-          "total_value": 124904.73569999999,
+          "cash": 49641.79200000007,
+          "total_value": 122392.42440000005,
           "num_positions": 20
         },
         {
           "date": "2024-09-18",
-          "cash": 36852.2944,
-          "total_value": 127284.99999999999,
+          "cash": 49641.79200000007,
+          "total_value": 123704.95100000006,
           "num_positions": 20
         },
         {
           "date": "2024-09-25",
-          "cash": 36852.2944,
-          "total_value": 129921.53889999999,
+          "cash": 49641.79200000007,
+          "total_value": 125011.70590000007,
           "num_positions": 20
         },
         {
           "date": "2024-10-02",
-          "cash": 36852.2944,
-          "total_value": 131564.42750000002,
+          "cash": 49641.79200000007,
+          "total_value": 124623.53390000005,
           "num_positions": 20
         },
         {
           "date": "2024-10-09",
-          "cash": 36852.2944,
-          "total_value": 130820.41020000001,
+          "cash": 49641.79200000007,
+          "total_value": 123963.39570000008,
           "num_positions": 20
         },
         {
           "date": "2024-10-16",
-          "cash": 36852.2944,
-          "total_value": 131362.97950000002,
+          "cash": 49641.79200000007,
+          "total_value": 125552.14550000009,
           "num_positions": 20
         },
         {
           "date": "2024-10-23",
-          "cash": 36852.2944,
-          "total_value": 129981.362,
+          "cash": 49641.79200000007,
+          "total_value": 124469.18170000004,
           "num_positions": 20
         },
         {
           "date": "2024-10-30",
-          "cash": 36852.2944,
-          "total_value": 128780.6266,
+          "cash": 49641.79200000007,
+          "total_value": 124726.22630000004,
           "num_positions": 20
         },
         {
           "date": "2024-11-06",
-          "cash": 36852.2944,
-          "total_value": 131965.17590000003,
+          "cash": 49641.79200000007,
+          "total_value": 124719.87600000008,
           "num_positions": 20
         },
         {
           "date": "2024-11-13",
-          "cash": 36852.2944,
-          "total_value": 130983.17899999997,
+          "cash": 50106.36290000007,
+          "total_value": 125136.31070000006,
           "num_positions": 20
         },
         {
           "date": "2024-11-20",
-          "cash": 36852.2944,
-          "total_value": 134105.44809999998,
+          "cash": 50106.36290000007,
+          "total_value": 124833.72960000008,
           "num_positions": 20
         },
         {
           "date": "2024-11-27",
-          "cash": 36852.2944,
-          "total_value": 134215.72019999995,
+          "cash": 50106.36290000007,
+          "total_value": 126246.79360000006,
           "num_positions": 20
         },
         {
           "date": "2024-12-04",
-          "cash": 36852.2944,
-          "total_value": 134937.05209999997,
+          "cash": 50106.36290000007,
+          "total_value": 127715.64200000005,
           "num_positions": 20
         },
         {
           "date": "2024-12-11",
-          "cash": 36852.2944,
-          "total_value": 132545.6131,
+          "cash": 50106.36290000007,
+          "total_value": 126855.95920000006,
           "num_positions": 20
         },
         {
           "date": "2024-12-18",
-          "cash": 36852.2944,
-          "total_value": 130388.90849999998,
+          "cash": 50727.33770000007,
+          "total_value": 124908.75320000006,
           "num_positions": 20
         },
         {
           "date": "2024-12-26",
-          "cash": 36852.2944,
-          "total_value": 131983.88669999997,
+          "cash": 50727.33770000007,
+          "total_value": 125609.59810000009,
           "num_positions": 20
         },
         {
-          "date": "2025-01-03",
-          "cash": 36852.2944,
-          "total_value": 131988.2873,
+          "date": "2025-01-02",
+          "cash": 50727.33770000007,
+          "total_value": 125136.89550000004,
           "num_positions": 20
         },
         {
-          "date": "2025-01-10",
-          "cash": 36852.2944,
-          "total_value": 130936.6093,
+          "date": "2025-01-07",
+          "cash": 50727.33770000007,
+          "total_value": 125713.58710000008,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-01-12",
+          "cash": 50727.33770000007,
+          "total_value": 125057.47790000006,
           "num_positions": 20
         },
         {
           "date": "2025-01-17",
-          "cash": 36852.2944,
-          "total_value": 133736.41879999998,
+          "cash": 51807.89410000007,
+          "total_value": 126688.0454000001,
           "num_positions": 20
         },
         {
-          "date": "2025-01-24",
-          "cash": 36852.2944,
-          "total_value": 136763.40399999995,
+          "date": "2025-01-22",
+          "cash": 51807.89410000007,
+          "total_value": 126759.63000000006,
           "num_positions": 20
         },
         {
-          "date": "2025-01-31",
-          "cash": 36852.2944,
-          "total_value": 136419.80869999997,
+          "date": "2025-01-27",
+          "cash": 51807.89410000007,
+          "total_value": 127568.4214000001,
           "num_positions": 20
         },
         {
-          "date": "2025-02-07",
-          "cash": 36852.2944,
-          "total_value": 135844.75590000002,
+          "date": "2025-02-01",
+          "cash": 51807.89410000007,
+          "total_value": 128151.80120000007,
           "num_positions": 20
         },
         {
-          "date": "2025-02-14",
-          "cash": 36852.2944,
-          "total_value": 136142.4471,
+          "date": "2025-02-06",
+          "cash": 51807.89410000007,
+          "total_value": 127927.73530000006,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-02-11",
+          "cash": 52372.96260000007,
+          "total_value": 128152.69880000007,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-02-16",
+          "cash": 52372.96260000007,
+          "total_value": 128853.28970000007,
           "num_positions": 20
         },
         {
           "date": "2025-02-21",
-          "cash": 36852.2944,
-          "total_value": 135604.1367,
+          "cash": 53021.77260000008,
+          "total_value": 129113.60580000003,
           "num_positions": 20
         },
         {
-          "date": "2025-02-28",
-          "cash": 36852.2944,
-          "total_value": 136081.55299999999,
+          "date": "2025-02-26",
+          "cash": 53021.77260000008,
+          "total_value": 129753.58370000008,
           "num_positions": 20
         },
         {
-          "date": "2025-03-07",
-          "cash": 36852.2944,
-          "total_value": 135806.9104,
+          "date": "2025-03-03",
+          "cash": 53021.77260000008,
+          "total_value": 129886.99400000011,
           "num_positions": 20
         },
         {
-          "date": "2025-03-14",
-          "cash": 36852.2944,
-          "total_value": 134481.3605,
+          "date": "2025-03-08",
+          "cash": 53021.77260000008,
+          "total_value": 130739.25100000006,
           "num_positions": 20
         },
         {
-          "date": "2025-03-21",
-          "cash": 36852.2944,
-          "total_value": 131131.13039999997,
+          "date": "2025-03-13",
+          "cash": 53021.77260000008,
+          "total_value": 129321.01360000011,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-03-18",
+          "cash": 53021.77260000008,
+          "total_value": 131342.59730000008,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-03-23",
+          "cash": 53021.77260000008,
+          "total_value": 131091.9583000001,
           "num_positions": 20
         },
         {
           "date": "2025-03-28",
-          "cash": 36852.2944,
-          "total_value": 130927.77179999997,
+          "cash": 53021.77260000008,
+          "total_value": 131147.32100000008,
           "num_positions": 20
         },
         {
-          "date": "2025-04-04",
-          "cash": 36852.2944,
-          "total_value": 122845.05890000002,
+          "date": "2025-04-02",
+          "cash": 53021.77260000008,
+          "total_value": 132143.83610000007,
           "num_positions": 20
         },
         {
-          "date": "2025-04-11",
-          "cash": 36852.2944,
-          "total_value": 125953.25830000003,
+          "date": "2025-04-07",
+          "cash": 53021.77260000008,
+          "total_value": 125464.63770000008,
           "num_positions": 20
         },
         {
-          "date": "2025-04-21",
-          "cash": 36852.2944,
-          "total_value": 125326.8936,
+          "date": "2025-04-12",
+          "cash": 52446.622600000075,
+          "total_value": 127984.89770000009,
           "num_positions": 20
         },
         {
-          "date": "2025-04-28",
-          "cash": 36852.2944,
-          "total_value": 128443.8153,
+          "date": "2025-04-17",
+          "cash": 52446.622600000075,
+          "total_value": 130396.6218000001,
           "num_positions": 20
         },
         {
-          "date": "2025-05-05",
-          "cash": 36852.2944,
-          "total_value": 135621.20620000002,
+          "date": "2025-04-22",
+          "cash": 56115.36150000007,
+          "total_value": 131521.42230000006,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-04-27",
+          "cash": 56115.36150000007,
+          "total_value": 132644.1906000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-05-02",
+          "cash": 56115.36150000007,
+          "total_value": 134045.76080000005,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-05-07",
+          "cash": 56603.417200000076,
+          "total_value": 135077.93740000008,
           "num_positions": 20
         },
         {
           "date": "2025-05-12",
-          "cash": 36852.2944,
-          "total_value": 142326.9275,
+          "cash": 56603.417200000076,
+          "total_value": 135143.75110000008,
           "num_positions": 20
         },
         {
-          "date": "2025-05-19",
-          "cash": 36852.2944,
-          "total_value": 148979.8618,
+          "date": "2025-05-17",
+          "cash": 56603.417200000076,
+          "total_value": 137855.69400000013,
           "num_positions": 20
         },
         {
-          "date": "2025-05-26",
-          "cash": 36852.2944,
-          "total_value": 154634.14280000003,
+          "date": "2025-05-22",
+          "cash": 56603.417200000076,
+          "total_value": 138784.52210000006,
           "num_positions": 20
         },
         {
-          "date": "2025-06-02",
-          "cash": 36852.2944,
-          "total_value": 154946.5483,
+          "date": "2025-05-27",
+          "cash": 56603.417200000076,
+          "total_value": 139787.3537000001,
           "num_positions": 20
         },
         {
-          "date": "2025-06-09",
-          "cash": 36852.2944,
-          "total_value": 157691.33090000003,
+          "date": "2025-06-01",
+          "cash": 56603.417200000076,
+          "total_value": 140172.27710000006,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-06-06",
+          "cash": 56603.417200000076,
+          "total_value": 141401.41840000008,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-06-11",
+          "cash": 57127.01220000008,
+          "total_value": 140883.89900000006,
           "num_positions": 20
         },
         {
           "date": "2025-06-16",
-          "cash": 36852.2944,
-          "total_value": 156802.16090000005,
+          "cash": 57127.01220000008,
+          "total_value": 141270.57690000007,
           "num_positions": 20
         },
         {
-          "date": "2025-06-23",
-          "cash": 36852.2944,
-          "total_value": 158313.92260000002,
+          "date": "2025-06-21",
+          "cash": 57127.01220000008,
+          "total_value": 140437.24030000006,
           "num_positions": 20
         },
         {
-          "date": "2025-06-30",
-          "cash": 36852.2944,
-          "total_value": 159716.808,
+          "date": "2025-06-26",
+          "cash": 57127.01220000008,
+          "total_value": 142139.11430000007,
           "num_positions": 20
         },
         {
-          "date": "2025-07-07",
-          "cash": 36852.2944,
-          "total_value": 158894.53699999998,
+          "date": "2025-07-01",
+          "cash": 57127.01220000008,
+          "total_value": 145458.83570000005,
           "num_positions": 20
         },
         {
-          "date": "2025-07-14",
-          "cash": 36852.2944,
-          "total_value": 165180.54550000004,
+          "date": "2025-07-06",
+          "cash": 57127.01220000008,
+          "total_value": 144268.82640000008,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-07-11",
+          "cash": 57127.01220000008,
+          "total_value": 144105.6122000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-07-16",
+          "cash": 57127.01220000008,
+          "total_value": 144082.5344000001,
           "num_positions": 20
         },
         {
           "date": "2025-07-21",
-          "cash": 36852.2944,
-          "total_value": 164824.96680000002,
+          "cash": 57127.01220000008,
+          "total_value": 144744.77010000008,
           "num_positions": 20
         },
         {
-          "date": "2025-07-28",
-          "cash": 36852.2944,
-          "total_value": 167875.80329999997,
+          "date": "2025-07-26",
+          "cash": 57127.01220000008,
+          "total_value": 147149.49430000008,
           "num_positions": 20
         },
         {
-          "date": "2025-08-04",
-          "cash": 36852.2944,
-          "total_value": 165932.3785,
+          "date": "2025-07-31",
+          "cash": 57127.01220000008,
+          "total_value": 147024.91140000013,
           "num_positions": 20
         },
         {
-          "date": "2025-08-11",
-          "cash": 36852.2944,
-          "total_value": 165870.0464,
+          "date": "2025-08-05",
+          "cash": 57127.01220000008,
+          "total_value": 147051.2164000001,
           "num_positions": 20
         },
         {
-          "date": "2025-08-18",
-          "cash": 36852.2944,
-          "total_value": 166306.66969999997,
+          "date": "2025-08-10",
+          "cash": 57127.01220000008,
+          "total_value": 147649.4126000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-08-15",
+          "cash": 57127.01220000008,
+          "total_value": 151050.21120000005,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-08-20",
+          "cash": 57127.01220000008,
+          "total_value": 150279.45470000012,
           "num_positions": 20
         },
         {
           "date": "2025-08-25",
-          "cash": 36852.2944,
-          "total_value": 167351.27740000002,
+          "cash": 57127.01220000008,
+          "total_value": 149768.82820000008,
           "num_positions": 20
         },
         {
-          "date": "2025-09-01",
-          "cash": 36852.2944,
-          "total_value": 168081.6282,
+          "date": "2025-08-30",
+          "cash": 57127.01220000008,
+          "total_value": 149250.27740000005,
           "num_positions": 20
         },
         {
-          "date": "2025-09-08",
-          "cash": 36852.2944,
-          "total_value": 167525.4341,
+          "date": "2025-09-04",
+          "cash": 57127.01220000008,
+          "total_value": 149650.88720000008,
           "num_positions": 20
         },
         {
-          "date": "2025-09-15",
-          "cash": 36852.2944,
-          "total_value": 168426.4751,
+          "date": "2025-09-09",
+          "cash": 57127.01220000008,
+          "total_value": 149472.70010000007,
           "num_positions": 20
         },
         {
-          "date": "2025-09-22",
-          "cash": 36852.2944,
-          "total_value": 170944.12470000001,
+          "date": "2025-09-14",
+          "cash": 57127.01220000008,
+          "total_value": 150696.6413000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-09-19",
+          "cash": 57082.49520000008,
+          "total_value": 151153.6066000001,
+          "num_positions": 20
+        },
+        {
+          "date": "2025-09-24",
+          "cash": 57082.49520000008,
+          "total_value": 152436.1030000001,
           "num_positions": 20
         },
         {
           "date": "2025-09-29",
-          "cash": 36852.2944,
-          "total_value": 169264.15660000002,
+          "cash": 57082.49520000008,
+          "total_value": 152517.68650000016,
           "num_positions": 20
         },
         {
-          "date": "2025-10-06",
-          "cash": 36852.2944,
-          "total_value": 171685.10059999998,
+          "date": "2025-10-04",
+          "cash": 57082.49520000008,
+          "total_value": 154480.02860000008,
           "num_positions": 20
         },
         {
-          "date": "2025-10-13",
-          "cash": 36852.2944,
-          "total_value": 169003.90740000003,
+          "date": "2025-10-09",
+          "cash": 57082.49520000008,
+          "total_value": 153230.11860000005,
           "num_positions": 20
         },
         {
-          "date": "2025-10-20",
-          "cash": 36852.2944,
-          "total_value": 171738.40649999995,
+          "date": "2025-10-14",
+          "cash": 57082.49520000008,
+          "total_value": 153392.07430000004,
           "num_positions": 20
         },
         {
-          "date": "2025-10-27",
-          "cash": 36852.2944,
-          "total_value": 174203.61019999997,
+          "date": "2025-10-19",
+          "cash": 57082.49520000008,
+          "total_value": 152299.1419000001,
           "num_positions": 20
         },
         {
-          "date": "2025-11-03",
-          "cash": 36852.2944,
-          "total_value": 174548.4208,
+          "date": "2025-10-24",
+          "cash": 57082.49520000008,
+          "total_value": 154075.95660000003,
           "num_positions": 20
         },
         {
-          "date": "2025-11-10",
-          "cash": 36852.2944,
-          "total_value": 181916.88550000003,
+          "date": "2025-10-29",
+          "cash": 57082.49520000008,
+          "total_value": 154419.61930000005,
           "num_positions": 20
         },
         {
-          "date": "2025-11-17",
-          "cash": 36852.2944,
-          "total_value": 179568.85619999998,
+          "date": "2025-11-05",
+          "cash": 62509.64380000008,
+          "total_value": 152676.66090000008,
           "num_positions": 20
         },
         {
-          "date": "2025-11-24",
-          "cash": 36852.2944,
-          "total_value": 179583.30469999998,
+          "date": "2025-11-12",
+          "cash": 62509.64380000008,
+          "total_value": 155360.84590000013,
           "num_positions": 20
         },
         {
-          "date": "2025-12-01",
-          "cash": 36852.2944,
-          "total_value": 196186.0836,
+          "date": "2025-11-19",
+          "cash": 62509.64380000008,
+          "total_value": 153102.60820000013,
           "num_positions": 20
         },
         {
-          "date": "2025-12-08",
-          "cash": 36852.2944,
-          "total_value": 196730.36990000005,
+          "date": "2025-11-26",
+          "cash": 62509.64380000008,
+          "total_value": 155454.14130000008,
           "num_positions": 20
         },
         {
-          "date": "2025-12-15",
-          "cash": 36852.2944,
-          "total_value": 193384.23639999997,
+          "date": "2025-12-03",
+          "cash": 62509.64380000008,
+          "total_value": 155673.62640000007,
           "num_positions": 20
         },
         {
-          "date": "2025-12-22",
-          "cash": 36852.2944,
-          "total_value": 195179.2725,
+          "date": "2025-12-10",
+          "cash": 62509.64380000008,
+          "total_value": 157456.62860000008,
           "num_positions": 20
         },
         {
-          "date": "2025-12-30",
-          "cash": 36852.2944,
-          "total_value": 195061.15499999997,
+          "date": "2025-12-17",
+          "cash": 62509.64380000008,
+          "total_value": 158226.67060000007,
           "num_positions": 20
         },
         {
-          "date": "2026-01-07",
-          "cash": 36852.2944,
-          "total_value": 199365.70159999997,
+          "date": "2025-12-24",
+          "cash": 62509.64380000008,
+          "total_value": 159044.54470000003,
           "num_positions": 20
         },
         {
-          "date": "2026-01-14",
-          "cash": 36852.2944,
-          "total_value": 201180.7597,
+          "date": "2026-01-02",
+          "cash": 62509.64380000008,
+          "total_value": 159442.2299000001,
           "num_positions": 20
         },
         {
-          "date": "2026-01-21",
-          "cash": 36852.2944,
-          "total_value": 205417.88929999998,
+          "date": "2026-01-09",
+          "cash": 62509.64380000008,
+          "total_value": 160111.66210000007,
           "num_positions": 20
         },
         {
-          "date": "2026-01-28",
-          "cash": 36852.2944,
-          "total_value": 203437.13569999998,
+          "date": "2026-01-16",
+          "cash": 62509.64380000008,
+          "total_value": 161447.5860000001,
           "num_positions": 20
         },
         {
-          "date": "2026-02-04",
-          "cash": 36852.2944,
-          "total_value": 209215.1983,
+          "date": "2026-01-23",
+          "cash": 66101.00380000008,
+          "total_value": 161247.25240000008,
           "num_positions": 20
         },
         {
-          "date": "2026-02-11",
-          "cash": 36852.2944,
-          "total_value": 212322.7597,
+          "date": "2026-01-30",
+          "cash": 67990.96400000008,
+          "total_value": 161881.98200000008,
           "num_positions": 20
         },
         {
-          "date": "2026-02-18",
-          "cash": 36852.2944,
-          "total_value": 218196.40539999996,
+          "date": "2026-02-06",
+          "cash": 67990.96400000008,
+          "total_value": 165492.31310000003,
           "num_positions": 20
         },
         {
-          "date": "2026-02-25",
-          "cash": 36852.2944,
-          "total_value": 224149.27379999997,
+          "date": "2026-02-13",
+          "cash": 74042.14070000008,
+          "total_value": 165765.96560000005,
           "num_positions": 20
         },
         {
-          "date": "2026-03-04",
-          "cash": 36852.2944,
-          "total_value": 218331.51829999997,
+          "date": "2026-02-20",
+          "cash": 74042.14070000008,
+          "total_value": 167115.95150000008,
           "num_positions": 20
         },
         {
-          "date": "2026-03-11",
-          "cash": 36852.2944,
-          "total_value": 209938.78319999998,
+          "date": "2026-02-27",
+          "cash": 74042.14070000008,
+          "total_value": 167987.2494000001,
           "num_positions": 20
         },
         {
-          "date": "2026-03-18",
-          "cash": 36852.2944,
-          "total_value": 219916.18699999995,
+          "date": "2026-03-06",
+          "cash": 74055.06070000007,
+          "total_value": 164766.8954000001,
           "num_positions": 20
         },
         {
-          "date": "2026-03-25",
-          "cash": 36852.2944,
-          "total_value": 219297.22949999993,
+          "date": "2026-03-13",
+          "cash": 74055.06070000007,
+          "total_value": 163511.19500000015,
           "num_positions": 20
         },
         {
-          "date": "2026-04-01",
-          "cash": 36852.2944,
-          "total_value": 218564.93619999997,
+          "date": "2026-03-20",
+          "cash": 74055.06070000007,
+          "total_value": 160590.45820000005,
           "num_positions": 20
         },
         {
-          "date": "2026-04-09",
-          "cash": 36852.2944,
-          "total_value": 223999.07789999997,
+          "date": "2026-03-27",
+          "cash": 74055.06070000007,
+          "total_value": 161017.84900000002,
           "num_positions": 20
         },
         {
-          "date": "2026-04-16",
-          "cash": 36852.2944,
-          "total_value": 222146.18759999998,
+          "date": "2026-04-06",
+          "cash": 74055.06070000007,
+          "total_value": 222874.32890000008,
           "num_positions": 20
         },
         {
-          "date": "2026-04-23",
-          "cash": 36852.2944,
-          "total_value": 232747.09709999998,
+          "date": "2026-04-13",
+          "cash": 74055.06070000007,
+          "total_value": 224311.71010000003,
           "num_positions": 20
         },
         {
-          "date": "2026-04-30",
-          "cash": 36852.2944,
-          "total_value": 238039.86819999997,
+          "date": "2026-04-20",
+          "cash": 74055.06070000007,
+          "total_value": 231207.9628000001,
           "num_positions": 20
         },
         {
-          "date": "2026-05-07",
-          "cash": 36852.2944,
-          "total_value": 241218.47150000004,
+          "date": "2026-04-27",
+          "cash": 73510.04070000007,
+          "total_value": 231783.30120000005,
           "num_positions": 20
         },
         {
-          "date": "2026-05-14",
-          "cash": 36852.2944,
-          "total_value": 241596.62170000002,
+          "date": "2026-05-04",
+          "cash": 73581.50080000007,
+          "total_value": 230547.88560000007,
           "num_positions": 20
         },
         {
-          "date": "2026-05-21",
-          "cash": 36852.2944,
-          "total_value": 241734.5654,
+          "date": "2026-05-11",
+          "cash": 73581.50080000007,
+          "total_value": 233386.23180000004,
           "num_positions": 20
         },
         {
-          "date": "2026-05-28",
-          "cash": 36852.2944,
-          "total_value": 283669.1923,
+          "date": "2026-05-18",
+          "cash": 71813.20680000007,
+          "total_value": 226318.2458000001,
           "num_positions": 20
         },
         {
-          "date": "2026-06-04",
-          "cash": 42111.269400000005,
-          "total_value": 283815.7153999999,
+          "date": "2026-05-25",
+          "cash": 71813.20680000007,
+          "total_value": 228669.40120000008,
           "num_positions": 20
         },
         {
-          "date": "2026-06-11",
-          "cash": 42111.269400000005,
-          "total_value": 275497.1014,
+          "date": "2026-06-01",
+          "cash": 71813.20680000007,
+          "total_value": 228084.8068000001,
           "num_positions": 20
         },
         {
-          "date": "2026-06-18",
-          "cash": 42111.269400000005,
-          "total_value": 278721.38139999995,
+          "date": "2026-06-08",
+          "cash": 115588.4188000001,
+          "total_value": 227146.72080000007,
           "num_positions": 20
         },
         {
-          "date": "2026-06-25",
-          "cash": 42111.269400000005,
-          "total_value": 285464.2895,
+          "date": "2026-06-15",
+          "cash": 116160.6588000001,
+          "total_value": 232041.1308000001,
           "num_positions": 20
+        },
+        {
+          "date": "2026-06-22",
+          "cash": 107781.00880000007,
+          "total_value": 232741.94880000007,
+          "num_positions": 20
+        },
+        {
+          "date": "2026-06-23",
+          "cash": 232973.2688000001,
+          "total_value": 232973.2688000001,
+          "num_positions": 0
+        },
+        {
+          "date": "2026-06-27",
+          "cash": 232973.2688000001,
+          "total_value": 232973.2688000001,
+          "num_positions": 0
         },
         {
           "date": "2026-06-30",
-          "cash": 42111.269400000005,
-          "total_value": 283036.0695,
-          "num_positions": 20
+          "cash": 232973.2688000001,
+          "total_value": 232973.2688000001,
+          "num_positions": 0
         },
         {
-          "date": "2026-07-05",
-          "cash": 42111.269400000005,
-          "total_value": 284524.9115,
-          "num_positions": 20
+          "date": "2026-07-02",
+          "cash": 232973.2688000001,
+          "total_value": 232973.2688000001,
+          "num_positions": 0
         },
         {
-          "date": "2026-07-10",
-          "cash": 42111.269400000005,
-          "total_value": 283366.48939999996,
-          "num_positions": 20
+          "date": "2026-07-07",
+          "cash": 232973.2688000001,
+          "total_value": 232973.2688000001,
+          "num_positions": 0
         },
         {
           "date": "2026-07-12",
-          "cash": 42111.269400000005,
-          "total_value": 283366.48939999996,
-          "num_positions": 20
+          "cash": 232973.2688000001,
+          "total_value": 232973.2688000001,
+          "num_positions": 0
+        },
+        {
+          "date": "2026-07-12",
+          "cash": 232973.2688000001,
+          "total_value": 232973.2688000001,
+          "num_positions": 0
         }
       ]
     }

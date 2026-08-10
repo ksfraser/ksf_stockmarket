@@ -59,3 +59,11 @@ recreate_*.py
 test_*.py
 create_*.py
 *.db.migrated*
+
+# Secrets / credentials (root-level .env holds DB_PASS; not just config/)
+.env
+config/external_auth.json
+
+# Runtime artifacts
+*.log
+.advisor_backtest_queue

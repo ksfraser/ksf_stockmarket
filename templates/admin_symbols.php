@@ -1,0 +1,379 @@
+<?php
+/** @var array $data */
+$data = $data ?? [];
+$symbols   = $data['symbols']   ?? [];
+$filter    = $data['filter']    ?? 'all';
+$search    = $data['search']    ?? '';
+$totalActive   = $data['total_active']   ?? 0;
+$totalInactive = $data['total_inactive'] ?? 0;
+$totalAll      = $data['total_all']      ?? 0;
+$page          = (int)($data['page'] ?? 1);
+$perPage       = (int)($data['per_page'] ?? 500);
+$totalPages    = (int)($data['total_pages'] ?? 1);
+
+$start = ($page - 1) * $perPage + 1;
+$end   = min($page * $perPage, $totalAll);
+
+$batchResult = null;
+$batchResultPath = ($GLOBALS['APP_ROOT'] ?? '') . '/results/batch_cleanup_result.json';
+if (is_readable($batchResultPath)) {
+    $raw = @file_get_contents($batchResultPath);
+    if ($raw) {
+        $batchResult = json_decode($raw, true);
+    }
+}
+
+$preserve = [
+    'action'   => 'admin_symbols',
+    'filter'   => $filter,
+    'search'   => $search,
+    'page'     => $page,
+    'per_page' => $perPage,
+];
+$baseQsNoPage = http_build_query(array_diff_key($preserve, ['page' => $page]));
+?>
+<div class="card">
+    <div class="card-header">Symbol Management</div>
+
+    <!-- Filter bar -->
+    <form method="GET" class="search-bar" style="margin-bottom:12px">
+        <input type="hidden" name="action" value="admin_symbols">
+        <input type="hidden" name="page" value="1">
+        <select name="filter" onchange="this.form.submit()">
+            <option value="all"     <?= $filter === 'all'     ? 'selected' : '' ?>>All (<?= $totalAll ?>)</option>
+            <option value="active"  <?= $filter === 'active'  ? 'selected' : '' ?>>Active (<?= $totalActive ?>)</option>
+            <option value="inactive" <?= $filter === 'inactive' ? 'selected' : '' ?>>Inactive (<?= $totalInactive ?>)</option>
+            <option value="no_exchange" <?= $filter === 'no_exchange' ? 'selected' : '' ?>>No Exchange</option>
+            <option value="needs_review" <?= $filter === 'needs_review' ? 'selected' : '' ?>>Needs Review</option>
+        </select>
+        <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="Search symbol or name...">
+        <button type="submit" class="btn btn-sm">Filter</button>
+    </form>
+
+    <!-- Batch cleanup toolbar -->
+    <form method="POST" style="margin-bottom:12px; display:inline-flex; align-items:center; gap:8px;"
+          onsubmit="return confirm('Batch cleanup will enrich all dead-name symbols via yfinance in the background. This may take several minutes. Continue?');">
+        <input type="hidden" name="action" value="admin_symbols">
+        <input type="hidden" name="subaction" value="run_batch">
+        <button type="submit" class="btn btn-sm" style="background:var(--orange);">Run Batch Cleanup</button>
+    </form>
+
+    <?php if ($batchResult): ?>
+    <div style="margin-bottom:12px; padding:12px; border-radius:var(--radius); background:rgba(0,0,0,0.15); font-size:0.85em;">
+        <strong>Last batch cleanup:</strong>
+        <?php if ($batchResult['status'] === 'complete'): ?>
+        <span style="color:var(--green)">Completed</span> —
+        total=<?= (int)($batchResult['total'] ?? 0) ?> /
+        updated=<?= (int)($batchResult['updated'] ?? 0) ?> /
+        skipped=<?= (int)($batchResult['skipped'] ?? 0) ?>
+        <?php if (!empty($batchResult['started_at'])): ?>
+        (started <?= htmlspecialchars($batchResult['started_at']) ?>)
+        <?php endif; ?>
+        <?php elseif ($batchResult['status'] === 'already_running'): ?>
+        <span style="color:var(--yellow)">Already running</span> — check log.
+        <?php else: ?>
+        <span style="color:var(--red)"><?= htmlspecialchars($batchResult['status'] ?? 'unknown') ?></span>
+        <?php endif; ?>
+        <a href="?action=admin_symbols&subaction=view_batch_log" class="btn btn-sm" style="padding:2px 8px; font-size:0.8em;">View Log</a>
+    </div>
+    <?php endif; ?>
+
+    <!-- Toolbar: page size + pager summary -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <form method="GET" style="display:inline-flex; align-items:center; gap:6px; font-size:0.85em;">
+            <input type="hidden" name="action" value="admin_symbols">
+            <input type="hidden" name="filter" value="<?= htmlspecialchars($filter) ?>">
+            <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
+            <input type="hidden" name="page" value="1">
+            <label>Show</label>
+            <select name="per_page" onchange="this.form.submit()">
+                <?php foreach ($perPageOptions as $opt): ?>
+                    <option value="<?= $opt ?>" <?= $perPage === $opt ? 'selected' : '' ?>><?= $opt ?></option>
+                <?php endforeach; ?>
+            </select>
+            <span class="muted">per page</span>
+        </form>
+
+        <div style="display:flex; align-items:center; gap:8px; font-size:0.85em;">
+            <span class="muted">Showing <?= $start ?>–<?= $end ?> of <?= $totalAll ?></span>
+            <a href="?<?= $baseQsNoPage ?>&page=<?= max(1, $page - 1) ?>" class="btn btn-sm" style="<?= $page <= 1 ? 'opacity:0.4;pointer-events:none;' : '' ?>">◀ Prev</a>
+            <span style="color:var(--text2);">Page <?= $page ?> / <?= $totalPages ?></span>
+            <a href="?<?= $baseQsNoPage ?>&page=<?= min($totalPages, $page + 1) ?>" class="btn btn-sm" style="<?= $page >= $totalPages ? 'opacity:0.4;pointer-events:none;' : '' ?>">Next ▶</a>
+        </div>
+    </div>
+
+    <form method="GET" action="?action=refresh_all_prices" style="margin-bottom:12px; display:inline-flex; align-items:center; gap:8px;">
+        <input type="hidden" name="redirect" value="?<?= htmlspecialchars($baseQsNoPage) ?>">
+        <label style="font-size:0.85em; display:flex; align-items:center; gap:4px; cursor:pointer;">
+            <input type="checkbox" name="full_history" value="1" onchange="var btn=this.form.querySelector('button'); btn.textContent=this.checked?'Refresh All History':'Refresh Recent Gap'">
+            All History
+        </label>
+        <button type="submit" class="btn btn-sm" style="background:var(--orange);">Refresh Recent Gap</button>
+    </form>
+
+    <!-- Inline deactivate reason form (shown via JS) -->
+    <div id="deactivate-form" style="display:none; margin-bottom:16px; padding:16px; background:rgba(0,0,0,0.2); border-radius:8px;">
+        <form method="POST" action="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=deactivate">
+            <input type="hidden" id="deactivate-symbol" name="symbol" value="">
+            <label style="font-size:0.85em; color:var(--text3)">Reason for deactivating <strong id="deactivate-symbol-label"></strong>:</label>
+            <textarea name="reason" rows="2" style="width:100%; margin:8px 0; background:rgba(0,0,0,0.2); border:1px solid var(--border); color:var(--text); padding:8px; border-radius:4px;" placeholder="e.g. Taken private, delisted, acquired, data unreliable..."></textarea>
+            <p style="font-size:0.75em; color:var(--text3); margin-bottom:8px;">
+                ℹ️ Inactive symbols keep all historical data for backtesting &amp; After Action Reports. Only new price fetching stops.
+            </p>
+            <button type="submit" class="btn btn-sm" style="background:var(--red)">Deactivate</button>
+            <button type="button" class="btn btn-sm" onclick="document.getElementById('deactivate-form').style.display='none'">Cancel</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Exchange</th>
+                <th>Sector</th>
+                <th>Status</th>
+                <th>Deactivation Date</th>
+                <th>Reason</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($symbols as $s): ?>
+            <tr>
+                <td><strong><a href="?action=detail&symbol=<?= urlencode($s['symbol']) ?>" style="color:var(--text);text-decoration:none;"><?= htmlspecialchars($s['symbol']) ?></a></strong></td>
+                <td><?= $s['name'] ? htmlspecialchars($s['name']) : '<span class="text-muted">—</span>' ?></td>
+                <td><?= $s['exchange'] ? htmlspecialchars($s['exchange']) : '<span class="text-muted">—</span>' ?></td>
+                <td><?= $s['sector'] ? htmlspecialchars($s['sector']) : '<span class="text-muted">—</span>' ?></td>
+                <td>
+                    <?php if ((int)$s['is_active'] === 1): ?>
+                        <span style="color:var(--green)">&#x2713; Active</span>
+                    <?php else: ?>
+                        <span style="color:var(--red)">&#x2717; Inactive</span>
+                    <?php endif; ?>
+                </td>
+                <td style="font-size:0.85em; color:var(--text3)">
+                    <?= $s['deactivated_at'] ? date('Y-m-d', strtotime($s['deactivated_at'])) : '—' ?>
+                </td>
+                <td style="font-size:0.8em; max-width:200px; color:var(--text3)">
+                    <?= htmlspecialchars(mb_strimwidth($s['deactivated_reason'] ?? '', 0, 60, '...')) ?>
+                </td>
+                <td>
+                    <button class="btn btn-sm" style="background:var(--blue); padding:2px 8px; font-size:0.8em;"
+                            onclick="toggleRowEdit('<?= htmlspecialchars($s['symbol']) ?>')">Edit</button>
+                    <?php if ((int)$s['is_active'] === 1): ?>
+                        <button class="btn btn-sm" style="background:var(--orange); padding:2px 8px; font-size:0.8em;"
+                                onclick="showDeactivate('<?= htmlspecialchars($s['symbol']) ?>')">
+                            Deactivate
+                        </button>
+                    <?php else: ?>
+                        <a href="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=reactivate&symbol=<?= urlencode($s['symbol']) ?>"
+                           class="btn btn-sm" style="padding:2px 8px; font-size:0.8em; background:var(--green)">Reactivate</a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            <tr class="edit-row" id="edit-<?= htmlspecialchars($s['symbol']) ?>" style="display:none; background:rgba(0,0,0,0.15);">
+                <td colspan="8">
+                    <form method="POST" action="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=save_symbol" style="display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; align-items:end; padding:8px 0;">
+                        <input type="hidden" name="symbol" value="<?= htmlspecialchars($s['symbol']) ?>">
+                        <div>
+                            <label style="font-size:0.75em; color:var(--text3)">Name</label>
+                            <input type="text" name="name" value="<?= htmlspecialchars($s['name'] ?? '') ?>" style="width:100%">
+                        </div>
+                        <div>
+                            <label style="font-size:0.75em; color:var(--text3)">Exchange</label>
+                            <select name="exchange" style="width:100%">
+                                <option value="">—</option>
+                                <option value="TSX" <?= $s['exchange'] === 'TSX' ? 'selected' : '' ?>>TSX</option>
+                                <option value="TSXV" <?= $s['exchange'] === 'TSXV' ? 'selected' : '' ?>>TSXV</option>
+                                <option value="NYSE" <?= $s['exchange'] === 'NYSE' ? 'selected' : '' ?>>NYSE</option>
+                                <option value="NASDAQ" <?= $s['exchange'] === 'NASDAQ' ? 'selected' : '' ?>>NASDAQ</option>
+                                <option value="AMEX" <?= $s['exchange'] === 'AMEX' ? 'selected' : '' ?>>AMEX</option>
+                                <option value="LSE" <?= $s['exchange'] === 'LSE' ? 'selected' : '' ?>>LSE</option>
+                                <option value="HKEX" <?= $s['exchange'] === 'HKEX' ? 'selected' : '' ?>>HKEX</option>
+                                <option value="ASX" <?= $s['exchange'] === 'ASX' ? 'selected' : '' ?>>ASX</option>
+                                <option value="Other" <?= $s['exchange'] === 'Other' ? 'selected' : '' ?>>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size:0.75em; color:var(--text3)">Sector</label>
+                            <input type="text" name="sector" value="<?= htmlspecialchars($s['sector'] ?? '') ?>" placeholder="optional" style="width:100%">
+                        </div>
+                        <div style="display:flex; gap:4px; align-items:end;">
+                            <button type="submit" class="btn btn-sm" style="background:var(--green)">Save</button>
+                            <button type="button" class="btn btn-sm" onclick="toggleRowEdit('<?= htmlspecialchars($s['symbol']) ?>')">Cancel</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <!-- Bottom pager -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; flex-wrap:wrap; gap:8px;">
+        <span class="muted" style="font-size:0.85em;">Showing <?= $start ?>–<?= $end ?> of <?= $totalAll ?></span>
+        <div style="display:flex; gap:6px; align-items:center;">
+            <a href="?<?= $baseQsNoPage ?>&page=<?= max(1, $page - 1) ?>" class="btn btn-sm" style="<?= $page <= 1 ? 'opacity:0.4;pointer-events:none;' : '' ?>">◀ Prev</a>
+            <span style="color:var(--text2); font-size:0.85em;">Page <?= $page ?> of <?= $totalPages ?></span>
+            <a href="?<?= $baseQsNoPage ?>&page=<?= min($totalPages, $page + 1) ?>" class="btn btn-sm" style="<?= $page >= $totalPages ? 'opacity:0.4;pointer-events:none;' : '' ?>">Next ▶</a>
+        </div>
+    </div>
+</div>
+
+<!-- Exchange Mapping section -->
+<?php
+$exchangeCtrl = new SymbolAdminController();
+$mappings = $exchangeCtrl->listExchangeMappings();
+?>
+<div class="card">
+    <div class="card-header">Exchange Mapping <span style="font-size:0.7em; color:var(--text3); font-weight:normal">(user-editable symbol-to-exchange mappings)</span></div>
+    <table>
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Exchange</th>
+                <th>Data Source</th>
+                <th>Yahoo Ticker</th>
+                <th>Notes</th>
+                <th>Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($mappings as $m): ?>
+            <tr>
+                <td><strong><a href="?action=detail&symbol=<?= urlencode($m['symbol']) ?>" style="color:var(--text);text-decoration:none;"><?= htmlspecialchars($m['symbol']) ?></a></strong></td>
+                <td><?= $m['exchange'] ? htmlspecialchars($m['exchange']) : '<span class="text-muted">—</span>' ?></td>
+                <td><?= htmlspecialchars($m['data_source']) ?></td>
+                <td><?= htmlspecialchars($m['yahoo_ticker'] ?? $m['symbol']) ?></td>
+                <td><?= htmlspecialchars($m['notes'] ?? '—') ?></td>
+                <td style="font-size:0.85em"><?= date('Y-m-d H:i', strtotime($m['updated_at'])) ?></td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <!-- Add new mapping -->
+    <h4 style="margin-top:20px; font-size:0.9em; color:var(--text2)">Add / Update Mapping</h4>
+    <form method="POST" action="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=save_mapping" style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr 2fr auto; gap:8px; align-items:end">
+        <div>
+            <label style="font-size:0.75em; color:var(--text3)">Symbol</label>
+            <input type="text" name="symbol" placeholder="e.g. KEG-UN.TO" style="width:100%">
+        </div>
+        <div>
+            <label style="font-size:0.75em; color:var(--text3)">Exchange</label>
+            <select name="exchange" style="width:100%">
+                <option value="TSX">TSX</option>
+                <option value="TSXV">TSXV</option>
+                <option value="NYSE">NYSE</option>
+                <option value="NASDAQ">NASDAQ</option>
+                <option value="AMEX">AMEX</option>
+                <option value="LSE">LSE</option>
+                <option value="HKEX">HKEX</option>
+                <option value="ASX">ASX</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div>
+            <label style="font-size:0.75em; color:var(--text3)">Data Source</label>
+            <select name="data_source" style="width:100%">
+                <option value="yahoo">Yahoo Finance</option>
+                <option value="alpha_vantage">Alpha Vantage</option>
+                <option value="manual">Manual</option>
+            </select>
+        </div>
+        <div>
+            <label style="font-size:0.75em; color:var(--text3)">Yahoo Ticker</label>
+            <input type="text" name="yahoo_ticker" placeholder="(override)" style="width:100%">
+        </div>
+        <div>
+            <label style="font-size:0.75em; color:var(--text3)">Notes</label>
+            <input type="text" name="notes" placeholder="Optional" style="width:100%">
+        </div>
+        <button type="submit" class="btn btn-sm">Save</button>
+    </form>
+</div>
+
+<!-- Watchlist Management Section -->
+<div class="card" style="margin-top:24px;">
+    <div class="card-header">&#128274; Watchlist Management (Track symbols without portfolio)</div>
+    
+    <?php if (!empty($_SESSION['flash_message'])): ?>
+        <div style="background:rgba(104,211,145,0.15);border:1px solid var(--green);color:var(--green);padding:12px;border-radius:var(--radius);margin-bottom:16px;font-size:0.9em;">
+            <?= htmlspecialchars($_SESSION['flash_message']) ?>
+        </div>
+        <?php unset($_SESSION['flash_message']); ?>
+    <?php endif; ?>
+
+    <!-- Existing watchlist symbols -->
+    <?php if (!empty($watchlistSymbols)): ?>
+    <table style="margin-bottom:20px;">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Monitor Volume</th>
+                <th>Monitor Price</th>
+                <th>Volume Threshold</th>
+                <th>Notes</th>
+                <th>Added</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($watchlistSymbols as $w): ?>
+            <tr>
+                <td><a href="?action=detail&symbol=<?= urlencode($w['symbol']) ?>"><?= htmlspecialchars($w['symbol']) ?></a></td>
+                <td style="text-align:center;"><?= $w['monitor_volume'] ? '&#10003;' : '&#10007;' ?></td>
+                <td style="text-align:center;"><?= $w['monitor_price'] ? '&#10003;' : '&#10007;' ?></td>
+                <td style="text-align:center;"><?= htmlspecialchars($w['volume_spike_threshold']) ?>x</td>
+                <td><?= htmlspecialchars($w['notes'] ?? '—') ?></td>
+                <td style="font-size:0.85em"><?= date('Y-m-d', strtotime($w['added_at'])) ?></td>
+                <td>
+                    <form method="POST" action="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=remove_watchlist" style="display:inline" onsubmit="return confirm('Remove this symbol from watchlist?');">
+                        <input type="hidden" name="symbol" value="<?= htmlspecialchars($w['symbol']) ?>">
+                        <button type="submit" class="btn btn-sm" style="background:var(--red);font-size:0.8em;padding:4px 8px;">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php else: ?>
+        <p style="color:var(--text3);font-size:0.9em;margin-bottom:16px;">No symbols in watchlist. Add one below.</p>
+    <?php endif; ?>
+
+    <!-- Add to watchlist form -->
+    <h4 style="margin-top:16px; font-size:0.9em; color:var(--text2)">Add Symbol to Watchlist</h4>
+    <form method="POST" action="?<?= htmlspecialchars($baseQsNoPage) ?>&subaction=add_watchlist" style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr auto; gap:8px; align-items:end">
+        <div>
+            <label style="font-size:0.75em; color:var(--text3)">Symbol</label>
+            <input type="text" name="symbol" placeholder="e.g. AAPL" required style="width:100%">
+        </div>
+        <div>
+            <label style="font-size:0.75em; color:var(--text3)">Volume Threshold</label>
+            <input type="number" name="volume_spike_threshold" value="3.0" step="0.5" min="1" max="10" style="width:100%">
+        </div>
+        <div>
+            <label style="font-size:0.75em; color:var(--text3)">Notes</label>
+            <input type="text" name="notes" placeholder="Optional" style="width:100%">
+        </div>
+        <button type="submit" class="btn btn-sm">Add to Watchlist</button>
+    </form>
+    <p style="font-size:0.75em; color:var(--text3); margin-top:8px;">
+        &#128172; Symbols added here are tracked for volume/price alerts but are NOT part of your portfolio. Useful for monitoring stocks you're considering.
+    </p>
+</div>
+
+<script>
+function showDeactivate(symbol) {
+    document.getElementById('deactivate-symbol').value = symbol;
+    document.getElementById('deactivate-symbol-label').textContent = symbol;
+    document.getElementById('deactivate-form').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function toggleRowEdit(symbol) {
+    var row = document.getElementById('edit-' + symbol);
+    if (!row) return;
+    row.style.display = row.style.display === 'none' ? '' : 'none';
+}
+</script>

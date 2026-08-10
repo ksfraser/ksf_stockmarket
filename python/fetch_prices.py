@@ -101,10 +101,20 @@ def _update_manifest(manifest: dict, sym: str, status: str, rows: int = 0,
     }
 
 if _cfg is not None:
+    # db_password normally comes from the decrypted Ansible vault; fall back to
+    # the DB_PASSWORD env var / .env (consistent with the other scripts) when
+    # the vault is unavailable in this environment.
+    _env = _load_env_db() or {}
+    _db_password = (
+        getattr(_cfg, 'db_password', None)
+        or os.environ.get('DB_PASSWORD')
+        or _env.get('DB_PASS')
+        or ''
+    )
     MYSQL = dict(
         host=_cfg.data.db_host,
         user=_cfg.data.db_user,
-        password=_cfg.db_password,
+        password=_db_password,
         database=_cfg.data.db_name,
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor,

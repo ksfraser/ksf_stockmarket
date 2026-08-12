@@ -214,10 +214,9 @@ class AdvisorController {
         // 5. ATR confirmation
         if (!empty($gates['require_atr_confirmation'])) {
             $stmt = $this->pdo->prepare("
-                SELECT stop_factor, trailing_pct, pnl_pct
+                SELECT atr_multiple, bounce_back_rate, n_drops
                 FROM atr_stop_optimization
-                WHERE symbol = :s
-                ORDER BY pnl_pct DESC
+                WHERE symbol = :s AND recommended = 1
                 LIMIT 1
             ");
             $stmt->execute([':s' => $symbol]);
@@ -227,7 +226,7 @@ class AdvisorController {
                 'name' => 'ATR confirmation',
                 'result' => $atrOk ? 'PASS' : 'WARN',
                 'detail' => $atrOk
-                    ? "stop={$atr['stop_factor']}x trailing={$atr['trailing_pct']}% PnL=" . number_format((float)$atr['pnl_pct'], 1) . "%"
+                    ? "recommended stop={$atr['atr_multiple']}x  bounce-back=" . number_format((float)$atr['bounce_back_rate'] * 100, 1) . "%  (n=" . (int)$atr['n_drops'] . ")"
                     : 'No ATR data',
             ];
         }

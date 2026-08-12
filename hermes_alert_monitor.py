@@ -89,7 +89,7 @@ def build_llm_prompt(alert_type: str, symbol: str, payload: dict) -> str:
     prompts = {
         'volume_spike': f"""Analyze {symbol} unusual volume alert.
         
-Volume ratio: {payload.get('ratio', 'N/A')}x average ({payload.get('current_volume', 'N/A')} vs {payload.get('avg_volume', 'N/A')})
+Volume ratio: {payload.get('volume_ratio', 'N/A')}x average ({payload.get('today_volume', 'N/A')} vs {payload.get('avg_volume', 'N/A')})
 
 Return brief analysis (2-3 sentences) on:
 1. What this volume spike likely indicates
@@ -98,7 +98,7 @@ Return brief analysis (2-3 sentences) on:
         
         'natr_spike': f"""Analyze {symbol} volatility spike.
         
-NATR ratio: {payload.get('ratio', 'N/A')}x average ({payload.get('natr_20d', 'N/A')} vs {payload.get('natr_avg', 'N/A')})
+NATR ratio: {payload.get('natr_ratio', 'N/A')}x average ({payload.get('natr_current', 'N/A')} vs {payload.get('natr_avg', 'N/A')})
 
 From research, NATR (Normalized Average True Range) is the only predictive indicator (r=0.16@20d).
 Assess: 1) Implied volatility regime change, 2) Timing implications for next 20 days, 3) Risk management.
@@ -107,7 +107,7 @@ Return 2-3 sentences with actionable insight.""",
         
         'gap_up': f"""Analyze {symbol} gap up.
         
-Gap: {payload.get('gap_pct', 'N/A')}% (open: {payload.get('open_price')}, prev close: {payload.get('prev_close')})
+Gap: {payload.get('gap_pct', 'N/A')}% (open: {payload.get('open_price')}, prev close: {payload.get('previous_close')})
 
 1) Likely catalysts (earnings, news, sector rotation)
 2) Trade setup assessment
@@ -124,7 +124,7 @@ Return 2-3 sentences.""",
         
         'oscillator_extreme': f"""{symbol} oscillator extreme detected.
         
-RSI: {payload.get('rsi_20d')} ({payload.get('extreme')}, Stoch K: {payload.get('stoch_k')}, Stoch D: {payload.get('stoch_d')})
+RSI: {payload.get('rsi')} ({payload.get('regime')}, extreme days: {payload.get('extreme_days')})
 
 Remember: oscillators = regime filters, not direction indicators.
 Brief assessment: is this noise or meaningful divergence?"""

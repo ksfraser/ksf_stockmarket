@@ -1,40 +1,33 @@
 #!/usr/bin/env python3
-"""Generate an ATR-stop equity curve chart for a single symbol.
+"""Generate an ATR drawdown-recovery chart for a single symbol.
 
-Reads the best stop_factor+trailing_pct from `atr_stop_optimization` for the
-given symbol, reruns the backtest, and writes a PNG showing:
-  • Strategy equity curve (dollar value over time)
-  • Buy & Hold reference
-  • Annotated entry/exit markers
+Reads the per-multiple bounce-back analysis from `atr_stop_optimization`
+for the given symbol and writes a PNG showing:
+  • bounce_back_rate (fraction of m*ATR drops that later recovered to a
+    new high) plotted against the ATR multiple m
+  • the 70% "acceptable false-exit ceiling" and 50% reference lines
+  • the recommended multiple (tightest m whose bounce <= threshold) marked
 
-Methodology (documented in the UI):
-  - Long-only.
-  - Entry: close > SMA200 (long bias filter).
-  - Initial stop: entry_price - stop_factor * ATR(14).
-  - Trailing stop: highest_high_since_entry * (1 - trailing_pct).
-  - Exit: either stop hit, or close < SMA200 * 0.95 (trend filter exit).
-  - Position sizing: min(5% of capital, 1% of capital / ATR) — risk-normalized.
-  - Commission: $9.99 per trade.
+This replaces the old equity-curve chart, which was based on the previous
+P&L-optimizing sweep that did not measure drawdown recovery.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
-from datetime import datetime, date
+from datetime import date
 from pathlib import Path
 from typing import Any
 
 import mysql.connector
-import pandas as pd
 import numpy as np
+import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-
-REPO_ROOT = Path(__file__).resolve().parents[1]
 
 DB_CONFIG = {
     "host": os.environ.get("DB_HOST", "ksfraser.ca"),
@@ -47,223 +40,74 @@ DB_CONFIG = {
 }
 
 
-def fetch_price_data(symbol: str, start: str, end: str) -> pd.DataFrame:
-    conn = mysql.connector.connect(**DB_CONFIG)
-    df = pd.read_sql_query(
-        """
-        SELECT price_date, open as o, high as h, low as l, close as c, volume
-        FROM stockprices
-        WHERE symbol = %s AND price_date BETWEEN %s AND %s
-        ORDER BY price_date
-        """,
-        conn,
-        params=(symbol, start, end),
-        parse_dates=["price_date"],
-    )
-    conn.close()
-    if df.empty:
-        return df
-    df = df.set_index("price_date").sort_index()
-    for col in ["o", "h", "l", "c", "v"]:
-        df[col] = pd.to_numeric(df[col], errors="coerce")
-    return df
-
-
-def calculate_atr(df: pd.DataFrame, period: int = 14) -> pd.Series:
-    high = df["h"].values
-    low = df["l"].values
-    close = df["c"].values
-    tr_list = []
-    for i in range(1, len(high)):
-        tr = max(
-            high[i] - low[i],
-            abs(high[i] - close[i - 1]),
-            abs(low[i] - close[i - 1]),
-        )
-        tr_list.append(tr)
-    tr = np.array([0.0] + tr_list)
-    return pd.Series(tr, index=df.index).rolling(period).mean()
-
-
-def get_best_params(symbol: str) -> dict[str, Any] | None:
+def get_rows(symbol: str) -> list:
     conn = mysql.connector.connect(**DB_CONFIG)
     cur = conn.cursor()
     cur.execute(
         """
-        SELECT stop_factor, trailing_pct, pnl_pct, n_trades, win_rate, expectancy
+        SELECT atr_multiple, n_drops, bounce_back_rate, avg_recovery_days,
+               max_drawdown_atr, recommended
         FROM atr_stop_optimization
         WHERE symbol = %s
-        ORDER BY pnl_pct DESC
-        LIMIT 1
+        ORDER BY atr_multiple
         """,
         (symbol,),
     )
-    row = cur.fetchone()
+    rows = cur.fetchall()
     conn.close()
-    if not row:
-        return None
-    return {
-        "stop_factor": float(row[0]),
-        "trailing_pct": float(row[1]),
-        "pnl_pct": float(row[2]),
-        "n_trades": int(row[3]),
-        "win_rate": float(row[4]),
-        "expectancy": float(row[5]),
-    }
-
-
-def run_backtest_with_equity(
-    df: pd.DataFrame,
-    stop_factor: float,
-    trailing_pct: float,
-    initial_capital: float = 100_000.0,
-    commission: float = 9.99,
-) -> dict[str, Any]:
-    df = df.copy()
-    df["atr"] = calculate_atr(df)
-    df = df.dropna(subset=["atr"])
-
-    position = 0
-    entry_price = 0.0
-    stop_price = 0.0
-    trailing_stop = 0.0
-    cash = initial_capital
-    highest_high = None
-    equity: list[dict[str, Any]] = []
-    trades: list[dict[str, Any]] = []
-
-    # SMA200
-    df["sma200"] = df["c"].rolling(200).mean()
-
-    for i in range(len(df)):
-        curr = df.iloc[i]
-        dt = curr.name.strftime("%Y-%m-%d") if hasattr(curr.name, "strftime") else str(curr.name)
-
-        if position > 0:
-            equity.append({"date": dt, "value": cash + position * curr["c"]})
-        else:
-            equity.append({"date": dt, "value": cash})
-
-        if position > 0 and highest_high is not None:
-            highest_high = max(highest_high, curr["h"])
-            new_trailing = highest_high * (1 - trailing_pct)
-            if new_trailing > trailing_stop:
-                trailing_stop = new_trailing
-
-            if curr["l"] <= trailing_stop:
-                pnl = (trailing_stop - entry_price) * position - commission
-                cash += trailing_stop * position - commission
-                trades.append({"date": dt, "type": "TRAILING", "price": trailing_stop, "pnl": pnl})
-                position = 0
-                trailing_stop = 0.0
-                highest_high = None
-                equity[-1]["value"] = cash
-                continue
-
-            if curr["l"] <= stop_price:
-                pnl = (stop_price - entry_price) * position - commission
-                cash += stop_price * position - commission
-                trades.append({"date": dt, "type": "ATR_STOP", "price": stop_price, "pnl": pnl})
-                position = 0
-                trailing_stop = 0.0
-                highest_high = None
-                equity[-1]["value"] = cash
-                continue
-
-            if pd.notna(curr["sma200"]) and curr["c"] < curr["sma200"] * 0.95:
-                pnl = (curr["c"] - entry_price) * position - commission
-                cash += curr["c"] * position - commission
-                trades.append({"date": dt, "type": "EXIT_SMA", "price": curr["c"], "pnl": pnl})
-                position = 0
-                trailing_stop = 0.0
-                highest_high = None
-                equity[-1]["value"] = cash
-                continue
-
-        if position == 0 and pd.notna(curr["sma200"]) and curr["c"] > curr["sma200"] and curr["atr"] > 0:
-            risk_dollars = initial_capital * 0.01
-            risk_size = risk_dollars / curr["atr"]
-            max_size = initial_capital * 0.05
-            size_dollar = min(max_size, risk_size)
-            if size_dollar > 0:
-                shares = size_dollar / curr["c"]
-                entry_price = curr["c"]
-                stop_price = entry_price - stop_factor * curr["atr"]
-                highest_high = curr["h"]
-                trailing_stop = highest_high * (1 - trailing_pct)
-                cash -= entry_price * shares + commission
-                position = shares
-                trades.append({"date": dt, "type": "ENTRY", "price": entry_price, "pnl": 0.0})
-
-    final_value = cash + position * df["c"].iloc[-1]
-    equity.append({"date": df.index[-1].strftime("%Y-%m-%d"), "value": final_value})
-
-    buy_hold = [
-        {
-            "date": (df.index[i].strftime("%Y-%m-%d") if hasattr(df.index[i], "strftime") else str(df.index[i])),
-            "value": initial_capital * (df["c"].iloc[i] / df["c"].iloc[0]),
-        }
-        for i in range(len(df))
-    ]
-
-    return {
-        "equity": equity,
-        "buy_hold": buy_hold,
-        "trades": trades,
-        "final_value": final_value,
-        "pnl_pct": (final_value - initial_capital) / initial_capital * 100,
-    }
+    return rows
 
 
 def generate_chart(symbol: str, output_path: str) -> dict[str, Any]:
-    params = get_best_params(symbol)
-    if not params:
+    rows = get_rows(symbol)
+    if not rows:
         raise ValueError(f"No sweep results for {symbol}")
 
-    start = "2022-01-01"
-    end = date.today().isoformat()
-    df = fetch_price_data(symbol, start, end)
-    if df.empty:
-        raise ValueError(f"No price data for {symbol}")
-
-    result = run_backtest_with_equity(
-        df,
-        stop_factor=params["stop_factor"],
-        trailing_pct=params["trailing_pct"],
-    )
-
-    eq = pd.DataFrame(result["equity"])
-    bh = pd.DataFrame(result["buy_hold"])
-    eq["date"] = pd.to_datetime(eq["date"])
-    bh["date"] = pd.to_datetime(bh["date"])
+    mult = [float(r[0]) for r in rows]
+    n_drops = [int(r[1]) for r in rows]
+    bounce = [float(r[2]) if r[2] is not None else np.nan for r in rows]
+    maxdd = float(rows[0][4]) if rows[0][4] is not None else float("nan")
+    rec_idx = next((i for i, r in enumerate(rows) if r[5]), None)
+    rec_mult = mult[rec_idx] if rec_idx is not None else None
 
     fig, ax = plt.subplots(figsize=(10, 5))
-    ax.plot(eq["date"], eq["value"], label="ATR Stop Strategy", color="#1f77b4", linewidth=1.8)
-    ax.plot(bh["date"], bh["value"], label="Buy & Hold", color="#ff7f0e", linewidth=1.8, linestyle="--")
-    ax.set_title(f"{symbol} — Best ATR Stop (factor={params['stop_factor']}, trailing={params['trailing_pct']*100:.0f}%)")
-    ax.set_ylabel("Portfolio Value ($)")
-    ax.legend()
+    ax.plot(mult, bounce, "o-", color="#1f77b4", linewidth=2,
+            markersize=7, label="Bounce-back rate")
+    ax.axhline(0.70, color="#888888", linestyle="--", linewidth=1,
+               label="70% acceptable false-exit ceiling")
+    ax.axhline(0.50, color="#cccccc", linestyle=":", linewidth=1,
+               label="50% reference")
+    if rec_idx is not None:
+        ax.plot([mult[rec_idx]], [bounce[rec_idx]], "r*", markersize=18,
+                label=f"Recommended {mult[rec_idx]}x")
+    ax.set_xlabel("ATR multiple  (stop placed m × ATR below running local high)")
+    ax.set_ylabel("Bounce-back rate  (fraction of drops that recover to a new high)")
+    ax.set_title(f"{symbol} — ATR Drawdown-Recovery   "
+                 f"(recommended {rec_mult}x,  max drawdown {maxdd:.1f} ATR)")
+    ax.set_ylim(-0.05, 1.05)
     ax.grid(True, alpha=0.3)
-    ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
-    fig.autofmt_xdate()
+    ax.legend(loc="upper right")
+
+    # Secondary axis: number of drop events per multiple (context)
+    ax2 = ax.twinx()
+    ax2.bar(mult, n_drops, width=0.06, color="#1f77b4", alpha=0.12)
+    ax2.set_ylabel("Number of m×ATR drop events", color="#1f77b4")
+    ax2.tick_params(axis="y", labelcolor="#1f77b4")
+
     fig.tight_layout()
     fig.savefig(output_path, dpi=150)
     plt.close(fig)
 
     return {
         "symbol": symbol,
-        "stop_factor": params["stop_factor"],
-        "trailing_pct": params["trailing_pct"],
-        "pnl_pct": params["pnl_pct"],
-        "n_trades": params["n_trades"],
-        "win_rate": params["win_rate"],
-        "expectancy": params["expectancy"],
-        "final_value": result["final_value"],
+        "recommended_multiple": rec_mult,
+        "max_drawdown_atr": maxdd,
+        "bounce_by_multiple": {str(m): b for m, b in zip(mult, bounce)},
     }
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Generate ATR stop chart for a symbol")
+    parser = argparse.ArgumentParser(description="Generate ATR drawdown-recovery chart")
     parser.add_argument("symbol", help="Ticker symbol (e.g. RY)")
     parser.add_argument("output", help="Output PNG path")
     args = parser.parse_args()
@@ -277,5 +121,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    import json
     sys.exit(main())

@@ -15,10 +15,14 @@ from datetime import date, timedelta
 from pathlib import Path
 from config_loader import Config
 
-# Ensure python/ and repo root are importable from any cwd
+# Ensure python/, python/src/ and repo root are importable from any cwd
+# (symbol_resolver and other shared modules live under python/src/).
 _script_dir = Path(__file__).resolve().parent
 if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
+_src_dir = _script_dir / 'src'
+if str(_src_dir) not in sys.path:
+    sys.path.insert(0, str(_src_dir))
 _repo_root = _script_dir.parent
 if str(_repo_root) not in sys.path:
     sys.path.insert(0, str(_repo_root))

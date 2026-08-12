@@ -104,62 +104,58 @@ class ATRSweepController {
      * Get best/second best/worst/second worst ATR params for a symbol.
      */
     private function getBestParams(string $symbol): ?array {
-        $stmt = $this->pdo->prepare("
-            SELECT stop_factor, trailing_pct, pnl_pct, n_trades, win_rate, avg_win, avg_loss, expectancy
-            FROM atr_stop_optimization
-            WHERE symbol = :s
-            ORDER BY pnl_pct DESC
-            LIMIT 1
-        ");
-        $stmt->execute([':s' => $symbol]);
-        $row = $stmt->fetch();
-        if (!$row) return null;
-
-        $second = $this->getRanked($symbol, 2);
-        $worst = $this->getRanked($symbol, -1);
-        $secondWorst = $this->getRanked($symbol, -2);
-
-        return [
-            'symbol' => $symbol,
-            'best' => $row,
-            'second_best' => $second,
-            'worst' => $worst,
-            'second_worst' => $secondWorst,
-        ];
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT atr_multiple, n_drops, bounce_back_rate, avg_recovery_days,
+                       max_drawdown_atr, recommended
+                FROM atr_stop_optimization
+                WHERE symbol = :s
+                ORDER BY recommended DESC, atr_multiple ASC
+                LIMIT 1
+            ");
+            $stmt->execute([':s' => $symbol]);
+            $rec = $stmt->fetch();
+            if (!$rec) return null;
+            return [
+                'symbol' => $symbol,
+                'recommended' => $rec,
+                'at_2_0' => $this->getAtMultiple($symbol, 2.0),
+                'at_2_5' => $this->getAtMultiple($symbol, 2.5),
+            ];
+        } catch (Exception $e) {
+            return null;
+        }
     }
 
-    private function getRanked(string $symbol, int $rank): ?array {
-        $dir = $rank > 0 ? 'ASC' : 'DESC';
-        $offset = abs($rank) - 1;
+    private function getAtMultiple(string $symbol, float $m): ?array {
         $stmt = $this->pdo->prepare("
-            SELECT stop_factor, trailing_pct, pnl_pct, n_trades, win_rate, expectancy
+            SELECT atr_multiple, n_drops, bounce_back_rate, avg_recovery_days
             FROM atr_stop_optimization
-            WHERE symbol = :s
-            ORDER BY pnl_pct " . $dir . "
-            LIMIT 1 OFFSET " . (int)$offset
-        );
-        $stmt->execute([':s' => $symbol]);
+            WHERE symbol = :s AND atr_multiple = :m
+            LIMIT 1
+        ");
+        $stmt->execute([':s' => $symbol, ':m' => $m]);
         return $stmt->fetch() ?: null;
     }
 
     private function aggregateStats(array $items): array {
         if (empty($items)) {
-            return ['symbols' => 0, 'avg_best_pnl_pct' => 0, 'avg_n_trades' => 0];
+            return ['symbols' => 0, 'avg_recommended_multiple' => 0, 'avg_max_drawdown_atr' => 0];
         }
-        $pnls = [];
-        $trades = [];
+        $recs = [];
+        $dds = [];
         foreach ($items as $item) {
-            if (!empty($item['best'])) {
-                $pnls[] = (float)$item['best']['pnl_pct'];
-                $trades[] = (int)$item['best']['n_trades'];
+            if (!empty($item['recommended'])) {
+                $recs[] = (float)$item['recommended']['atr_multiple'];
+                if (isset($item['recommended']['max_drawdown_atr'])) {
+                    $dds[] = (float)$item['recommended']['max_drawdown_atr'];
+                }
             }
         }
         return [
             'symbols' => count($items),
-            'avg_best_pnl_pct' => count($pnls) ? array_sum($pnls) / count($pnls) : 0,
-            'avg_n_trades' => count($trades) ? array_sum($trades) / count($trades) : 0,
-            'min_best_pnl_pct' => count($pnls) ? min($pnls) : 0,
-            'max_best_pnl_pct' => count($pnls) ? max($pnls) : 0,
+            'avg_recommended_multiple' => $recs ? array_sum($recs) / count($recs) : 0,
+            'avg_max_drawdown_atr' => $dds ? array_sum($dds) / count($dds) : 0,
         ];
     }
 }

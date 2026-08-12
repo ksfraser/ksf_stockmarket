@@ -313,6 +313,24 @@ class DailyPriceDownloader:
             if verbose:
                 print(f"  Dividends: {len(divs)}, Splits: {len(splits)}")
 
+            # Auto back-sweep: once historical data is downloaded for a newly
+            # added symbol, compute its ATR drawdown-recovery profile so the
+            # user can make a sensible stop decision without waiting for the
+            # nightly sweep. Reads the data we just upserted from stockprices.
+            try:
+                import sys as _sys, os as _os
+                _root = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+                if _root not in _sys.path:
+                    _sys.path.insert(0, _root)
+                from atr_sweep_mariadb import run_sweep_for_symbol
+                run_sweep_for_symbol(symbol, verbose=verbose)
+                if verbose:
+                    print(f"  ATR drawdown-recovery sweep completed for {symbol}")
+            except Exception as _e:
+                # Never let the sweep break the add-symbol flow.
+                if verbose:
+                    print(f"  ATR sweep for {symbol} skipped: {_e}")
+
             return n
 
         except Exception as e:

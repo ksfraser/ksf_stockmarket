@@ -140,13 +140,13 @@ def save_brief(
 # ==========================================================================
 
 def fetch_atr_top_results(conn: Any, limit: int = 10) -> List[Dict[str, Any]]:
-    """Best ATR stop-optimization combos by PnL across all symbols."""
+    """Recommended ATR multiple per symbol (lowest bounce-back rate first)."""
     cursor = conn.cursor(dictionary=True)
     cursor.execute(f"""
-        SELECT symbol, stop_factor, trailing_pct, pnl_pct, n_trades
+        SELECT symbol, atr_multiple, bounce_back_rate, n_drops, max_drawdown_atr
         FROM `atr_stop_optimization`
-        WHERE pnl_pct IS NOT NULL
-        ORDER BY pnl_pct DESC
+        WHERE recommended = 1
+        ORDER BY bounce_back_rate ASC
         LIMIT {int(limit)}
     """)
     rows = cursor.fetchall()

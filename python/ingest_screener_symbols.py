@@ -24,29 +24,44 @@ STOCK_PRICES_TABLE = "stockprices"
 # Use actual MySQL table from compute_all_talib_indicators.py
 TECH_TABLE = "ta_indicators"
 
-BASE_CONFIG = {
-    "host": "ksfraser.ca",
-    "port": 3306,
-    "user": "ksfraser_stockmarket",
-    "password": os.environ.get("DB_PASSWORD", "Zaqwsx9sm1@"),
-    "database": "ksfraser_stock_market",
-    "charset": "utf8mb4",
-    "cursorclass": pymysql.cursors.DictCursor,
-}
+# Credentials are resolved at connect time from config.yaml (vault) / environment
+# via python.db_connector — no hardcoded secrets in source.
+BASE_CONFIG = None  # deprecated; _connect() uses db_connector
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FETCH_PRICES_SCRIPT = REPO_ROOT / "python" / "fetch_prices.py"
 
 
 def _connect():
-    return pymysql.connect(**BASE_CONFIG)
+    # Resolve credentials the same way the screener does (config.yaml vault /
+    # environment) so we never fall back to a stale hardcoded password.
+    import python.db_connector as _dc
+    if not _dc.DB_CONFIG:
+        _dc._init_config()
+    cfg = _dc.DB_CONFIG
+    return pymysql.connect(
+        host=cfg.get("host"),
+        port=cfg.get("port"),
+        user=cfg.get("user"),
+        password=cfg.get("password"),
+        database=cfg.get("database"),
+        charset="utf8mb4",
+        cursorclass=pymysql.cursors.DictCursor,
+    )
 
 
 def _latest_run(conn) -> Dict:
     """
-    Because the screener inserts in micro-batches, find the latest logical
-    run by expanding 10 minutes back from the newest run_at. Return the
-    time window so callers can collect every row in that batch.
+    Find the latest logical screener run and return the full time window
+    containing every row written during that run.
+
+    The screener inserts each preset's rows with NOW(), so a single logical
+    run spans a few seconds across multiple presets. We take the newest run_at
+    and expand a short trailing window (2 minutes) to capture the entire run
+    without bleeding into the previous scheduled run (which is >= 15 minutes
+    earlier). The previous implementation used `run_at = MAX(run_at)`, so it
+    ingested only the single newest second (typically a handful of rows)
+    instead of the whole run.
     """
     with conn.cursor() as cur:
         cur.execute(
@@ -61,7 +76,7 @@ def _latest_run(conn) -> Dict:
             SELECT MIN(run_at) AS window_start, MAX(run_at) AS window_end,
                    COUNT(*) AS row_count
             FROM {TRADING_VIEW_TABLE}
-            WHERE run_at >= %s AND run_at <= %s
+            WHERE run_at >= %s - INTERVAL 2 MINUTE AND run_at <= %s
             """,
             (max_run, max_run),
         )
@@ -148,7 +163,7 @@ def _pending_price_symbols(
             price_row = cur.fetchone()
             latest_price = price_row.get("price_date") if price_row else None
 
-            if latest_price == today:
+            if latest_price is not None and str(latest_price) == today:
                 continue
 
             cur.execute(
@@ -170,30 +185,34 @@ def _trigger_price_sync(symbols: List[str]) -> bool:
     if not FETCH_PRICES_SCRIPT.exists():
         return False
 
-    # Call with the explicit pending symbol list so fetch_prices.py force-fetches
-    # exactly the screened symbols that need prices. Using --start-from instead
-    # would let fetch_prices.py re-derive its own pending set from the whole DB
-    # and silently fetch an unrelated (possibly delisted) symbol.
-    sym_arg = ",".join(symbols[:50])
-    cmd = [
-        sys.executable,
-        str(FETCH_PRICES_SCRIPT),
-        "--symbols",
-        sym_arg,
-    ]
-    try:
-        proc = subprocess.run(
-            cmd,
-            cwd=str(REPO_ROOT),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            timeout=1800,
-        )
-        return proc.returncode == 0
-    except Exception as exc:
-        print(f"Price sync failed: {exc}")
-        return False
+    # Fetch exactly the screened symbols that need prices. Batch into chunks of
+    # 50 so a large pending set (the full screener run can surface hundreds of
+    # symbols) is fully synced instead of being silently truncated at 50.
+    ok = True
+    for i in range(0, len(symbols), 50):
+        chunk = symbols[i:i + 50]
+        cmd = [
+            sys.executable,
+            str(FETCH_PRICES_SCRIPT),
+            "--symbols",
+            ",".join(chunk),
+        ]
+        try:
+            proc = subprocess.run(
+                cmd,
+                cwd=str(REPO_ROOT),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=1800,
+            )
+            if proc.returncode != 0:
+                ok = False
+                print(f"Price sync chunk failed (rc={proc.returncode}): {proc.stderr[:500]}")
+        except Exception as exc:
+            print(f"Price sync failed: {exc}")
+            ok = False
+    return ok
 
 
 def main() -> int:

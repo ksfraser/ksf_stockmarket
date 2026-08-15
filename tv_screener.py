@@ -19,26 +19,35 @@ def _translate_symbol(raw: str) -> str:
     """Normalize TradingView screener symbols to canonical form.
 
     Rules:
-      * NASDAQ:SYM / NYSE:SYM -> SYM
+      * NASDAQ:SYM / NYSE:SYM / TSE:SYM / OTC:SYM -> SYM   (non-Canadian, no suffix)
       * TSX:SYM.UN            -> SYM.UN.TO
       * TSX:SYM               -> SYM.TO
       * NEO:SYM.UN            -> SYM.UN.TO
       * NEO:SYM               -> SYM.TO
       * already .TO/.UN.TO    -> pass-through
+
+    Prevously every non-Canadian symbol was blindly given a ".TO" suffix,
+    turning US/OTC tickers (e.g. NASDAQ:HOPE -> HOPE.TO) into invalid Toronto
+    symbols and polluting downstream price/indicator data.
     """
     if not raw:
         return ""
     sym = raw.strip()
-    for prefix in ("NASDAQ:", "NYSE:", "TSE:", "TSX:", "NEO:"):
-        if sym.startswith(prefix):
-            sym = sym[len(prefix):]
-            break
     if sym.endswith(".TO") or sym.endswith(".UN.TO"):
         return sym
-    lower = sym.lower()
-    if ".un" in lower or (len(sym) > 3 and sym[-3] == "." and sym[-2:].isalpha()):
+    us_prefixes = ("NASDAQ:", "NYSE:", "TSE:", "OTC:")
+    ca_prefixes = ("TSX:", "NEO:")
+    for prefix in us_prefixes:
+        if sym.startswith(prefix):
+            return sym[len(prefix):]
+    for prefix in ca_prefixes:
+        if sym.startswith(prefix):
+            base = sym[len(prefix):]
+            return base + ".TO"
+    # No recognized prefix: a bare ".UN" implies a Canadian unit-trust.
+    if sym.endswith(".UN"):
         return sym + ".TO"
-    return sym + ".TO"
+    return sym
 
 
 def fetch_tradingview_screen(preset: str = None, filters: list = None, markets: list = None, 

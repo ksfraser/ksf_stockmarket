@@ -9,7 +9,6 @@ symbol_master, and triggers price/indicator updates for changed symbols.
 from __future__ import annotations
 
 import json
-import os
 import subprocess
 import sys
 from datetime import datetime

@@ -31,7 +31,7 @@ if str(_repo_root) not in sys.path:
 from src.events.publisher import EventPublisher
 
 # ALL yfinance calls MUST resolve through symbol_resolver first.
-from symbol_resolver import resolve_for_yfinance
+from symbol_resolver import resolve_for_yfinance, normalize_symbol
 
 # Credentials loaded from Ansible Vault via config_loader, fallback to .env
 _cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config.yaml')
@@ -179,32 +179,119 @@ def get_pending_symbols(c, existing):
 
 
 def is_yfinance_resolvable(sym: str) -> bool:
-    """Return False for tickers yfinance consistently cannot resolve."""
-    if sym.startswith('AMEX:') or sym.startswith('OTC:') or sym.startswith('NYSE:') or sym.startswith('NASDAQ:'):
-        return False
-    if '/' in sym:
-        return False
+    """Return False for tickers yfinance consistently cannot resolve.
+
+    Runs the symbol through normalize_symbol() first so exchange-prefixed
+    (AMEX:/OTC:/NYSE:/NASDAQ:) and share-class (/, class '.') forms are no
+    longer auto-skipped — they are normalized to a yfinance-resolvable ticker
+    and tried. Only the genuinely problematic TSX ETF series suffixes remain
+    blocked.
+    """
+    sym = normalize_symbol(sym)
     # Common ETF series suffix patterns on TSX that trip up yfinance
     if re.search(r'\.[A-Z]\.TO$', sym):
-        return False
-    if re.search(r'/PD\.TO$|/PB\.TO$|/PE\.TO$|/PF\.TO$|/PG\.TO$|/PH\.TO$|/PI\.TO$|/PJ\.TO$|/PK\.TO$|/PL\.TO$|/PM\.TO$|/PN\.TO$|/PO\.TO$|/PQ\.TO$|/PS\.TO$|/PT\.TO$', sym):
         return False
     return True
 
 
+def _normalize_price_cols(df):
+    """Coerce OHLCV column names to the yfinance shape insert_prices expects."""
+    if df is None or df.empty:
+        return df
+    ren = {}
+    for c in df.columns:
+        cl = str(c).strip().lower()
+        if cl in ('open', 'o'):
+            ren[c] = 'Open'
+        elif cl in ('high', 'h'):
+            ren[c] = 'High'
+        elif cl in ('low', 'l'):
+            ren[c] = 'Low'
+        elif cl in ('close', 'c'):
+            ren[c] = 'Close'
+        elif cl in ('adj close', 'adjclose', 'adjusted close'):
+            ren[c] = 'Adj Close'
+        elif cl in ('volume', 'v'):
+            ren[c] = 'Volume'
+    if ren:
+        df = df.rename(columns=ren)
+    if 'Adj Close' not in df.columns and 'Close' in df.columns:
+        df['Adj Close'] = df['Close']
+    return df
+
+
+def _fetch_stooq(norm, start, end):
+    """Fallback: fetch daily OHLCV from Stooq via public CSV endpoint (no key)."""
+    import io
+    import urllib.request
+    import urllib.parse
+    s = urllib.parse.quote(norm.lower())
+    url = f"https://stooq.com/q/d/l/?s={s}.us&i=d"
+    try:
+        with urllib.request.urlopen(url, timeout=25) as resp:
+            raw = resp.read().decode('utf-8', errors='ignore')
+    except Exception as e:
+        print(f"  stooq: download failed for {norm}: {e}")
+        return None
+    if not raw or 'Date,Open' not in raw:
+        return None
+    try:
+        df = pd.read_csv(io.StringIO(raw))
+    except Exception:
+        return None
+    if df.empty or 'Date' not in df.columns:
+        return None
+    df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
+    df = df.dropna(subset=['Date'])
+    df = df[(df['Date'] >= pd.Timestamp(start)) & (df['Date'] <= pd.Timestamp(end))]
+    if df.empty:
+        return None
+    df = df.set_index('Date').sort_index()
+    return _normalize_price_cols(df)
+
+
+def _fetch_xfinance(norm, start, end):
+    """Fallback: fetch via the xfinance drop-in yfinance replacement."""
+    try:
+        import xfinance as xf
+    except Exception:
+        return None
+    try:
+        df = xf.download(norm, start=start, end=end, auto_adjust=False)
+    except Exception as e:
+        print(f"  xfinance: download failed for {norm}: {e}")
+        return None
+    if df is None or df.empty:
+        return None
+    return _normalize_price_cols(df)
+
+
 def fetch_symbol(sym, start='2014-01-01', end=None):
-    """Fetch daily OHLCV from yfinance. Returns DataFrame or None."""
+    """Fetch daily OHLCV with a yfinance -> Stooq -> xfinance fallback chain.
+
+    Returns (DataFrame | None, normalized_symbol). The normalized symbol is the
+    ticker actually stored in stockprices so screener/symbol_master joins line up.
+    """
     if end is None:
         end = (date.today() + timedelta(days=1)).isoformat()
-    resolved = resolve_for_yfinance(sym)
+    norm = normalize_symbol(sym)
+    # 1. yfinance (primary)
     try:
+        resolved = resolve_for_yfinance(norm)
         hist = yf.Ticker(resolved).history(start=start, end=end, auto_adjust=False)
-        if hist is None or hist.empty:
-            return None
-        return hist
+        if hist is not None and not hist.empty:
+            return hist, norm
     except Exception as e:
-        print(f"  ERROR: {e}")
-        return None
+        print(f"  yfinance: failed for {norm}: {e}")
+    # 2. Stooq (free, no key)
+    hist = _fetch_stooq(norm, start, end)
+    if hist is not None and not hist.empty:
+        return hist, norm
+    # 3. xfinance (multi-source failover)
+    hist = _fetch_xfinance(norm, start, end)
+    if hist is not None and not hist.empty:
+        return hist, norm
+    return None, norm
 
 
 def insert_prices(c, sym, hist):
@@ -316,7 +403,7 @@ def main():
 
     ok, fail, total_rows = 0, 0, 0
     for i, sym in enumerate(pending):
-        hist = fetch_symbol(sym, start=default_start)
+        hist, norm = fetch_symbol(sym, start=default_start)
         if hist is None:
             fail += 1
             if manifest_path:
@@ -326,13 +413,13 @@ def main():
             time.sleep(1)
             continue
 
-        n = _retry(lambda: insert_prices(c, sym, hist), label=f"insert {sym}")
+        n = _retry(lambda: insert_prices(c, norm, hist), label=f"insert {norm}")
         conn.commit()
         ok += 1
         total_rows += n
         start_d = str(hist.index[0])[:10]
         end_d = str(hist.index[-1])[:10]
-        print(f"  [{i+1}/{len(pending)}] {sym}: {n} rows ({start_d} -> {end_d})")
+        print(f"  [{i+1}/{len(pending)}] {norm}: {n} rows ({start_d} -> {end_d})")
 
         if manifest_path:
             _update_manifest(manifest, sym, status='success', rows=n,
@@ -345,12 +432,12 @@ def main():
         try:
             publisher.publish(
                 'prices_loaded',
-                {'symbol': sym},
+                {'symbol': norm},
             )
         except Exception:
             pass
         _retry(lambda: c.execute("UPDATE symbol_master SET data_start=%s, last_updated=CURRENT_TIMESTAMP WHERE symbol=%s",
-                  (hist.index[0].date().isoformat(), sym)), label=f"update symbol_master {sym}")
+                  (hist.index[0].date().isoformat(), norm)), label=f"update symbol_master {norm}")
         conn.commit()
 
     if manifest_path:

@@ -8,6 +8,33 @@ Centralized logic for resolving tickers to yfinance-compatible format.
 import re
 from typing import Optional, Tuple, Dict, Any
 
+# Exchange suffixes that must stay dotted (do not convert '.' -> '-').
+_PRESERVE_SUFFIX_RE = re.compile(
+    r'\.(TO|V|X|O|UN\.TO|B\.TO|U\.TO|NE|L|PA|DE|HK|T|SS|SW|MI|AX|HE|SG|SI|AS|JP|CN|SA|MX|VI|BA|F)$',
+    re.IGNORECASE,
+)
+
+
+def normalize_symbol(symbol: str) -> str:
+    """Normalize a stored ticker to a yfinance/Stooq-resolvable form.
+
+    - Strip exchange prefixes (AMEX:, OTC:, NYSE:, NASDAQ:, CBOE:, ...).
+    - Convert share-class / preferred separators '/' -> '-' (AGM/PE -> AGM-PE).
+    - Convert US class-share dots to '-' (BRK.A -> BRK-B) while leaving
+      exchange suffixes (.TO, .V, .UN.TO, ...) intact.
+    """
+    if not symbol:
+        return symbol
+    s = symbol.strip()
+    if ':' in s:
+        s = s.split(':', 1)[1]
+    s = s.replace('/', '-')
+    if '.' in s and not _PRESERVE_SUFFIX_RE.search(s):
+        head, _, tail = s.rpartition('.')
+        if len(tail) == 1 and tail.isalpha() and tail.isupper():
+            s = head + '-' + tail
+    return s
+
 # Try to import database for exchange_mapping lookup
 try:
     from database import get_connection
@@ -46,6 +73,9 @@ def resolve_for_yfinance(symbol: str, use_db_lookup: bool = True) -> str:
     """
     if not symbol:
         return symbol
+
+    # Strip exchange prefixes / share-class separators before any TSX logic
+    symbol = normalize_symbol(symbol)
 
     # Normalize TSX formats first
     symbol = _convert_tsx_format(symbol)

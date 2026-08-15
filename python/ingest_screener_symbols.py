@@ -16,6 +16,14 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Set, Tuple
 
 import pymysql
+import sys
+from pathlib import Path
+
+# Ensure python/src/ is importable so we can reuse the shared symbol normalizer
+_src_dir = Path(__file__).resolve().parent / 'src'
+if str(_src_dir) not in sys.path:
+    sys.path.insert(0, str(_src_dir))
+from symbol_resolver import normalize_symbol
 
 TRADING_VIEW_TABLE = "tradingview_screener_results"
 SYMBOL_MASTER_TABLE = "symbol_master"
@@ -228,7 +236,23 @@ def main() -> int:
         rows = _results_for_run(conn, latest.get("window_start"), latest.get("window_end"))
         print(f"Loaded {len(rows)} screener rows")
 
-        candidates = {r["symbol"]: r["payload"] for r in rows if r.get("symbol")}
+        # Normalize symbols (strip AMEX:/OTC: prefixes, '/'-preferred, class '.')
+        # so symbol_master, the screener view, and stockprices all share the
+        # yfinance-resolvable ticker and joins line up.
+        candidates = {}
+        for r in rows:
+            raw = r.get("symbol")
+            if not raw:
+                continue
+            norm = normalize_symbol(raw)
+            candidates[norm] = r.get("payload") or {}
+            if norm != raw:
+                with conn.cursor() as cur:
+                    cur.execute(
+                        f"UPDATE {TRADING_VIEW_TABLE} SET symbol=%s WHERE symbol=%s",
+                        (norm, raw),
+                    )
+        conn.commit()
         if not candidates:
             print("No valid candidate symbols")
             return 0

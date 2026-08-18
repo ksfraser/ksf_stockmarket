@@ -1,18 +1,18 @@
--- Seed: Beneva Insurance GIF segregated funds -> stockmarket app seg_funds table
--- Source: beneva.ca/en/savings-investments/segregated-funds (public). Beneva markets
--- guarantee-tier portfolios (Basic 75/75, Enhanced 75/100, Optimal 100/100), not named
--- funds. Best 5-yr annualized net return (basic) = 13.24% as of Jun 30 2026.
--- Full portfolio-level data is SPA/advisor-portal-gated (see KB/Beneva/Segregated_Funds.md).
--- Requires migrate_rbc_seg_fund_columns.sql. Idempotent: NOT EXISTS on (fund_name, carrier).
-
-INSERT INTO `seg_funds` (fund_name, carrier, asset_type, asset_class, return_5yr, is_active)
-SELECT 'Beneva Segregated Fund - Basic (75/75)', 'Beneva', 'Segregated Fund', 'Basic: 75% maturity / 75% death', '13.24', '1'
-WHERE NOT EXISTS (SELECT 1 FROM `seg_funds` WHERE fund_name='Beneva Segregated Fund - Basic (75/75)' AND carrier='Beneva');
-
-INSERT INTO `seg_funds` (fund_name, carrier, asset_type, asset_class, is_active)
-SELECT 'Beneva Segregated Fund - Enhanced (75/100)', 'Beneva', 'Segregated Fund', 'Enhanced: 75% maturity / 100% death', '1'
-WHERE NOT EXISTS (SELECT 1 FROM `seg_funds` WHERE fund_name='Beneva Segregated Fund - Enhanced (75/100)' AND carrier='Beneva');
-
-INSERT INTO `seg_funds` (fund_name, carrier, asset_type, asset_class, is_active)
-SELECT 'Beneva Segregated Fund - Optimal (100/100)', 'Beneva', 'Segregated Fund', 'Optimal: 100% maturity / 100% death', '1'
-WHERE NOT EXISTS (SELECT 1 FROM `seg_funds` WHERE fund_name='Beneva Segregated Fund - Optimal (100/100)' AND carrier='Beneva');
+-- Beneva segregated funds seed (generated from source data)
+-- Source: Lipper / carrier rate sheets, extracted 2026-08-18
+DELETE FROM seg_funds WHERE carrier = 'Beneva';
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva Money Market GIF (Fiera Capital)', 'Beneva', 'Money Market', 'Basic 75/75', NULL, 0.88, 2.15, NULL, NULL, NULL, 'Canadian Money Market', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva Money Market GIF (Fiera Capital)', 'Beneva', 'Money Market', 'Enhanced 75/100', NULL, 0.88, 2.15, NULL, NULL, NULL, 'Canadian Money Market', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva Money Market GIF (Fiera Capital)', 'Beneva', 'Money Market', 'Optimal 100/100', NULL, 0.88, 2.15, NULL, NULL, NULL, 'Canadian Money Market', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva Canadian Dividend Equity GIF (Guardian)', 'Beneva', 'Equity', 'Basic 75/75', NULL, 33.32, 18.94, NULL, NULL, NULL, 'Canadian Dividend Equity', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva Canadian Dividend Equity GIF (Guardian)', 'Beneva', 'Equity', 'Enhanced 75/100', NULL, 33.32, 18.94, NULL, NULL, NULL, 'Canadian Dividend Equity', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva Canadian Dividend Equity GIF (Guardian)', 'Beneva', 'Equity', 'Optimal 100/100', NULL, 33.32, 18.94, NULL, NULL, NULL, 'Canadian Dividend Equity', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva Global Small Cap Equity GIF (Fisher)', 'Beneva', 'Equity', 'Basic 75/75', NULL, 45.67, 17.61, NULL, NULL, NULL, 'Global Small Cap Equity', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva Global Small Cap Equity GIF (Fisher)', 'Beneva', 'Equity', 'Enhanced 75/100', NULL, 45.67, 17.61, NULL, NULL, NULL, 'Global Small Cap Equity', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva Global Small Cap Equity GIF (Fisher)', 'Beneva', 'Equity', 'Optimal 100/100', NULL, 45.67, 17.61, NULL, NULL, NULL, 'Global Small Cap Equity', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva U.S. Equity GIF (Hillsdale)', 'Beneva', 'Equity', 'Basic 75/75', NULL, 26.89, 17.56, NULL, NULL, NULL, 'U.S. Equity', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva U.S. Equity GIF (Hillsdale)', 'Beneva', 'Equity', 'Enhanced 75/100', NULL, 26.89, 17.56, NULL, NULL, NULL, 'U.S. Equity', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva U.S. Equity GIF (Hillsdale)', 'Beneva', 'Equity', 'Optimal 100/100', NULL, 26.89, 17.56, NULL, NULL, NULL, 'U.S. Equity', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva Global Real Estate GIF (CI)', 'Beneva', 'Real Estate', 'Basic 75/75', NULL, 13.91, 6.23, NULL, NULL, NULL, 'Global Real Estate', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva Global Real Estate GIF (CI)', 'Beneva', 'Real Estate', 'Enhanced 75/100', NULL, 13.91, 6.23, NULL, NULL, NULL, 'Global Real Estate', NULL, 'CAD', NULL, 1);
+INSERT INTO seg_funds (fund_name, carrier, category, series, mer, return_1yr, return_3yr, return_5yr, return_10yr, return_inception, asset_class, asset_type, currency, launch_date, is_active) VALUES ('Beneva Global Real Estate GIF (CI)', 'Beneva', 'Real Estate', 'Optimal 100/100', NULL, 13.91, 6.23, NULL, NULL, NULL, 'Global Real Estate', NULL, 'CAD', NULL, 1);

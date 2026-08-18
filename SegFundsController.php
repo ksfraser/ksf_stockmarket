@@ -13,7 +13,12 @@ class SegFundsController {
      * GET /?action=seg_funds — List all seg funds with filters.
      */
     public function listFunds(string $carrier = '', string $category = '', string $series = '', string $search = '', string $sortBy = 'fund_name', string $sortDir = 'ASC'): array {
-        $allowedSort = ['fund_name', 'carrier', 'category', 'series', 'mer', 'return_1yr', 'return_3yr', 'return_5yr', 'return_10yr'];
+        $allowedSort = ['fund_name', 'carrier', 'fund_code', 'category', 'series', 'currency', 'asset_type', 'asset_class',
+            'launch_date', 'aum_millions', 'mer', 'mer_pct', 'load_type', 'rrsp_eligible',
+            'num_securities', 'pe', 'pb', 'eps_growth', 'div_yield', 'volatility',
+            'nav', 'day_change_pct', 'week_pct', 'mtd_pct', 'ytd_pct', 'return_1mo', 'return_3mo',
+            'return_1yr', 'return_3yr', 'return_5yr', 'return_10yr', 'return_15yr', 'return_inception',
+            'quartile_ytd', 'quartile_1yr', 'quartile_3yr', 'quartile_5yr', 'quartile_10yr', 'quartile_15yr'];
         if (!in_array($sortBy, $allowedSort)) $sortBy = 'fund_name';
         $sortDir = strtoupper($sortDir) === 'DESC' ? 'DESC' : 'ASC';
 
@@ -40,8 +45,13 @@ class SegFundsController {
 
         $whereSql = 'WHERE ' . implode(' AND ', $where);
 
-        $sql = "SELECT id, fund_name, carrier, category, series, mer,
-                       return_1yr, return_3yr, return_5yr, return_10yr
+        $sql = "SELECT id, fund_name, carrier, fund_code, category, series, currency, asset_type, asset_class,
+                       launch_date, aum_millions, mer, mer_pct, load_type, rrsp_eligible,
+                       num_securities, pe, pb, eps_growth, div_yield, volatility,
+                       nav, day_change_dollars, day_change_pct, week_pct, mtd_pct, return_30day_pct, ytd_pct,
+                       return_1mo, return_3mo, return_1yr, return_3yr, return_5yr, return_10yr, return_15yr, return_inception,
+                       quartile_ytd, quartile_1yr, quartile_3yr, quartile_5yr, quartile_10yr, quartile_15yr,
+                       pdf_path
                 FROM seg_funds
                 {$whereSql}
                 ORDER BY {$sortBy} {$sortDir}

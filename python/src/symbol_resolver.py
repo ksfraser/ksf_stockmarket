@@ -42,6 +42,13 @@ try:
 except ImportError:
     _db_available = False
 
+# Synthetic "fake exchange" (money-market / private series) — see synthetic_quotes.py
+try:
+    from synthetic_quotes import is_synthetic
+except ImportError:
+    def is_synthetic(symbol):  # type: ignore
+        return False
+
 # Short bare symbols that resolve correctly without .TO on yfinance.
 # All other short, dot-free symbols default to .TO for TSX disambiguation.
 US_SHORT_NO_SUFFIX = {
@@ -76,6 +83,11 @@ def resolve_for_yfinance(symbol: str, use_db_lookup: bool = True) -> str:
 
     # Strip exchange prefixes / share-class separators before any TSX logic
     symbol = normalize_symbol(symbol)
+
+    # Synthetic exchange: money-market / private series with no real quote.
+    # Short-circuit before any yfinance dual-fetch.
+    if is_synthetic(symbol):
+        return symbol
 
     # Normalize TSX formats first
     symbol = _convert_tsx_format(symbol)

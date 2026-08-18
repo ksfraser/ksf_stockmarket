@@ -51,6 +51,15 @@ try:
     YFINANCE_AVAILABLE = True
 except ImportError:
     pass
+
+# Synthetic "fake exchange" — money-market / private series with no TSX quote.
+try:
+    from synthetic_quotes import is_synthetic, get_synthetic_quote
+except ImportError:  # pragma: no cover
+    def is_synthetic(symbol):  # type: ignore
+        return False
+    def get_synthetic_quote(symbol):  # type: ignore
+        return None
 from symbol_resolver import resolve_for_yfinance
 
 TALIB_AVAILABLE = False
@@ -138,6 +147,11 @@ class DailyPriceDownloader:
         if not YFINANCE_AVAILABLE:
             log.warning(f"yfinance not available — cannot download {symbol}")
             return []
+
+        # Synthetic exchange: money-market / private series with no real quote.
+        if is_synthetic(symbol):
+            q = get_synthetic_quote(symbol)
+            return [q] if q else []
 
         try:
             ticker = yf.Ticker(resolve_for_yfinance(symbol))
@@ -279,6 +293,11 @@ class DailyPriceDownloader:
         if not YFINANCE_AVAILABLE:
             print("yfinance not available")
             return 0
+
+        # Synthetic exchange: serve static NAV, no history backfill.
+        if is_synthetic(symbol):
+            q = get_synthetic_quote(symbol)
+            return self.upsert_prices(symbol, [q]) if q else 0
 
         if verbose:
             print(f"Backfilling {symbol}: {start_date} to {end_date}")

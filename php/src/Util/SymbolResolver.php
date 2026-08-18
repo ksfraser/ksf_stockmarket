@@ -27,6 +27,11 @@ class SymbolResolver
     {
         $symbol = strtoupper(trim($symbol));
 
+        // Synthetic exchange: money-market / private series with no real quote.
+        if ($this->isSynthetic($symbol)) {
+            return $symbol;
+        }
+
         // TSX unit/class normalization: .UN → -UN.TO, .B.TO → -B.TO, etc.
         if (str_ends_with($symbol, '.UN')) {
             return substr($symbol, 0, -3) . '-UN.TO';
@@ -84,6 +89,24 @@ class SymbolResolver
             return [$symbol];
         }
         return [$symbol, $resolved];
+    }
+
+    /**
+     * True if the symbol is registered in the synthetic exchange
+     * (money-market / private series served locally, not via yfinance).
+     * Gracefully returns false if the table does not exist yet.
+     */
+    private function isSynthetic(string $symbol): bool
+    {
+        try {
+            $row = $this->fetchOne(
+                "SELECT 1 FROM synthetic_quotes WHERE symbol = :sym AND is_active = 1 LIMIT 1",
+                [':sym' => $symbol]
+            );
+            return $row !== null;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     private function fetchOne(string $sql, array $params): ?array

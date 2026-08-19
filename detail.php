@@ -444,6 +444,52 @@ window.currentPrice = <?= (float)$close ?>;
     <?php endif; ?>
 </div>
 
+<!-- ===== LIPPER PEER-RELATIVE SCORES ===== -->
+<?php $lipperScores = $data['lipperScores'] ?? []; ?>
+<?php if (!empty($lipperScores)): ?>
+<div class="card" style="margin-top:12px;">
+    <div class="card-header">Lipper Peer-Relative Scores</div>
+    <p class="text-muted" style="margin:0 0 10px;">
+        Each score ranks this stock against its peers in the group on a 1–5 scale
+        (5 = top 20%, 1 = bottom 20%). <strong>Composite</strong> is the average of
+        Total Return, Preservation (loss avoidance) and Consistent Return (risk-adjusted).
+    </p>
+    <?php foreach (['sector','industry','style_box'] as $pgType): ?>
+        <?php if (!empty($lipperScores[$pgType])): $ls = $lipperScores[$pgType]; ?>
+        <div style="margin-bottom:12px; padding:10px; border:1px solid rgba(255,255,255,0.15); border-radius:8px;">
+            <div style="font-weight:600; margin-bottom:6px;">
+                <?= htmlspecialchars($pgType === 'sector' ? 'Sector' : ($pgType === 'industry' ? 'Industry' : 'Style Box')) ?>:
+                <?= htmlspecialchars($ls['peer_group_value'] ?? '') ?>
+                <span class="text-muted" style="font-weight:400;">(peer percentile <?= round($ls['sector_rank_pct'] ?? 0) ?>%)</span>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <?php
+                $measures = [
+                    'Total Return'      => $ls['total_return_score'] ?? null,
+                    'Preservation'      => $ls['preservation_score'] ?? null,
+                    'Consistent Return' => $ls['consistent_score'] ?? null,
+                ];
+                foreach ($measures as $mName => $mVal):
+                    if ($mVal === null) continue;
+                    $col = $mVal >= 4 ? 'var(--green)' : ($mVal == 3 ? 'var(--yellow)' : 'var(--red)');
+                ?>
+                <div style="text-align:center; min-width:92px; padding:6px 10px; border-radius:8px; background:rgba(255,255,255,0.04);">
+                    <div style="font-size:1.6em; font-weight:700; color:<?= $col ?>;"><?= $mVal ?>/5</div>
+                    <div class="text-muted" style="font-size:0.75em;"><?= htmlspecialchars($mName) ?></div>
+                </div>
+                <?php endforeach; ?>
+                <?php $ccol = ($ls['composite_score'] ?? 0) >= 4 ? 'var(--green)' : (($ls['composite_score'] ?? 0) == 3 ? 'var(--yellow)' : 'var(--red)'); ?>
+                <div style="text-align:center; min-width:92px; padding:6px 10px; border-radius:8px; background:rgba(255,255,255,0.08);">
+                    <div style="font-size:1.6em; font-weight:800; color:<?= $ccol ?>;"><?= $ls['composite_score'] ?? '—' ?>/5</div>
+                    <div class="text-muted" style="font-size:0.75em;">Composite</div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</div>
+<?php endif; ?>
+
 <!-- ===== EXIT SIGNALS / SELL RISK ===== -->
 <?php
 $exitSignals = $data['exit_signals'] ?? [];

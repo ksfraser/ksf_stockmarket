@@ -347,7 +347,21 @@ class StockController {
 
         // Performance
         $perf = $this->calcPerformance($symbol);
-        
+
+        // Lipper-style peer-relative scores (sector / industry / style_box)
+        $lipperScores = [];
+        try {
+            $stmt = $this->pdo->prepare(
+                "SELECT peer_group_type, peer_group_value, total_return_score, preservation_score,
+                        consistent_score, composite_score, sector_rank_pct
+                 FROM lipper_scores WHERE symbol = :sym"
+            );
+            $stmt->execute([':sym' => $symbol]);
+            foreach ($stmt->fetchAll() as $row) {
+                $lipperScores[$row['peer_group_type']] = $row;
+            }
+        } catch (\Exception $e) {}
+
         // Markov regime analysis
         $regime = $this->getRegimeAnalysis($symbol);
 
@@ -364,7 +378,7 @@ class StockController {
             'analystRatings', 'analystTargets', 'news', 'optionsData',
             'buffettScore', 'zacksScore', 'perf', 'regime', 'exitSignals',
             'recommendations', 'holders', 'financials', 'estimates',
-            'vectorVest', 'iplaceCalc'
+            'vectorVest', 'iplaceCalc', 'lipperScores'
         );
         $result['analyst_ratings'] = $result['analystRatings'];
         $result['analyst_targets'] = $result['analystTargets'];

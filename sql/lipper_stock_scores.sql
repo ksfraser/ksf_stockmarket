@@ -1,14 +1,16 @@
--- Lipper-style peer-relative risk-adjusted scoring for stocks (by sector) + portfolio effectiveness.
--- Implements the "meaningful part" of Lipper: Total Return, Preservation (loss avoidance),
--- and Consistent Return (risk-adjusted). Each is percentile-ranked within the stock's
--- GICS-style sector peer group and expressed as a 1-5 Lipper Leader-style score; the
--- composite score is the average of the three. Advisor portfolios (portfolio table) are
--- then aggregated, weighted by market value, to measure effectiveness.
+-- Lipper-style peer-relative stock scoring (extensible by peer group: sector/industry/style_box)
+-- + advisor portfolio effectiveness.
+-- Implements the meaningful Lipper measures: Total Return, Preservation (loss avoidance),
+-- Consistent Return (risk-adjusted). Each is percentile-ranked within the stock's peer group
+-- and expressed as a 1-5 Lipper Leader-style score; composite = avg of the three.
+-- Adding a new peer dimension = new rows (peer_group_type), NOT new columns.
 
-CREATE TABLE IF NOT EXISTS lipper_stock_scores (
+DROP TABLE IF EXISTS lipper_stock_scores;
+
+CREATE TABLE IF NOT EXISTS lipper_scores (
   symbol            VARCHAR(20)  NOT NULL,
-  sector            VARCHAR(100),
-  industry          VARCHAR(100),
+  peer_group_type   VARCHAR(20)  NOT NULL,
+  peer_group_value  VARCHAR(100),
   as_of             DATE,
   ret_1y            DECIMAL(8,4),
   ret_3y            DECIMAL(8,4),
@@ -24,9 +26,9 @@ CREATE TABLE IF NOT EXISTS lipper_stock_scores (
   consistent_score   TINYINT,
   composite_score    TINYINT,
   sector_rank_pct    DECIMAL(5,2),
-  PRIMARY KEY (symbol),
-  INDEX (sector),
-  INDEX (composite_score)
+  PRIMARY KEY (symbol, peer_group_type),
+  INDEX (peer_group_type, peer_group_value),
+  INDEX (symbol)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS portfolio_lipper_effectiveness (

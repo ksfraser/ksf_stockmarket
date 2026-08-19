@@ -12,7 +12,7 @@ Counts as of 2026-08-18.
 | Manulife | 142 | (prior) | done |
 | RBC | 34 | Lipper SPA — blocked | pending export from Kevin |
 | Sun Life | 94 | (prior) | done |
-| Empire Life | 0 | class-segs (JS) + Fund Facts PDFs | pending |
+| Empire Life | 11 | funds.empire.ca DSEG (Elite Equity GIF, 11 series) | partial — only Elite GIF enumerable |
 | Equitable | 119 | Fundata EGIF (https://equitablelife.fundata.com/?product=EGIF&language=en) | done (2026-08-18) |
 | iA (Industrial Alliance) | 0 | ia.ca/funds-performance | pending [LATER] |
 
@@ -57,6 +57,10 @@ Counts as of 2026-08-18.
   / Fund Facts PDF export over scraping the rendered table.
 - Empire Life class-segs is closed to new policies (Oct 31 2014) — only existing clients; still
   ingest for historical/holdings reference.
+- funds.empire.ca is a per-series lookup app with no listing/sitemap; the only enumerable family is
+  DSEG = Empire Life Elite Equity GIF (11 series pages DSEG-a..w). Other discontinued families
+  (CP, CP2, CP21, class-segs) did not expose funds.empire.ca IDs; to ingest them, supply the
+  Fund Facts PDFs or the FundSERV code list (FS-FundSERVCodesClosed-EN-web.pdf).
 - KYC/FNA infra already exists in ksfii_app: FNACalculationService, RetirementCalculator
   (ksf_retirement), BudgetCalculatorService. Empire/iA tools should map onto these, not be
   re-implemented from scratch.

@@ -25,9 +25,14 @@ class AlertsController
 
     /**
      * GET /?action=alerts_status — Alerts and cron monitoring dashboard.
+     * POST /?action=alerts_status — Update alert status (ack/ignore).
      */
     public function index(): array
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            return $this->updateStatus();
+        }
+
         $jobs = $this->loadCronJobs();
         $summary = $this->computeSummary($jobs);
         $volumeSnapshots = $this->getVolumeSnapshotInfo($jobs);
@@ -36,13 +41,7 @@ class AlertsController
         $watchlistSymbols = $this->loadWatchlistSymbols();
         $alertQueueCounts = $this->getAlertQueueCounts();
         $filter = $_GET['filter'] ?? '';
-        $severityFilter = $_GET['severity'] ?? '';
-        $symbolFilter = $_GET['symbol'] ?? '';
-        $recentAlerts = $this->getRecentAlerts(
-            $filter === 'portfolio' ? 'portfolio' : null,
-            $severityFilter,
-            $symbolFilter
-        );
+        $recentAlerts = $this->getRecentAlerts($filter === 'portfolio' ? 'portfolio' : null);
 
         return [
             'pageTitle'       => 'Alerts & Cron Status',
@@ -56,6 +55,26 @@ class AlertsController
             'recentAlerts'    => $recentAlerts,
             'filter'          => $filter,
         ];
+    }
+
+    private function updateStatus(): array
+    {
+        $alertId = trim((string)($_POST['alert_id'] ?? ''));
+        $status = strtolower(trim((string)($_POST['status'] ?? '')));
+        $allowed = ['ack', 'ignore'];
+
+        if ($alertId === '' || !in_array($status, $allowed, true)) {
+            return ['updateStatus' => 'missing'];
+        }
+
+        try {
+            $pdo = Database::get();
+            $stmt = $pdo->prepare("UPDATE alert_queue SET status = :status WHERE id = :id");
+            $stmt->execute([':status' => $status, ':id' => $alertId]);
+            return ['updateStatus' => $stmt->rowCount() > 0 ? 'ok' : 'missing'];
+        } catch (Exception $e) {
+            return ['updateStatus' => 'error'];
+        }
     }
 
     /**
@@ -221,9 +240,9 @@ class AlertsController
 
     /**
      * Get recent triggered alerts from MariaDB (last 7 days).
-     * Can filter by portfolio symbols, severity, and symbol.
+     * Can filter by portfolio symbols if provided.
      */
-    private function getRecentAlerts(?string $portfolioFilter = null, ?string $severityFilter = null, ?string $symbolFilter = null): array
+    private function getRecentAlerts(?string $portfolioFilter = null): array
     {
         try {
             $pdo = Database::get();
@@ -234,34 +253,19 @@ class AlertsController
                 WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
             ";
             
-            $params = [];
-            
             // Optional filter by portfolio symbols
             if ($portfolioFilter === 'portfolio') {
                 $sql = "
-                    SELECT DISTINCT aq.id, aq.symbol, aq.alert_type, aq.severity, aq.payload, aq.status, aq.created_at, aq.completed_at
+                    SELECT aq.id, aq.symbol, aq.alert_type, aq.severity, aq.payload, aq.status, aq.created_at, aq.completed_at
                     FROM alert_queue aq
-                    INNER JOIN portfolio p ON aq.symbol = p.symbol
+                    INNER JOIN portfolio_holdings ph ON aq.symbol = ph.symbol
                     WHERE aq.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
                 ";
             }
             
-            // Apply severity filter
-            if ($severityFilter && in_array($severityFilter, ['low', 'medium', 'high', 'critical'])) {
-                $sql .= " AND severity = ?";
-                $params[] = $severityFilter;
-            }
-            
-            // Apply symbol filter
-            if ($symbolFilter) {
-                $sql .= " AND symbol LIKE ?";
-                $params[] = '%' . $symbolFilter . '%';
-            }
-            
             $sql .= " ORDER BY created_at DESC LIMIT 100";
             
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute($params);
+            $stmt = $pdo->query($sql);
             return $stmt->fetchAll();
         } catch (Exception $e) {
             return [];

@@ -567,6 +567,33 @@ class StockController {
      * "Great Company at a Fair Price" — focuses on business fundamentals (moat, financials).
      * Price-related checks moved to separate valuation assessment.
      */
+    /**
+     * Generic helper: fetch the latest row from a table for a given key column.
+     * Tries common timestamp columns to determine "latest"; falls back to any
+     * matching row. Returns [] on any failure (table/column missing or empty).
+     */
+    private function getLatestRow(string $table, string $keyCol, string $symbol): array {
+        $table  = preg_replace('/[^A-Za-z0-9_]/', '', $table);
+        $keyCol = preg_replace('/[^A-Za-z0-9_]/', '', $keyCol);
+        $dateCols = ['date_calculated', 'date', 'created_at', 'analysis_date', 'as_of', 'updated_at'];
+        foreach ($dateCols as $dc) {
+            try {
+                $stmt = $this->pdo->prepare("SELECT * FROM `{$table}` WHERE `{$keyCol}` = :sym ORDER BY `{$dc}` DESC LIMIT 1");
+                $stmt->execute([':sym' => $symbol]);
+                if ($row = $stmt->fetch()) return $row;
+            } catch (\Exception $e) {
+                // column missing — try next candidate
+            }
+        }
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM `{$table}` WHERE `{$keyCol}` = :sym LIMIT 1");
+            $stmt->execute([':sym' => $symbol]);
+            return $stmt->fetch() ?: [];
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
     private function calcBuffettScore(array $f, array $ind, float $closePrice = 0): array {
         $checks = [];
         $score = 0;

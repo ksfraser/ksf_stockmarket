@@ -1,0 +1,103 @@
+# BMO segregated fund Calendar Year Returns — source digital.lipperweb.com/bmoinsurance (LSEG Lipper), as of 2026-07-31
+# columns: fund_name | 2025 | 2024 | 2023 | 2022 | 2021 | 2020 | 2019 | 2018 | 2017 | 2016
+# "-" = not available (pre-inception / N/A)
+BMO Aggregate Bond Index ETF GIF 100/100 Class A|-0.11|1.75|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 100/100 Class A Prestige|0.31|1.66|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 100/100 Class F|1.09|2.42|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 75/100 Class A|0.55|1.68|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 75/100 Class A Prestige|0.45|1.81|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 75/100 Class F|1.59|2.79|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 75/100 Plus Class A|0.55|1.68|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 75/100 Plus Class A Prestige|0.45|1.81|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 75/100 Plus Class F|1.59|2.79|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 75/75 Class A|0.56|1.92|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 75/75 Class A Prestige|0.65|1.92|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 75/75 Class F|1.61|2.98|-|-|-|-|-|-|-|-
+BMO Aggregate Bond Index ETF GIF 75/75 Class F Prestige|1.76|3.08|-|-|-|-|-|-|-|-
+BMO Asset Allocation GIF 100/100 Class A|12.17|11.67|7.21|-12.41|10.44|4.48|11.22|-|-|-
+BMO Asset Allocation GIF 100/100 Class A Prestige|12.62|12.10|7.60|-12.10|10.71|5.27|11.67|-|-|-
+BMO Asset Allocation GIF 100/100 Class F|13.36|12.87|8.36|-11.47|11.47|5.75|12.51|-|-|-
+BMO Asset Allocation GIF 75/100 Class A|12.60|12.09|7.65|-12.08|10.72|5.02|11.69|-|-|-
+BMO Asset Allocation GIF 75/100 Class A Prestige|12.85|12.36|7.88|-11.87|11.07|5.35|-|-|-|-
+BMO Asset Allocation GIF 75/100 Class F|13.82|13.33|8.80|-11.11|11.92|6.18|12.96|-|-|-
+BMO Asset Allocation GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Asset Allocation GIF 75/75 Class A|12.88|12.39|7.84|-11.81|11.08|5.36|11.97|-|-|-
+BMO Asset Allocation GIF 75/75 Class A Prestige|13.30|12.82|8.12|-11.58|11.12|5.41|-|-|-|-
+BMO Asset Allocation GIF 75/75 Class F|14.71|13.66|9.07|-10.89|12.20|6.44|13.24|-|-|-
+BMO Asset Allocation GIF 75/75 Class F Prestige|13.94|13.87|-|-|-|-|-|-|-|-
+BMO Balanced ESG ETF GIF 100/100 Class A|9.16|13.11|11.55|-15.13|-|-|-|-|-|-
+BMO Balanced ESG ETF GIF 100/100 Class A Prestige|9.64|13.62|11.98|-14.90|-|-|-|-|-|-
+BMO Balanced ESG ETF GIF 100/100 Class F|10.29|14.30|12.76|-14.29|-|-|-|-|-|-
+BMO Balanced ESG ETF GIF 75/100 Class A|9.64|13.63|12.08|-14.87|-|-|-|-|-|-
+BMO Balanced ESG ETF GIF 75/100 Class A Prestige|9.87|13.85|12.24|-14.70|-|-|-|-|-|-
+BMO Balanced ESG ETF GIF 75/100 Class F|10.80|14.81|13.23|-13.93|-|-|-|-|-|-
+BMO Balanced ESG ETF GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Balanced ESG ETF GIF 75/75 Class A|9.87|13.85|12.31|-14.61|-|-|-|-|-|-
+BMO Balanced ESG ETF GIF 75/75 Class A Prestige|10.07|14.06|12.46|-14.52|-|-|-|-|-|-
+BMO Balanced ESG ETF GIF 75/75 Class F|11.01|15.10|13.45|-13.75|-|-|-|-|-|-
+BMO Balanced ESG ETF GIF 75/75 Class F Prestige|11.12|15.20|-|-|-|-|-|-|-|-
+BMO Balanced ETF Portfolio GIF 100/100 Class A|10.49|11.41|8.72|-12.67|6.03|6.16|11.58|-4.20|-|-
+BMO Balanced ETF Portfolio GIF 100/100 Class A Prestige|10.94|11.84|9.15|-12.33|6.45|6.64|12.03|-3.89|-|-
+BMO Balanced ETF Portfolio GIF 100/100 Class F|11.81|12.71|9.98|-11.67|7.20|7.36|12.81|-|-|-
+BMO Balanced ETF Portfolio GIF 75/100 Class A|10.99|11.88|9.20|-12.31|6.48|6.69|12.04|-3.85|5.44|-
+BMO Balanced ETF Portfolio GIF 75/100 Class A Prestige|11.29|12.18|9.48|-12.07|6.75|6.85|-|-|-|-
+BMO Balanced ETF Portfolio GIF 75/100 Class F|12.24|13.14|10.42|-11.30|7.71|7.92|13.29|-|-|-
+BMO Balanced ETF Portfolio GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Balanced ETF Portfolio GIF 75/100 Plus Class A|10.99|11.88|9.20|-12.31|6.48|-|-|-|-|-
+BMO Balanced ETF Portfolio GIF 75/100 Plus Class A Prestige|11.29|12.18|9.48|-12.07|6.75|-|-|-|-|-
+BMO Balanced ETF Portfolio GIF 75/100 Plus Class F|12.24|13.14|10.42|-11.30|7.71|-|-|-|-|-
+BMO Balanced ETF Portfolio GIF 75/75 Class A|11.32|12.20|9.51|-12.05|6.78|6.97|12.36|-3.58|5.80|-
+BMO Balanced ETF Portfolio GIF 75/75 Class A Prestige|11.54|12.44|9.73|-11.86|7.01|7.15|-|-|-|-
+BMO Balanced ETF Portfolio GIF 75/75 Class F|12.57|13.42|10.72|-11.07|7.96|8.68|13.62|-|-|-
+BMO Balanced ETF Portfolio GIF 75/75 Class F Prestige|12.66|13.56|-|-|-|-|-|-|-|-
+BMO Canadian Balanced Growth GIF 100/100 Class A|13.04|13.86|7.30|-11.37|8.47|0.21|10.25|-5.92|2.00|3.37
+BMO Canadian Balanced Growth GIF 100/100 Class A Prestige|13.49|14.29|7.73|-11.02|8.89|0.61|10.68|-5.51|2.43|3.79
+BMO Canadian Balanced Growth GIF 100/100 Class F|14.26|15.10|8.48|-10.41|9.64|1.29|11.43|-|-|-
+BMO Canadian Income & Growth GIF 75/100 Class A|11.30|13.30|-|-|-|-|-|-|-|-
+BMO Canadian Income & Growth GIF 75/100 Class A Prestige|11.52|13.57|-|-|-|-|-|-|-|-
+BMO Canadian Income & Growth GIF 75/100 Class F|12.50|14.44|-|-|-|-|-|-|-|-
+BMO Canadian Income & Growth GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Canadian Income & Growth GIF 75/100 Plus Class A|11.30|-|-|-|-|-|-|-|-|-
+BMO Canadian Income & Growth GIF 75/100 Plus Class A Prestige|11.52|-|-|-|-|-|-|-|-|-
+BMO Canadian Income & Growth GIF 75/100 Plus Class F|12.50|-|-|-|-|-|-|-|-|-
+BMO Canadian Income & Growth GIF 75/75 Class A|11.78|13.69|-|-|-|-|-|-|-|-
+BMO Canadian Income & Growth GIF 75/75 Class A Prestige|11.84|13.82|-|-|-|-|-|-|-|-
+BMO Canadian Income & Growth GIF 75/75 Class F|12.57|14.83|-|-|-|-|-|-|-|-
+BMO Canadian Income & Growth GIF 75/75 Class F Prestige|13.01|15.07|-|-|-|-|-|-|-|-
+BMO Canadian Income Strategy GIF 100/100 Class A|11.80|13.06|7.07|-11.13|11.68|5.54|9.59|-4.23|2.63|1.20
+BMO Canadian Income Strategy GIF 100/100 Class A Prestige|12.24|13.50|7.51|-10.82|12.07|5.90|9.97|-3.87|3.05|1.81
+BMO Canadian Income Strategy GIF 100/100 Class F|13.00|14.28|8.26|-10.17|12.88|6.67|10.76|-|-|-
+BMO Conservative ETF Portfolio GIF 100/100 Class A|7.49|7.28|7.27|-13.03|2.12|6.45|9.09|-3.48|-|-
+BMO Conservative ETF Portfolio GIF 100/100 Class A Prestige|7.92|7.71|7.71|-12.69|2.51|6.87|9.46|-3.11|-|-
+BMO Conservative ETF Portfolio GIF 100/100 Class F|8.73|8.50|8.51|-12.04|3.27|7.49|10.29|-|-|-
+BMO Conservative ETF Portfolio GIF 75/100 Class A|7.95|7.72|7.73|-12.66|2.55|6.74|9.50|-3.11|2.87|-
+BMO Conservative ETF Portfolio GIF 75/100 Class A Prestige|8.17|7.95|7.96|-12.50|2.77|6.96|-|-|-|-
+BMO Conservative ETF Portfolio GIF 75/100 Class F|9.18|8.92|8.94|-11.68|3.68|7.92|10.72|-|-|-
+BMO Conservative ETF Portfolio GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Conservative ETF Portfolio GIF 75/100 Plus Class A|7.95|7.72|7.73|-12.66|2.55|-|-|-|-|-
+BMO Conservative ETF Portfolio GIF 75/100 Plus Class A Prestige|8.17|7.95|7.96|-12.50|2.77|-|-|-|-|-
+BMO Conservative ETF Portfolio GIF 75/100 Plus Class F|9.18|8.92|8.94|-11.68|3.68|-|-|-|-|-
+BMO Conservative ETF Portfolio GIF 75/75 Class A|8.17|7.93|7.94|-12.53|2.73|7.16|9.73|-2.90|3.18|-
+BMO Conservative ETF Portfolio GIF 75/75 Class A Prestige|8.34|8.13|8.12|-12.29|2.95|6.95|-|-|-|-
+BMO Conservative ETF Portfolio GIF 75/75 Class F|9.38|9.15|9.16|-11.51|3.93|8.14|10.96|-|-|-
+BMO Conservative ETF Portfolio GIF 75/75 Class F Prestige|9.49|9.26|-|-|-|-|-|-|-|-
+BMO Dividend GIF 75/100 Class A|15.64|14.89|7.66|-10.24|20.82|-0.29|21.32|-|-|-
+BMO Dividend GIF 75/100 Class A Prestige|15.98|15.24|7.97|-9.99|21.19|-0.18|-|-|-|-
+BMO Dividend GIF 75/100 Class F|16.91|16.15|8.84|-9.24|22.24|0.75|22.67|-|-|-
+BMO Dividend GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Dividend GIF 75/75 Class A|16.16|15.44|8.06|-9.86|21.32|0.02|21.74|-|-|-
+BMO Dividend GIF 75/75 Class A Prestige|16.62|15.88|8.35|-9.71|21.47|0.26|-|-|-|-
+BMO Dividend GIF 75/75 Class F|17.30|16.56|9.23|-8.86|22.59|1.09|23.09|-|-|-
+BMO Dividend GIF 75/75 Class F Prestige|17.72|16.93|-|-|-|-|-|-|-|-
+BMO Equity Growth ETF Portfolio GIF 75/100 Class A|15.67|18.79|11.49|-11.27|14.67|6.70|16.25|-5.87|11.29|-
+BMO Equity Growth ETF Portfolio GIF 75/100 Class A Prestige|16.00|19.10|11.82|-11.07|15.00|6.54|-|-|-|-
+BMO Equity Growth ETF Portfolio GIF 75/100 Class F|16.91|20.04|12.70|-10.33|15.95|7.70|17.53|-|-|-
+BMO Equity Growth ETF Portfolio GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Equity Growth ETF Portfolio GIF 75/75 Class A|16.07|19.18|11.90|-10.98|15.14|6.94|16.68|-5.53|11.66|-
+BMO Equity Growth ETF Portfolio GIF 75/75 Class A Prestige|16.29|19.41|12.10|-10.81|15.30|7.09|-|-|-|-
+BMO Equity Growth ETF Portfolio GIF 75/75 Class F|17.28|20.45|13.10|-10.02|16.33|8.08|17.94|-|-|-
+BMO Equity Growth ETF Portfolio GIF 75/75 Class F Prestige|17.44|20.59|-|-|-|-|-|-|-|-
+BMO Fixed Income ETF Portfolio GIF 75/100 Class A|2.87|0.62|5.34|-13.75|-3.40|5.70|4.42|-0.82|-0.47|-
+BMO Fixed Income ETF Portfolio GIF 75/100 Class A Prestige|3.03|0.76|5.46|-13.64|-3.23|5.79|-|-|-|-
+BMO Fixed Income ETF Portfolio GIF 75/100 Class F|4.02|1.74|6.47|-12.81|-2.36|6.80|6.05|-|-|-

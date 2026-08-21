@@ -1,0 +1,103 @@
+# BMO segregated fund Calendar Year Returns — page 2 — source digital.lipperweb.com/bmoinsurance (LSEG Lipper), as of 2026-07-31
+# columns: fund_name | 2025 | 2024 | 2023 | 2022 | 2021 | 2020 | 2019 | 2018 | 2017 | 2016
+# "-" = not available (pre-inception / N/A)
+BMO Fixed Income ETF Portfolio GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Fixed Income ETF Portfolio GIF 75/100 Plus Class A|2.87|0.62|5.34|-13.75|-3.40|-|-|-|-|-
+BMO Fixed Income ETF Portfolio GIF 75/100 Plus Class A Prestige|3.03|0.76|5.46|-13.64|-3.23|-|-|-|-|-
+BMO Fixed Income ETF Portfolio GIF 75/100 Plus Class F|4.02|1.74|6.47|-12.81|-2.36|-|-|-|-|-
+BMO Fixed Income ETF Portfolio GIF 75/75 Class A|3.01|0.76|5.47|-13.64|-3.28|5.97|5.04|-0.73|-0.38|-
+BMO Fixed Income ETF Portfolio GIF 75/75 Class A Prestige|3.11|0.87|5.55|-13.54|-3.21|5.88|-|-|-|-
+BMO Fixed Income ETF Portfolio GIF 75/75 Class F|4.17|-2.16|6.63|-12.68|-2.22|6.89|6.22|-|-|-
+BMO Fixed Income ETF Portfolio GIF 75/75 Class F Prestige|4.28|2.10|-|-|-|-|-|-|-|-
+BMO Global Dividend Opportunities Fund GIF 75/100 Class A|-|-|-|-|-|-|-|-|-|-
+BMO Global Dividend Opportunities Fund GIF 75/100 Class A Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Global Dividend Opportunities Fund GIF 75/100 Class F|-|-|-|-|-|-|-|-|-|-
+BMO Global Dividend Opportunities Fund GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Global Dividend Opportunities Fund GIF 75/75 Class A|-|-|-|-|-|-|-|-|-|-
+BMO Global Dividend Opportunities Fund GIF 75/75 Class A Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Global Dividend Opportunities Fund GIF 75/75 Class F|-|-|-|-|-|-|-|-|-|-
+BMO Global Dividend Opportunities Fund GIF 75/75 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Global Equity Fund GIF 75/100 Class A|12.89|-|-|-|-|-|-|-|-|-
+BMO Global Equity Fund GIF 75/100 Class A Prestige|13.20|-|-|-|-|-|-|-|-|-
+BMO Global Equity Fund GIF 75/100 Class F|14.01|-|-|-|-|-|-|-|-|-
+BMO Global Equity Fund GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Global Equity Fund GIF 75/75 Class A|13.54|-|-|-|-|-|-|-|-|-
+BMO Global Equity Fund GIF 75/75 Class A Prestige|13.82|-|-|-|-|-|-|-|-|-
+BMO Global Equity Fund GIF 75/75 Class F|14.35|-|-|-|-|-|-|-|-|-
+BMO Global Equity Fund GIF 75/75 Class F Prestige|14.83|-|-|-|-|-|-|-|-|-
+BMO Global Income & Growth GIF 100/100 Class A|-|-|-|-|-|-|-|-|-|-
+BMO Global Income & Growth GIF 100/100 Class A Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Global Income & Growth GIF 100/100 Class F|-|-|-|-|-|-|-|-|-|-
+BMO Global Income & Growth GIF 75/100 Class A|10.24|15.83|-|-|-|-|-|-|-|-
+BMO Global Income & Growth GIF 75/100 Class A Prestige|10.44|16.15|-|-|-|-|-|-|-|-
+BMO Global Income & Growth GIF 75/100 Class F|11.40|17.14|-|-|-|-|-|-|-|-
+BMO Global Income & Growth GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Global Income & Growth GIF 75/75 Class A|10.59|16.12|-|-|-|-|-|-|-|-
+BMO Global Income & Growth GIF 75/75 Class A Prestige|10.80|16.54|-|-|-|-|-|-|-|-
+BMO Global Income & Growth GIF 75/75 Class F|11.33|17.57|-|-|-|-|-|-|-|-
+BMO Global Income & Growth GIF 75/75 Class F Prestige|12.15|17.78|-|-|-|-|-|-|-|-
+BMO Global Innovators GIF 75/100 Class A|16.88|27.86|-|-|-|-|-|-|-|-
+BMO Global Innovators GIF 75/100 Class A Prestige|16.94|28.05|-|-|-|-|-|-|-|-
+BMO Global Innovators GIF 75/100 Class F|18.00|29.03|-|-|-|-|-|-|-|-
+BMO Global Innovators GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Global Innovators GIF 75/75 Class A|17.17|28.20|-|-|-|-|-|-|-|-
+BMO Global Innovators GIF 75/75 Class A Prestige|17.54|28.67|-|-|-|-|-|-|-|-
+BMO Global Innovators GIF 75/75 Class F|18.46|29.41|-|-|-|-|-|-|-|-
+BMO Global Innovators GIF 75/75 Class F Prestige|18.70|29.80|-|-|-|-|-|-|-|-
+BMO Growth ETF Portfolio GIF 75/100 Class A|13.58|15.87|10.08|-11.89|11.04|6.72|14.27|-4.93|7.67|-
+BMO Growth ETF Portfolio GIF 75/100 Class A Prestige|13.91|16.20|10.41|-11.67|11.34|6.72|-|-|-|-
+BMO Growth ETF Portfolio GIF 75/100 Class F|14.84|17.17|11.33|-10.94|12.25|7.75|15.54|-|-|-
+BMO Growth ETF Portfolio GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Growth ETF Portfolio GIF 75/75 Class A|13.96|16.27|10.46|-11.59|11.43|7.00|14.70|-4.58|7.96|-
+BMO Growth ETF Portfolio GIF 75/75 Class A Prestige|14.19|16.49|10.71|-11.42|11.61|7.14|-|-|-|-
+BMO Growth ETF Portfolio GIF 75/75 Class F|15.21|17.53|11.68|-10.63|12.64|8.13|15.95|-|-|-
+BMO Growth ETF Portfolio GIF 75/75 Class F Prestige|15.33|17.67|-|-|-|-|-|-|-|-
+BMO Income ETF Portfolio GIF 75/100 Class A|6.12|5.48|7.03|-13.04|0.16|6.41|7.67|-2.31|1.71|-
+BMO Income ETF Portfolio GIF 75/100 Class A Prestige|6.36|5.72|7.27|-12.81|0.28|6.65|-|-|-|-
+BMO Income ETF Portfolio GIF 75/100 Class F|7.33|6.65|8.23|-12.03|1.17|7.61|8.86|-|-|-
+BMO Income ETF Portfolio GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Income ETF Portfolio GIF 75/100 Plus Class A|6.12|5.48|7.03|-13.04|0.16|-|-|-|-|-
+BMO Income ETF Portfolio GIF 75/100 Plus Class A Prestige|6.36|5.72|7.27|-12.81|0.28|-|-|-|-|-
+BMO Income ETF Portfolio GIF 75/100 Plus Class F|7.33|6.65|8.23|-12.03|1.17|-|-|-|-|-
+BMO Income ETF Portfolio GIF 75/75 Class A|6.40|5.72|7.27|-12.81|0.32|6.61|7.86|-2.10|1.95|-
+BMO Income ETF Portfolio GIF 75/75 Class A Prestige|6.53|5.88|7.43|-12.69|0.40|6.83|-|-|-|-
+BMO Income ETF Portfolio GIF 75/75 Class F|7.62|6.96|8.53|-11.80|1.37|7.82|9.08|-|-|-
+BMO Income ETF Portfolio GIF 75/75 Class F Prestige|7.72|6.96|-|-|-|-|-|-|-|-
+BMO Low Volatility Canadian Equity ETF GIF 75/100 Class A|22.06|12.40|6.61|-2.96|19.77|-1.02|18.62|-5.22|8.06|-
+BMO Low Volatility Canadian Equity ETF GIF 75/100 Class A Prestige|22.42|12.73|6.94|-2.69|20.10|-0.78|-|-|-|-
+BMO Low Volatility Canadian Equity ETF GIF 75/100 Class F|23.46|13.63|7.77|-1.90|21.07|0.05|19.94|-|-|-
+BMO Low Volatility Canadian Equity ETF GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Low Volatility Canadian Equity ETF GIF 75/75 Class A|22.68|12.96|7.08|-2.56|20.24|-0.63|19.09|-4.82|8.49|-
+BMO Low Volatility Canadian Equity ETF GIF 75/75 Class A Prestige|22.92|13.19|7.28|-2.41|20.48|-0.45|-|-|-|-
+BMO Low Volatility Canadian Equity ETF GIF 75/75 Class F|23.89|14.08|8.21|-1.51|21.56|0.46|20.42|-|-|-
+BMO Low Volatility Canadian Equity ETF GIF 75/75 Class F Prestige|23.99|14.18|-|-|-|-|-|-|-|-
+BMO Low Volatility International Equity ETF GIF 75/100 Class A|10.54|8.66|6.97|-11.33|2.25|-2.59|-|-|-|-
+BMO Low Volatility International Equity ETF GIF 75/100 Class A Prestige|10.87|8.98|7.46|-11.21|2.52|-2.40|-|-|-|-
+BMO Low Volatility International Equity ETF GIF 75/100 Class F|11.74|9.86|8.15|-10.50|3.36|-1.51|-|-|-|-
+BMO Low Volatility International Equity ETF GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Low Volatility International Equity ETF GIF 75/75 Class A|11.03|9.13|7.32|-11.22|2.58|-2.31|-|-|-|-
+BMO Low Volatility International Equity ETF GIF 75/75 Class A Prestige|11.22|9.35|7.55|-10.97|2.83|-2.11|-|-|-|-
+BMO Low Volatility International Equity ETF GIF 75/75 Class F|12.20|10.28|8.53|-10.20|3.72|-1.17|-|-|-|-
+BMO Low Volatility International Equity ETF GIF 75/75 Class F Prestige|12.24|10.31|-|-|-|-|-|-|-|-
+BMO Low Volatility U.S. Equity ETF GIF 75/100 Class A|3.85|18.10|-5.57|5.21|17.59|-0.65|17.23|5.75|2.41|-
+BMO Low Volatility U.S. Equity ETF GIF 75/100 Class A Prestige|4.15|18.44|-5.29|5.50|17.95|-0.55|-|-|-|-
+BMO Low Volatility U.S. Equity ETF GIF 75/100 Class F|5.03|19.40|-4.52|6.35|18.88|0.37|18.51|-|-|-
+BMO Low Volatility U.S. Equity ETF GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Low Volatility U.S. Equity ETF GIF 75/75 Class A|4.37|18.66|-5.21|5.60|18.01|-0.30|17.63|6.10|2.72|-
+BMO Low Volatility U.S. Equity ETF GIF 75/75 Class A Prestige|4.54|18.91|-5.01|5.77|18.26|-0.38|-|-|-|-
+BMO Low Volatility U.S. Equity ETF GIF 75/75 Class F|5.37|19.83|-0.65|6.72|19.33|0.75|18.95|-|-|-
+BMO Low Volatility U.S. Equity ETF GIF 75/75 Class F Prestige|5.59|19.92|-|-|-|-|-|-|-|-
+BMO Money Market GIF 100/100 Class A|1.56|3.39|3.38|0.89|0.05|0.12|0.45|0.19|0.05|0.06
+BMO Money Market GIF 100/100 Class F|2.12|4.19|3.96|1.23|0.04|0.23|1.01|-|-|-
+BMO Money Market GIF 75/100 Class A|1.59|3.41|3.39|0.90|0.05|0.12|0.46|0.18|0.05|-
+BMO Money Market GIF 75/100 Class F|2.24|4.01|4.04|1.50|0.05|0.23|1.01|-|-|-
+BMO Money Market GIF 75/100 Plus Class A|1.59|3.41|3.39|0.90|0.05|-|-|-|-|-
+BMO Money Market GIF 75/100 Plus Class F|2.24|4.01|4.04|1.50|0.05|-|-|-|-|-
+BMO Money Market GIF 75/75 Class A|1.57|3.40|3.41|0.90|0.05|0.12|0.45|0.18|0.05|-
+BMO Money Market GIF 75/75 Class F|2.14|3.99|4.93|1.24|0.05|0.27|1.01|-|-|-
+BMO Monthly High Income II GIF 75/100 Class A|25.10|9.88|4.60|-1.44|27.32|-8.43|16.36|-|-|-
+BMO Monthly High Income II GIF 75/100 Class A Prestige|25.48|10.22|4.91|-1.05|27.73|-7.54|-|-|-|-
+BMO Monthly High Income II GIF 75/100 Class F|26.46|11.10|5.74|-0.29|28.76|-7.31|17.67|-|-|-
+BMO Monthly High Income II GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Monthly High Income II GIF 75/75 Class A|25.75|10.41|4.95|-1.07|27.82|-8.58|16.79|-|-|-
+BMO Monthly High Income II GIF 75/75 Class A Prestige|26.16|10.80|5.18|-0.88|28.12|-6.93|-|-|-|-

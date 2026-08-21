@@ -105,10 +105,12 @@ def stability(series):
     return ("Unknown", "insufficient", 0, None, None, None, None)
 
 
+MIN_YEARS = 4  # need >=4 shared annual observations for stable beta/alpha
+
 def rel_metrics(series_ann, market, years_sorted):
-    """beta, alpha, corr, neg_years, contrary -- needs >=2 shared years."""
+    """beta, alpha, corr, neg_years, contrary -- needs >=MIN_YEARS shared years."""
     yrs = [y for y in years_sorted if y in series_ann and y in market]
-    if len(yrs) < 2:
+    if len(yrs) < MIN_YEARS:
         return (None, None, None, None, None)
     ri = [series_ann[y] for y in yrs]
     rm = [market[y] for y in yrs]
@@ -161,10 +163,11 @@ def main():
                 all_years.add(int(c[3:]))
         series_ann[r["series_id"]] = d
     years_sorted = sorted(all_years)
+    MIN_YR_COVERAGE = 10  # benchmark year needs >=10 funds reporting for stability
     market = {}
     for y in years_sorted:
         vals = [d[y] for d in series_ann.values() if y in d]
-        if len(vals) >= 2:
+        if len(vals) >= MIN_YR_COVERAGE:
             market[y] = statistics.mean(vals)
 
     recs = []

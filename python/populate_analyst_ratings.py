@@ -13,6 +13,7 @@ Writes to analyst_ratings, analyst_recommendations, and analyst_targets.
 from __future__ import annotations
 
 import json
+import os
 import time
 from datetime import date
 from typing import Any
@@ -147,10 +148,15 @@ def populate_price_targets(conn: Any, symbol: str, price_targets: Any, info: dic
 def run() -> None:
     symbols = load_symbols_prioritized()
     print(f"Priority list: {len(symbols)} symbols")
+    start = time.time()
+    budget = int(os.getenv("ANALYST_RATINGS_BUDGET", "90"))
     processed = 0
     total_records = 0
     skipped = 0
     for idx, original_symbol in enumerate(symbols, 1):
+        if time.time() - start > budget:
+            print(f"Time budget {budget}s reached after {processed} processed — stopping (re-run to continue).")
+            break
         ticker = resolve_ticker(original_symbol)
         if not ticker:
             skipped += 1

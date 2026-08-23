@@ -37,14 +37,22 @@ a URL twice.
 - **Seeder:** `scripts/seed_empire_local.py` (upsert funds + fund_series, carrier_id=7).
 - **Notes:** NO PDFs (API). Temp JSON `/tmp/empire_list.json` deleted after seeding.
 
+### Canada Life (carrier_id=4) ✅ — Fundata shelf added separately
+- **Source:** `https://canadalifemutualfunds.fundata.com/Default.aspx` (Fundata, server-rendered
+  calendar-year "Performance" tab — no API/embedded JSON).
+- **Method:** `curl` page HTML (3 MB) → `scripts/parse_canada_life_html.py` (bs4) extracts
+  566 funds with calendar 2016–2025 + MER into `/tmp/cl_cal.json` →
+  `scripts/seed_canada_life_local.py` upserts 566 funds + series (carrier_id=4, 1 fund = 1 series).
+  Volatility proxy = underlying fund returns (seg-fund wrapper only subtracts a small insurance MER).
+- **Why a separate shelf:** the ~2,280 pre-loaded `CAN …` rows use allocation-code names with NO
+  annual-return source, so they were left untouched. The Fundata shelf is a clean comparable dataset
+  (538/566 have full 2019–2025). Screen now ranks 4,769 series; 1,064 have relative beta/alpha/corr.
+- **Notes:** NO manual transcription (BS4 parse only — manual copy injected garbage earlier).
+  Temp HTML + JSON deleted after parse.
+
 ---
 
 ## PENDING (status as of last scan)
-
-### Canada Life (carrier_id=4) — 2280 local series, 0 annual
-- **Source:** `https://canadalifemutualfunds.fundata.com/Default.aspx` (Fundata)
-- **Check:** does Fundata expose a calendar-year performance view? If trailing-only
-  (like Equitable EGIF), fall back to Fund Facts PDFs (download→parse→rm).
 
 ### Manulife (carrier_id=1) — 589 local series, 0 annual
 - **Source portal:** `https://funds.manulife.ca/en-US/profiles/` (SPA — calendar-year NOT in DOM)

@@ -74,13 +74,19 @@ a URL twice.
 - **Have:** email-gateway CSV `/home/kevin/Documents/rbc_gif_funds_2026-08-17.csv` (34 funds,
   trailing-only, no annual). Needs user forward or RBC Fund Facts PDFs.
 
-### iA Financial (carrier_id=5) — 0 local series
-- **Portal:** `https://ia.ca/funds-performance` is a Next.js SPA. Per-fund API
-  `https://ia.ca/api/sites/ia/fund?locale=en-ca&fundId=<uuid>` returns ONLY metadata
-  (name, code, nested `fundProducts`, and a `fundSheetLink` PDF) — no inline calendar
-  returns. 1,122 fundIds are extractable from the page RSC payload.
-- **Real annual source:** parse the linked fund-sheet PDFs (Fund Facts). Heavy
-  (~1,100 sheets; filter to seg funds). Needs PDF batch + `pdftotext` + rm.
+### iA Financial (carrier_id=5) ✅
+- **Source (data stream):** the `https://ia.ca/funds-performance` Next.js SPA fires
+  `GET /api/sites/ia/fund/yield?locale=en-ca&fundType=savings&date=<as-of>` to fill its
+  performance table. Replayed via curl → 1.48 MB JSON, **1,423 series** (94 fund
+  families). Per series: `lastYearReturn` (2025 calendar annual, %), `netReturnYearToDate`,
+  `netUnitValue` (NAV), and trailing `netReturns1Month/3Months/6Months/1Year/3Years/5Years/10Years`.
+  (The per-fund `/api/sites/ia/fund?fundId=<uuid>` endpoint only returns metadata + a PDF
+  link — not the performance table; the yield endpoint is the real data stream.)
+- **Seeder:** `scripts/seed_ia_local.py`. Maps `yr_2025←lastYearReturn`, `return_*←netReturns*`,
+  `price←netUnitValue`, `ytd_return←netReturnYearToDate`. Trailing return columns feed the
+  screen's return/relative metrics even though only 2025 is a true calendar year.
+- **Note:** iA exposes only the 2025 calendar year (not 2019–2024), so calendar-year volatility
+  is Unknown for iA series; they still rank on trailing returns (return_1y/3y/5y/10y).
 
 ### SSQ / Beneva (carrier_id=6) — 0 local series
 - **Source:** `https://www.beneva.ca/en/savings-investments/segregated-funds` (non-Lipper SPA;

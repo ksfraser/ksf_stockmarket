@@ -75,7 +75,12 @@ a URL twice.
   trailing-only, no annual). Needs user forward or RBC Fund Facts PDFs.
 
 ### iA Financial (carrier_id=5) — 0 local series
-- **Source:** `https://ia.ca/funds-performance` — investigate (Fundata-style?).
+- **Portal:** `https://ia.ca/funds-performance` is a Next.js SPA. Per-fund API
+  `https://ia.ca/api/sites/ia/fund?locale=en-ca&fundId=<uuid>` returns ONLY metadata
+  (name, code, nested `fundProducts`, and a `fundSheetLink` PDF) — no inline calendar
+  returns. 1,122 fundIds are extractable from the page RSC payload.
+- **Real annual source:** parse the linked fund-sheet PDFs (Fund Facts). Heavy
+  (~1,100 sheets; filter to seg funds). Needs PDF batch + `pdftotext` + rm.
 
 ### SSQ / Beneva (carrier_id=6) — 0 local series
 - **Source:** `https://www.beneva.ca/en/savings-investments/segregated-funds` (non-Lipper SPA;
@@ -86,11 +91,14 @@ a URL twice.
 - **Source:** login_required. Needs credentials or Fund Facts PDFs.
 
 ### ivari (carrier_id=9) — 0 local series
-- **Source:** `https://rates.ivari.ca/EN/rates/default.asp?Lang=EN&ShowList=IP` — investigate.
+- **Portal:** `https://rates.ivari.ca/EN/rates/default.asp?Lang=EN&ShowList=IP` returns a
+  "Rates of Return" SPA with 0 server-rendered tables (data JS-loaded). No clean scrape.
+- **Real annual source:** Fund Facts PDFs (download→parse→rm).
 
 ### Forresters (carrier_id=11) — 0 local series
-- **Source:** `https://funds.cifinancial.com/en/funds/segregated/` (CI Financial / Fundata-style)
-  — investigate for calendar-year.
+- **Listed source** `https://funds.cifinancial.com/en/funds/segregated/` returns HTTP 400;
+  CI Financial does not expose a `fundata.com` subdomain. Re-find the source or use
+  Fund Facts PDFs.
 
 ### VMO (carrier_id=12) — 0 local series
 - **Source:** login_required. Needs credentials or Fund Facts PDFs.

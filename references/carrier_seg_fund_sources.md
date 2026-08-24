@@ -65,9 +65,17 @@ a URL twice.
 
 ## PENDING (status as of last scan)
 
-### Manulife (carrier_id=1) — 589 local series, 0 annual
-- **Source portal:** `https://funds.manulife.ca/en-US/profiles/` (SPA — calendar-year NOT in DOM)
-- **Real annual source:** Fund Facts PDFs (download→parse→rm). 142 GIF funds via Manulife SPA.
+### Manulife (carrier_id=1) ✅
+- **Source (data stream):** the `https://funds.manulife.ca/en-US/profiles/` "Prices & Performance"
+  SPA fires `GET /profiles/api/funds/list/en-US/?skip=N&take=1000` (6 pages, TotalItems=5,605).
+  All Manulife seg-fund product lines (GIF Select, MPIP, RetirementPlus, Ideal, etc.). Per
+  series: `annRet2017`–`annRet2025` (calendar annuals, %), `mer`, `retNav` (NAV), `retYtd`,
+  and compound trailing `compM1/3/6`, `compY1/3/5/10`, `compIncep`. `fundServCode` unique per
+  series; `fundName` = 412 unique funds.
+- **Seeder:** `scripts/seed_manulife_local.py`. Maps `yr_2019..2025←annRet*`, `return_*←comp*`,
+  `price←retNav`, `ytd_return←retYtd`, `fund_status←fundStatus`. As-at 2026-07-31.
+- **Note:** default page view shows 575 (a filtered subset); the full API is 5,605 series — all
+  imported (658 funds / 6,194 series incl. pre-existing prod metadata rows).
 
 ### RBC Insurance (carrier_id=2) — 0 local series
 - **Source portal:** `https://lipper.rbcinsurance.com/rbc/list` (BLOCKED/timeouts on Browserbase)

@@ -77,10 +77,16 @@ a URL twice.
 - **Note:** default page view shows 575 (a filtered subset); the full API is 5,605 series — all
   imported (658 funds / 6,194 series incl. pre-existing prod metadata rows).
 
-### RBC Insurance (carrier_id=2) — 0 local series
-- **Source portal:** `https://lipper.rbcinsurance.com/rbc/list` (BLOCKED/timeouts on Browserbase)
-- **Have:** email-gateway CSV `/home/kevin/Documents/rbc_gif_funds_2026-08-17.csv` (34 funds,
-  trailing-only, no annual). Needs user forward or RBC Fund Facts PDFs.
+### RBC Insurance (carrier_id=2) ✅ (calendar) / ⏳ trailing
+- **Source (data stream):** Lipper portal `https://lipper.rbcinsurance.com/rbc/list` renders a
+  PUBLIC DataTables endpoint `POST /List/GetResult/` (tabName=CalendarYear, iDisplayLength=154).
+  154 funds; calendar years 2016–2025 per series (symbol = Lipper id). **Values are percentages
+  already** (no ×100). Seeded yr_2019..yr_2025 for all 154. Local chromium loads the portal fine
+  (Browserbase was the tier that timed out).
+- **Seeder:** `scripts/seed_rbc_local.py`.
+- **Pending:** trailing returns (1yr/3yr/5yr/10yr) + MER/NAV from the "Long Term"/"Fund Details"
+  tabs — endpoint is public; capture those tabs' GetResult sColumns and curl to merge by symbol.
+  (The email-gateway CSV of 34 funds is trailing-only, no annual — superseded by the portal stream.)
 
 ### iA Financial (carrier_id=5) ✅
 - **Source (data stream):** the `https://ia.ca/funds-performance` Next.js SPA fires

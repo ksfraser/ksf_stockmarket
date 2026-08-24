@@ -117,6 +117,13 @@ a URL twice.
 ### VMO (carrier_id=12) — 0 local series
 - **Source:** login_required. Needs credentials or Fund Facts PDFs.
 
-### Sun Life (carrier_id=13) — 202 local series, 0 annual
-- **Source:** `https://funds.sunlifeglobalinvestments.com/seg-funds-list` (799 pre-loaded
-  trailing in prod). Real annual = Fund Facts PDFs / email forward (download→parse→rm).
+### Sun Life (carrier_id=13) ✅
+- **Source (embedded JSON):** `https://funds.sunlifeglobalinvestments.com/seg-funds-list` embeds
+  `window.dfSb.__PRELOADED_STATES__['root'].data.webProfiles` (566 series, all `isInactive=false`
+  → all current/active). Per series: `overview.mer`, `performance.compoundPerformance`
+  (p1mo/p3mo/p6mo/pytd/p1yr/p3yr/p5yr/p10yr — DECIMALS, ×100 for DB), `dailyPerformance.navPS` (NAV).
+- **Seeder:** `scripts/seed_sunlife_local.py`. **SCALE FIX:** Sun Life stores returns/MER as
+  decimals (0.0868 = 8.68%) — multiplied by 100 to match the DB percent convention (iA/Manulife
+  were already percentages). No calendar-year (2019–2025) fields on this page → yr_* NULL
+  (calendar volatility Unknown; trailing returns still captured).
+- **Scope:** active/current only (all 566 are active).

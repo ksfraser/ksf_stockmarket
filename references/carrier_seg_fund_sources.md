@@ -103,17 +103,22 @@ a URL twice.
   is Unknown for iA series; they still rank on trailing returns (return_1y/3y/5y/10y).
 
 ### SSQ / Beneva (carrier_id=6) — 0 local series
-- **Source:** `https://www.beneva.ca/en/savings-investments/segregated-funds` (non-Lipper SPA;
-  headless clicks fail — MUI menuitems "Could not compute box model"). Fallback `web_search`
-  or Fund Facts PDFs.
+- **Source:** `https://www.beneva.ca/en/savings-investments/segregated-funds` is a **marketing
+  page** (capital guarantees, portfolios) — NO performance table / data API. The seg-fund
+  returns grid is not publicly exposed (headless clicks on the SPA fail). Needs Fund Facts
+  PDFs or an advisor/login portal.
+- **Status:** blocked — Fund Facts PDFs required (or re-find a performance endpoint).
 
 ### Humania (carrier_id=8) — 0 local series
 - **Source:** login_required. Needs credentials or Fund Facts PDFs.
 
 ### ivari (carrier_id=9) — 0 local series
-- **Portal:** `https://rates.ivari.ca/EN/rates/default.asp?Lang=EN&ShowList=IP` returns a
-  "Rates of Return" SPA with 0 server-rendered tables (data JS-loaded). No clean scrape.
-- **Real annual source:** Fund Facts PDFs (download→parse→rm).
+- **Portal:** `https://rates.ivari.ca/EN/rates/default.asp?Lang=EN&ShowList=IP` — Life/Investment
+  radio; Investment-products (seg funds / BigUNIT) grid requires a **per-product postback**
+  (classic ASP, no clean public API). Not yet scraped.
+- **Fund Facts:** `ivari.ca/tools-and-resources/fund-facts-and-performance-updates/` lists **126
+  seg funds** as "View PDF" (Fund Facts PDFs) — the structured annual source. Fallback = parse PDFs.
+- **Status:** blocked on approach — per-product portal scrape OR Fund Facts PDF parsing.
 
 ### Forresters (carrier_id=11) — 0 local series
 - **Listed source** `https://funds.cifinancial.com/en/funds/segregated/` returns HTTP 400;

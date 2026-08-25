@@ -6,7 +6,7 @@ REPO=/home/ksf_stockmarket/ksf_stockmarket
 LOG=/tmp/segfund_annual.log
 cd "$REPO" || exit 1
 echo "[$(date -u +%FT%TZ)] annual seg-fund run start" | tee -a "$LOG"
-bash scripts/run_seg_fund_monthly.sh >> "$LOG" 2>&1 || true
+bash "$REPO/scripts/run_seg_fund_monthly.sh" >> "$LOG" 2>&1 || true
 python3 scripts/rollover_calendar_year.py >> "$LOG" 2>&1 || true
 python3 scripts/calc_pipeline.py >> "$LOG" 2>&1 || true
 echo "[$(date -u +%FT%TZ)] annual seg-fund run done" | tee -a "$LOG"

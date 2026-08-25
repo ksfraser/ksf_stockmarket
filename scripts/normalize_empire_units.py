@@ -35,9 +35,14 @@ def main():
     con = sqlite3.connect(args.db)
     cur = con.cursor()
 
-    # series whose EVERY return column has |value| < 1 => decimal
-    having = "MAX(" + ",".join(
-        "ABS(coalesce(%s,0))" % c for c in RET_COLS) + ") < 1"
+    # Convert series whose returns are clearly decimals: every column |value| < 1
+    # AND the largest, *100, lands in [1, 100) -- i.e. original in [0.01, 1.0).
+    # This is idempotent: after one pass those become >=1 and are skipped. It
+    # deliberately SKIPS sub-0.01 decimals (e.g. 0.0087 -> 0.87 still <1) to
+    # avoid an infinite re-conversion loop; those few are flagged for manual
+    # review. Empire is a decimal-source carrier, so this is the right call.
+    abs_cols = ",".join("ABS(coalesce(%s,0))" % c for c in RET_COLS)
+    having = "MAX(%s) < 1 AND MAX(%s) * 100 >= 1" % (abs_cols, abs_cols)
     ids = [r[0] for r in cur.execute(
         "SELECT s.series_id FROM fund_series s "
         "JOIN funds f ON f.fund_id = s.fund_id "

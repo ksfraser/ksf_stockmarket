@@ -234,16 +234,20 @@ class DailyPriceDownloader:
             return 0
 
         sql = (
-            "INSERT INTO stockprices (symbol, price_date, open, high, low, close, volume) "
-            "VALUES (%s, %s, %s, %s, %s, %s, %s) "
-            "ON DUPLICATE KEY UPDATE open=%s, high=%s, low=%s, close=%s, volume=%s"
+            "INSERT INTO stockprices (symbol, price_date, open, high, low, close, volume, adj_close) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s) "
+            "ON DUPLICATE KEY UPDATE open=%s, high=%s, low=%s, close=%s, volume=%s, adj_close=%s"
         )
 
         batch = []
         for p in new_prices:
+            # daily_pipeline does not fetch yfinance 'Adj Close'; mirror close
+            # (consistent with the historical backfill) so Lipper scoring never
+            # sees a NULL adj_close on newly ingested daily rows.
+            adj = p.get('adj_close', p['close'])
             batch.append((
-                symbol, p['date'], p['open'], p['high'], p['low'], p['close'], p['volume'],
-                p['open'], p['high'], p['low'], p['close'], p['volume']
+                symbol, p['date'], p['open'], p['high'], p['low'], p['close'], p['volume'], adj,
+                p['open'], p['high'], p['low'], p['close'], p['volume'], adj
             ))
 
         with self.db.connect() as conn:

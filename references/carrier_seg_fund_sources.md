@@ -113,13 +113,23 @@ a URL twice.
 ### Humania (carrier_id=8) — 0 local series
 - **Source:** login_required. Needs credentials or Fund Facts PDFs.
 
-### ivari (carrier_id=9) — 0 local series
-- **Portal:** `https://rates.ivari.ca/EN/rates/default.asp?Lang=EN&ShowList=IP` — Life/Investment
-  radio; Investment-products (seg funds / BigUNIT) grid requires a **per-product postback**
-  (classic ASP, no clean public API). Not yet scraped.
+### ivari (carrier_id=9) ✅ (roster + live NAV via portal; annual returns PENDING PDF pass)
+- **Portal (data stream):** `https://rates.ivari.ca/en` ("Net Rates of Return and Prices") is an
+  ASP.NET MVC form (`frmSelector`) that AJAX-POSTs to `/Home/<Product>/en` with
+  `ShowList=IP`, `View_Category=RatesOfReturn`, `View=<code>`, `__RequestVerificationToken`.
+  Investment-products families (7): `BigUNIT, GS2UNIT, GS3UNIT, IMAXXUNIT, _5FLUNIT, TGIFUNIT,
+  NNIP_unit`. Each returns a tablesaw table of the **last ~week of daily unit values** per fund
+  (Fund Name + daily NAVs + Daily/Weekly Chg %). NOTE: only recent daily prices — **no
+  calendar-year returns** are exposed on the portal (the curl-only probe hit the dead classic-ASP
+  `rates.ivari.ca/EN/rates/default.asp` and missed this newer `/en` portal).
+- **Seeder:** `scripts/seed_ivari_local.py` — loops the 7 families, parses fund name + latest NAV
+  (`price`), `price_date`, `price_change_1d_pct` into `funds`+`fund_series` (carrier_id=9).
+  Idempotent. Seeded **95 funds / 95 series** (as-at 2026-08-26) with live NAVs; `yr_*` NULL.
 - **Fund Facts:** `ivari.ca/tools-and-resources/fund-facts-and-performance-updates/` lists **126
-  seg funds** as "View PDF" (Fund Facts PDFs) — the structured annual source. Fallback = parse PDFs.
-- **Status:** blocked on approach — per-product portal scrape OR Fund Facts PDF parsing.
+  seg funds** as "View PDF" — the structured **annual** (2019–2025) source. These populate `yr_*`
+  (the Lipper screen's scoring gate) in a later PDF-parse pass.
+- **Status:** portal pass DONE (roster + NAV, unscored); annual returns BLOCKED pending Fund Facts
+  PDF parsing.
 
 ### Forresters (carrier_id=11) — 0 local series
 - **Listed source** `https://funds.cifinancial.com/en/funds/segregated/` returns HTTP 400;

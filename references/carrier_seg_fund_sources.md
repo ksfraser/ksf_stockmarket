@@ -113,30 +113,41 @@ a URL twice.
 ### Humania (carrier_id=8) — 0 local series
 - **Source:** login_required. Needs credentials or Fund Facts PDFs.
 
-### ivari (carrier_id=9) ✅ (roster + trailing returns via portal; calendar-year BLOCKED pending PDF pass)
-- **Portal (data stream):** `https://rates.ivari.ca/en` ("Net Rates of Return and Prices") is an
-  ASP.NET MVC form (`frmSelector`) using unobtrusive AJAX. Selecting *Investment products* +
-  *Rates of Return – Seg. Funds* rewrites the form action to `/Home/<ProductCode>/en`; submitting
-  (POST) with `__RequestVerificationToken` returns a tablesaw table of **trailing returns**
-  (1yr / 2yr / 3yr / 5yr / 10yr / since-inception) per fund.
-  - **Product codes:** the RatesOfReturn filter exposes *RATE codes
-    (`BigRATE, GS2RATE, TIPs, IMAXXRATE, _5FLRATE, TGIFRATE, NNIP_rate`) — 7 seg-fund families
-    (BIG, GROWSafe, GROWSafe³, imaxxGIF, Five for Life, ivari GIF, NN IP). (The Unit-Values view
-    uses a different set: `BigUNIT, GS2UNIT, GS3UNIT, IMAXXUNIT, _5FLUNIT, TGIFUNIT, NNIP_unit`.)
-  - **NOTE:** the portal exposes **trailing** returns only — NOT calendar-year (yr_2019..2025). The
-    older curl-only probe hit the dead classic-ASP `rates.ivari.ca/EN/rates/default.asp` and missed
-    this newer `/en` portal; chromium (browser) was required to locate it.
-- **Seeder:** `scripts/seed_ivari_local.py` — `GET` token, then
-  `GET /Home/GetProductsForFilter/en?filterID=RatesOfReturn` (dynamic product list, hardcoded
-  fallback), then POST each *RATE code, parse the trailing-return table, upsert `funds` +
-  `fund_series` (carrier_id=9). Maps return_1y/3y/5y/10y/incept (no return_2y column in schema →
-  "2 yrs" dropped). Idempotent; self-cleans legacy/dup series. Seeded **122 funds / 95 series /
-  89 with return_1y** (as-at 2026-07-31 for BIG/GROWSafe/NN IP; other families omit the "as of" line).
-- **Fund Facts:** `ivari.ca/tools-and-resources/fund-facts-and-performance-updates/` lists **126
-  seg funds** as "View PDF" — the structured **annual** (2019–2025) source. These populate `yr_*`
-  (the Lipper screen's scoring gate) in a later PDF-parse pass.
-- **Status:** portal pass DONE (roster + trailing returns, unscored on calendar); calendar-year
-  returns BLOCKED pending Fund Facts PDF parsing.
+### ivari (carrier_id=9) ✅ (roster + trailing via portal; calendar-year 2019–2025 via Fund Facts PDFs)
+
+- **Portal (trailing returns):** `https://rates.ivari.ca/en` ("Net Rates of Return and Prices"),
+  ASP.NET MVC form (`frmSelector`) with unobtrusive AJAX. Select *Investment products* +
+  *Rates of Return – Seg. Funds* → POST per *RATE code* (`BigRATE, GS2RATE, TIPs, IMAXXRATE,
+  _5FLRATE, TGIFRATE, NNIP_rate`) returns **trailing** returns (1/2/3/5/10y/incept) per fund.
+  - **Seeder:** `scripts/seed_ivari_local.py` — GET token → GET product list → POST each RATE
+    code → parse tablesaw table → upsert `funds` + `fund_series` (carrier_id=9). Maps
+    return_1y/3y/5y/10y/incept (no return_2y column → "2 yrs" dropped). Idempotent.
+    Seeded **122 funds / 95 series / 89 with return_1y** (as-at 2026-07-31 for BIG/GROWSafe/NN IP).
+  - **NOTE:** portal is **trailing-only** — NOT calendar-year. Calendar returns come from Fund Facts.
+
+- **Fund Facts (calendar-year 2019–2025):** ivari publishes one Fund Facts PDF per investment
+  product at `https://ivari.ca/files/<CODE>.pdf` (WordPress media; `<CODE>` is the fund code,
+  e.g. `USEIN_TGIF` = "ivari U.S. Equity Index GIF"). Discovered via the WP REST media endpoint
+  (`/wp-json/wp/v2/media?post=<ffpu_investment_prod id>`, EN only — FR `*_FR` excluded). Page
+  HTML/REST are Cloudflare-gated stubs, but `/files/*.pdf` downloads fine via `curl`.
+  - **Parse:** `pymupdf` extracts the "Year-by-year returns" chart → years + returns paired in
+    descending order (2025…2015). As-at = "as of December 31, YYYY" (most families as-of 2024;
+    the base/None family as-of 2025).
+  - **Match:** PDF `(family, core-description)` → DB `(family, core-description)`. Family ∈
+    {BIG, GS/GS2, GS3, imaxxGIF, NN IP, 5FL, MM, None}; "Class 2" is ignored (same underlying
+    fund, different sales-charge series → identical returns). Family-aware so e.g. GS3 returns
+    are NOT written into BIG/imaxxGIF rows (they differ materially).
+  - **Seeder:** `scripts/seed_ivari_fundfacts_local.py` — idempotent UPDATE of `fund_series`
+    `yr_2019…yr_2025` + `as_at_date` for matched fund_ids. **Auto-creates a `DEFAULT` series row**
+    for the ~27 funds (mostly GS3/imaxxGIF) the trailing seed left without a `fund_series` row,
+    so their calendar data has a home.
+  - **Coverage:** **114 / 122 funds** (93%) have 2019–2024; the 22 base/None-family funds also
+    have 2025. Gaps (8): **BIG** (15209) & **MM** (15294) have no Fund Facts PDF published; the
+    6 **GS/GS2 Class 2** funds (15210/15211/15212/15213/15219/15220) have PDFs but the chart is an
+    embedded *image* (empty text layer) → need OCR (ksf-tesseract container, port 8100).
+
+- **Status:** portal pass DONE (roster + trailing); Fund Facts calendar-year pass DONE
+  (114/122, 27 series rows auto-created). 8 funds pending (2 no-PDF, 6 OCR).
 
 ### Forresters (carrier_id=11) — 0 local series
 - **Listed source** `https://funds.cifinancial.com/en/funds/segregated/` returns HTTP 400;

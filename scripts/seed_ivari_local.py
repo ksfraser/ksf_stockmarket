@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Seed ivari segregated funds (TRAILING returns) into the LOCAL analysis store from the
+Seed ivari segregated funds (TRAILING returns) into the analysis store from the
 ivari "Net Rates of Return and Prices" portal at https://rates.ivari.ca/en.
 
 The portal is an ASP.NET MVC page using unobtrusive AJAX. The "Investment products"
@@ -17,19 +17,18 @@ returns (yr_2019..yr_2025) are NOT on this portal and would require the Fund Fac
 PDFs. Trailing data is still valuable and matches the return_* columns populated for
 RBC / Manulife / iA.
 
-Local store: carrier_id=9 (ivari). Upserts funds + fund_series.
+DB target: production MySQL via segfund_db.get_conn() (falls back to local SQLite cache).
 """
 import os
 import re
 import json
-import sqlite3
 import http.cookiejar
 import urllib.request
 import urllib.parse
+import segfund_db
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
-LOCAL_DB = os.environ.get("SEG_FUNDS_DB", "/root/.hermes/cache/seg_funds.db")
 IVARI_CARRIER_ID = 9
 BASE = "https://rates.ivari.ca"
 UA = {
@@ -142,8 +141,11 @@ def main():
     products = get_products(opener)
     print("ivari RatesOfReturn products: %d" % len(products))
 
-    con = sqlite3.connect(LOCAL_DB)
-    cur = con.cursor()
+    conn, backend = segfund_db.get_conn()
+
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
+
     inserted = updated = total_series = 0
 
     for code, desc in products:
@@ -174,33 +176,29 @@ def main():
             if not ret:
                 continue
             gua = guarantee(name)
-            cur.execute(
-                "SELECT fund_id FROM funds WHERE carrier_id=? AND fund_name=?",
-                (IVARI_CARRIER_ID, name))
-            row = cur.fetchone()
+            row = q("SELECT fund_id FROM funds WHERE carrier_id=? AND fund_name=?",
+                    (IVARI_CARRIER_ID, name)).fetchone()
             if row:
                 fid = row[0]
             else:
-                cur.execute(
+                ins = q(
                     "INSERT INTO funds (family_id, carrier_id, fund_name, fund_name_clean, category, is_active) "
                     "VALUES (0,?,?,?,?,1)",
                     (IVARI_CARRIER_ID, name, name, category(name)))
-                fid = cur.lastrowid
+                fid = ins.lastrowid
                 inserted += 1
             series_code = "G%d" % gua if gua else "DEFAULT"
-            cur.execute(
-                "SELECT series_id FROM fund_series WHERE fund_id=? AND series_code=?",
-                (fid, series_code))
-            srow = cur.fetchone()
+            srow = q("SELECT series_id FROM fund_series WHERE fund_id=? AND series_code=?",
+                     (fid, series_code)).fetchone()
             if srow:
-                cur.execute(
+                q(
                     "UPDATE fund_series SET return_1y=?,return_3y=?,return_5y=?,return_10y=?,"
                     "return_incept=?,guarantee_pct=?,as_at_date=? WHERE series_id=?",
                     (ret.get("return_1y"), ret.get("return_3y"), ret.get("return_5y"),
                      ret.get("return_10y"), ret.get("return_incept"), gua, as_at, srow[0]))
                 updated += 1
             else:
-                cur.execute(
+                q(
                     "INSERT INTO fund_series (fund_id, series_code, series_name, load_type, mer, "
                     "guarantee_pct, return_1y, return_3y, return_5y, return_10y, return_incept, as_at_date) "
                     "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
@@ -209,22 +207,21 @@ def main():
                      ret.get("return_10y"), ret.get("return_incept"), as_at))
             total_series += 1
 
-    con.commit()
-    cur.execute(
+    conn.commit()
+    have = q(
         "SELECT COUNT(*) FROM fund_series fs JOIN funds f ON f.fund_id=fs.fund_id "
-        "WHERE f.carrier_id=? AND return_1y IS NOT NULL", (IVARI_CARRIER_ID,))
-    have = cur.fetchone()[0]
+        "WHERE f.carrier_id=? AND return_1y IS NOT NULL", (IVARI_CARRIER_ID,)).fetchone()[0]
     if total_series > 0:
-        cur.execute("UPDATE carriers SET scrape_url=?, scrape_status='done' WHERE carrier_id=?",
-                    (BASE + "/en", IVARI_CARRIER_ID))
-        con.commit()
+        q("UPDATE carriers SET scrape_url=?, scrape_status='done' WHERE carrier_id=?",
+          (BASE + "/en", IVARI_CARRIER_ID))
+        conn.commit()
     # defensive cleanup: drop any legacy/dup series whose code equals the fund name
-    cur.execute(
+    q(
         "DELETE FROM fund_series WHERE series_id IN ("
         "SELECT fs.series_id FROM fund_series fs JOIN funds f ON f.fund_id=fs.fund_id "
         "WHERE f.carrier_id=? AND fs.series_code = f.fund_name)", (IVARI_CARRIER_ID,))
-    con.commit()
-    con.close()
+    conn.commit()
+    conn.close()
     print("inserted %d new funds, updated %d series; ivari series with return_1y: %d "
           "(total series seen: %d)" % (inserted, updated, have, total_series))
 

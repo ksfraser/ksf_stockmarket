@@ -17,11 +17,13 @@ Matching: PDF (family, core-description) -> DB (family, core-description).
 This yields a clean 1:1 family mapping and correct per-family returns.
 
 Idempotent: only UPDATEs existing fund_series rows (no inserts).
-"""
-import sqlite3, re, fitz, sys
-from pathlib import Path
 
-LOCAL_DB = '/root/.hermes/cache/seg_funds.db'
+DB target: production MySQL via segfund_db.get_conn() (falls back to local SQLite cache).
+"""
+import re, fitz, sys
+from pathlib import Path
+import segfund_db
+
 PDF_DIR = Path('/root/.hermes/cache/ivari_ff/pdfs')
 CARRIER = 9
 DRY = '--apply' not in sys.argv
@@ -79,8 +81,12 @@ def parse_pdf(path):
 
 
 def main():
-    c = sqlite3.connect(LOCAL_DB)
-    funds = c.execute("SELECT fund_id, fund_name FROM funds WHERE carrier_id=?", (CARRIER,)).fetchall()
+    conn, backend = segfund_db.get_conn()
+
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
+
+    funds = q("SELECT fund_id, fund_name FROM funds WHERE carrier_id=?", (CARRIER,)).fetchall()
     key_to_ids = {}
     for fid, fn in funds:
         key_to_ids.setdefault((fam(fn), norm_core(fn)), []).append(fid)
@@ -105,7 +111,7 @@ def main():
 
     all_ids = [fid for fid, _ in funds]
     covered = set(i for _, _, _, ids, _, _ in plan for i in ids)
-    print(f"DRY_RUN={DRY}")
+    print(f"DRY_RUN={DRY}  backend={backend}")
     print(f"PDFs with data (will upsert): {len(plan)}")
     print(f"Skipped (empty yr / image chart -> OCR needed): {len(skipped_empty)}")
     print(f"Unmatched PDFs (no DB fund): {len(unmatched_pdf)}")
@@ -129,24 +135,24 @@ def main():
     update_ids = set(i for _, _, _, ids, _, _ in plan for i in ids)
     created = 0
     for fid in update_ids:
-        if c.execute("SELECT COUNT(*) FROM fund_series WHERE fund_id=?", (fid,)).fetchone()[0] == 0:
-            c.execute(
+        if q("SELECT COUNT(*) FROM fund_series WHERE fund_id=?", (fid,)).fetchone()[0] == 0:
+            q(
                 "INSERT INTO fund_series (fund_id, series_code, series_name, fund_status) "
                 "VALUES (?,?,?,?)",
                 (fid, 'DEFAULT', fname.get(fid), 'Open'))
             created += 1
-    c.commit()
+    conn.commit()
     print(f"  ensured series rows: created {created} new (previously-missing) series rows")
 
     for fn, desc, f, ids, yr, as_at in plan:
         vals = [yr.get(2019), yr.get(2020), yr.get(2021), yr.get(2022),
                 yr.get(2023), yr.get(2024), yr.get(2025), as_at]
         for fid in ids:
-            c.execute(
+            q(
                 "UPDATE fund_series SET yr_2019=?,yr_2020=?,yr_2021=?,yr_2022=?,"
                 "yr_2023=?,yr_2024=?,yr_2025=?,as_at_date=? WHERE fund_id=?",
                 vals + [fid])
-    c.commit()
+    conn.commit()
     print(f"\nAPPLIED: {len(plan)} PDF mappings -> {len(update_ids)} fund rows updated "
           f"({created} newly created).")
 

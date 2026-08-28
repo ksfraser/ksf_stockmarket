@@ -1,168 +1,232 @@
 #!/usr/bin/env python3
 """
-Seed ivari segregated-fund NAMES + current daily NAVs from the rates portal:
+Seed ivari segregated funds (TRAILING returns) into the LOCAL analysis store from the
+ivari "Net Rates of Return and Prices" portal at https://rates.ivari.ca/en.
 
-    POST https://rates.ivari.ca/Home/<Product>/en
-      form: ShowList=IP, View_Category=RatesOfReturn, View=<Product>,
-            __RequestVerificationToken=<from /en>, Submit=Go
-    -> server-rendered tablesaw table in #result (latest ~week of daily unit values)
+The portal is an ASP.NET MVC page using unobtrusive AJAX. The "Investment products"
+-> "Rates of Return - Seg. Funds" view exposes 7 seg-fund families, each with a
+*RATE product code (BigRATE, GS2RATE, TIPs, IMAXXRATE, _5FLRATE, TGIFRATE, NNIP_rate).
+Selecting a product rewrites the form action to /Home/<code>/en; submitting (POST) with
+the ASP.NET __RequestVerificationToken returns an HTML tablesaw table of trailing
+returns (1yr / 2yr / 3yr / 5yr / 10yr / since-inception) per fund.
 
-The portal's "Rates of Return - Seg. Funds" (and UnitValues) view returns only the
-last ~week of daily unit values per fund family, so this seeder captures:
-  - the full ivari seg-fund roster (fund_name) across the 7 Investment-product families
-  - current NAV (price) + price_date + daily-change %
+NOTE: this view exposes TRAILING returns only. They map to fund_series
+return_1y / return_3y / return_5y / return_10y / return_incept. There is no
+return_2y column in the schema, so the "2 yrs" value is dropped. Calendar-year
+returns (yr_2019..yr_2025) are NOT on this portal and would require the Fund Facts
+PDFs. Trailing data is still valuable and matches the return_* columns populated for
+RBC / Manulife / iA.
 
-Calendar-year returns (yr_2019..yr_2025) are NOT exposed on this portal -- they live
-in ivari's 126 public Fund Facts PDFs and are added in a later pass
-(see references/carrier_seg_fund_sources.md, ivari section). Until then, ivari series
-carry price/NAV but NULL annual returns, so the Lipper screen will leave them unscored.
-
-Idempotent: SELECT-first upsert on (fund_id, series_code). Re-runnable.
-
-Usage:
-    python3 scripts/seed_ivari_local.py                 # live write
-    python3 scripts/seed_ivari_local.py --dry-run       # no writes
+Local store: carrier_id=9 (ivari). Upserts funds + fund_series.
 """
-import sys
+import os
 import re
+import json
 import sqlite3
-import requests
-from bs4 import BeautifulSoup
+import http.cookiejar
+import urllib.request
+import urllib.parse
 
-DB_PATH = "/root/.hermes/cache/seg_funds.db"
-CARRIER_ID = 9  # ivari (per references/carrier_seg_fund_sources.md)
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(HERE)
+LOCAL_DB = os.environ.get("SEG_FUNDS_DB", "/root/.hermes/cache/seg_funds.db")
+IVARI_CARRIER_ID = 9
 BASE = "https://rates.ivari.ca"
-PRODUCTS = ["BigUNIT", "GS2UNIT", "GS3UNIT", "IMAXXUNIT", "_5FLUNIT", "TGIFUNIT", "NNIP_unit"]
-UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+UA = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36",
+    "Referer": BASE + "/en",
+}
+# Fallback if the dynamic product list cannot be fetched.
+FALLBACK_PRODUCTS = [
+    ("BigRATE", "Balanced Investment Growth (BIG)"),
+    ("GS2RATE", "GROWSafe and GROWSafe²"),
+    ("TIPs", "GROWSafe³"),
+    ("IMAXXRATE", "imaxxGIF"),
+    ("_5FLRATE", "Five for Life"),
+    ("TGIFRATE", "ivari Guaranteed Investment Funds"),
+    ("NNIP_rate", "NN IP Segregated Funds"),
+]
+
+# Map portal header label -> fund_series column. None means "no column, drop".
+COL_MAP = {
+    "1 yr": "return_1y",
+    "2 yrs": None,
+    "3 yrs": "return_3y",
+    "5 yrs": "return_5y",
+    "10 yrs": "return_10y",
+    "since inception*": "return_incept",
+}
 
 
-def clean(s):
-    return re.sub(r"\s+", " ", str(s)).replace("\xa0", " ").strip()
+def category(name):
+    n = name.lower()
+    if any(k in n for k in ("bond", "fixed income", "mortgage", "income")):
+        return "Fixed Income"
+    if any(k in n for k in ("money", "cash", "treasury", "savings")):
+        return "Money Market"
+    if any(k in n for k in ("balanced", "allocation", "portfolio", "conservative", "moderate")):
+        return "Balanced"
+    if any(k in n for k in ("equity", "growth", "stock", "global", "dividend", "index", "focus")):
+        return "Equity"
+    return "Other"
 
 
-def parse_date_col(h):
-    """'08/26/2026' -> '2026-08-26' (None if not a date)."""
-    m = re.match(r"(\d{1,2})/(\d{1,2})/(\d{4})", h or "")
-    return f"{m.group(3)}-{int(m.group(1)):02d}-{int(m.group(2)):02d}" if m else None
+def guarantee(name):
+    m = re.search(r"(\d{2})/(\d{2})", name)
+    return int(m.group(1)) if m else None
 
 
-def to_num(v):
-    m = re.search(r"-?\d+\.?\d*", v or "")
-    return float(m.group()) if m else None
+def make_opener():
+    cj = http.cookiejar.CookieJar()
+    return urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
 
 
-def fetch(session, token, product):
-    data = {
-        "ShowList": "IP",
-        "View_Category": "RatesOfReturn",
-        "View": product,
-        "__RequestVerificationToken": token,
-        "Submit": "Go",
-    }
-    r = session.post(f"{BASE}/Home/{product}/en", data=data)
-    if r.status_code != 200:
-        print(f"  ! {product}: HTTP {r.status_code}", file=sys.stderr)
-        return []
-    soup = BeautifulSoup(r.text, "html.parser")
-    t = soup.find("table")
-    if not t:
-        return []
-    header = [c.get_text(" ", strip=True) for c in t.find("tr").find_all(["th", "td"])]
-    date_cols = [(i, h) for i, h in enumerate(header) if parse_date_col(h)]
-    if not date_cols:
-        return []
-    last_i, last_h = date_cols[-1]
-    daily_i = header.index("Daily Chg.") if "Daily Chg." in header else None
-    out = []
-    for tr in t.find_all("tr")[1:]:
-        cells = [c.get_text(" ", strip=True) for c in tr.find_all(["td", "th"])]
-        if len(cells) < 2:
+def get_token(opener):
+    req = urllib.request.Request(BASE + "/en", headers=UA)
+    resp = opener.open(req, timeout=60)
+    html = resp.read().decode("utf-8", "ignore")
+    m = re.search(r'__RequestVerificationToken[^>]*value="([^"]+)"', html)
+    if not m:
+        raise RuntimeError("could not find __RequestVerificationToken on %s/en" % BASE)
+    return m.group(1)
+
+
+def get_products(opener):
+    url = BASE + "/Home/GetProductsForFilter/en?filterID=RatesOfReturn"
+    req = urllib.request.Request(url, headers=UA)
+    try:
+        resp = opener.open(req, timeout=60)
+        data = json.loads(resp.read().decode("utf-8", "ignore"))
+        prods = [(d["optionValue"], d.get("optionDescription", "")) for d in data]
+        if prods:
+            return prods
+    except Exception as e:  # noqa: BLE001
+        print("GetProductsForFilter failed (%s); using fallback list" % e)
+    return FALLBACK_PRODUCTS
+
+
+def parse_rates_html(html):
+    """Return (as_at_date, [(fund_name, cols, vals), ...])."""
+    m = re.search(r"Rates in effect as of\s*([\d/]+)", html, re.I)
+    as_at = m.group(1) if m else None
+    header = re.search(r"<thead>(.*?)</thead>", html, re.S)
+    cols = []
+    if header:
+        cols = [re.sub(r"<[^>]+>", "", c).strip().lower()
+                for c in re.findall(r"<th[^>]*>(.*?)</th>", header.group(1), re.S)]
+        cols = [c for c in cols if c and c != "fund name"]  # drop the label column
+    tbody = re.search(r"<tbody>(.*?)</tbody>", html, re.S)
+    body = tbody.group(1) if tbody else html
+    rows = []
+    for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", body, re.S):
+        th = re.search(r"<th[^>]*>(.*?)</th>", tr, re.S)
+        if not th:
             continue
-        name = clean(cells[0])
+        name = re.sub(r"<[^>]+>", "", th.group(1)).strip()
         if not name:
             continue
-        out.append({
-            "name": name,
-            "price": to_num(cells[last_i]) if last_i < len(cells) else None,
-            "price_date": parse_date_col(last_h),
-            "price_change_1d_pct": to_num(cells[daily_i]) if daily_i is not None and daily_i < len(cells) else None,
-        })
-    return out
-
-
-def seed(records, dry_run=False):
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
-    n_fund = n_ins = n_upd = 0
-    for r in records:
-        cur.execute(
-            "INSERT OR IGNORE INTO funds (carrier_id, fund_name) VALUES (?,?)",
-            (CARRIER_ID, r["name"]),
-        )
-        if cur.rowcount:
-            n_fund += 1
-        cur.execute(
-            "SELECT fund_id FROM funds WHERE carrier_id=? AND fund_name=?",
-            (CARRIER_ID, r["name"]),
-        )
-        row = cur.fetchone()
-        if not row:
-            continue
-        fund_id = row[0]
-        code = r["name"]  # portal gives no separate series code; fund name is unique per fund
-        cur.execute(
-            "SELECT series_id FROM fund_series WHERE fund_id=? AND series_code=?",
-            (fund_id, code),
-        )
-        srow = cur.fetchone()
-        if srow:
-            if not dry_run:
-                cur.execute(
-                    """UPDATE fund_series SET series_name=?, price=?, price_date=?,
-                       price_change_1d_pct=?, as_at_date=?, updated_at=datetime('now')
-                       WHERE series_id=?""",
-                    (r["name"], r["price"], r["price_date"], r["price_change_1d_pct"],
-                     r["price_date"], srow[0]),
-                )
-            n_upd += 1
-        else:
-            if not dry_run:
-                cur.execute(
-                    """INSERT INTO fund_series
-                       (fund_id, series_code, series_name, price, price_date,
-                        price_change_1d_pct, as_at_date, updated_at)
-                       VALUES (?,?,?,?,?,?,?,datetime('now'))""",
-                    (fund_id, code, r["name"], r["price"], r["price_date"],
-                     r["price_change_1d_pct"], r["price_date"]),
-                )
-            n_ins += 1
-    if not dry_run:
-        conn.commit()
-    conn.close()
-    return n_fund, n_ins, n_upd
+        vals = []
+        for td in re.findall(r"<td[^>]*>(.*?)</td>", tr, re.S):
+            txt = re.sub(r"<[^>]+>", "", td).strip().replace("%", "").replace(",", "")
+            try:
+                vals.append(float(txt))
+            except ValueError:
+                vals.append(None)
+        rows.append((name, cols, vals))
+    return as_at, rows
 
 
 def main():
-    dry_run = "--dry-run" in sys.argv
-    session = requests.Session()
-    session.headers.update({"User-Agent": UA})
-    r = session.get(f"{BASE}/en")
-    tok = re.search(r'name="__RequestVerificationToken"[^>]*value="([^"]+)"', r.text)
-    if not tok:
-        print("FATAL: could not read __RequestVerificationToken", file=sys.stderr)
-        sys.exit(1)
-    token = tok.group(1)
-    all_recs = []
-    for p in PRODUCTS:
-        recs = fetch(session, token, p)
-        print(f"{p}: {len(recs)} funds", file=sys.stderr)
-        all_recs.extend(recs)
-    print(f"parsed {len(all_recs)} series total")
-    nf, ni, nu = seed(all_recs, dry_run=dry_run)
-    if dry_run:
-        print(f"[DRY-RUN] funds inserted {nf}, series insert {ni}, series update {nu}")
-    else:
-        print(f"funds inserted {nf}, series insert {ni}, series update {nu}")
+    opener = make_opener()
+    token = get_token(opener)
+    products = get_products(opener)
+    print("ivari RatesOfReturn products: %d" % len(products))
+
+    con = sqlite3.connect(LOCAL_DB)
+    cur = con.cursor()
+    inserted = updated = total_series = 0
+
+    for code, desc in products:
+        data = urllib.parse.urlencode({
+            "ShowList": "IP",
+            "View_Category": "RatesOfReturn",
+            "View": code,
+            "Submit": "Submit",
+            "__RequestVerificationToken": token,
+        }).encode()
+        req = urllib.request.Request(BASE + "/Home/%s/en" % code, data=data, headers=UA)
+        try:
+            resp = opener.open(req, timeout=60)
+        except Exception as e:  # noqa: BLE001
+            print("  POST %s failed: %s" % (code, e))
+            continue
+        html = resp.read().decode("utf-8", "ignore")
+        as_at, rows = parse_rates_html(html)
+        print("  %-12s %-42s -> %d fund rows (as_at=%s)" % (code, desc[:42], len(rows), as_at))
+
+        for name, cols, vals in rows:
+            if not vals:
+                continue
+            ret = {}
+            for i, c in enumerate(cols):
+                if i < len(vals) and c in COL_MAP and COL_MAP[c]:
+                    ret[COL_MAP[c]] = vals[i]
+            if not ret:
+                continue
+            gua = guarantee(name)
+            cur.execute(
+                "SELECT fund_id FROM funds WHERE carrier_id=? AND fund_name=?",
+                (IVARI_CARRIER_ID, name))
+            row = cur.fetchone()
+            if row:
+                fid = row[0]
+            else:
+                cur.execute(
+                    "INSERT INTO funds (family_id, carrier_id, fund_name, fund_name_clean, category, is_active) "
+                    "VALUES (0,?,?,?,?,1)",
+                    (IVARI_CARRIER_ID, name, name, category(name)))
+                fid = cur.lastrowid
+                inserted += 1
+            series_code = "G%d" % gua if gua else "DEFAULT"
+            cur.execute(
+                "SELECT series_id FROM fund_series WHERE fund_id=? AND series_code=?",
+                (fid, series_code))
+            srow = cur.fetchone()
+            if srow:
+                cur.execute(
+                    "UPDATE fund_series SET return_1y=?,return_3y=?,return_5y=?,return_10y=?,"
+                    "return_incept=?,guarantee_pct=?,as_at_date=? WHERE series_id=?",
+                    (ret.get("return_1y"), ret.get("return_3y"), ret.get("return_5y"),
+                     ret.get("return_10y"), ret.get("return_incept"), gua, as_at, srow[0]))
+                updated += 1
+            else:
+                cur.execute(
+                    "INSERT INTO fund_series (fund_id, series_code, series_name, load_type, mer, "
+                    "guarantee_pct, return_1y, return_3y, return_5y, return_10y, return_incept, as_at_date) "
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (fid, series_code, name, None, None, gua,
+                     ret.get("return_1y"), ret.get("return_3y"), ret.get("return_5y"),
+                     ret.get("return_10y"), ret.get("return_incept"), as_at))
+            total_series += 1
+
+    con.commit()
+    cur.execute(
+        "SELECT COUNT(*) FROM fund_series fs JOIN funds f ON f.fund_id=fs.fund_id "
+        "WHERE f.carrier_id=? AND return_1y IS NOT NULL", (IVARI_CARRIER_ID,))
+    have = cur.fetchone()[0]
+    if total_series > 0:
+        cur.execute("UPDATE carriers SET scrape_url=?, scrape_status='done' WHERE carrier_id=?",
+                    (BASE + "/en", IVARI_CARRIER_ID))
+        con.commit()
+    # defensive cleanup: drop any legacy/dup series whose code equals the fund name
+    cur.execute(
+        "DELETE FROM fund_series WHERE series_id IN ("
+        "SELECT fs.series_id FROM fund_series fs JOIN funds f ON f.fund_id=fs.fund_id "
+        "WHERE f.carrier_id=? AND fs.series_code = f.fund_name)", (IVARI_CARRIER_ID,))
+    con.commit()
+    con.close()
+    print("inserted %d new funds, updated %d series; ivari series with return_1y: %d "
+          "(total series seen: %d)" % (inserted, updated, have, total_series))
 
 
 if __name__ == "__main__":

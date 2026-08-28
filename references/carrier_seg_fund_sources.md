@@ -113,23 +113,30 @@ a URL twice.
 ### Humania (carrier_id=8) — 0 local series
 - **Source:** login_required. Needs credentials or Fund Facts PDFs.
 
-### ivari (carrier_id=9) ✅ (roster + live NAV via portal; annual returns PENDING PDF pass)
+### ivari (carrier_id=9) ✅ (roster + trailing returns via portal; calendar-year BLOCKED pending PDF pass)
 - **Portal (data stream):** `https://rates.ivari.ca/en` ("Net Rates of Return and Prices") is an
-  ASP.NET MVC form (`frmSelector`) that AJAX-POSTs to `/Home/<Product>/en` with
-  `ShowList=IP`, `View_Category=RatesOfReturn`, `View=<code>`, `__RequestVerificationToken`.
-  Investment-products families (7): `BigUNIT, GS2UNIT, GS3UNIT, IMAXXUNIT, _5FLUNIT, TGIFUNIT,
-  NNIP_unit`. Each returns a tablesaw table of the **last ~week of daily unit values** per fund
-  (Fund Name + daily NAVs + Daily/Weekly Chg %). NOTE: only recent daily prices — **no
-  calendar-year returns** are exposed on the portal (the curl-only probe hit the dead classic-ASP
-  `rates.ivari.ca/EN/rates/default.asp` and missed this newer `/en` portal).
-- **Seeder:** `scripts/seed_ivari_local.py` — loops the 7 families, parses fund name + latest NAV
-  (`price`), `price_date`, `price_change_1d_pct` into `funds`+`fund_series` (carrier_id=9).
-  Idempotent. Seeded **95 funds / 95 series** (as-at 2026-08-26) with live NAVs; `yr_*` NULL.
+  ASP.NET MVC form (`frmSelector`) using unobtrusive AJAX. Selecting *Investment products* +
+  *Rates of Return – Seg. Funds* rewrites the form action to `/Home/<ProductCode>/en`; submitting
+  (POST) with `__RequestVerificationToken` returns a tablesaw table of **trailing returns**
+  (1yr / 2yr / 3yr / 5yr / 10yr / since-inception) per fund.
+  - **Product codes:** the RatesOfReturn filter exposes *RATE codes
+    (`BigRATE, GS2RATE, TIPs, IMAXXRATE, _5FLRATE, TGIFRATE, NNIP_rate`) — 7 seg-fund families
+    (BIG, GROWSafe, GROWSafe³, imaxxGIF, Five for Life, ivari GIF, NN IP). (The Unit-Values view
+    uses a different set: `BigUNIT, GS2UNIT, GS3UNIT, IMAXXUNIT, _5FLUNIT, TGIFUNIT, NNIP_unit`.)
+  - **NOTE:** the portal exposes **trailing** returns only — NOT calendar-year (yr_2019..2025). The
+    older curl-only probe hit the dead classic-ASP `rates.ivari.ca/EN/rates/default.asp` and missed
+    this newer `/en` portal; chromium (browser) was required to locate it.
+- **Seeder:** `scripts/seed_ivari_local.py` — `GET` token, then
+  `GET /Home/GetProductsForFilter/en?filterID=RatesOfReturn` (dynamic product list, hardcoded
+  fallback), then POST each *RATE code, parse the trailing-return table, upsert `funds` +
+  `fund_series` (carrier_id=9). Maps return_1y/3y/5y/10y/incept (no return_2y column in schema →
+  "2 yrs" dropped). Idempotent; self-cleans legacy/dup series. Seeded **122 funds / 95 series /
+  89 with return_1y** (as-at 2026-07-31 for BIG/GROWSafe/NN IP; other families omit the "as of" line).
 - **Fund Facts:** `ivari.ca/tools-and-resources/fund-facts-and-performance-updates/` lists **126
   seg funds** as "View PDF" — the structured **annual** (2019–2025) source. These populate `yr_*`
   (the Lipper screen's scoring gate) in a later PDF-parse pass.
-- **Status:** portal pass DONE (roster + NAV, unscored); annual returns BLOCKED pending Fund Facts
-  PDF parsing.
+- **Status:** portal pass DONE (roster + trailing returns, unscored on calendar); calendar-year
+  returns BLOCKED pending Fund Facts PDF parsing.
 
 ### Forresters (carrier_id=11) — 0 local series
 - **Listed source** `https://funds.cifinancial.com/en/funds/segregated/` returns HTTP 400;

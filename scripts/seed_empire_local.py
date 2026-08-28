@@ -11,7 +11,8 @@ Each row: fundName, entityId, calendar returns keyed by year (2018..2025), relat
 Local store: carrier_id=7 (Empire Life). Upserts funds + fund_series (yr_2019..2025).
 Existing pre-loaded Empire rows are preserved; Class Segs are inserted/updated by name+entityId.
 """
-import os, re, sqlite3, sys, json, urllib.request
+import os, re, sys, json, urllib.request
+import segfund_db
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
@@ -60,49 +61,49 @@ def main():
     data = fetch_api()
     funds = data.get("data", [])
     print(f"API returned {len(funds)} Empire Class Segs")
-    con = sqlite3.connect(LOCAL_DB)
-    cur = con.cursor()
+    conn, backend = segfund_db.get_conn()
+
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
+
     inserted = updated = 0
     for f in funds:
         name = f["fundName"]
         rets = {int(k): v for k, v in f.items() if k.isdigit() and isinstance(v, (int, float))}
         entity = f.get("entityId")
-        cur.execute("SELECT fund_id FROM funds WHERE carrier_id=? AND fund_name=?", (EMPIRE_CARRIER_ID, name))
-        row = cur.fetchone()
+        row = q("SELECT fund_id FROM funds WHERE carrier_id=? AND fund_name=?", (EMPIRE_CARRIER_ID, name)).fetchone()
         if row:
             fid = row[0]
         else:
-            cur.execute(
+            ins = q(
                 "INSERT INTO funds (family_id, carrier_id, fund_name, fund_name_clean, category, is_active) "
                 "VALUES (0,?,?,?,?,1)",
                 (EMPIRE_CARRIER_ID, name, name, category(name)),
             )
-            fid = cur.lastrowid
+            fid = ins.lastrowid
             inserted += 1
         yr = [rets.get(y) for y in YEARS]
         gua = guarantee(name)
-        cur.execute("SELECT series_id FROM fund_series WHERE fund_id=? AND series_code=?", (fid, entity))
-        srow = cur.fetchone()
+        srow = q("SELECT series_id FROM fund_series WHERE fund_id=? AND series_code=?", (fid, entity)).fetchone()
         if srow:
-            cur.execute(
+            q(
                 "UPDATE fund_series SET yr_2019=?,yr_2020=?,yr_2021=?,yr_2022=?,yr_2023=?,yr_2024=?,yr_2025=?,"
                 "guarantee_pct=? WHERE series_id=?",
                 (yr[0], yr[1], yr[2], yr[3], yr[4], yr[5], yr[6], gua, srow[0]),
             )
             updated += 1
         else:
-            cur.execute(
+            q(
                 "INSERT INTO fund_series (fund_id, series_code, series_name, load_type, mer, guarantee_pct, "
                 "yr_2019, yr_2020, yr_2021, yr_2022, yr_2023, yr_2024, yr_2025) "
                 "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (fid, entity, name, None, None, gua,
                  yr[0], yr[1], yr[2], yr[3], yr[4], yr[5], yr[6]),
             )
-    con.commit()
-    cur.execute("SELECT COUNT(*) FROM fund_series fs JOIN funds f ON f.fund_id=fs.fund_id "
-                "WHERE f.carrier_id=? AND yr_2025 IS NOT NULL", (EMPIRE_CARRIER_ID,))
-    have = cur.fetchone()[0]
-    con.close()
+    conn.commit()
+    have = q("SELECT COUNT(*) FROM fund_series fs JOIN funds f ON f.fund_id=fs.fund_id "
+             "WHERE f.carrier_id=? AND yr_2025 IS NOT NULL", (EMPIRE_CARRIER_ID,)).fetchone()[0]
+    conn.close()
     print(f"inserted {inserted} new funds, updated {updated} series; Empire series with yr_2025 populated: {have}")
 
 

@@ -16,9 +16,13 @@ idempotent):
      Money Market / Other). Same methodology as (2) but the benchmark is the
      peer average, not the all-fund average.
 
-  4. MAX DRAWDOWN - from the cumulative annual calendar-return path
-     (yr_2019..yr_2025). A positive % decline (e.g. 35.2 == -35.2%). Coarse
-     (annual resolution); NAV-history drawdown is a future enhancement.
+  4. MAX DRAWDOWN - from a NAV path reconstructed from trailing total-return
+     NAV levels (anchor 100 now; historical levels 100/(1+r) at the 1/3/5/10y
+     offsets). A genuine NAV-path drawdown at trailing resolution -- higher
+     than year-end calendar points and it works for funds with sparse annual
+     history (the old annual-only code reported 0% for any fund with <2
+     calendar years). Falls back to the annual calendar path when a fund has
+     no trailing returns.
 
   5. LIPPER-STYLE composite score (0-5). NOT the licensed Lipper Leader number
      (that needs a Lipper data feed). It is our own quintile-rank composite
@@ -29,7 +33,7 @@ idempotent):
          - Expense        (MER, lower better)
      Tax Efficiency is excluded (no tax data in source). Each component is
      percentile-ranked within the fund's peer group -> 0-5; overall = mean of
-     available components (>=2 required, else NULL).
+     the available components (>=2 required, else NULL).
 
 The benchmark averages (market + peer) are computed from OPEN/NULL-status
 series only, so closed funds are still scored but measured against the
@@ -42,8 +46,8 @@ Usage:
 """
 import argparse
 import os
-import sqlite3
 import statistics
+import segfund_db
 import sys
 from datetime import datetime
 
@@ -82,8 +86,37 @@ def norm_category(cat):
     return "Other"
 
 
-# --------------------------------------------------------------------------
-# max drawdown from cumulative annual calendar-return path
+def nav_path_drawdown(row):
+    """Max drawdown from a NAV path reconstructed from trailing total-return
+    NAV levels (scale-invariant, so no price/NAV column required).
+
+    Anchor = 100 at "now"; historical levels = 100 / (1 + r) at the KNOWN
+    offsets of the trailing returns (1/3/5/10y). These are the REAL historical
+    NAV levels implied by the trailing data, so the drawdown is a genuine
+    NAV-path drawdown -- higher resolution than year-end calendar points and
+    it works for funds with sparse annual history (the old code returned 0%
+    for any fund with <2 calendar years, even when it had a real drawdown in
+    its trailing window)."""
+    pts = [(0, 100.0)]
+    for col, off in (("return_1y", 1), ("return_3y", 3),
+                     ("return_5y", 5), ("return_10y", 10)):
+        v = row[col]
+        if v is not None:
+            pts.append((off, 100.0 / (1.0 + v / 100.0)))
+    if len(pts) < 2:
+        return None, "insufficient"
+    pts.sort(key=lambda p: p[0])
+    peak = pts[0][1]
+    mdd = 0.0
+    for _, lvl in pts:
+        if lvl > peak:
+            peak = lvl
+        dd = (lvl - peak) / peak
+        if dd < mdd:
+            mdd = dd
+    return round(-mdd * 100.0, 2), "nav-trailing"
+
+
 # --------------------------------------------------------------------------
 def max_drawdown(annual_vals):
     yrs = [y for y in annual_vals if annual_vals[y] is not None]
@@ -131,11 +164,16 @@ def main():
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
-    con = sqlite3.connect(args.db)
-    con.row_factory = sqlite3.Row
-    cur = con.cursor()
+    conn, backend = segfund_db.get_conn()
+    if backend == "mysql":
+        # mysql.connector returns tuple rows by default; emulate sqlite3.Row
+        # so the dict-style r["col"] access below works against prod too.
+        _base_cursor = conn.cursor
+        conn.cursor = lambda *a, **k: _base_cursor(dictionary=True)
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
 
-    rows = cur.execute("""
+    rows = q("""
         SELECT s.series_id, s.fund_id, s.series_code, s.series_name, s.mer,
                s.fund_status, s.return_1y, s.return_3y, s.return_5y,
                s.return_10y, s.return_incept,
@@ -193,7 +231,10 @@ def main():
             all_ann.get(r["series_id"], {}), market, years_sorted)
         s_beta, s_alpha, s_corr, _, _ = rel_metrics(
             all_ann.get(r["series_id"], {}), market_cat.get(cat, {}), years_sorted)
-        mdd = max_drawdown(all_ann.get(r["series_id"], {}))
+        mdd, mdd_basis = nav_path_drawdown(r)
+        if mdd is None:
+            mdd = max_drawdown(all_ann.get(r["series_id"], {}))
+            mdd_basis = "annual" if mdd is not None else "insufficient"
         recs.append({
             "series_id": r["series_id"], "fund_id": r["fund_id"],
             "carrier": r["carrier"], "fund_name": r["fund_name"],
@@ -201,7 +242,7 @@ def main():
             "fund_status": r["fund_status"], "mer": r["mer"],
             "volatility_rating": rating, "vol_basis": basis, "std": std, "ann_n": n,
             "max_drawdown": mdd,
-            "drawdown_basis": "annual" if mdd is not None else "insufficient",
+            "drawdown_basis": mdd_basis,
             "market_beta": m_beta, "market_alpha": m_alpha, "market_corr": m_corr,
             "sector_beta": s_beta, "sector_alpha": s_alpha, "sector_corr": s_corr,
             "ret5": r["return_5y"], "preservation": (1.0 - mdd / 100.0) if mdd is not None else None,
@@ -240,11 +281,11 @@ def main():
 
     if args.dry_run:
         print("[DRY-RUN] would write %d series to seg_fund_metrics" % len(recs))
-        con.close()
+        conn.close()
         return
 
-    cur.execute("DROP TABLE IF EXISTS seg_fund_metrics")
-    cur.execute("""
+    q("DROP TABLE IF EXISTS seg_fund_metrics")
+    q("""
         CREATE TABLE IF NOT EXISTS seg_fund_metrics (
             series_id INTEGER PRIMARY KEY, fund_id INTEGER, carrier TEXT,
             fund_name TEXT, category TEXT, category_raw TEXT, fund_status TEXT,
@@ -258,7 +299,7 @@ def main():
     """)
     now = datetime.utcnow().isoformat(sep=" ")
     for x in recs:
-        cur.execute("""
+        q("""
             INSERT INTO seg_fund_metrics VALUES (
                 :series_id,:fund_id,:carrier,:fund_name,:category,:category_raw,
                 :fund_status,:mer,:volatility_rating,:vol_basis,:std,:ann_n,
@@ -267,7 +308,7 @@ def main():
                 :lipper_consistent,:lipper_preservation,:lipper_expense,
                 :lipper_style_score,:computed_at)
         """, {**x, "computed_at": now})
-    con.commit()
+    conn.commit()
 
     # summary
     n = len(recs)
@@ -281,7 +322,7 @@ def main():
     print("  sector beta/alpha/corr : %d" % with_sec)
     print("  max drawdown          : %d" % with_mdd)
     print("  Lipper-style score     : %d" % with_lip)
-    con.close()
+    conn.close()
 
 
 if __name__ == "__main__":

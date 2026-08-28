@@ -44,7 +44,7 @@ Usage:
 import sys
 import json
 import re
-import sqlite3
+import segfund_db
 
 DB_PATH = "/root/.hermes/cache/seg_funds.db"
 CARRIER_ID = 2  # RBC Insurance (per references/carrier_seg_fund_sources.md)
@@ -96,33 +96,32 @@ def extract(json_path):
 
 
 def seed(records, dry_run=False):
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
+    conn, backend = segfund_db.get_conn()
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
     n_fund = n_series_ins = n_series_upd = 0
     for r in records:
-        cur.execute(
+        res = q(
             "INSERT OR IGNORE INTO funds (carrier_id, fund_name) VALUES (?,?)",
             (CARRIER_ID, r["fund_name"]),
         )
-        if cur.rowcount:
+        if res.rowcount:
             n_fund += 1
-        cur.execute(
+        row = q(
             "SELECT fund_id FROM funds WHERE carrier_id=? AND fund_name=?",
             (CARRIER_ID, r["fund_name"]),
-        )
-        row = cur.fetchone()
+        ).fetchone()
         if not row:
             continue
         fund_id = row[0]
-        cur.execute(
+        srow = q(
             "SELECT series_id FROM fund_series WHERE fund_id=? AND series_code=?",
             (fund_id, r["series_code"]),
-        )
-        srow = cur.fetchone()
+        ).fetchone()
         if srow:
             if not dry_run:
-                cur.execute(
-                    """UPDATE fund_series SET series_name=?, yr_2019=?, yr_2020=?, yr_2021=?, yr_2022=?,
+                q(
+                    """UPDATE fund_series SET series_name=?, yr_2019=?, yr_2020=?, yr_2021?,
                        yr_2023=?, yr_2024=?, yr_2025=?, as_at_date=?, fund_status=?, updated_at=datetime('now')
                        WHERE series_id=?""",
                     (r["series_name"], r["yr_2019"], r["yr_2020"], r["yr_2021"], r["yr_2022"],
@@ -131,7 +130,7 @@ def seed(records, dry_run=False):
             n_series_upd += 1
         else:
             if not dry_run:
-                cur.execute(
+                q(
                     """INSERT INTO fund_series
                        (fund_id, series_code, series_name, yr_2019, yr_2020, yr_2021, yr_2022, yr_2023,
                         yr_2024, yr_2025, as_at_date, fund_status, updated_at)

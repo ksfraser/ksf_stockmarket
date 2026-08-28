@@ -16,7 +16,7 @@ Usage:
     python3 scripts/normalize_empire_units.py --db /path/seg_funds.db
 """
 import argparse
-import sqlite3
+import segfund_db
 import sys
 
 DEFAULT_DB = "/root/.hermes/cache/seg_funds.db"
@@ -32,8 +32,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default=DEFAULT_DB)
     args = ap.parse_args()
-    con = sqlite3.connect(args.db)
-    cur = con.cursor()
+    conn, backend = segfund_db.get_conn()
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
 
     # Convert series whose returns are clearly decimals: every column |value| < 1
     # AND the largest, *100, lands in [1, 100) -- i.e. original in [0.01, 1.0).
@@ -43,7 +44,7 @@ def main():
     # review. Empire is a decimal-source carrier, so this is the right call.
     abs_cols = ",".join("ABS(coalesce(%s,0))" % c for c in RET_COLS)
     having = "MAX(%s) < 1 AND MAX(%s) * 100 >= 1" % (abs_cols, abs_cols)
-    ids = [r[0] for r in cur.execute(
+    ids = [r[0] for r in q(
         "SELECT s.series_id FROM fund_series s "
         "JOIN funds f ON f.fund_id = s.fund_id "
         "WHERE f.carrier_id = ? GROUP BY s.series_id HAVING " + having,
@@ -52,17 +53,17 @@ def main():
 
     if not ids:
         print("Empire Life: no decimal series found (already normalized).")
-        con.close()
+        conn.close()
         return
 
     placeholders = ",".join("?" * len(ids))
     set_clause = ", ".join("%s = %s * 100" % (c, c) for c in RET_COLS)
-    cur.execute(
+    q(
         "UPDATE fund_series SET %s WHERE series_id IN (%s)" % (set_clause, placeholders),
         ids,
     )
-    con.commit()
-    con.close()
+    conn.commit()
+    conn.close()
     print("Empire Life: converted %d decimal series to percentages." % len(ids))
 
 

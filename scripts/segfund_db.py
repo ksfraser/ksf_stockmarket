@@ -27,6 +27,7 @@ Usage in a seeder::
 from __future__ import annotations
 
 import os
+import re
 import sys
 import sqlite3
 
@@ -56,10 +57,18 @@ def get_conn():
 
 
 def adapt_sql(sql: str, backend: str) -> str:
-    """Rewrite sqlite-style SQL for the target backend."""
+    """Rewrite sqlite-style SQL for the target backend.
+
+    Translates sqlite idioms to MySQL: ``?`` -> ``%s``,
+    ``datetime('now')`` -> ``CURRENT_TIMESTAMP``,
+    ``INSERT OR REPLACE INTO`` -> ``REPLACE INTO``,
+    ``INSERT OR IGNORE INTO`` -> ``INSERT IGNORE INTO``.
+    """
     if backend == "mysql":
         sql = sql.replace("?", "%s")
         sql = sql.replace("datetime('now')", "CURRENT_TIMESTAMP")
+        sql = re.sub(r"INSERT\s+OR\s+REPLACE\s+INTO", "REPLACE INTO", sql, flags=re.I)
+        sql = re.sub(r"INSERT\s+OR\s+IGNORE\s+INTO", "INSERT IGNORE INTO", sql, flags=re.I)
     return sql
 
 

@@ -50,9 +50,9 @@ flag vol_basis='trailing' / 'insufficient'. Populate yr_2019..yr_2025 (from
 carrier Lipper portals / fund-fact PDFs) to unlock true annual metrics.
 """
 import argparse
-import sqlite3
 import statistics
 import re
+import segfund_db
 import sys
 from datetime import datetime
 
@@ -135,11 +135,16 @@ def main():
     ap.add_argument("--rebuild", action="store_true")
     args = ap.parse_args()
 
-    con = sqlite3.connect(args.db)
-    con.row_factory = sqlite3.Row
-    cur = con.cursor()
+    conn, backend = segfund_db.get_conn()
+    if backend == "mysql":
+        # mysql.connector returns tuple rows by default; emulate sqlite3.Row
+        # so the dict-style r["col"] access below works against prod too.
+        _base_cursor = conn.cursor
+        conn.cursor = lambda *a, **k: _base_cursor(dictionary=True)
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
 
-    rows = cur.execute("""
+    rows = q("""
         SELECT s.series_id, s.fund_id, s.series_code, s.series_name, s.load_type,
                s.mer, s.guarantee_pct, s.return_1y, s.return_3y, s.return_5y,
                s.return_10y, s.return_incept, s.yr_2019, s.yr_2020, s.yr_2021,
@@ -205,8 +210,8 @@ def main():
         for x in lst:
             x["base_class"] = 1 if x is base else 0
 
-    cur.execute("DROP TABLE IF EXISTS seg_fund_screen")
-    cur.execute("""
+    q("DROP TABLE IF EXISTS seg_fund_screen")
+    q("""
         CREATE TABLE IF NOT EXISTS seg_fund_screen (
             series_id INTEGER PRIMARY KEY, fund_id INTEGER, carrier TEXT, fund_name TEXT,
             category TEXT, series_code TEXT, load_type TEXT, mer REAL, guarantee_pct REAL,
@@ -216,10 +221,10 @@ def main():
             contrary INTEGER, poor_risk_adj INTEGER, mean_ret REAL, base_class INTEGER,
             wealth_threshold REAL, computed_at TEXT)
     """)
-    cur.execute("DELETE FROM seg_fund_screen")
+    q("DELETE FROM seg_fund_screen")
     now = datetime.utcnow().isoformat(sep=" ")
     for x in recs:
-        cur.execute(
+        q(
             """INSERT INTO seg_fund_screen VALUES (
                 :series_id,:fund_id,:carrier,:fund_name,:category,:series_code,:load_type,
                 :mer,:guarantee_pct,:min_invest,:eligible,:stability,:vol_basis,:ann_n,
@@ -227,7 +232,7 @@ def main():
                 :corr,:neg_years,:contrary,:poor_risk_adj,:mean_ret,:base_class,:wt,:computed_at)""",
             {**x, "wt": args.wealth, "computed_at": now},
         )
-    con.commit()
+    conn.commit()
 
     total = len(recs)
     elig = sum(x["eligible"] for x in recs)
@@ -256,7 +261,7 @@ def main():
         for x in cs[: args.top]:
             print(f"  {x['carrier']:<6}corr={x['corr']:>5} beta={x['beta']:>5} alpha={x['alpha']:>5} "
                   f"{x['stability']:<7} {(x['fund_name'] or '')[:46]} [{x['series_code']}]")
-        con.close()
+        conn.close()
         return
 
     rank = {"Low": 0, "Medium": 1, "High": 2, "Unknown": 3}
@@ -270,7 +275,7 @@ def main():
               f"{(x['beta'] or 0):>6.2f}{(x['corr'] or 0):>6.2f}"
               f"{(x['neg_years'] or 0):>4}{x['min_invest']:>9,}"
               f"  {(x['fund_name'] or '')[:42]} [{x['series_code']}]")
-    con.close()
+    conn.close()
 
 
 if __name__ == "__main__":

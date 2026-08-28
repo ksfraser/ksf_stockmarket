@@ -32,7 +32,7 @@ Usage:
 import sys
 import json
 import re
-import sqlite3
+import segfund_db
 
 DB_PATH = "/root/.hermes/cache/seg_funds.db"
 CARRIER_ID = 2  # RBC Insurance
@@ -71,18 +71,19 @@ def parse(rows):
 
 
 def seed(recs, dry_run=False):
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
+    conn, backend = segfund_db.get_conn()
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
     n = 0
     for r in recs:
-        cur.execute(
+        res = q(
             """UPDATE fund_series SET return_1y=?, return_3y=?, return_5y=?, return_10y=?,
                return_incept=?, updated_at=datetime('now')
                WHERE series_code=? AND fund_id IN (SELECT fund_id FROM funds WHERE carrier_id=?)""",
             (r["return_1y"], r["return_3y"], r["return_5y"], r["return_10y"],
              r["return_incept"], r["series_code"], CARRIER_ID),
         )
-        n += cur.rowcount
+        n += res.rowcount
     if not dry_run:
         conn.commit()
     conn.close()

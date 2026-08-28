@@ -42,7 +42,7 @@ Usage:
 import sys
 import json
 import html
-import sqlite3
+import segfund_db
 
 DB_PATH = "/root/.hermes/cache/seg_funds.db"
 CARRIER_ID = 5  # iA Financial (per references/carrier_seg_fund_sources.md)
@@ -96,32 +96,31 @@ def extract(json_path):
 
 
 def seed(records, dry_run=False):
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
+    conn, backend = segfund_db.get_conn()
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
     n_fund = n_series_ins = n_series_upd = 0
     for r in records:
-        cur.execute(
+        res = q(
             "INSERT OR IGNORE INTO funds (carrier_id, fund_name) VALUES (?,?)",
             (CARRIER_ID, r["name"]),
         )
-        if cur.rowcount:
+        if res.rowcount:
             n_fund += 1
-        cur.execute(
+        row = q(
             "SELECT fund_id FROM funds WHERE carrier_id=? AND fund_name=?",
             (CARRIER_ID, r["name"]),
-        )
-        row = cur.fetchone()
+        ).fetchone()
         if not row:
             continue
         fund_id = row[0]
-        cur.execute(
+        srow = q(
             "SELECT series_id FROM fund_series WHERE fund_id=? AND series_code=?",
             (fund_id, r["series_code"]),
-        )
-        srow = cur.fetchone()
+        ).fetchone()
         if srow:
             if not dry_run:
-                cur.execute(
+                q(
                     """UPDATE fund_series SET series_name=?, mer=?, yr_2025=?, return_1m=?,
                        return_3m=?, return_6m=?, return_1y=?, return_3y=?, return_5y=?,
                        return_10y=?, ytd_return=?, price=?, price_date=?, as_at_date=?,
@@ -134,7 +133,7 @@ def seed(records, dry_run=False):
             n_series_upd += 1
         else:
             if not dry_run:
-                cur.execute(
+                q(
                     """INSERT INTO fund_series
                        (fund_id, series_code, series_name, mer, yr_2025, return_1m, return_3m,
                         return_6m, return_1y, return_3y, return_5y, return_10y, ytd_return,

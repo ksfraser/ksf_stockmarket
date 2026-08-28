@@ -19,6 +19,7 @@ include the new column so it feeds volatility -- noted in carrier_seg_fund_sourc
 Usage:
     python3 scripts/rollover_calendar_year.py
 """
+import segfund_db
 import sqlite3
 import sys
 from datetime import datetime
@@ -28,33 +29,34 @@ DEFAULT_DB = "/root/.hermes/cache/seg_funds.db"
 
 def main():
     db = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_DB
-    con = sqlite3.connect(db)
-    cur = con.cursor()
+    conn, backend = segfund_db.get_conn()
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
     year = datetime.now().year - 1
     col = "yr_%d" % year
 
     try:
-        cur.execute("ALTER TABLE fund_series ADD COLUMN %s REAL" % col)
+        q("ALTER TABLE fund_series ADD COLUMN %s REAL" % col)
         print("added column %s" % col)
-    except sqlite3.OperationalError:
-        pass  # already exists
+    except Exception:
+        pass  # already exists (sqlite3.OperationalError or mysql duplicate-column error)
 
-    rows = cur.execute("SELECT series_id, return_1y FROM fund_series").fetchall()
+    rows = q("SELECT series_id, return_1y FROM fund_series").fetchall()
     n = 0
     for sid, cur1y in rows:
-        snap = cur.execute(
+        snap = q(
             "SELECT return_1y FROM performance_history "
             "WHERE series_id=? AND snapshot_date LIKE ? "
             "ORDER BY snapshot_date DESC LIMIT 1",
             (sid, "%s-%%" % year),
         ).fetchone()
         val = snap[0] if snap and snap[0] is not None else cur1y
-        cur.execute(
+        q(
             "UPDATE fund_series SET %s=? WHERE series_id=?" % col, (val, sid)
         )
         n += 1
-    con.commit()
-    con.close()
+    conn.commit()
+    conn.close()
     print("rolled over %d series into %s (prev year = %d)" % (n, col, year))
 
 

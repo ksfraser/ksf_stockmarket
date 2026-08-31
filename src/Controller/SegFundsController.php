@@ -33,8 +33,9 @@ class SegFundsController {
             $params[':series'] = $series;
         }
         if ($search) {
-            $where[] = '(fund_name LIKE :search OR carrier LIKE :search)';
-            $params[':search'] = '%' . $search . '%';
+            $where[] = '(fund_name LIKE :search1 OR carrier LIKE :search2)';
+            $params[':search1'] = '%' . $search . '%';
+            $params[':search2'] = '%' . $search . '%';
         }
 
         $whereSql = 'WHERE ' . implode(' AND ', $where);
@@ -98,6 +99,115 @@ class SegFundsController {
             'fund' => $fund,
             'prices' => $prices,
             'error' => null,
+        ];
+    }
+
+    /**
+     * GET /?action=seg_fund_lira — LIRA/LRSP seg-fund screener.
+     * Ranks equity seg funds for retirement-account use: 10y/5y returns,
+     * max-drawdown risk, dedupes to one series per (carrier, fund), then
+     * aggregates to a carrier score across CA / US / INTL geographies.
+     */
+    public function liraScreener(int $age = 52, float $principal = 200000.0): array {
+        $caCats = ['Canadian Equity','Canadian Focused Equity','Canadian Dividend and Income Equity','Canadian Small/Mid Cap Equity'];
+        $usCats = ['U.S. Equity'];
+        $intlCats = ['International Equity','Foreign equity','European Equity','Emerging Markets Equity','Global Equity'];
+
+        $sql = "
+            SELECT
+                c.name AS carrier,
+                c.carrier_id,
+                f.fund_id,
+                s.series_id,
+                s.fund_name,
+                s.series_code,
+                s.mer,
+                m.category_raw,
+                m.max_drawdown,
+                m.volatility_rating,
+                s.ret_10y,
+                s.ret_5y
+            FROM seg_fund_screen s
+            JOIN seg_fund_metrics m ON s.series_id = m.series_id
+            JOIN funds f ON s.fund_id = f.fund_id
+            JOIN carriers c ON f.carrier_id = c.carrier_id
+            WHERE s.eligible = 1
+              AND s.base_class = 1
+              AND s.ret_10y IS NOT NULL AND s.ret_10y > 0
+              AND m.max_drawdown IS NOT NULL AND m.max_drawdown > 0
+              AND m.category_raw IN (?,?,?,?,?,?,?,?,?,?)
+        ";
+        $allCats = array_merge($caCats, $usCats, $intlCats);
+        $placeholders = implode(',', array_fill(0, count($allCats), '?'));
+        $sql = str_replace('IN (?,?,?,?,?,?,?,?,?,?)', 'IN (' . $placeholders . ')', $sql);
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($allCats);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Bucket by geography
+        $caSet = array_flip($caCats);
+        $usSet = array_flip($usCats);
+        $intlSet = array_flip($intlCats);
+        $buckets = ['CA' => [], 'US' => [], 'INTL' => []];
+        foreach ($rows as $r) {
+            $cat = $r['category_raw'] ?? '';
+            if (isset($caSet[$cat])) $buckets['CA'][] = $r;
+            elseif (isset($usSet[$cat])) $buckets['US'][] = $r;
+            elseif (isset($intlSet[$cat])) $buckets['INTL'][] = $r;
+        }
+
+        // Dedupe: keep the highest risk-adjusted (ret_10y / max_drawdown) per (carrier, fund)
+        $ranked = ['CA' => [], 'US' => [], 'INTL' => []];
+        foreach ($buckets as $geo => $list) {
+            $best = [];
+            foreach ($list as $r) {
+                $key = $r['carrier'] . '||' . $r['fund_name'];
+                $ra = $r['max_drawdown'] > 0 ? $r['ret_10y'] / $r['max_drawdown'] : 0;
+                $r['risk_adj'] = round($ra, 3);
+                if (!isset($best[$key]) || $r['risk_adj'] > $best[$key]['risk_adj']) {
+                    $best[$key] = $r;
+                }
+            }
+            usort($best, fn($a, $b) => $b['risk_adj'] <=> $a['risk_adj']);
+            $ranked[$geo] = array_values($best);
+        }
+
+        // Aggregate per carrier: requires all 3 geographies, score = mean of top-fund RA
+        $carriers = [];
+        foreach (array_merge($ranked['CA'], $ranked['US'], $ranked['INTL']) as $r) {
+            $c = $r['carrier'];
+            if (!isset($carriers[$c])) $carriers[$c] = ['CA'=>null,'US'=>null,'INTL'=>null];
+        }
+        foreach ($ranked as $geo => $list) {
+            foreach ($list as $r) {
+                $c = $r['carrier'];
+                if ($carriers[$c][$geo] === null) $carriers[$c][$geo] = $r;
+            }
+        }
+        $carrierScores = [];
+        foreach ($carriers as $name => $geoPicks) {
+            if ($geoPicks['CA'] && $geoPicks['US'] && $geoPicks['INTL']) {
+                $avgRa = ($geoPicks['CA']['risk_adj'] + $geoPicks['US']['risk_adj'] + $geoPicks['INTL']['risk_adj']) / 3;
+                $avgMer = ($geoPicks['CA']['mer'] + $geoPicks['US']['mer'] + $geoPicks['INTL']['mer']) / 3;
+                $carrierScores[] = [
+                    'carrier' => $name,
+                    'avg_risk_adj' => round($avgRa, 3),
+                    'avg_mer' => round($avgMer, 2),
+                    'ca' => $geoPicks['CA'],
+                    'us' => $geoPicks['US'],
+                    'intl' => $geoPicks['INTL'],
+                ];
+            }
+        }
+        usort($carrierScores, fn($a, $b) => $b['avg_risk_adj'] <=> $a['avg_risk_adj']);
+
+        return [
+            'ranked' => $ranked,
+            'carriers' => $carrierScores,
+            'age' => $age,
+            'principal' => $principal,
+            'allocation' => ['CA' => 0.60, 'US' => 0.25, 'INTL' => 0.15],
+            'runway' => 10,
         ];
     }
 }

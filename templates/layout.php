@@ -13,6 +13,8 @@
 .nav-system a.active, .nav-personal a.active { background:var(--accent); color:#fff; }
 .nav-section { display:inline-block; margin-right:24px; }
 .nav-section-label { font-size:0.7em; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-right:8px; vertical-align:middle; }
+.sort-link { color:var(--text); text-decoration:none; }
+.sort-link:hover { text-decoration:underline; opacity:0.85; }
 </style>
 </head>
 <body>
@@ -26,9 +28,11 @@
         <a href="?action=overview" class="<?php echo active_class('overview', $action); ?>">Dashboard</a>
         <a href="?action=list" class="<?php echo active_class('list', $action); ?>">All Symbols</a>
         <a href="?action=screener" class="<?php echo active_class('screener', $action); ?>">Screener</a>
-        <a href="?action=news" class="<?php echo active_class('news', $action); ?>">News</a>
         <a href="?action=strategy_stock" class="<?php echo active_class('strategy_stock', $action); ?>">Strategies</a>
+        <a href="?action=advisor_backtest" class="<?php echo active_class('advisor_backtest', $action); ?>">Advisor Backtest</a>
         <a href="?action=seg_funds" class="<?php echo in_array($action, ['seg_funds','seg_fund_detail']) ? 'active' : ''; ?>">Seg Funds</a>
+        <a href="?action=seg_fund_lira" class="<?php echo active_class('seg_fund_lira', $action); ?>">LIRA Screener</a>
+        <a href="?action=advisor&view=research" class="<?php echo ($action==='advisor' && ($_GET['view'] ?? '')==='research') ? 'active' : ''; ?>">Research Briefs</a>
     </span>
     
     <?php if (!empty($data['current_user'])): ?>
@@ -40,6 +44,7 @@
         <a href="?action=stop_orders" class="<?php echo active_class('stop_orders', $action); ?>">Stop Orders</a>
         <a href="?action=broker_stops" class="<?php echo active_class('broker_stops', $action); ?>">Broker Stops</a>
         <a href="?action=transactions" class="<?php echo active_class('transactions', $action); ?>">Transactions</a>
+        <a href="?action=shared_with_me" class="<?php echo active_class('shared_with_me', $action); ?>">Shared with Me</a>
         <a href="?action=alerts_status" class="<?php echo active_class('alerts_status', $action); ?>">&#x1F4E3; Alerts</a>
         <a href="?action=upload" class="<?php echo active_class('upload', $action); ?>">&#x1F4E4; Upload</a>
         <a href="?action=export" class="<?php echo active_class('export', $action); ?>">&#x1F4BE; Export</a>
@@ -55,6 +60,7 @@
             <?php if (($data['current_user']['role'] ?? '') === 'admin'): ?>
                 |&nbsp;
                 <a href="?action=admin_symbols" class="<?php echo active_class('admin_symbols', $action); ?>">Admin</a>
+                <a href="?action=manual_ohlcv" class="<?php echo active_class('manual_ohlcv', $action); ?>">OHLCV Import</a>
                 <a href="?action=admin_settings" class="<?php echo active_class('admin_settings', $action); ?>">Settings</a>
             <?php endif; ?>
         <?php else: ?>
@@ -77,10 +83,10 @@ if (file_exists($tplFile)) {
 </div>
 
 <?php
+require __DIR__ . '/js.php';
 if (in_array($action ?? '', ['detail', 'indicators'])) {
     echo '<script src="/stockmarket/js/enhanced_charts.js?v=3"></script>';
 }
-require __DIR__ . '/js.php';
 ?>
 </body>
 </html>

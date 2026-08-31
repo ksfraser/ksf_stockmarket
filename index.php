@@ -549,6 +549,16 @@ case 'strategy_timing':
         $pageTitle = 'Fund Detail';
         $template = 'seg_fund_detail';
         break;
+    case 'seg_fund_lira':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/SegFundsController.php';
+        $ctrl = new SegFundsController();
+        $data = array_merge($data, $ctrl->liraScreener(
+            (int)($_GET['age'] ?? 52),
+            (float)($_GET['principal'] ?? 200000)
+        ));
+        $pageTitle = 'LIRA/LRSP Seg-Fund Screener';
+        $template = 'seg_fund_lira_screener';
+        break;
     case 'shared_with_me':
         if (!$userId) {
             header('Location: ?action=login');

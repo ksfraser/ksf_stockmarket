@@ -107,11 +107,33 @@ class SegFundsController {
      * Ranks equity seg funds for retirement-account use: 10y/5y returns,
      * max-drawdown risk, dedupes to one series per (carrier, fund), then
      * aggregates to a carrier score across CA / US / INTL geographies.
+     *
+     * @param string $horizon '10y' (default) or '5y' — controls which return
+     *                        column is used for ranking and which minimum
+     *                        track-record is required.
      */
-    public function liraScreener(int $age = 52, float $principal = 200000.0): array {
-        $caCats = ['Canadian Equity','Canadian Focused Equity','Canadian Dividend and Income Equity','Canadian Small/Mid Cap Equity'];
+    public function liraScreener(int $age = 52, float $principal = 200000.0, string $horizon = '10y'): array {
+        $returnCol = $horizon === '5y' ? 's.ret_5y' : 's.ret_10y';
+        $horizonLabel = $horizon === '5y' ? '5-Year' : '10-Year';
+
+        // Comprehensive equity categories (covers all carriers + casing variants)
+        $caCats = [
+            'Canadian Equity', 'Canadian equity',
+            'Canadian Focused Equity',
+            'Canadian Dividend and Income Equity', 'Canadian Dividend & Income Equity',
+            'Canadian Small/Mid Cap Equity',
+            'Canadian Equity Balanced',
+        ];
         $usCats = ['U.S. Equity'];
-        $intlCats = ['International Equity','Foreign equity','European Equity','Emerging Markets Equity','Global Equity'];
+        $intlCats = [
+            'International Equity', 'Foreign equity',
+            'European Equity', 'Emerging Markets Equity',
+            'Global and regional equity', 'Global Equity',
+            'Global Small/Mid Cap Equity',
+        ];
+
+        $allCats = array_merge($caCats, $usCats, $intlCats);
+        $placeholders = implode(',', array_fill(0, count($allCats), '?'));
 
         $sql = "
             SELECT
@@ -125,21 +147,19 @@ class SegFundsController {
                 m.category_raw,
                 m.max_drawdown,
                 m.volatility_rating,
-                s.ret_10y,
-                s.ret_5y
+                $returnCol AS ret_horizon,
+                s.ret_5y,
+                s.ret_10y
             FROM seg_fund_screen s
             JOIN seg_fund_metrics m ON s.series_id = m.series_id
             JOIN funds f ON s.fund_id = f.fund_id
             JOIN carriers c ON f.carrier_id = c.carrier_id
             WHERE s.eligible = 1
               AND s.base_class = 1
-              AND s.ret_10y IS NOT NULL AND s.ret_10y > 0
+              AND $returnCol IS NOT NULL AND $returnCol > 0
               AND m.max_drawdown IS NOT NULL AND m.max_drawdown > 0
-              AND m.category_raw IN (?,?,?,?,?,?,?,?,?,?)
+              AND m.category_raw IN ($placeholders)
         ";
-        $allCats = array_merge($caCats, $usCats, $intlCats);
-        $placeholders = implode(',', array_fill(0, count($allCats), '?'));
-        $sql = str_replace('IN (?,?,?,?,?,?,?,?,?,?)', 'IN (' . $placeholders . ')', $sql);
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($allCats);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -156,14 +176,15 @@ class SegFundsController {
             elseif (isset($intlSet[$cat])) $buckets['INTL'][] = $r;
         }
 
-        // Dedupe: keep the highest risk-adjusted (ret_10y / max_drawdown) per (carrier, fund)
+        // Dedupe: keep the highest risk-adjusted (ret_horizon / max_drawdown) per (carrier, fund)
         $ranked = ['CA' => [], 'US' => [], 'INTL' => []];
         foreach ($buckets as $geo => $list) {
             $best = [];
             foreach ($list as $r) {
                 $key = $r['carrier'] . '||' . $r['fund_name'];
-                $ra = $r['max_drawdown'] > 0 ? $r['ret_10y'] / $r['max_drawdown'] : 0;
+                $ra = $r['max_drawdown'] > 0 ? $r['ret_horizon'] / $r['max_drawdown'] : 0;
                 $r['risk_adj'] = round($ra, 3);
+                $r['return_label'] = $horizonLabel;
                 if (!isset($best[$key]) || $r['risk_adj'] > $best[$key]['risk_adj']) {
                     $best[$key] = $r;
                 }
@@ -208,6 +229,8 @@ class SegFundsController {
             'principal' => $principal,
             'allocation' => ['CA' => 0.60, 'US' => 0.25, 'INTL' => 0.15],
             'runway' => 10,
+            'horizon' => $horizon,
+            'horizon_label' => $horizonLabel,
         ];
     }
 }

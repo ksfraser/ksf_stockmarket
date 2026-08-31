@@ -31,7 +31,8 @@
         <a href="?action=strategy_stock" class="<?php echo active_class('strategy_stock', $action); ?>">Strategies</a>
         <a href="?action=advisor_backtest" class="<?php echo active_class('advisor_backtest', $action); ?>">Advisor Backtest</a>
         <a href="?action=seg_funds" class="<?php echo in_array($action, ['seg_funds','seg_fund_detail']) ? 'active' : ''; ?>">Seg Funds</a>
-        <a href="?action=seg_fund_lira" class="<?php echo active_class('seg_fund_lira', $action); ?>">LIRA Screener</a>
+        <a href="?action=seg_fund_lira" class="<?php echo active_class('seg_fund_lira', $action); ?>">LIRA (10y)</a>
+        <a href="?action=seg_fund_lira_5y" class="<?php echo active_class('seg_fund_lira_5y', $action); ?>">LIRA (5y)</a>
         <a href="?action=advisor&view=research" class="<?php echo ($action==='advisor' && ($_GET['view'] ?? '')==='research') ? 'active' : ''; ?>">Research Briefs</a>
     </span>
     

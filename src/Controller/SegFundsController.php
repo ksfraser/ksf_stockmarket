@@ -116,25 +116,7 @@ class SegFundsController {
         $returnCol = $horizon === '5y' ? 's.ret_5y' : 's.ret_10y';
         $horizonLabel = $horizon === '5y' ? '5-Year' : '10-Year';
 
-        // Comprehensive equity categories (covers all carriers + casing variants)
-        $caCats = [
-            'Canadian Equity', 'Canadian equity',
-            'Canadian Focused Equity',
-            'Canadian Dividend and Income Equity', 'Canadian Dividend & Income Equity',
-            'Canadian Small/Mid Cap Equity',
-            'Canadian Equity Balanced',
-        ];
-        $usCats = ['U.S. Equity'];
-        $intlCats = [
-            'International Equity', 'Foreign equity',
-            'European Equity', 'Emerging Markets Equity',
-            'Global and regional equity', 'Global Equity',
-            'Global Small/Mid Cap Equity',
-        ];
-
-        $allCats = array_merge($caCats, $usCats, $intlCats);
-        $placeholders = implode(',', array_fill(0, count($allCats), '?'));
-
+        // Geography buckets: all equity seg funds, then bucket by category_raw
         $sql = "
             SELECT
                 c.name AS carrier,
@@ -158,22 +140,28 @@ class SegFundsController {
               AND s.base_class = 1
               AND $returnCol IS NOT NULL AND $returnCol > 0
               AND m.max_drawdown IS NOT NULL AND m.max_drawdown > 0
-              AND m.category_raw IN ($placeholders)
+              AND m.category = 'Equity'
         ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($allCats);
+        $stmt->execute();
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Bucket by geography
-        $caSet = array_flip($caCats);
-        $usSet = array_flip($usCats);
-        $intlSet = array_flip($intlCats);
+        // Bucket by geography using category_raw heuristics
         $buckets = ['CA' => [], 'US' => [], 'INTL' => []];
         foreach ($rows as $r) {
-            $cat = $r['category_raw'] ?? '';
-            if (isset($caSet[$cat])) $buckets['CA'][] = $r;
-            elseif (isset($usSet[$cat])) $buckets['US'][] = $r;
-            elseif (isset($intlSet[$cat])) $buckets['INTL'][] = $r;
+            $cat = strtolower($r['category_raw'] ?? '');
+            if (str_contains($cat, 'canadian')) {
+                $buckets['CA'][] = $r;
+            } elseif (str_contains($cat, 'u.s.') || preg_match('/\bus\b/', $cat)) {
+                $buckets['US'][] = $r;
+            } elseif (str_contains($cat, 'international') || str_contains($cat, 'foreign') ||
+                       str_contains($cat, 'global') || str_contains($cat, 'european') ||
+                       str_contains($cat, 'emerging')) {
+                $buckets['INTL'][] = $r;
+            } else {
+                // Unmapped equity defaults to INTL for diversification
+                $buckets['INTL'][] = $r;
+            }
         }
 
         // Dedupe: keep the highest risk-adjusted (ret_horizon / max_drawdown) per (carrier, fund)

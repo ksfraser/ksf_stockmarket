@@ -583,11 +583,6 @@ case 'strategy_timing':
         $template = 'shared_with_me';
         break;
     case 'etf_performance':
-        $host = 'ksfraser.ca';
-        $db   = 'ksfraser_stock_market';
-        $user = 'ksfraser_stockmarket';
-        $pass = getenv('MYSQL_PASSWORD') ?: '';
-
         $sortField = $_GET['sort'] ?? 'symbol';
         $sortDir   = $_GET['dir'] ?? 'asc';
 
@@ -615,9 +610,7 @@ case 'strategy_timing':
         $nextDir = ($sortDir === 'asc') ? 'desc' : 'asc';
 
         try {
-            $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $pdo = Database::get();
 
             $sql = "
                 WITH latest AS (

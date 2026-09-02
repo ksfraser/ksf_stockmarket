@@ -71,8 +71,9 @@ class AdvisorController {
         $category = $_GET['category'] ?? 'all';
         $limit = (int)($_GET['limit'] ?? 20);
 
-        $sql = "SELECT * FROM research_briefs WHERE brief_date = :today";
-        $params = [':today' => date('Y-m-d')];
+        // Show recent briefs (last 7 days) so the page always has content
+        $sql = "SELECT * FROM research_briefs WHERE brief_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
+        $params = [];
 
         if ($mode !== 'all') {
             $sql .= " AND mode = :mode";

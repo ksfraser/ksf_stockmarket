@@ -1,9 +1,24 @@
 <?php
-/** Advisor Research Briefs */
+/**
+ * Advisor Research Briefs — renders the last 7 days of briefs
+ * from the research_briefs table. Briefs are markdown-encoded in
+ * the `summary` column; this template renders them as monospace
+ * preformatted text without external dependencies.
+ */
 $briefs = $data['briefs'] ?? [];
 $mode = $data['mode'] ?? 'all';
 $category = $data['category'] ?? 'all';
+
+// Group briefs by date for cleaner display
+$grouped = [];
+foreach ($briefs as $b) {
+    $date = $b['brief_date'] ?? 'unknown';
+    $grouped[$date][] = $b;
+}
+ksort($grouped);
+$grouped = array_reverse($grouped);
 ?>
+
 <div class="card" style="margin-bottom:24px;">
     <div class="card-header">&#x1F4DC; Strategy Research Briefs</div>
     <p style="margin-bottom:16px;">
@@ -26,9 +41,9 @@ $category = $data['category'] ?? 'all';
         <label>Category:
             <select name="category">
                 <option value="all" <?= $category==='all'?'selected':'' ?>>All</option>
-                <option value="internal">Internal</option>
-                <option value="external">External</option>
-                <option value="general">General</option>
+                <option value="internal" <?= $category==='internal'?'selected':'' ?>>Internal</option>
+                <option value="external" <?= $category==='external'?'selected':'' ?>>External</option>
+                <option value="general" <?= $category==='general'?'selected':'' ?>>General</option>
             </select>
         </label>
         <button type="submit" class="btn btn-sm">Filter</button>
@@ -36,32 +51,44 @@ $category = $data['category'] ?? 'all';
     </form>
 </div>
 
-<?php if (empty($briefs)): ?>
+<?php if (empty($grouped)): ?>
 <div class="card">
-    <p>No briefs for today yet. The nightly cron runs at 02:00.</p>
+    <p>No briefs available. The Research Agent writes one per day at 02:00.</p>
 </div>
 <?php else: ?>
-    <?php foreach ($briefs as $b): ?>
-    <div class="card" style="margin-bottom:16px;border-left:4px solid var(--accent);">
-        <div class="card-header">
-            <?= htmlspecialchars($b['title']) ?>
-            <span style="float:right;font-size:0.85em;color:var(--text3);">
-                <?= htmlspecialchars($b['mode']) ?> · <?= htmlspecialchars($b['category']) ?>
-                · <?= htmlspecialchars($b['brief_date']) ?>
-            </span>
+    <?php foreach ($grouped as $date => $dayBriefs): ?>
+    <div class="card" style="margin-bottom:24px;">
+        <div class="card-header" style="background:rgba(0,0,0,0.2);">
+            <?= htmlspecialchars($date) ?> · <?= count($dayBriefs) ?> brief<?= count($dayBriefs) !== 1 ? 's' : '' ?>
         </div>
-        <?php if (!empty($b['source_url'])): ?>
-        <p style="margin-bottom:8px;">
-            <a href="<?= htmlspecialchars($b['source_url']) ?>" target="_blank">Source</a>
-        </p>
-        <?php endif; ?>
-        <div style="white-space:pre-wrap;font-family:monospace;font-size:0.9em;background:rgba(0,0,0,0.15);padding:12px;border-radius:6px;"><?= htmlspecialchars($b['summary']) ?></div>
-        <?php if (!empty($b['recommendation'])): ?>
-        <p style="margin-top:12px;color:var(--accent);"><strong>Recommendation:</strong> <?= htmlspecialchars($b['recommendation']) ?></p>
-        <?php endif; ?>
-        <?php if (!empty($b['scores'])): ?>
-        <p style="margin-top:8px;color:var(--text3);"><strong>Scores:</strong> <?= htmlspecialchars(json_encode($b['scores'])) ?></p>
-        <?php endif; ?>
+        <?php foreach ($dayBriefs as $b): ?>
+        <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.06);">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+                <strong><?= htmlspecialchars($b['title']) ?></strong>
+                <span style="font-size:0.8em;color:var(--text3);">
+                    <?= htmlspecialchars($b['mode']) ?> · <?= htmlspecialchars($b['category']) ?>
+                    · created <?= htmlspecialchars(substr($b['created_at'] ?? '', 0, 16)) ?>
+                </span>
+            </div>
+            <?php if (!empty($b['source_url'])): ?>
+            <p style="margin-bottom:8px;">
+                <a href="<?= htmlspecialchars($b['source_url']) ?>" target="_blank">Source</a>
+            </p>
+            <?php endif; ?>
+            <div style="white-space:pre-wrap;font-family:monospace;font-size:0.9em;background:rgba(0,0,0,0.15);padding:12px;border-radius:6px;"><?= htmlspecialchars($b['summary']) ?></div>
+            <?php if (!empty($b['recommendation'])): ?>
+            <p style="margin-top:12px;color:var(--accent);"><strong>Recommendation:</strong> <?= htmlspecialchars($b['recommendation']) ?></p>
+            <?php endif; ?>
+            <?php if (!empty($b['scores']) && is_array($b['scores']) && array_filter($b['scores'])): ?>
+            <p style="margin-top:8px;color:var(--text3);font-size:0.85em;">
+                <strong>Scores:</strong>
+                <?php foreach ($b['scores'] as $k => $v): ?>
+                    <?= htmlspecialchars($k) ?>=<strong><?= htmlspecialchars((string)$v) ?></strong>
+                <?php endforeach; ?>
+            </p>
+            <?php endif; ?>
+        </div>
+        <?php endforeach; ?>
     </div>
     <?php endforeach; ?>
 <?php endif; ?>

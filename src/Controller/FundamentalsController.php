@@ -4,34 +4,27 @@
  */
 class FundamentalsController {
     private $pdo;
+    /** @var SymbolResolver */
+    private $resolver;
 
     public function __construct() {
         $this->pdo = Database::get();
+        $this->resolver = new SymbolResolver($this->pdo);
     }
 
     /**
      * Get latest fundamental data for a symbol.
-     * Tries .TO suffix for Canadian symbols if no direct match.
+     * Uses resolver so Canadian symbols hit the canonical DB symbol.
      */
     public function getSymbol(string $symbol): array {
+        $resolved = $this->resolver->resolve($symbol);
         $stmt = $this->pdo->prepare("
             SELECT * FROM fundamentals
             WHERE symbol = :sym
             ORDER BY fetch_date DESC LIMIT 1
         ");
-        $stmt->execute([':sym' => $symbol]);
+        $stmt->execute([':sym' => $resolved]);
         $result = $stmt->fetch();
-        
-        // If no match, try .TO suffix for Canadian symbols (only if symbol doesn't already have it)
-        if (!$result && preg_match('/^[A-Z]/', $symbol) && !str_ends_with($symbol, '.TO')) {
-            $stmt = $this->pdo->prepare("
-                SELECT * FROM fundamentals
-                WHERE symbol = :sym
-                ORDER BY fetch_date DESC LIMIT 1
-            ");
-            $stmt->execute([':sym' => $symbol . '.TO']);
-            $result = $stmt->fetch();
-        }
         return $result ?: [];
     }
 
@@ -49,7 +42,7 @@ class FundamentalsController {
         $components = [];
 
         // Payout ratio
-        if ($f['payout_ratio'] !== null) {
+        if (($f['payout_ratio'] ?? null) !== null) {
             $pr = (float)$f['payout_ratio'];
             if ($pr > 1.0) { $score -= 40; $components[] = ['Payout Ratio', 'CRITICAL', sprintf('%.0f%% — exceeds earnings', $pr * 100)]; }
             elseif ($pr > 0.8) { $score -= 20; $components[] = ['Payout Ratio', 'WARNING', sprintf('%.0f%% — limited cushion', $pr * 100)]; }
@@ -58,7 +51,7 @@ class FundamentalsController {
         }
 
         // FCF coverage
-        if ($f['dividend_fcf_coverage'] !== null) {
+        if (($f['dividend_fcf_coverage'] ?? null) !== null) {
             $cov = (float)$f['dividend_fcf_coverage'];
             if ($cov < 0.5) { $score -= 35; $components[] = ['FCF Coverage', 'CRITICAL', sprintf('%.1f× — not covering dividends', $cov)]; }
             elseif ($cov < 0.8) { $score -= 20; $components[] = ['FCF Coverage', 'WARNING', sprintf('%.1f×', $cov)]; }
@@ -67,7 +60,7 @@ class FundamentalsController {
         }
 
         // Debt/Equity
-        if ($f['debt_to_equity'] !== null) {
+        if (($f['debt_to_equity'] ?? null) !== null) {
             $de = (float)$f['debt_to_equity'];
             if ($de > 2.0) { $score -= 20; $components[] = ['Debt/Equity', 'CRITICAL', sprintf('%.1f× — highly leveraged', $de)]; }
             elseif ($de > 1.5) { $score -= 10; $components[] = ['Debt/Equity', 'WARNING', sprintf('%.1f×', $de)]; }
@@ -98,31 +91,30 @@ class FundamentalsController {
         $ratingColor = $score >= 80 ? '#22c55e' : ($score >= 60 ? '#eab308' : ($score >= 40 ? '#f97316' : '#ef4444'));
 
         return [
-            'symbol' => $symbol,
-            'score' => $score,
-            'rating' => $rating,
-            'rating_color' => $ratingColor,
-            'components' => $components,
-            'fetch_date' => $f['fetch_date'] ?? null,
+            'symbol'          => $symbol,
+            'score'           => $score,
+            'rating'          => $rating,
+            'rating_color'    => $ratingColor,
+            'components'      => $components,
+            'fetch_date'      => $f['fetch_date'] ?? null,
+            'payout_ratio'    => $f['payout_ratio'] ?? null,
+            'fcf_coverage'    => $f['dividend_fcf_coverage'] ?? null,
+            'debt_equity'     => $f['debt_to_equity'] ?? null,
+            'revenue_growth'  => $f['revenue_growth'] ?? null,
+            'roe'             => $f['roe'] ?? null,
         ];
     }
 
     /**
      * Get dividend history for a symbol.
-     * Tries .TO suffix for Canadian symbols if no direct match.
+     * Uses resolver so Canadian symbols hit the canonical DB symbol.
      */
     public function getDividends(string $symbol): array {
+        $resolved = $this->resolver->resolve($symbol);
         $sql = "SELECT * FROM dividends WHERE symbol = :sym ORDER BY ex_date DESC LIMIT 50";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':sym' => $symbol]);
+        $stmt->execute([':sym' => $resolved]);
         $result = $stmt->fetchAll();
-        
-        // If no match, try .TO suffix for Canadian symbols (only if symbol doesn't already have it)
-        if (empty($result) && preg_match('/^[A-Z]/', $symbol) && !str_ends_with($symbol, '.TO')) {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([':sym' => $symbol . '.TO']);
-            $result = $stmt->fetchAll();
-        }
         return $result;
     }
 }

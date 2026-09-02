@@ -1018,6 +1018,26 @@ class StockController {
 
         $fctrl = new FundamentalsController();
 
+        // Preload all fundamentals in one query to avoid N×1 loop overhead
+        $fundamentalsMap = [];
+        if (!empty($holdings)) {
+            $allSymbols = array_column($holdings, 'symbol');
+            $inFund = implode(',', array_fill(0, count($allSymbols), '?'));
+            $stmtFund = $this->pdo->prepare("
+                SELECT f.* FROM fundamentals f
+                INNER JOIN (
+                    SELECT symbol, MAX(fetch_date) as max_date
+                    FROM fundamentals
+                    WHERE symbol IN ($inFund)
+                    GROUP BY symbol
+                ) latest ON f.symbol = latest.symbol AND f.fetch_date = latest.max_date
+            ");
+            $stmtFund->execute($allSymbols);
+            foreach ($stmtFund->fetchAll() as $fr) {
+                $fundamentalsMap[$fr['symbol']] = $fr;
+            }
+        }
+
         $totalCost = 0;
         $totalValue = 0;
         foreach ($holdings as &$h) {
@@ -1027,6 +1047,14 @@ class StockController {
             $currentValue = $h['shares'] * $currentPrice;
             $pnl = $currentValue - $costTotal;
             $pnlPct = $costTotal > 0 ? ($pnl / $costTotal) * 100 : 0;
+
+            // Use preloaded fundamentals
+            $fund = $fundamentalsMap[$symbol] ?? [];
+            $pe = $fund['trailing_pe'] ?? null;
+            $divYield = $fund['dividend_yield'] ?? null;
+            $annualDivPerShare = $fund['dividend_rate'] ?? 0;
+            $costBasisDivYield = $h['cost_basis'] > 0 ? ($annualDivPerShare / $h['cost_basis']) * 100 : null;
+            $currentDivYield = $currentPrice > 0 ? ($annualDivPerShare / $currentPrice) * 100 : null;
 
             // Annualized P&L (years held)
             $entryDate = $h['entry_date'] ?? null;
@@ -1038,16 +1066,8 @@ class StockController {
                 $daysHeld = null;
                 $annualizedPnlPct = null;
             }
-
-            // Fundamentals
-            $fund = $fctrl->getSymbol($symbol);
-            $pe = $fund['trailing_pe'] ?? null;
-            $divYield = $fund['dividend_yield'] ?? null;
-
-            // Cost-basis dividend yield (annual income / cost)
-            $annualDivPerShare = ($fund['dividend_rate'] ?? 0);
-            $costBasisDivYield = $h['cost_basis'] > 0 ? ($annualDivPerShare / $h['cost_basis']) * 100 : null;
-            $currentDivYield = $currentPrice > 0 ? ($annualDivPerShare / $currentPrice) * 100 : null;
+            $h['annualized_pnl_pct'] = $annualizedPnlPct;
+            $h['days_held'] = $daysHeld;
 
             // Dividend safety
             $divSafety = $fctrl->getDividendSafety($symbol);
@@ -1105,15 +1125,16 @@ class StockController {
         if ($user_id > 0 && !empty($holdings)) {
             $symbols = array_column($holdings, 'symbol');
             $in = implode(',', array_fill(0, count($symbols), '?'));
+            $params = array_merge([$user_id], $symbols);
             $stmt = $this->pdo->prepare("
                 SELECT symbol, MAX(settlement_date) as settlement_date
                 FROM transactions
-                WHERE user_id = :uid
+                WHERE user_id = ?
                   AND symbol IN ($in)
                   AND settlement_date IS NOT NULL
                 GROUP BY symbol
             ");
-            $stmt->execute(array_merge([':uid' => $user_id], $symbols));
+            $stmt->execute($params);
             foreach ($stmt->fetchAll() as $row) {
                 $settlementMap[$row['symbol']] = $row['settlement_date'];
             }
@@ -1126,22 +1147,22 @@ class StockController {
             $stmt = $this->pdo->prepare("
                 SELECT COALESCE(SUM(
                     CASE type
-                        WHEN 'BUY' THEN -amount
-                        WHEN 'SELL' THEN amount
-                        WHEN 'DEPOSIT' THEN amount
-                        WHEN 'WITHDRAWAL' THEN -amount
-                        WHEN 'DIVIDEND' THEN amount
-                        WHEN 'INTEREST_CHARGE' THEN -amount
-                        WHEN 'TAX' THEN -amount
-                        WHEN 'DELIVERY' THEN -amount
+                        WHEN 'BUY' THEN -total
+                        WHEN 'SELL' THEN total
+                        WHEN 'DEPOSIT' THEN total
+                        WHEN 'WITHDRAWAL' THEN -total
+                        WHEN 'DIVIDEND' THEN total
+                        WHEN 'INTEREST_CHARGE' THEN -total
+                        WHEN 'TAX' THEN -total
+                        WHEN 'DELIVERY' THEN -total
                         ELSE 0
                     END
                 ), 0) as cash
                 FROM transactions
                 WHERE user_id = :uid
-                  AND account_type IN ('portfolio','accrual')
+                  AND account_type IN ('RRSP','TFSA','MARGIN','CSA','JRSP')
                   AND symbol = 'CASH'
-                  AND date <= CURRENT_DATE()
+                  AND trade_date <= CURRENT_DATE()
             ");
             $stmt->execute([':uid' => $user_id]);
             $availableCash = (float)($stmt->fetchColumn() ?: 0);
@@ -1196,7 +1217,6 @@ class StockController {
      * Uses resolver so Canadian symbols hit the canonical DB symbol.
      */
     private function getLatestIndicators(string $symbol): array {
-        $this->refreshIndicatorsJsonIfStale($symbol);
         $resolved = $this->resolver->resolve($symbol);
         $stmt = $this->pdo->prepare("
             SELECT data FROM indicators_json
@@ -1205,7 +1225,7 @@ class StockController {
         ");
         $stmt->execute([':sym' => $resolved]);
         $row = $stmt->fetch();
-        
+
         if (!$row) return [];
         return json_decode($row['data'] ?: $row[0], true) ?: [];
     }

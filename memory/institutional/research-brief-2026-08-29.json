@@ -1,0 +1,106 @@
+{
+  "mode": "internal",
+  "category": "internal",
+  "title": "Internal Brief \u2014 2026-08-29",
+  "summary": "# Internal Strategy Brief \u2014 2026-08-29\n\n## ATR Stop Optimization Leaders\n\n- **VET.TO** stop=2.0\u00d7 bounce_back_rate=0.639344262295082% n_drops=305 avg_recovery=16.03076923076923d max_drawdown=199.1585365853659 ATR\n- **IEV** stop=3.5\u00d7 bounce_back_rate=0.64% n_drops=100 avg_recovery=17.515625d max_drawdown=31.167883211678898 ATR\n- **CEF** stop=3.0\u00d7 bounce_back_rate=0.6517857142857143% n_drops=112 avg_recovery=21.328767123287673d max_drawdown=25.980769230769173 ATR\n- **IQLT** stop=4.0\u00d7 bounce_back_rate=0.6527777777777778% n_drops=72 avg_recovery=21.06382978723404d max_drawdown=22.03651723668078 ATR\n- **WDOFF** stop=4.0\u00d7 bounce_back_rate=0.6557377049180327% n_drops=61 avg_recovery=24.675d max_drawdown=46.330508474576284 ATR\n\n## Fundamental Score Leaders\n\n- **CHY** MF score 4 tenets passed 6 (as of 2026-07-31 02:29:35)\n",
+  "source_url": null,
+  "scores": {
+    "atr_symbols": 10,
+    "eval_signals": 0,
+    "fundamentals": 1
+  },
+  "recommendation": "Review ATR leaders and eval signals for candidate trades.",
+  "raw_data": {
+    "atr_top": [
+      {
+        "symbol": "VET.TO",
+        "atr_multiple": 2.0,
+        "bounce_back_rate": 0.639344262295082,
+        "n_drops": 305,
+        "avg_recovery_days": 16.03076923076923,
+        "max_drawdown_atr": 199.1585365853659
+      },
+      {
+        "symbol": "IEV",
+        "atr_multiple": 3.5,
+        "bounce_back_rate": 0.64,
+        "n_drops": 100,
+        "avg_recovery_days": 17.515625,
+        "max_drawdown_atr": 31.167883211678898
+      },
+      {
+        "symbol": "CEF",
+        "atr_multiple": 3.0,
+        "bounce_back_rate": 0.6517857142857143,
+        "n_drops": 112,
+        "avg_recovery_days": 21.328767123287673,
+        "max_drawdown_atr": 25.980769230769173
+      },
+      {
+        "symbol": "IQLT",
+        "atr_multiple": 4.0,
+        "bounce_back_rate": 0.6527777777777778,
+        "n_drops": 72,
+        "avg_recovery_days": 21.06382978723404,
+        "max_drawdown_atr": 22.03651723668078
+      },
+      {
+        "symbol": "WDOFF",
+        "atr_multiple": 4.0,
+        "bounce_back_rate": 0.6557377049180327,
+        "n_drops": 61,
+        "avg_recovery_days": 24.675,
+        "max_drawdown_atr": 46.330508474576284
+      },
+      {
+        "symbol": "PZA",
+        "atr_multiple": 2.0,
+        "bounce_back_rate": 0.6571428571428571,
+        "n_drops": 280,
+        "avg_recovery_days": 16.472826086956523,
+        "max_drawdown_atr": 74.61999999999998
+      },
+      {
+        "symbol": "SPEU",
+        "atr_multiple": 3.5,
+        "bounce_back_rate": 0.6601941747572816,
+        "n_drops": 103,
+        "avg_recovery_days": 21.25,
+        "max_drawdown_atr": 37.57471264367783
+      },
+      {
+        "symbol": "CM",
+        "atr_multiple": 3.5,
+        "bounce_back_rate": 0.6607142857142857,
+        "n_drops": 112,
+        "avg_recovery_days": 23.60810810810811,
+        "max_drawdown_atr": 86.30635838150297
+      },
+      {
+        "symbol": "PMDIY",
+        "atr_multiple": 1.0,
+        "bounce_back_rate": 0.6610169491525424,
+        "n_drops": 59,
+        "avg_recovery_days": 8.23076923076923,
+        "max_drawdown_atr": 544.3728070175521
+      },
+      {
+        "symbol": "MA",
+        "atr_multiple": 3.5,
+        "bounce_back_rate": 0.6666666666666666,
+        "n_drops": 72,
+        "avg_recovery_days": 21.458333333333332,
+        "max_drawdown_atr": 14.182198157119796
+      }
+    ],
+    "eval_rows": [],
+    "fund_rows": [
+      {
+        "symbol": "CHY",
+        "mf_score": 4,
+        "lastupdate": "2026-07-31T02:29:35",
+        "tenets_passed": 6
+      }
+    ]
+  }
+}

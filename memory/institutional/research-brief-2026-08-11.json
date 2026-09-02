@@ -1,0 +1,96 @@
+{
+  "mode": "internal",
+  "category": "internal",
+  "title": "Internal Brief \u2014 2026-08-11",
+  "summary": "# Internal Strategy Brief \u2014 2026-08-11\n\n## ATR Stop Optimization Leaders\n\n- **EULIF** stop=2.0\u00d7 trailing=0.05% \u2192 PnL 78.11% (240 trades)\n- **EULIF** stop=3.0\u00d7 trailing=0.05% \u2192 PnL 78.11% (240 trades)\n- **EULIF** stop=2.5\u00d7 trailing=0.05% \u2192 PnL 78.11% (240 trades)\n- **EULIF** stop=3.0\u00d7 trailing=0.05% \u2192 PnL 78.11% (240 trades)\n- **EULIF** stop=1.5\u00d7 trailing=0.05% \u2192 PnL 78.11% (240 trades)\n\n## Fundamental Score Leaders\n\n- **CHY** MF score 4 tenets passed 6 (as of 2026-07-31 02:29:35)\n",
+  "source_url": null,
+  "scores": {
+    "atr_symbols": 10,
+    "eval_signals": 0,
+    "fundamentals": 1
+  },
+  "recommendation": "Review ATR leaders and eval signals for candidate trades.",
+  "raw_data": {
+    "atr_top": [
+      {
+        "symbol": "EULIF",
+        "stop_factor": 2.0,
+        "trailing_pct": 0.05,
+        "pnl_pct": 78.11002736985975,
+        "n_trades": 240
+      },
+      {
+        "symbol": "EULIF",
+        "stop_factor": 3.0,
+        "trailing_pct": 0.05,
+        "pnl_pct": 78.11002736985975,
+        "n_trades": 240
+      },
+      {
+        "symbol": "EULIF",
+        "stop_factor": 2.5,
+        "trailing_pct": 0.05,
+        "pnl_pct": 78.11002736985975,
+        "n_trades": 240
+      },
+      {
+        "symbol": "EULIF",
+        "stop_factor": 3.0,
+        "trailing_pct": 0.05,
+        "pnl_pct": 78.11002736985975,
+        "n_trades": 240
+      },
+      {
+        "symbol": "EULIF",
+        "stop_factor": 1.5,
+        "trailing_pct": 0.05,
+        "pnl_pct": 78.11002736985975,
+        "n_trades": 240
+      },
+      {
+        "symbol": "EULIF",
+        "stop_factor": 2.0,
+        "trailing_pct": 0.05,
+        "pnl_pct": 78.11002736985975,
+        "n_trades": 240
+      },
+      {
+        "symbol": "EULIF",
+        "stop_factor": 2.5,
+        "trailing_pct": 0.05,
+        "pnl_pct": 78.11002736985975,
+        "n_trades": 240
+      },
+      {
+        "symbol": "EULIF",
+        "stop_factor": 3.0,
+        "trailing_pct": 0.05,
+        "pnl_pct": 78.11002736985975,
+        "n_trades": 240
+      },
+      {
+        "symbol": "EULIF",
+        "stop_factor": 1.5,
+        "trailing_pct": 0.05,
+        "pnl_pct": 78.11002736985975,
+        "n_trades": 240
+      },
+      {
+        "symbol": "EULIF",
+        "stop_factor": 2.0,
+        "trailing_pct": 0.05,
+        "pnl_pct": 78.11002736985975,
+        "n_trades": 240
+      }
+    ],
+    "eval_rows": [],
+    "fund_rows": [
+      {
+        "symbol": "CHY",
+        "mf_score": 4,
+        "lastupdate": "2026-07-31T02:29:35",
+        "tenets_passed": 6
+      }
+    ]
+  }
+}

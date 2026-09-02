@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Personal Feed — Persona Builder</title>
+<style>
+  :root { --bg:#0f1115; --panel:#1a1d24; --line:#2a2e38; --text:#e6e8ef; --muted:#8b8fa3; --accent:#4f8cff; --accent2:#a78bfa; --ok:#34d399; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif; }
+  .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; height: 100%; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; overflow: auto; }
+  .panel h2 { margin: 0 0 12px; font-size: 16px; color: var(--accent); }
+  .panel h3 { margin: 18px 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 4px; }
+  input, textarea, select { width: 100%; background: #0f1115; color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font: inherit; }
+  textarea { min-height: 88px; resize: vertical; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .chip { background: #0f1115; border: 1px solid var(--line); color: var(--text); padding: 6px 10px; border-radius: 999px; cursor: pointer; font-size: 12px; }
+  .chip:hover { border-color: var(--accent); }
+  .chip.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); border-color: transparent; color: white; }
+  .preview { background: #0f1115; border: 1px dashed var(--line); border-radius: 10px; padding: 12px; min-height: 120px; }
+  .actions { display: flex; gap: 8px; margin-top: 12px; }
+  button { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: 0; padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+  button.secondary { background: #2a2e38; color: var(--text); }
+  code, pre { background: #0f1115; border: 1px solid var(--line); border-radius: 8px; padding: 10px; display: block; overflow: auto; }
+  pre { white-space: pre-wrap; word-break: break-word; }
+  .ok { color: var(--ok); }
+  .muted { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="panel">
+    <h2>🎭 Persona Builder</h2>
+    <p class="muted">Configure the AI character, voice, scenery, and action. JSON updates live.</p>
+
+    <h3>Personality</h3>
+    <label>Preset</label>
+    <div class="presets" id="personalityPresets"></div>
+    <label>Custom Personality</label>
+    <textarea id="personalityCustom" placeholder="Freeform personality description..."></textarea>
+
+    <h3>Appearance</h3>
+    <label>Character Description</label>
+    <textarea id="appearanceDesc" placeholder="Describe appearance, clothing, vibe..."></textarea>
+    <label>Reference Image URL</label>
+    <input id="appearanceImage" placeholder="https://...">
+
+    <h3>Voice</h3>
+    <div class="row">
+      <div>
+        <label>Gender</label>
+        <select id="voiceGender">
+          <option>female</option><option>male</option><option>neutral</option>
+        </select>
+      </div>
+      <div>
+        <label>Accent</label>
+        <input id="voiceAccent" placeholder="e.g. North American, British">
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div>
+        <label>Age</label>
+        <input id="voiceAge" placeholder="e.g. 30s">
+      </div>
+      <div>
+        <label>Tone</label>
+        <input id="voiceTone" placeholder="e.g. warm, confident, crisp">
+      </div>
+    </div>
+
+    <h3>Scenery / Style</h3>
+    <label>Preset</label>
+    <div class="presets" id="sceneryPresets"></div>
+    <label>Custom Style Prompt</label>
+    <textarea id="sceneryCustom" placeholder="Describe the scene, lighting, camera..."></textarea>
+
+    <h3>Action</h3>
+    <label>What the character does while talking</label>
+    <div class="presets" id="actionPresets"></div>
+    <label>Custom Action</label>
+    <input id="actionCustom" placeholder="e.g. sip coffee, lean on railing">
+
+    <h3>Data Source</h3>
+    <label>DATA_SOURCE_PATH</label>
+    <input id="dataSource" value="./data/sample-portfolio.json">
+
+    <div class="actions">
+      <button onclick="exportJSON()">Download .json</button>
+      <button class="secondary" onclick="exportMD()">Download .md</button>
+      <button class="secondary" onclick="copyJSON()">Copy JSON</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>📄 Output</h2>
+    <div class="preview" id="preview"></div>
+    <h3>.env</h3>
+    <pre id="env"></pre>
+    <h3>JSON</h3>
+    <pre id="json"></pre>
+    <p class="muted" id="status"></p>
+  </div>
+</div>
+
+<script>
+const PERSONALITY_PRESETS = [
+  { id:'cheerleader', label:'Cheerleader', text:'Energetic, positive, encouraging, uses exclamation points, celebrates wins' },
+  { id:'wise-mentor', label:'Wise Mentor', text:'Calm, measured, experienced, references timeless principles, patient teacher' },
+  { id:'smart-friend', label:'Smart Friend', text:'Peer-level insight, conversational, occasionally uses humor, relatable' },
+  { id:'hype-friend', label:'Hype Friend', text:'High energy, gets excited about opportunities, pushes action' },
+  { id:'dry-observer', label:'Dry-witted Observer', text:'Understated humor, deadpan delivery, finds irony in market behavior' },
+  { id:'analyst', label:'Analyst', text:'Matter-of-fact, data-first, precise terminology, concise' },
+  { id:'custom', label:'Custom', text:'' }
+];
+const SCENERY_PRESETS = [
+  { id:'rooftop', label:'Rooftop Terrace', text:'Cinematic rooftop terrace at golden hour, holding a coffee cup, city skyline behind in soft morning haze. Warm directional sunrise light from screen-right, slight wind moving hair, atmospheric depth, slow handheld camera push-in. Premium lifestyle cinematography. Live-action.' },
+  { id:'penthouse', label:'Modern Penthouse', text:'Sleek modern penthouse apartment, floor-to-ceiling windows behind with sunrise spilling orange and pink light across polished concrete floor. Natural wood, minimal furniture, architectural light fixtures. Tracking camera follows movement smoothly. Premium editorial aesthetic. Live-action.' },
+  { id:'mountain', label:'Mountain Deck', text:'Wooden mountain deck at sunrise, panoramic valley view, fog lifting off treetops. Camera orbits subject slowly. Natural ambient sound implied. Premium nature cinematography. Live-action.' },
+  { id:'studio', label:'Studio', text:'Clean broadcast studio, soft key light, subtle bokeh background, teleprompter reflection in glasses, professional news aesthetic. Sharp, modern, authoritative.' },
+  { id:'cafe', label:'Cafe', text:'Cozy third-wave coffee shop, warm Edison lighting, beans and pour-over setup, neighborhood street visible through rain-streaked window. Intimate, authentic, lived-in.' },
+  { id:'gym', label:'Gym', text:'Empty boxing gym at 5am, neon exit sign glow, speed bag slightly swinging, industrial concrete floors, morning light through high windows. High-contrast, gritty, motivational.' },
+  { id:'custom', label:'Custom', text:'' }
+];
+const ACTION_PRESETS = [
+  { id:'sip-coffee', label:'Sip Coffee' },
+  { id:'lean-railing', label:'Lean on Railing' },
+  { id:'pace', label:'Pace Slowly' },
+  { id:'type-laptop', label:'Type on Laptop' },
+  { id:'review-chart', label:'Review Chart' },
+  { id:'custom', label:'Custom' }
+];
+const state = {
+  character_name: '',
+  character_description: '',
+  character_image_url: '',
+  character_voice_description: '',
+  style_prompt: '',
+  character_action: '',
+  character_personality: '',
+  video_resolution: '1080p',
+  data_source_path: './data/sample-portfolio.json'
+};
+function initPresets(containerId, items, stateKey, extra) {
+  const el = document.getElementById(containerId);
+  items.forEach(p => {
+    const c = document.createElement('button');
+    c.className = 'chip';
+    c.textContent = p.label || p.id;
+    c.dataset.id = p.id;
+    c.title = p.text || '';
+    c.onclick = () => {
+      el.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+      if (p.id === 'custom') {
+        if (extra) extra.customFocus();
+      } else {
+        state[stateKey] = p.text || p.label;
+        if (extra && extra.apply) extra.apply(p);
+        render();
+      }
+    };
+    el.appendChild(c);
+  });
+}
+function bind(id, key, fmt) {
+  const el = document.getElementById(id);
+  el.addEventListener('input', () => { state[key] = fmt ? fmt(el.value) : el.value; render(); });
+}
+function render() {
+  const out = { ...state, llm_provider: 'anthropic', llm_model: 'claude-sonnet-4-20250514' };
+  delete out.character_name; // optional
+  const env = `ANTHROPIC_API_KEY=<REDACTED>
+YOUTUBE_CHANNEL_ID=
+CHARACTER_NAME=${state.character_name || 'Your Character'}
+CHARACTER_DESCRIPTION=${state.character_description || ''}
+CHARACTER_IMAGE_URL=${state.character_image_url || ''}
+CHARACTER_VOICE_DESCRIPTION=${state.character_voice_description || ''}
+STYLE_PROMPT=${state.style_prompt || ''}
+CHARACTER_ACTION=${state.character_action || ''}
+CHARACTER_PERSONALITY=${state.character_personality || ''}
+VIDEO_RESOLUTION=${state.video_resolution}
+DATA_SOURCE_PATH=${state.data_source_path}`;
+  document.getElementById('preview').innerHTML = `<span class="ok">●</span> <span class="muted">Persona ready — ${Object.values(state).filter(Boolean).length} fields populated</span>`;
+  document.getElementById('env').textContent = env;
+  document.getElementById('json').textContent = JSON.stringify(out, null, 2);
+}
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'persona.json'; a.click();
+  status('Saved persona.json');
+}
+function exportMD() {
+  const md = `# Persona Config\n\nGenerated: ${new Date().toISOString()}\n\n## Personality\n${state.character_personality || ''}\n## Appearance\n${state.character_description || ''}\nReference: ${state.character_image_url || ''}\n## Voice\n${state.character_voice_description || ''}\n## Style\n${state.style_prompt || ''}\n## Action\n${state.character_action || ''}\n## Data Source\n${state.data_source_path}\n`;
+  const blob = new Blob([md], { type:'text/markdown' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'persona.md'; a.click();
+  status('Saved persona.md');
+}
+function copyJSON() {
+  navigator.clipboard.writeText(JSON.stringify(state, null, 2)).then(() => status('Copied to clipboard'));
+}
+function status(msg) { document.getElementById('status').textContent = msg; setTimeout(() => document.getElementById('status').textContent = '', 2000); }
+
+initPresets('personalityPresets', PERSONALITY_PRESETS, 'character_personality', {
+  customFocus: () => document.getElementById('personalityCustom').focus(),
+  apply: (p) => { document.getElementById('personalityCustom').value = p.text; }
+});
+initPresets('sceneryPresets', SCENERY_PRESETS, 'style_prompt', {
+  customFocus: () => document.getElementById('sceneryCustom').focus(),
+  apply: (p) => { document.getElementById('sceneryCustom').value = p.text; }
+});
+initPresets('actionPresets', ACTION_PRESETS, 'character_action', {
+  apply: (p) => { document.getElementById('actionCustom').value = p.label; }
+});
+bind('personalityCustom', 'character_personality');
+bind('appearanceDesc', 'character_description');
+bind('appearanceImage', 'character_image_url');
+bind('voiceGender', 'character_voice_description', v => `${v}, `);
+bind('voiceAccent', 'character_voice_description', v => v ? v : '');
+bind('voiceAge', 'character_voice_description', v => v ? `${v}, ` : '');
+bind('voiceTone', 'character_voice_description');
+bind('sceneryCustom', 'style_prompt');
+bind('actionCustom', 'character_action');
+bind('dataSource', 'data_source_path');
+render();
+</script>
+</body>
+</html>

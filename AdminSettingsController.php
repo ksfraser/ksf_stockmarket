@@ -55,13 +55,6 @@ class AdminSettingsController {
             'ta_run_frequency' => 'string',
             'alert_check_frequency' => 'string',
             'max_symbols_per_run' => 'integer',
-            'external_auth_reddit_client_id' => 'string',
-            'external_auth_reddit_client_secret' => 'password',
-            'external_auth_tradingview_api_key' => 'password',
-            'external_auth_arxiv_api_key' => 'password',
-            'youtube_api_key' => 'password',
-            'apify_token' => 'password',
-            'youtube_watch_channels' => 'text',
         ];
 
         foreach ($allowedKeys as $key => $type) {
@@ -128,9 +121,6 @@ class AdminSettingsController {
             'ta_run_frequency' => 'daily',
             'alert_check_frequency' => '15min',
             'max_symbols_per_run' => '100',
-            'youtube_api_key' => '',
-            'apify_token' => '',
-            'youtube_watch_channels' => '',
         ];
 
         // First, seed from .env if available

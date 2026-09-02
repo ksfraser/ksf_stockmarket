@@ -14,6 +14,8 @@ class SymbolResolver
 {
     /** @var PDO */
     private $pdo;
+    /** @var array<string,string> */
+    private $cache = [];
 
     public function __construct(PDO $pdo)
     {
@@ -27,50 +29,56 @@ class SymbolResolver
     {
         $symbol = strtoupper(trim($symbol));
 
+        if (isset($this->cache[$symbol])) {
+            return $this->cache[$symbol];
+        }
+
+        $resolved = $symbol;
+
         // TSX unit/class normalization: .UN → -UN.TO, .B.TO → -B.TO, etc.
         if (str_ends_with($symbol, '.UN')) {
-            return substr($symbol, 0, -3) . '-UN.TO';
-        }
-        $symbol = str_replace(['.B.TO', '.UN.TO', '.U.TO'], ['-B.TO', '-UN.TO', '-U.TO'], $symbol);
+            $resolved = substr($symbol, 0, -3) . '-UN.TO';
+        } else {
+            $symbol = str_replace(['.B.TO', '.UN.TO', '.U.TO'], ['-B.TO', '-UN.TO', '-U.TO'], $symbol);
 
-        // Already suffixed
-        if (preg_match('/\.(TO|V|X|O)$/i', $symbol)) {
-            return $symbol;
-        }
-
-        // exchange_mapping yahoo_ticker
-        $row = $this->fetchOne(
-            "SELECT yahoo_ticker FROM exchange_mapping WHERE symbol = :sym AND is_primary = 1 AND is_active = 1 LIMIT 1",
-            [':sym' => $symbol]
-        );
-        if (!empty($row['yahoo_ticker'])) {
-            return strtoupper($row['yahoo_ticker']);
-        }
-
-        // portfolio.price_symbol ending in .TO
-        $row = $this->fetchOne(
-            "SELECT price_symbol FROM portfolio WHERE symbol = :sym AND price_symbol LIKE :pat LIMIT 1",
-            [':sym' => $symbol, ':pat' => $symbol . '.TO']
-        );
-        if (!empty($row['price_symbol'])) {
-            return strtoupper($row['price_symbol']);
-        }
-
-        // symbol_master exchange hints TSX/TSXV
-        $row = $this->fetchOne(
-            "SELECT exchange FROM symbol_master WHERE symbol = :sym LIMIT 1",
-            [':sym' => $symbol]
-        );
-        if (!empty($row['exchange'])) {
-            $ex = strtoupper($row['exchange']);
-            if (str_contains($ex, 'TSX') || str_contains($ex, 'TSXV')) {
-                return $symbol . '.TO';
+            // Already suffixed
+            if (!preg_match('/\.(TO|V|X|O)$/i', $symbol)) {
+                // exchange_mapping yahoo_ticker
+                $row = $this->fetchOne(
+                    "SELECT yahoo_ticker FROM exchange_mapping WHERE symbol = :sym AND is_primary = 1 AND is_active = 1 LIMIT 1",
+                    [':sym' => $symbol]
+                );
+                if (!empty($row['yahoo_ticker'])) {
+                    $resolved = strtoupper($row['yahoo_ticker']);
+                } else {
+                    // portfolio.price_symbol ending in .TO
+                    $row = $this->fetchOne(
+                        "SELECT price_symbol FROM portfolio WHERE symbol = :sym AND price_symbol LIKE :pat LIMIT 1",
+                        [':sym' => $symbol, ':pat' => $symbol . '.TO']
+                    );
+                    if (!empty($row['price_symbol'])) {
+                        $resolved = strtoupper($row['price_symbol']);
+                    } else {
+                        // symbol_master exchange hints TSX/TSXV
+                        $row = $this->fetchOne(
+                            "SELECT exchange FROM symbol_master WHERE symbol = :sym LIMIT 1",
+                            [':sym' => $symbol]
+                        );
+                        if (!empty($row['exchange'])) {
+                            $ex = strtoupper($row['exchange']);
+                            if (str_contains($ex, 'TSX') || str_contains($ex, 'TSXV')) {
+                                $resolved = $symbol . '.TO';
+                            }
+                        }
+                    }
+                }
+            } else {
+                $resolved = $symbol;
             }
-            return $symbol;
         }
 
-        // Unknown → do NOT blindly append .TO for US ETFs / microcaps
-        return $symbol;
+        $this->cache[$symbol] = $resolved;
+        return $resolved;
     }
 
     /**

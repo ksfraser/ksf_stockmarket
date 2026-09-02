@@ -4,18 +4,14 @@
  *
  * Data:
  *   $jobs       — array of cron job info
- *   $summary    — counts by status (cron jobs)
+ *   $summary    — counts by status
  *   $volumeSnapshots — volume snapshot jobs
  *   $priceAlerts     — price alert jobs
- *   $alertCounts     — alert_queue counts (pending, completed, failed)
- *   $recentAlerts    — triggered alerts from last 7 days
  */
 $jobs       = $data['jobs'] ?? [];
 $summary    = $data['summary'] ?? [];
 $volumeSnapshots = $data['volumeSnapshots'] ?? [];
 $priceAlerts = $data['priceAlerts'] ?? [];
-$alertCounts = $data['alertCounts'] ?? [];
-$recentAlerts = $data['recentAlerts'] ?? [];
 
 function statusBadge(string $status): array
 {
@@ -58,22 +54,6 @@ function statusBadge(string $status): array
         <div class="stat-card" style="background:rgba(99,179,237,0.1);">
             <div style="font-size:0.7em;color:var(--accent);text-transform:uppercase;">Scheduled</div>
             <div style="font-size:1.8em;font-weight:700;color:var(--accent);"><?= (int)($summary['scheduled'] ?? 0) ?></div>
-        </div>
-    </div>
-    
-    <!-- Alert Queue Counts -->
-    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;">
-        <div style="padding:8px 16px;background:rgba(99,179,237,0.1);border-radius:8px;">
-            <span style="font-size:0.7em;color:var(--text3);text-transform:uppercase;">Pending</span>
-            <strong style="margin-left:6px;color:var(--accent);"><?= (int)($alertCounts['pending'] ?? 0) ?></strong>
-        </div>
-        <div style="padding:8px 16px;background:rgba(104,211,145,0.1);border-radius:8px;">
-            <span style="font-size:0.7em;color:var(--text3);text-transform:uppercase;">Completed</span>
-            <strong style="margin-left:6px;color:var(--green);"><?= (int)($alertCounts['completed'] ?? 0) ?></strong>
-        </div>
-        <div style="padding:8px 16px;background:rgba(252,129,129,0.1);border-radius:8px;">
-            <span style="font-size:0.7em;color:var(--text3);text-transform:uppercase;">Failed</span>
-            <strong style="margin-left:6px;color:var(--red);"><?= (int)($alertCounts['failed'] ?? 0) ?></strong>
         </div>
     </div>
 </div>
@@ -145,80 +125,117 @@ function statusBadge(string $status): array
 <?php endforeach; ?>
 <?php endif; ?>
 
-<!-- Alert Filters -->
-<div style="margin-bottom:12px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
-    <form method="GET" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-        <input type="hidden" name="action" value="alerts_status">
-        
-        <label style="font-size:0.8em;color:var(--text3);">
-            <input type="radio" name="filter" value="" onchange="this.form.submit()" <?= (!isset($_GET['filter']) || $_GET['filter'] === '') ? 'checked' : '' ?>> All Alerts
-        </label>
-        <label style="font-size:0.8em;color:var(--text3);">
-            <input type="radio" name="filter" value="portfolio" onchange="this.form.submit()" <?= (($_GET['filter'] ?? '') === 'portfolio') ? 'checked' : '' ?>> Portfolio Only
-        </label>
-        
-        <select name="severity" onchange="this.form.submit()" style="background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.1);color:var(--text2);padding:4px 8px;border-radius:4px;font-size:0.8em;">
-            <option value="">All Severities</option>
-            <option value="critical" <?= (($_GET['severity'] ?? '') === 'critical') ? 'selected' : '' ?>>Critical</option>
-            <option value="high" <?= (($_GET['severity'] ?? '') === 'high') ? 'selected' : '' ?>>High</option>
-            <option value="medium" <?= (($_GET['severity'] ?? '') === 'medium') ? 'selected' : '' ?>>Medium</option>
-            <option value="low" <?= (($_GET['severity'] ?? '') === 'low') ? 'selected' : '' ?>>Low</option>
-        </select>
-        
-        <input type="text" name="symbol" placeholder="Symbol filter (e.g., RY)" value="<?= htmlspecialchars($_GET['symbol'] ?? '') ?>" style="background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.1);color:var(--text2);padding:4px 8px;border-radius:4px;font-size:0.8em;width:120px;">
-        <button type="submit" style="background:var(--accent);color:white;border:none;padding:4px 12px;border-radius:4px;font-size:0.8em;cursor:pointer;">Filter</button>
-        <?php if (($_GET['filter'] ?? '') || ($_GET['severity'] ?? '') || ($_GET['symbol'] ?? '')): ?>
-            <a href="?action=alerts_status" style="font-size:0.75em;color:var(--text3);text-decoration:none;margin-left:8px;">Clear</a>
-        <?php endif; ?>
-    </form>
+<!-- Alert Queue Summary -->
+<?php $alertCounts = $data['alertCounts'] ?? ['pending'=>0,'completed'=>0,'failed'=>0]; ?>
+<?php
+function alertStatusBadge(string $status): string
+{
+    $s = strtolower($status);
+    $color = match ($s) {
+        'pending'    => 'yellow',
+        'completed'  => 'green',
+        'failed'     => 'red',
+        'ack'        => 'cyan',
+        'ignore'     => 'gray',
+        default      => 'yellow',
+    };
+    return '<span style="color:var(--' . $color . ');font-weight:600;">' . htmlspecialchars($status) . '</span>';
+}
+?>
+<div class="card" style="margin-top:12px;border-color:var(--accent);">
+    <div class="card-header">&#x1F4CA; Alert Queue</div>
+    <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:12px;">
+        <div class="stat-card"><div class="stat-value" style="color:var(--yellow);"><?= (int)($alertCounts['pending'] ?? 0) ?></div><div class="stat-label">Pending</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--green);"><?= (int)($alertCounts['completed'] ?? 0) ?></div><div class="stat-label">Completed</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--red);"><?= (int)($alertCounts['failed'] ?? 0) ?></div><div class="stat-label">Failed</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--cyan);"><?= (int)($alertCounts['ack'] ?? 0) ?></div><div class="stat-label">Acknowledged</div></div>
+        <div class="stat-card"><div class="stat-value" style="color:var(--gray);"><?= (int)($alertCounts['ignore'] ?? 0) ?></div><div class="stat-label">Ignored</div></div>
+    </div>
 </div>
 
-<!-- Recent Triggered Alerts -->
-<h2 style="color:var(--green);margin:24px 0 12px;border-bottom:1px solid rgba(104,211,145,0.3);padding-bottom:8px;">
-    &#x1F6A8; Recent Triggered Alerts (Last 7 Days)
-</h2>
-
-<?php if (empty($recentAlerts)): ?>
-<div class="card">
-    <p style="color:var(--text3);text-align:center;padding:20px;">No alerts triggered in the last 7 days.</p>
-</div>
-<?php else: ?>
-<div style="overflow-x:auto;">
-<table style="width:100%;border-collapse:collapse;font-size:0.82em;">
-    <thead>
-        <tr style="background:rgba(0,0,0,0.2);">
-            <th style="padding:8px 12px;text-align:left;">Symbol</th>
-            <th style="padding:8px 12px;text-align:left;">Type</th>
-            <th style="padding:8px 12px;text-align:left;">Severity</th>
-            <th style="padding:8px 12px;text-align:left;">Triggered</th>
-            <th style="padding:8px 12px;text-align:left;">Status</th>
-            <th style="padding:8px 12px;text-align:left;">Details</th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($recentAlerts as $alert): ?>
-        <?php 
-        $severityColors = ['low' => 'green', 'medium' => 'yellow', 'high' => 'orange', 'critical' => 'red'];
-        $sevColor = $severityColors[$alert['severity']] ?? 'text2';
-        $payload = json_decode($alert['payload'], true);
-        $details = '';
-        if ($payload) {
-            $details = json_encode($payload);
+<!-- Recent Alerts (last 2 trading days) -->
+<?php
+$recentAlerts = $data['recentAlerts'] ?? [];
+if (!empty($recentAlerts)) {
+    // last 2 distinct trading days
+    $dates = [];
+    foreach ($recentAlerts as $ra) {
+        $d = substr($ra['created_at'] ?? '', 0, 10);
+        $dates[$d] = true;
+    }
+    krsort($dates);
+    $lastTwo = array_slice(array_keys($dates), 0, 2, true);
+    if (empty($lastTwo)) {
+        $lastTwo = array_slice(array_keys($dates), 0, 2, true);
+    }
+    $prevDate = null;
+    if (count($lastTwo) >= 2) {
+        $keys = array_keys($lastTwo);
+        $prevDate = $keys[1] ?? null;
+    }
+    $repeatKeyCache = [];
+    $todayGroup = [];
+    $sortedDates = array_keys($lastTwo);
+    $latestDate = $sortedDates[0] ?? null;
+    $prevDate = $sortedDates[1] ?? null;
+    foreach ($recentAlerts as $ra) {
+        $d = substr($ra['created_at'] ?? '', 0, 10);
+        if (!in_array($d, $lastTwo, true)) continue;
+        $key = ($ra['symbol'] ?? '') . '::' . ($ra['alert_type'] ?? '');
+        $isRepeat = false;
+        if ($prevDate !== null && $d === $latestDate) {
+            if (!isset($repeatKeyCache[$prevDate])) {
+                $repeatKeyCache[$prevDate] = [];
+                foreach ($recentAlerts as $prev) {
+                    if (substr($prev['created_at'] ?? '', 0, 10) === $prevDate) {
+                        $k = ($prev['symbol'] ?? '') . '::' . ($prev['alert_type'] ?? '');
+                        $repeatKeyCache[$prevDate][$k] = true;
+                    }
+                }
+            }
+            $isRepeat = isset($repeatKeyCache[$prevDate][$key]);
         }
-        ?>
-        <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
-            <td style="padding:8px 12px;"><strong><?= htmlspecialchars($alert['symbol']) ?></strong></td>
-            <td style="padding:8px 12px;color:var(--text2);"><?= htmlspecialchars(str_replace('_', ' ', ucwords($alert['alert_type'], '_'))) ?></td>
-            <td style="padding:8px 12px;"><span style="color:var(--<?= $sevColor ?>);text-transform:uppercase;"><?= $alert['severity'] ?></span></td>
-            <td style="padding:8px 12px;color:var(--text3);"><?= htmlspecialchars($alert['created_at']) ?></td>
-            <td style="padding:8px 12px;color:var(--accent);"><?= htmlspecialchars($alert['status']) ?></td>
-            <td style="padding:8px 12px;color:var(--text3);font-size:0.75em;max-width:300px;"><?= htmlspecialchars($details) ?></td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
+        $todayGroup[] = ['alert' => $ra, 'isRepeat' => $isRepeat, 'date' => $d];
+    }
+    $todayGroup = array_slice($todayGroup, 0, 100);
+?>
+<div class="card" style="margin-top:24px;border-color:var(--accent);">
+    <div class="card-header">&#x1F4A1; Recent Alerts (<?= htmlspecialchars(implode(', ', $lastTwo)) ?>)</div>
+    <p style="margin-bottom:12px;font-size:0.85em;color:var(--text3);">Last 2 trading days. <span style="background:var(--yellow);color:#222;font-size:0.8em;padding:1px 6px;border-radius:10px;">REPEAT</span> = same symbol+type also hit the day before.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Symbol</th>
+                <th>Alert Type</th>
+                <th>Severity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php foreach ($todayGroup as $row): ?>
+            <tr style="background:<?= $row['isRepeat'] ? 'rgba(255,255,0,0.08)' : '' ?>">
+                <td style="font-size:0.85em;color:var(--text3)"><?= htmlspecialchars($row['date']) ?></td>
+                <td><strong><?= htmlspecialchars($row['alert']['symbol'] ?? '—') ?></strong></td>
+                <td><?= htmlspecialchars($row['alert']['alert_type'] ?? '—') ?></td>
+                <td style="color:var(--<?= ($row['alert']['severity'] ?? 'medium') === 'critical' ? 'red' : 'yellow' ?>)"><?= htmlspecialchars($row['alert']['severity'] ?? 'medium') ?></td>
+                <td><?= alertStatusBadge($row['alert']['status'] ?? 'pending') ?></td>
+                <td>
+                    <form method="post" style="display:inline;" onsubmit="return confirm('Mark ack?')">
+                        <input type="hidden" name="alert_id" value="<?= htmlspecialchars($row['alert']['id'] ?? '') ?>">
+                        <button type="submit" name="status" value="ack" style="background:var(--cyan);color:#000;border:none;padding:2px 8px;border-radius:4px;font-size:0.75em;cursor:pointer;">Ack</button>
+                    </form>
+                    <form method="post" style="display:inline;margin-left:6px;" onsubmit="return confirm('Ignore?')">
+                        <input type="hidden" name="alert_id" value="<?= htmlspecialchars($row['alert']['id'] ?? '') ?>">
+                        <button type="submit" name="status" value="ignore" style="background:var(--gray);color:#000;border:none;padding:2px 8px;border-radius:4px;font-size:0.75em;cursor:pointer;">Ignore</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
-<?php endif; ?>
+<?php } ?>
 
 <!-- All Jobs Table -->
 <h2 style="color:var(--accent);margin:24px 0 12px;border-bottom:1px solid rgba(99,179,237,0.3);padding-bottom:8px;">
@@ -293,7 +310,7 @@ $inactiveWatchlist = array_filter($watchlistSymbols, fn($s) => !$s['is_active'])
             <div style="font-family:monospace;font-size:0.85em;color:var(--text2);">
                 <?php foreach ($portfolioSymbols as $s): ?>
                     <div style="padding:2px 0;">
-                        <?= htmlspecialchars($s['symbol']) ?>
+                        <a href="?action=detail&symbol=<?= urlencode($s['symbol']) ?>"><?= htmlspecialchars($s['symbol']) ?></a>
                         <?php if ($s['volume_spike_threshold'] != 2.0): ?>
                             <span style="color:var(--text3);font-size:0.8em;">(<?= $s['volume_spike_threshold'] ?>×)</span>
                         <?php endif; ?>
@@ -309,7 +326,7 @@ $inactiveWatchlist = array_filter($watchlistSymbols, fn($s) => !$s['is_active'])
             <div style="font-family:monospace;font-size:0.85em;color:var(--text2);">
                 <?php foreach ($watchlistOnly as $s): ?>
                     <div style="padding:2px 0;">
-                        <?= htmlspecialchars($s['symbol']) ?>
+                        <a href="?action=detail&symbol=<?= urlencode($s['symbol']) ?>"><?= htmlspecialchars($s['symbol']) ?></a>
                         <?php if ($s['volume_spike_threshold'] != 2.0): ?>
                             <span style="color:var(--text3);font-size:0.8em;">(<?= $s['volume_spike_threshold'] ?>×)</span>
                         <?php endif; ?>
@@ -329,7 +346,7 @@ $inactiveWatchlist = array_filter($watchlistSymbols, fn($s) => !$s['is_active'])
     </p>
     <div style="font-family:monospace;font-size:0.85em;color:var(--text3);margin-top:8px;">
         <?php foreach ($inactiveWatchlist as $s): ?>
-            <span style="margin-right:12px;"><?= htmlspecialchars($s['symbol']) ?> (<?= $s['list_type'] ?>)</span>
+            <span style="margin-right:12px;"><a href="?action=detail&symbol=<?= urlencode($s['symbol']) ?>"><?= htmlspecialchars($s['symbol']) ?></a> (<?= $s['list_type'] ?>)</span>
         <?php endforeach; ?>
     </div>
 </div>
@@ -338,4 +355,5 @@ $inactiveWatchlist = array_filter($watchlistSymbols, fn($s) => !$s['is_active'])
 <div style="display:flex;gap:12px;margin-top:24px;justify-content:center;">
     <a href="?action=overview" class="btn">&larr; Dashboard</a>
     <a href="?action=admin_symbols" class="btn">&#x1F4B0; Symbol Admin</a>
+    <a href="?action=admin_settings" class="btn">&#x1F6E0; Admin Settings</a>
 </div>

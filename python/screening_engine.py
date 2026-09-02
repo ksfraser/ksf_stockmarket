@@ -19,23 +19,23 @@ Usage:
 
 import sys, os, json, argparse, math
 import numpy as np
-import pymysql
 from datetime import date, datetime, timedelta
 
 sys.path.insert(0, os.path.dirname(__file__))
+from db import Database, MySQLAdapter, SQLiteAdapter
+
 from config_loader import Config
 
 # Credentials loaded from Ansible Vault via config_loader
 _cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config.yaml')
 _cfg = Config(_cfg_path) if os.path.exists(_cfg_path) else Config()
-MYSQL = dict(
-    host=_cfg.data.db_host,
-    user=_cfg.data.db_user,
-    password=_cfg.db_password,
-    database=_cfg.data.db_name,
-    charset='utf8mb4',
-    cursorclass=pymysql.cursors.DictCursor
-)
+db = Database(MySQLAdapter(
+        host='_cfg.data.db_host',
+        user='_cfg.data.db_user',
+        password=getattr(_cfg, 'db_password', None) or os.getenv('DB_PASSWORD', ''),
+        database='_cfg.data.db_name',
+        port=3306,
+    ))
 
 
 # ── Symbol Mapping for Backtesting Continuity ────────────────────────────────
@@ -49,12 +49,12 @@ class SymbolMapper:
         # Load from DB symbol_changes table if cursor provided
         if db_cursor:
             try:
-                db_cursor.execute("""
+                db_conn.execute("""
                     SELECT old_symbol, new_symbol, change_type, change_date, reason
                     FROM symbol_changes
                     WHERE new_symbol IS NOT NULL
                 """)
-                for row in db_cursor.fetchall():
+                for row in db_conn.fetchall():
                     if row['new_symbol']:
                         self.mapping[row['old_symbol']] = row['new_symbol']
             except Exception:
@@ -87,13 +87,13 @@ class SymbolMapper:
         # For backtesting: if the symbol changed after as_of_date, use the old symbol
         if db_cursor:
             try:
-                db_cursor.execute("""
+                db_conn.execute("""
                     SELECT old_symbol, new_symbol, change_date
                     FROM symbol_changes
                     WHERE old_symbol = %s AND change_date > %s
                     ORDER BY change_date ASC
                 """, (symbol, as_of_date))
-                rows = db_cursor.fetchall()
+                rows = db_conn.fetchall()
                 if rows:
                     return rows[0]['old_symbol']  # use symbol as it was at that date
             except Exception:
@@ -108,17 +108,16 @@ class IndicatorStore:
 
     def __init__(self, conn):
         self.conn = conn
-        self.cursor = conn.cursor()
 
     def get_latest_indicators(self, symbol: str, n_days: int = 250) -> dict:
         """Get the latest n_days of indicator data for a symbol."""
-        self.cursor.execute("""
+        self.conn.execute("""
             SELECT price_date, data FROM indicators_json
             WHERE symbol = %s
             ORDER BY price_date DESC
             LIMIT %s
         """, (symbol, n_days))
-        rows = self.cursor.fetchall()
+        rows = self.conn.fetchall()
         result = {}
         for row in rows:
             try:
@@ -129,19 +128,19 @@ class IndicatorStore:
 
     def get_latest_date(self, symbol: str) -> str:
         """Get the most recent date with indicator data."""
-        self.cursor.execute("""
+        self.conn.execute("""
             SELECT MAX(price_date) as latest FROM indicators_json WHERE symbol = %s
         """, (symbol,))
-        row = self.cursor.fetchone()
+        row = self.conn.fetchone()
         return str(row['latest']) if row and row['latest'] else None
 
     def get_latest_prices(self, symbol: str, n_days: int = 250) -> list:
         """Get latest n_days of closing prices."""
-        self.cursor.execute("""
+        self.conn.execute("""
             SELECT price_date, close, volume FROM stockprices
             WHERE symbol = %s ORDER BY price_date DESC LIMIT %s
         """, (symbol, n_days))
-        rows = self.cursor.fetchall()
+        rows = self.conn.fetchall()
         return [{'date': str(r['price_date']), 'close': float(r['close']),
                  'volume': float(r['volume'])} for r in rows]
 
@@ -158,13 +157,13 @@ class UniverseFilter:
         self.allowed_exchanges = config.get('allowed_exchanges', ['TSX', 'NYSE', 'NASDAQ'])
         self.max_spread_pct = config.get('max_bid_ask_spread_pct', 0.005)
 
-    def get_viable_symbols(self, cursor) -> list:
+    def get_viable_symbols(self, conn) -> list:
         """
         Get symbols that pass Stage 1 hard filters.
         Uses latest price data from stockprices.
         """
         # Get latest price for each symbol
-        cursor.execute("""
+        conn.execute("""
             SELECT sp.symbol, sp.close, sp.volume, sm.exchange, sm.sector
             FROM stockprices sp
             INNER JOIN symbol_master sm ON sp.symbol = sm.symbol
@@ -173,7 +172,7 @@ class UniverseFilter:
                 FROM stockprices GROUP BY symbol
             ) latest ON sp.symbol = latest.symbol AND sp.price_date = latest.max_date
         """)
-        rows = cursor.fetchall()
+        rows = conn.fetchall()
 
         viable = []
         for r in rows:
@@ -1181,25 +1180,25 @@ class StrategyScorer:
         # Add exit signal scoring (InvestorsObserver 18 warning signs)
         try:
             # Fetch fundamentals for exit signal evaluation
-            cursor = store.cursor
-            cursor.execute("""
+            cursor = store.conn
+            conn.execute("""
                 SELECT f.*, h.institutional_pct
                 FROM fundamentals f
                 LEFT JOIN holders h ON h.symbol = f.symbol
                 WHERE f.symbol = %s
                 ORDER BY f.last_updated DESC LIMIT 1
             """, (symbol,))
-            fund_row = cursor.fetchone()
+            fund_row = conn.fetchone()
             fundamentals = dict(fund_row) if fund_row else {}
             
             # Fetch insider trading data (last 90 days)
-            cursor.execute("""
+            conn.execute("""
                 SELECT transaction_type, COUNT(*) as cnt
                 FROM insider_trades
                 WHERE symbol = %s AND filing_date >= DATE_SUB(CURDATE(), INTERVAL 90 DAY)
                 GROUP BY transaction_type
             """, (symbol,))
-            insider_rows = cursor.fetchall()
+            insider_rows = conn.fetchall()
             insider_data = {r['transaction_type']: r['cnt'] for r in insider_rows}
             
             exit_signals = self.score_exit_signals(
@@ -1335,7 +1334,7 @@ class ScreeningOrchestrator:
 
     def __init__(self, config_path: str = 'config.yaml'):
         self.config = Config(config_path)
-        self.conn = pymysql.connect(**MYSQL)
+        self.conn = db.connect()
         self.universe_filter = UniverseFilter({})
         self.quality_filter = QualityFilter({})
         self.strategy_scorer = StrategyScorer()
@@ -1343,7 +1342,7 @@ class ScreeningOrchestrator:
         self.store = IndicatorStore(self.conn)
 
     def close(self):
-        self.conn.close()
+        pass
 
     def run_full_screen(self, strategies: list = None, top_n: int = 10,
                         verbose: bool = True) -> dict:
@@ -1352,8 +1351,7 @@ class ScreeningOrchestrator:
         Returns dict with results at each stage.
         """
 
-        cursor = self.conn.cursor()
-
+        
         if verbose:
             print("="*60)
             print("SCREENING PIPELINE")
@@ -1498,12 +1496,12 @@ if __name__ == '__main__':
                     print(f"  {k}: {v:.3f}")
         elif args.mode == 'status':
             cursor = orch.conn.cursor()
-            cursor.execute("SELECT COUNT(DISTINCT symbol) as n FROM stockprices")
-            n_prices = cursor.fetchone()['n']
-            cursor.execute("SELECT COUNT(DISTINCT symbol) as n FROM indicators_json")
-            n_ind = cursor.fetchone()['n']
-            cursor.execute("SELECT COUNT(*) as n FROM symbol_master")
-            n_total = cursor.fetchone()['n']
+            conn.execute("SELECT COUNT(DISTINCT symbol) as n FROM stockprices")
+            n_prices = conn.fetchone()['n']
+            conn.execute("SELECT COUNT(DISTINCT symbol) as n FROM indicators_json")
+            n_ind = conn.fetchone()['n']
+            conn.execute("SELECT COUNT(*) as n FROM symbol_master")
+            n_total = conn.fetchone()['n']
 
             print(f"\nScreening Engine Status")
             print(f"{'='*40}")

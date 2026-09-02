@@ -475,7 +475,7 @@ blender:
 #═══════════════════════════════════════════════════════════════════════════
 backtesting:
   walk_forward:               true
-  train:                      "2014-2018"
+  train:                      "1990-2018"
   test:                       "2019-2024"
   step_forward_days:          252
   transaction_cost:           9.95

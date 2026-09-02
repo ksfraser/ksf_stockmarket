@@ -5,17 +5,18 @@ nn_predictor.py — PyTorch LSTM for tactical return prediction.
 Trains on 60-day sequences of 120 indicators to predict 20-day forward return.
 Outputs both mean prediction and uncertainty (heteroscedastic).
 
-Walk-forward: train 2014-2018, validate 2019-2020, test 2021-2024.
+Walk-forward: train 1990-2018, validate 2019-2020, test 2021-2024.
 
 Usage:
     python3 nn_predictor.py [--epochs 50] [--predict 2025-01-01]
 """
 import sys, os, json, argparse
 import numpy as np
-import pymysql
 from datetime import date
 
 sys.path.insert(0, os.path.dirname(__file__))
+from db import Database, MySQLAdapter, SQLiteAdapter
+
 from config_loader import Config
 
 try:
@@ -28,14 +29,13 @@ except ImportError:
 # Credentials loaded from Ansible Vault via config_loader
 _cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config.yaml')
 _cfg = Config(_cfg_path) if os.path.exists(_cfg_path) else Config()
-MYSQL = dict(
-    host=_cfg.data.db_host,
-    user=_cfg.data.db_user,
-    password=_cfg.db_password,
-    database=_cfg.data.db_name,
-    charset='utf8mb4',
-    cursorclass=pymysql.cursors.DictCursor
-)
+db = Database(MySQLAdapter(
+        host='ksfraser.ca',
+        user='ksfraser_stockmarket',
+        password=getattr(_cfg, 'db_password', None) or os.getenv('DB_PASSWORD', ''),
+        database='ksfraser_stock_market',
+        port=3306,
+    ))
 
 
 # ── Dataset ────────────────────────────────────────────────────────────────
@@ -82,16 +82,15 @@ def gaussian_nll_loss(mean, logvar, target):
 # ── Data Loading ───────────────────────────────────────────────────────────
 def load_indicator_data(symbols, start, end):
     """Load indicator time series from MySQL JSON table."""
-    conn = pymysql.connect(**MYSQL); c = conn.cursor()
-    placeholders = ','.join(['%s'] * len(symbols))
+    conn = db.connect();     placeholders = ','.join(['%s'] * len(symbols))
 
-    c.execute(f"SELECT symbol, price_date, data FROM indicators_json "
+    conn.execute(f"SELECT symbol, price_date, data FROM indicators_json "
               f"WHERE symbol IN ({placeholders}) AND price_date BETWEEN %s AND %s "
               f"ORDER BY symbol, price_date", list(symbols) + [start, end])
 
     data = {}
     ind_cols = None
-    for r in c.fetchall():
+    for r in conn.fetchall():
         sym, d = r['symbol'], str(r['price_date'])
         vals = json.loads(r['data']) if isinstance(r['data'], str) else r['data']
         if ind_cols is None:
@@ -100,23 +99,20 @@ def load_indicator_data(symbols, start, end):
         ordered = [vals.get(k, 0.0) or 0.0 for k in ind_cols]
         data.setdefault(sym, []).append((d, ordered))
 
-    conn.close()
-    return data, ind_cols
+        return data, ind_cols
 
 
 def load_price_data(symbols, start, end):
     """Load close prices to compute forward returns."""
-    conn = pymysql.connect(**MYSQL); c = conn.cursor()
-    placeholders = ','.join(['%s'] * len(symbols))
-    c.execute(f"SELECT symbol, price_date, close FROM stockprices "
+    conn = db.connect();     placeholders = ','.join(['%s'] * len(symbols))
+    conn.execute(f"SELECT symbol, price_date, close FROM stockprices "
               f"WHERE symbol IN ({placeholders}) AND price_date BETWEEN %s AND %s "
               f"ORDER BY symbol, price_date", list(symbols) + [start, end])
 
     prices = {}
-    for r in c.fetchall():
+    for r in conn.fetchall():
         prices.setdefault(r['symbol'], {})[str(r['price_date'])] = float(r['close'])
-    conn.close()
-    return prices
+        return prices
 
 
 def build_sequences(indicator_data, prices, lookback=60, horizon=20):
@@ -280,19 +276,17 @@ def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Get symbols
-    conn = pymysql.connect(**MYSQL); c = conn.cursor()
-    c.execute("SELECT symbol FROM symbol_master WHERE symbol IN (SELECT DISTINCT symbol FROM stockprices) ORDER BY symbol")
-    symbols = [r['symbol'] for r in c.fetchall()]
-    conn.close()
-
+    conn = db.connect();     conn.execute("SELECT symbol FROM symbol_master WHERE symbol IN (SELECT DISTINCT symbol FROM stockprices) ORDER BY symbol")
+    symbols = [r['symbol'] for r in conn.fetchall()]
+    
     if args.symbol:
         symbols = [args.symbol]
 
     print(f"NN Predictor: {len(symbols)} symbols | device={device}")
 
     # Load data
-    indicator_data, ind_cols = load_indicator_data(symbols, '2014-01-01', '2024-12-31')
-    prices = load_price_data(symbols, '2014-01-01', '2024-12-31')
+    indicator_data, ind_cols = load_indicator_data(symbols, '1990-01-01', '2024-12-31')
+    prices = load_price_data(symbols, '1990-01-01', '2024-12-31')
 
     if not indicator_data:
         print("No indicator data. Computing from prices...")
@@ -326,8 +320,7 @@ def main():
     results = evaluate_predictions(model, test, device, config)
 
     # Save predictions to DB
-    conn = pymysql.connect(**MYSQL); c = conn.cursor()
-    c.execute("""CREATE TABLE IF NOT EXISTS nn_predictions (
+    conn = db.connect();     conn.execute("""CREATE TABLE IF NOT EXISTS nn_predictions (
         id INT AUTO_INCREMENT PRIMARY KEY,
         symbol VARCHAR(20), price_date DATE, predicted_return DECIMAL(8,6),
         uncertainty DECIMAL(8,6), actual_return DECIMAL(8,6),
@@ -344,11 +337,10 @@ def main():
 
     for i, (sym, d) in enumerate(test_meta):
         if i < len(all_preds):
-            c.execute("INSERT INTO nn_predictions (symbol,price_date,predicted_return,uncertainty) VALUES (%s,%s,%s,%s)",
+            conn.execute("INSERT INTO nn_predictions (symbol,price_date,predicted_return,uncertainty) VALUES (%s,%s,%s,%s)",
                       (sym, d, float(all_preds[i]), float(np.sqrt(all_vars[i]))))
 
-    conn.commit(); conn.close()
-    print(f"Saved {len(all_preds)} predictions to nn_predictions")
+    conn.commit();     print(f"Saved {len(all_preds)} predictions to nn_predictions")
 
 
 if __name__ == '__main__':

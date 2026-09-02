@@ -813,6 +813,19 @@ class IndicatorCalculator:
         n = self.save_indicators(symbol, ohlcv['dates'], indicators)
         return n
 
+    def prune_old_indicators(self, cutoff='1990-01-01', verbose=True):
+        """
+        Delete indicator rows older than cutoff to keep data bounded.
+        """
+        with self.db.connect() as conn:
+            deleted = conn.execute(
+                "DELETE FROM indicators_json WHERE price_date < %s",
+                (cutoff,)
+            )
+        if verbose and deleted:
+            print(f"  Pruned {deleted} rows before {cutoff} from indicators_json")
+        return deleted
+
     def calculate_all_missing(self, verbose=True):
         """Calculate indicators for all active symbols that need them."""
         symbols = self.get_symbols_needing_indicators()
@@ -833,10 +846,14 @@ class IndicatorCalculator:
 
         if verbose:
             print(f"Total: {total} indicator rows saved")
+
+        # Retention: keep 1990+
+        self.prune_old_indicators(verbose=verbose)
+
         return total
 
 
-# ── CLI ──────────────────────────────────────────────────────────────────────
+# ── Retention / Housekeeping ───────────────────────────────────────────────
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Daily data pipeline (Stage 1 & 2)')

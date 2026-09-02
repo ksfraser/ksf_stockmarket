@@ -1,3 +1,4 @@
+from db import Database, MySQLAdapter, SQLiteAdapter
 #!/usr/bin/env python3
 """
 import_old_data.py — Transform and import old per-symbol data into new unified schema.
@@ -11,7 +12,6 @@ Reads MYSQL.stock_market_2.sql and imports:
 import sys
 import os
 import re
-import pymysql
 import json
 from datetime import datetime
 

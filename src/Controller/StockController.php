@@ -2303,6 +2303,15 @@ class StockController {
     {
         $minChange = (float)($_GET['min_change'] ?? 0.1);
         $limit = (int)($_GET['limit'] ?? 25);
+        $direction = strtolower($_GET['direction'] ?? 'bullish'); // bullish | bearish
+
+        if ($direction === 'bearish') {
+            $where = 'f.zacks_eps_change_f1_4w <= :min';
+            $order = 'f.zacks_eps_change_f1_4w ASC';
+        } else {
+            $where = 'f.zacks_eps_change_f1_4w >= :min';
+            $order = 'f.zacks_eps_change_f1_4w DESC';
+        }
 
         $sql = "
             SELECT f.symbol,
@@ -2325,17 +2334,21 @@ class StockController {
                 WHERE zacks_eps_change_f1_4w IS NOT NULL
                 GROUP BY symbol
             ) latest ON latest.symbol = f.symbol AND latest.max_date = f.fetch_date
-            WHERE f.zacks_eps_change_f1_4w >= :min
-            ORDER BY f.zacks_eps_change_f1_4w DESC
+            WHERE $where
+            ORDER BY $order
             LIMIT :limit
         ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':min' => $minChange, ':limit' => $limit]);
+        $stmt->execute([
+            ':min' => $direction === 'bearish' ? -abs($minChange) : $minChange,
+            ':limit' => $limit,
+        ]);
         $rows = $stmt->fetchAll();
 
         return [
             'rows' => $rows,
             'min_change' => $minChange,
+            'direction' => $direction,
             'limit' => $limit,
             'count' => count($rows),
         ];

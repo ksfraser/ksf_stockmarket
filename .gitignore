@@ -67,3 +67,5 @@ config/external_auth.json
 # Runtime artifacts
 *.log
 .advisor_backtest_queue
+memory/institutional/*.json
+memory/institutional/*.md

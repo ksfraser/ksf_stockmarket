@@ -12,7 +12,13 @@
                 </span>
             </h4>
             <p style="font-size:0.85em;color:var(--text3);margin-top:8px;">
-                Market state detection using 5% rolling return threshold.
+                <strong>Bear</strong> = negative rolling returns (downtrend). 
+                <strong>Sideways</strong> = returns near zero (consolidation). 
+                <strong>Bull</strong> = positive rolling returns (uptrend).
+                The stationary distribution shows the long-term probability of being in each state;
+                rising Bull % = strengthening uptrend bias. The transition matrix shows the 
+                probability of moving from one regime to another; e.g. high Bear→Sideways 
+                suggests recovery is likely.
             </p>
         </div>
         <div>

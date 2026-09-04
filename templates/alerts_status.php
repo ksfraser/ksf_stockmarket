@@ -32,6 +32,12 @@ function statusBadge(string $status): array
         Volume snapshots run 4× daily during market hours (Mon–Fri).
         Price alerts check every 15 minutes.
     </p>
+    <div style="font-size:0.85em;color:var(--text3);margin-bottom:16px;padding:10px;background:rgba(0,0,0,0.15);border-radius:6px;">
+        <strong>Alert Type Guide:</strong>
+        <span style="margin-left:12px;"><code>gap_up</code> — Symbol gapped up sharply vs previous close (potential breakout).</span>
+        <span style="margin-left:12px;"><code>oscillator_extremes</code> — RSI/MACD in overbought or oversold territory (reversal risk).</span>
+        <span style="margin-left:12px;"><code>zacks_eps_revision</code> — Zacks analysts raised (bullish) or cut (bearish) F1 EPS estimates over 4 weeks. Leading indicator of institutional accumulation/distribution.</span>
+    </div>
 
     <!-- Summary Cards -->
     <div class="stats-grid" style="margin-bottom:20px;">

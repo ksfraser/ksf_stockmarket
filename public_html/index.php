@@ -590,6 +590,48 @@ case 'strategy_timing':
             (float)($_GET['principal'] ?? 200000),
             '5y'
         ));
+        if (!empty($_GET['format']) && $_GET['format'] === 'csv') {
+            header('Content-Type: text/csv; charset=utf-8');
+            header('Content-Disposition: attachment; filename="lira_screener_5y_' . date('Ymd') . '.csv"');
+            $out = fopen('php://output', 'w');
+            // Per-geography ranked funds
+            foreach (['CA' => 'Canadian', 'US' => 'US', 'INTL' => 'International'] as $geo => $label) {
+                fputcsv($out, ["=== 5-Year LIRA Screener — {$label} ==="]);
+                fputcsv($out, ['Rank', 'Carrier', 'Fund Name', 'Series', 'MER (%)', '5Y Return (%)', 'Max Drawdown (%)', 'Risk-Adj Return', 'Category']);
+                foreach (($data['ranked'][$geo] ?? []) as $i => $r) {
+                    fputcsv($out, [
+                        $i + 1,
+                        $r['carrier'] ?? '',
+                        $r['fund_name'] ?? '',
+                        $r['series_code'] ?? '',
+                        $r['mer'] ?? '',
+                        $r['ret_horizon'] ?? '',
+                        $r['max_drawdown'] ?? '',
+                        $r['risk_adj'] ?? '',
+                        $r['category_raw'] ?? '',
+                    ]);
+                }
+                fputcsv($out, []);
+            }
+            // Carrier summary
+            fputcsv($out, ["=== Carrier Summary (all 3 geographies) ==="]);
+            fputcsv($out, ['Carrier', 'Avg Risk-Adj (5y)', 'Avg MER (%)', 'CA Pick', 'CA 5Y (%)', 'US Pick', 'US 5Y (%)', 'INTL Pick', 'INTL 5Y (%)']);
+            foreach ($data['carriers'] ?? [] as $c) {
+                fputcsv($out, [
+                    $c['carrier'] ?? '',
+                    $c['avg_risk_adj'] ?? '',
+                    $c['avg_mer'] ?? '',
+                    $c['ca']['fund_name'] ?? '',
+                    $c['ca']['ret_horizon'] ?? '',
+                    $c['us']['fund_name'] ?? '',
+                    $c['us']['ret_horizon'] ?? '',
+                    $c['intl']['fund_name'] ?? '',
+                    $c['intl']['ret_horizon'] ?? '',
+                ]);
+            }
+            fclose($out);
+            exit;
+        }
         $pageTitle = 'LIRA Screener — 5 Year';
         $template = 'seg_fund_lira_screener_5y';
         break;

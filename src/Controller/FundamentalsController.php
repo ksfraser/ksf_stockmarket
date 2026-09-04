@@ -17,13 +17,12 @@ class FundamentalsController {
      * Uses resolver so Canadian symbols hit the canonical DB symbol.
      */
     public function getSymbol(string $symbol): array {
-        $resolved = $this->resolver->resolve($symbol);
         $stmt = $this->pdo->prepare("
             SELECT * FROM fundamentals
             WHERE symbol = :sym
             ORDER BY fetch_date DESC LIMIT 1
         ");
-        $stmt->execute([':sym' => $resolved]);
+        $stmt->execute([':sym' => $symbol]);
         $result = $stmt->fetch();
         return $result ?: [];
     }
@@ -110,10 +109,9 @@ class FundamentalsController {
      * Uses resolver so Canadian symbols hit the canonical DB symbol.
      */
     public function getDividends(string $symbol): array {
-        $resolved = $this->resolver->resolve($symbol);
         $sql = "SELECT * FROM dividends WHERE symbol = :sym ORDER BY ex_date DESC LIMIT 50";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':sym' => $resolved]);
+        $stmt->execute([':sym' => $symbol]);
         $result = $stmt->fetchAll();
         return $result;
     }

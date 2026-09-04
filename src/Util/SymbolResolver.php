@@ -66,7 +66,7 @@ class SymbolResolver
                         );
                         if (!empty($row['exchange'])) {
                             $ex = strtoupper($row['exchange']);
-                            if (str_contains($ex, 'TSX') || str_contains($ex, 'TSXV')) {
+                            if (str_contains($ex, 'TSX') || str_contains($ex, 'TSXV') || str_contains($ex, 'TOR') || str_contains($ex, 'CAD')) {
                                 $resolved = $symbol . '.TO';
                             }
                         }

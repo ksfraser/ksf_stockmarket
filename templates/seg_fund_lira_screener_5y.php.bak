@@ -1,6 +1,3 @@
-<?php
-/**
- * LIRA/LRSP Seg-Fund Screener — 5-Year Horizon
  * Same methodology as the 10-year view but uses 5-year annualized returns.
  * Broader universe: funds with ≥5 yr track record (vs ≥10 yr).
  */
@@ -15,6 +12,10 @@ $horizonLabel = $data['horizon_label'] ?? '5-Year';
 
 function geo_label($k) {
     return ['CA'=>'🇨🇦 Canadian', 'US'=>'🇺🇸 US', 'INTL'=>'🌍 International'][$k] ?? $k;
+}
+function fmt_pct($v) {
+    if ($v === null || $v === '') return '—';
+    return number_format((float)$v, 1) . '%';
 }
 function fmt_mer($v) {
     if ($v === null || $v === '') return '—';
@@ -37,6 +38,7 @@ function fmt_money($v) {
         <label>Age: <input type="number" name="age" value="<?= htmlspecialchars($age) ?>" min="18" max="100" style="width:80px;padding:4px;"></label>
         <label>Principal ($): <input type="number" name="principal" value="<?= htmlspecialchars($principal) ?>" min="1000" step="1000" style="width:120px;padding:4px;"></label>
         <button type="submit" class="btn btn-sm">Recompute</button>
+        <a href="?action=seg_fund_lira_5y&age=<?= (int)$age ?>&principal=<?= (float)$principal ?>&format=csv" class="btn btn-sm" style="background:var(--green);color:#fff;text-decoration:none;">⬇ CSV</a>
         <span style="margin-left:auto;color:var(--text3);font-size:0.85em;">
             Allocated: <?= fmt_money($principal * $alloc['CA']) ?> CA,
             <?= fmt_money($principal * $alloc['US']) ?> US,
@@ -134,3 +136,4 @@ function fmt_money($v) {
         Stored <code>max_drawdown</code> is analytic worst peak-to-trough; the seg-fund guarantee floor is separate.
     </p>
 </div>
+<!-- MARKER123 -->

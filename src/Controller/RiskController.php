@@ -19,7 +19,7 @@ class RiskController {
      */
     public function preTradeGate(array $params): array {
         $userId = $params['user_id'] ?? 1;
-        $symbol = $this->resolver->resolve(strtoupper($params['symbol'] ?? ''));
+        $symbol = strtoupper($params['symbol'] ?? '');
         $direction = strtoupper($params['direction'] ?? '');
         $entryPrice = (float)($params['entry_price'] ?? 0);
         $accountBalance = (float)($params['account_balance'] ?? 100000);

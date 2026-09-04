@@ -118,7 +118,6 @@ class AdvisorController {
      */
     public function preTradeGate(array $post = []): array {
         $symbol = strtoupper(trim($post['symbol'] ?? ''));
-        $symbol = $this->resolver->resolve($symbol);
         $direction = strtoupper($post['direction'] ?? 'BUY');
         $entryPrice = (float)($post['entry_price'] ?? 0);
         $stopPrice = isset($post['stop_price']) ? (float)$post['stop_price'] : null;

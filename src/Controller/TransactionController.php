@@ -44,7 +44,7 @@ class TransactionController {
         $params = [];
 
         if ($account) { $where[] = "t.account_type = :acct"; $params[':acct'] = $account; }
-        if ($symbol) { $resolved = $this->resolver->resolve($symbol); $where[] = "t.symbol = :sym"; $params[':sym'] = $resolved; }
+        if ($symbol) { $where[] = "t.symbol = :sym"; $params[':sym'] = $symbol; }
         if ($type)   { $where[] = "t.type = :type"; $params[':type'] = $type; }
         if ($dateFrom) { $where[] = "t.trade_date >= :dfrom"; $params[':dfrom'] = $dateFrom; }
         if ($dateTo)   { $where[] = "t.trade_date <= :dto"; $params[':dto'] = $dateTo; }
@@ -105,8 +105,8 @@ class TransactionController {
         $commission = isset($post['commission']) ? (float) $post['commission'] : 0;
         $notes    = trim($post['notes'] ?? '');
 
-        // Normalize symbol via canonical resolver
-        $symbol = $this->resolver->resolve($symbol);
+        // Normalize symbol
+        $symbol = strtoupper(trim($symbol));
 
         if (strlen($symbol) < 1 || strlen($symbol) > 20) $errors[] = 'Symbol is required (1-20 chars).';
         if (!in_array($type, ['BUY', 'SELL', 'DIVIDEND', 'SPLIT'], true)) $errors[] = 'Type must be BUY, SELL, DIVIDEND, or SPLIT.';

@@ -414,6 +414,155 @@ if (!empty($z)):
 </div>
 <?php endif; ?>
 
+<!-- ===== ZACKS RESEARCH ===== -->
+<?php
+$zacks = $fundamentals; // zacks_* columns live on fundamentals row
+$hasZacks = !empty($zacks['zacks_rank']) || !empty($zacks['zacks_composite']);
+if ($hasZacks || !empty($zacks_broker_recs)):
+    $zRankColors = [1=>'var(--green)', 2=>'var(--green)', 3=>'var(--yellow)', 4=>'var(--red)', 5=>'var(--red)'];
+    $zGradeColors = ['A'=>'var(--green)', 'B'=>'#4caf50', 'C'=>'var(--yellow)', 'D'=>'var(--red)', 'F'=>'var(--red)'];
+    $zRankText = ['1'=>'Strong Buy','2'=>'Buy','3'=>'Hold','4'=>'Sell','5'=>'Strong Sell'];
+?>
+<div class="card" style="margin-top:12px;">
+    <div class="card-header">Zacks Research</div>
+
+    <!-- Rank + VGM -->
+    <div style="display:flex; gap:20px; align-items:center; margin-bottom:12px; flex-wrap:wrap;">
+        <div style="font-size:2.5em; font-weight:700; color:<?= $zRankColors[$zacks['zacks_rank'] ?? 5] ?? 'var(--text3)' ?>">
+            <?= htmlspecialchars($zacks['zacks_rank_text'] ?? ($zRankText[$zacks['zacks_rank'] ?? ''] ?? 'N/A')) ?>
+        </div>
+        <div style="font-size:0.9em; color:var(--text3);">
+            Zacks Rank <?= htmlspecialchars($zacks['zacks_rank'] ?? '—') ?>
+            <?php if (!empty($zacks['zacks_composite'])): ?>• Composite <?= (int)$zacks['zacks_composite'] ?>/100<?php endif; ?>
+        </div>
+        <div style="display:flex; gap:8px; margin-left:auto;">
+            <?php foreach (['value_grade'=>'Value','growth_grade'=>'Growth','momentum_grade'=>'Momentum','vgm_grade'=>'VGM'] as $gk=>$gl): ?>
+                <div class="stat-card" style="min-width:60px;">
+                    <div class="stat-value" style="color:<?= $zGradeColors[$zacks['zacks_'.$gk] ?? 'C'] ?? 'var(--text1)' ?>; font-size:1.2em;">
+                        <?= htmlspecialchars($zacks['zacks_'.$gk] ?? '—') ?>
+                    </div>
+                    <div class="stat-label"><?= $gl ?></div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- Price Targets -->
+    <?php if (!empty($zacks['zacks_price_target_avg'])): ?>
+    <div class="stats-grid" style="margin-bottom:12px;">
+        <div class="stat-card">
+            <div class="stat-value">$<?= number_format($zacks['zacks_price_target_avg'], 2) ?></div>
+            <div class="stat-label">Avg Target</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">$<?= number_format($zacks['zacks_price_target_high'] ?? 0, 2) ?></div>
+            <div class="stat-label">High Target</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">$<?= number_format($zacks['zacks_price_target_low'] ?? 0, 2) ?></div>
+            <div class="stat-label">Low Target</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value"><?= (int)($zacks['zacks_num_analysts'] ?? 0) ?></div>
+            <div class="stat-label">Analysts</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value"><?= htmlspecialchars($zacks['zacks_recommendation'] ?? '—') ?></div>
+            <div class="stat-label">Recommendation</div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Price Momentum -->
+    <?php
+    $momentumFields = [
+        '52-Week' => 'zacks_price_change_52w',
+        '24-Week' => 'zacks_price_change_24w',
+        '12-Week' => 'zacks_price_change_12w',
+        '4-Week'  => 'zacks_price_change_4w',
+    ];
+    $hasMomentum = false;
+    foreach ($momentumFields as $k => $fk) {
+        if (!empty($zacks[$fk])) { $hasMomentum = true; break; }
+    }
+    if ($hasMomentum):
+    ?>
+    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; font-size:0.85em; margin-bottom:12px;">
+        <?php foreach ($momentumFields as $label => $field): $v = $zacks[$field] ?? null; ?>
+            <div style="text-align:center; padding:8px; border:1px solid var(--border); border-radius:6px;">
+                <div class="text-muted"><?= $label ?></div>
+                <div style="font-size:1.3em; font-weight:600; color:<?= $v !== null ? ($v >= 0 ? 'var(--green)' : 'var(--red)') : 'var(--text3)' ?>">
+                    <?= $v !== null ? sprintf('%+.1f%%', $v) : '—' ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <!-- Broker Recommendations -->
+    <?php if (!empty($zacks_broker_recs)): ?>
+    <div style="margin-bottom:12px;">
+        <h4 style="margin:0 0 6px 0;">Broker Recommendations</h4>
+        <table style="width:100%; font-size:0.85em; border-collapse:collapse;">
+            <thead><tr style="border-bottom:1px solid var(--border);">
+                <th style="text-align:left; padding:4px;">Firm</th>
+                <th style="text-align:left; padding:4px;">Analyst</th>
+                <th style="text-align:center; padding:4px;">Grade</th>
+                <th class="r" style="padding:4px;">Target</th>
+                <th style="text-align:left; padding:4px;">Action</th>
+            </tr></thead>
+            <tbody>
+            <?php foreach (array_slice($zacks_broker_recs, 0, 15) as $br): ?>
+                <tr style="border-bottom:1px solid var(--border);">
+                    <td style="padding:4px;"><?= htmlspecialchars($br['firm'] ?? '') ?></td>
+                    <td style="padding:4px;"><?= htmlspecialchars($br['analyst'] ?? '') ?></td>
+                    <td style="text-align:center; padding:4px; color:<?= $zGradeColors[strtoupper($br['grade'] ?? 'C')] ?? 'var(--text1)' ?>">
+                        <?= htmlspecialchars(strtoupper($br['grade'] ?? '—')) ?>
+                    </td>
+                    <td class="r" style="padding:4px;"><?= !empty($br['price_target']) ? '$'.number_format($br['price_target'], 2) : '—' ?></td>
+                    <td style="padding:4px;"><?= htmlspecialchars($br['action'] ?? '') ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php endif; ?>
+
+    <!-- Additional Zacks Metrics Grid -->
+    <?php
+    $zacksGrid = [
+        ['EPS Growth Q0/Q-4', 'zacks_eps_growth_q0_q4', '%'],
+        ['EPS Growth 5Yr', 'zacks_eps_growth_5yr', '%'],
+        ['EPS % F1/F0', 'zacks_eps_pct_change_f1_f0', '%'],
+        ['EPS % F2/F1', 'zacks_eps_pct_change_f2_f1', '%'],
+        ['EPS Growth LT 3-5Yr', 'zacks_eps_growth_lt_3_5yr', '%'],
+        ['Sales Growth Reported Q', 'zacks_sales_growth_reported_q', '%'],
+        ['ROI', 'zacks_roi', '%'],
+        ['Asset Turnover TTM', 'zacks_asset_turnover_ttm', 'x'],
+        ['LT Debt/Capital', 'zacks_lt_debt_capital_pct', '%'],
+        ['Inventory Turnover 5Yr', 'zacks_inventory_turnover_5yr', 'x'],
+        ['FCF F0', 'zacks_fcf_f0', ''],
+        ['Net Profit Margin', 'zacks_net_profit_margin', '%'],
+    ];
+    $hasZacksGrid = false;
+    foreach ($zacksGrid as $row) { if (!empty($zacks[$row[1]])) { $hasZacksGrid = true; break; } }
+    if ($hasZacksGrid):
+    ?>
+    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; font-size:0.85em;">
+        <?php foreach ($zacksGrid as $row): $label=$row[0]; $field=$row[1]; $suffix=$row[2]; $v=$zacks[$field] ?? null; ?>
+            <div><span class="text-muted"><?= $label ?></span><br>
+                <strong><?= $v !== null ? number_format($v, 1).$suffix : '—' ?></strong>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <?php if (empty($zacks['zacks_rank']) && empty($zacks_broker_recs)): ?>
+        <p class="text-muted">Zacks Research data not yet available. Run <code>python3 zacks_scraper.py --symbol <?= htmlspecialchars($sym) ?></code> to fetch.</p>
+    <?php endif; ?>
+</div>
+<?php endif; ?>
+
 <!-- ===== FUNDAMENTALS DEEP DIVE ===== -->
 <div class="card" style="margin-top:12px;">
     <div class="card-header">Fundamentals Deep Dive</div>

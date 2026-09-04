@@ -837,7 +837,7 @@ class IndicatorCalculator:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Daily data pipeline (Stage 1 & 2)')
     parser.add_argument('--mode', required=True,
-                       choices=['daily', 'backfill', 'indicators', 'status'],
+                       choices=['daily', 'backfill', 'indicators', 'status', 'zacks'],
                        help='Operation mode')
     parser.add_argument('--symbol', help='Symbol for backfill mode')
     parser.add_argument('--start', help='Start date for backfill')
@@ -888,3 +888,36 @@ if __name__ == '__main__':
             for d in status['details']:
                 if d['status'] == 'stale':
                     print(f"  {d['symbol']}: last data {d['latest']}")
+
+    elif args.mode == 'zacks':
+        # Run Zacks Research Wizard scraper
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from zacks_scraper import ZacksScraper, ZacksStore
+        scraper = ZacksScraper()
+        store = ZacksStore()
+
+        if args.symbol:
+            symbols = [args.symbol.strip().upper()]
+        else:
+            symbols = [r['symbol'] for r in db.fetchall(
+                "SELECT symbol FROM symbol_master WHERE is_active = 1 ORDER BY symbol"
+            )]
+
+        print(f"Zacks scrape: {len(symbols)} symbols")
+        ok = fail = 0
+        for i, sym in enumerate(symbols):
+            print(f"  [{i+1}/{len(symbols)}] {sym}...", end=" ", flush=True)
+            data = scraper.fetch(sym)
+            if "error" in data:
+                print(f"SKIP ({data['error']})")
+                fail += 1
+                continue
+            if store.upsert_fundamentals(data):
+                print("✓")
+                ok += 1
+            else:
+                print("✗")
+                fail += 1
+            if i < len(symbols) - 1:
+                time.sleep(1.0)
+        print(f"Done. {ok} ok, {fail} failed")

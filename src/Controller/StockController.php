@@ -137,21 +137,14 @@ class StockController {
         $stmt->execute([':sym' => $symbol]);
         $history = array_reverse($stmt->fetchAll());
 
-        // Indicators: latest + 60 days for charts — prefer the resolved symbol
-        $this->refreshIndicatorsJsonIfStale($resolved);
+        // Indicators: latest + 60 days for charts
         $indHistory = [];
         $indicators = [];
 
         $indSql = "SELECT price_date, data FROM indicators_json WHERE symbol = :sym ORDER BY price_date DESC LIMIT 60";
         $stmt = $this->pdo->prepare($indSql);
-        $stmt->execute([':sym' => $resolved]);
+        $stmt->execute([':sym' => $symbol]);
         $indRows = array_reverse($stmt->fetchAll());
-
-        if (empty($indRows) && $resolved !== $symbol) {
-            // Fallback to input symbol if resolved form has no data yet
-            $stmt->execute([':sym' => $symbol]);
-            $indRows = array_reverse($stmt->fetchAll());
-        }
 
         foreach ($indRows as $i => $row) {
             $d = json_decode($row['data'], true);
@@ -160,14 +153,10 @@ class StockController {
         }
         if ($indHistory) $indicators = end($indHistory);
 
-        // Fundamentals — use resolved symbol first, fallback to original
+        // Fundamentals
         $stmt = $this->pdo->prepare("SELECT * FROM fundamentals WHERE symbol = :sym ORDER BY fetch_date DESC LIMIT 1");
-        $stmt->execute([':sym' => $resolved]);
+        $stmt->execute([':sym' => $symbol]);
         $fundamentals = $stmt->fetch() ?: [];
-        if (empty($fundamentals) && $resolved !== $symbol) {
-            $stmt->execute([':sym' => $symbol]);
-            $fundamentals = $stmt->fetch() ?: [];
-        }
 
         // Portfolio position
         $stmt = $this->pdo->prepare("SELECT * FROM portfolio WHERE symbol = :sym");
@@ -195,6 +184,14 @@ class StockController {
 
         // Analyst recommendations
         $recommendations = $this->getTableData('analyst_recommendations', $symbol, 'rec_date DESC', 30);
+
+        // Zacks broker recommendations
+        $zacksBrokerRecs = [];
+        try {
+            $stmt = $this->pdo->prepare("SELECT firm, analyst, grade, price_target, action, rec_date FROM zacks_broker_recommendations WHERE symbol = :sym ORDER BY fetch_date DESC, rec_date DESC LIMIT 20");
+            $stmt->execute([':sym' => $symbol]);
+            $zacksBrokerRecs = $stmt->fetchAll();
+        } catch (\Exception $e) {}
 
         // News — use news_feeds table populated by news_monitor.py, fallback to symbol_news
         $news = [];
@@ -378,12 +375,13 @@ class StockController {
             'analystRatings', 'analystTargets', 'news', 'optionsData',
             'buffettScore', 'zacksScore', 'perf', 'regime', 'exitSignals',
             'recommendations', 'holders', 'financials', 'estimates',
-            'vectorVest', 'iplaceCalc', 'lipperScores'
+            'vectorVest', 'iplaceCalc', 'lipperScores', 'zacksBrokerRecs'
         );
         $result['analyst_ratings'] = $result['analystRatings'];
         $result['analyst_targets'] = $result['analystTargets'];
         $result['buffett_score'] = $result['buffettScore'];
         $result['zacks_score'] = $result['zacksScore'] ?? [];
+        $result['zacks_broker_recs'] = $result['zacksBrokerRecs'] ?? [];
         $result['options'] = $result['optionsData'];
         $result['ind_history'] = $result['indHistory'];
         $result['dividend_safety'] = $result['dividendSafety'];
@@ -549,10 +547,9 @@ class StockController {
      */
     private function getTableData(string $table, string $symbol, string $order = 'date DESC', int $limit = 10): array {
         try {
-            $resolved = $this->resolver->resolve($symbol);
             $sql = "SELECT * FROM {$table} WHERE symbol = :sym ORDER BY {$order} LIMIT :lim";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindValue(':sym', $resolved);
+            $stmt->bindValue(':sym', $symbol);
             $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetchAll();
@@ -1217,13 +1214,12 @@ class StockController {
      * Uses resolver so Canadian symbols hit the canonical DB symbol.
      */
     private function getLatestIndicators(string $symbol): array {
-        $resolved = $this->resolver->resolve($symbol);
         $stmt = $this->pdo->prepare("
             SELECT data FROM indicators_json
             WHERE symbol = :sym
             ORDER BY price_date DESC LIMIT 1
         ");
-        $stmt->execute([':sym' => $resolved]);
+        $stmt->execute([':sym' => $symbol]);
         $row = $stmt->fetch();
 
         if (!$row) return [];
@@ -1247,22 +1243,18 @@ class StockController {
     }
 
     private function refreshIndicatorsJsonIfStale(string $symbol): void {
-        $resolved = $this->resolver->resolve($symbol);
         $stmt = $this->pdo->prepare("
             SELECT updated_date FROM indicators_json
             WHERE symbol = :sym
             ORDER BY price_date DESC LIMIT 1
         ");
-        $stmt->execute([':sym' => $resolved]);
+        $stmt->execute([':sym' => $symbol]);
         $row = $stmt->fetch();
 
         $today = date('Y-m-d');
         $last = $row ? substr($row['updated_date'], 0, 10) : '';
         if ($last !== $today) {
-            $this->refreshIndicatorsJson($resolved);
-            if ($resolved !== $symbol) {
-                $this->refreshIndicatorsJson($symbol);
-            }
+            $this->refreshIndicatorsJson($symbol);
         }
     }
 

@@ -24,37 +24,65 @@ class DashboardController {
             'last_update'         => date('Y-m-d H:i:s'),
         ];
 
-        // Top gainers — ALL symbols (app level)
-        $gainers = $this->pdo->query("
+        // Recency window — only count symbols whose LATEST price_date is within the
+        // last N business days. Prevents stale "gainers" from illiquid / delisted tickers
+        // (e.g. RNK, which last traded years ago) from polluting the dashboard.
+        // 5 business days ≈ 7 calendar days, with a buffer to 10 to be safe over long weekends.
+        $recencyCutoff = date('Y-m-d', strtotime('-10 days'));
+
+        // Top gainers — ALL symbols (app level), recent only
+        $gainers = $this->pdo->prepare("
             SELECT sp.symbol, sp.close, sp.volume, sm.name,
                    prev.close as prev_close,
-                   CASE WHEN prev.close > 0 THEN ((sp.close - prev.close) / prev.close * 100) ELSE 0 END as change_pct
+                   CASE WHEN prev.close > 0 THEN ((sp.close - prev.close) / prev.close * 100) ELSE 0 END as change_pct,
+                   sp.price_date as price_date,
+                   prev.price_date as prev_date,
+                   sm.is_active
             FROM stockprices sp
             INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol) latest
                 ON sp.symbol = latest.symbol AND sp.price_date = latest.max_date
             LEFT JOIN symbol_master sm ON sp.symbol = sm.symbol
             LEFT JOIN stockprices prev ON prev.symbol = sp.symbol
-                AND prev.price_date = (SELECT MAX(price_date) FROM stockprices WHERE symbol = sp.symbol AND price_date < sp.price_date)
+                AND prev.price_date = (SELECT MAX(price_date) FROM stockprices
+                                        WHERE symbol = sp.symbol
+                                          AND price_date < sp.price_date
+                                          AND price_date >= DATE_SUB(sp.price_date, INTERVAL 14 DAY))
             WHERE prev.close > 0
+              AND sp.price_date >= :cutoff
+              AND sp.close > 0
+              AND COALESCE(sm.is_active, 1) = 1
             ORDER BY change_pct DESC
             LIMIT 10
-        ")->fetchAll();
+        ");
+        $gainers->execute([':cutoff' => $recencyCutoff]);
+        $gainers = $gainers->fetchAll();
 
-        // Top losers — ALL symbols (app level)
-        $losers = $this->pdo->query("
+        // Top losers — ALL symbols (app level), recent only
+        $losers = $this->pdo->prepare("
             SELECT sp.symbol, sp.close, sp.volume, sm.name,
                    prev.close as prev_close,
-                   CASE WHEN prev.close > 0 THEN ((sp.close - prev.close) / prev.close * 100) ELSE 0 END as change_pct
+                   CASE WHEN prev.close > 0 THEN ((sp.close - prev.close) / prev.close * 100) ELSE 0 END as change_pct,
+                   sp.price_date as price_date,
+                   prev.price_date as prev_date,
+                   sm.is_active
             FROM stockprices sp
             INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM stockprices GROUP BY symbol) latest
                 ON sp.symbol = latest.symbol AND sp.price_date = latest.max_date
             LEFT JOIN symbol_master sm ON sp.symbol = sm.symbol
             LEFT JOIN stockprices prev ON prev.symbol = sp.symbol
-                AND prev.price_date = (SELECT MAX(price_date) FROM stockprices WHERE symbol = sp.symbol AND price_date < sp.price_date)
+                AND prev.price_date = (SELECT MAX(price_date) FROM stockprices
+                                        WHERE symbol = sp.symbol
+                                          AND price_date < sp.price_date
+                                          AND price_date >= DATE_SUB(sp.price_date, INTERVAL 14 DAY))
             WHERE prev.close > 0
+              AND sp.price_date >= :cutoff
+              AND sp.close > 0
+              AND COALESCE(sm.is_active, 1) = 1
             ORDER BY change_pct ASC
             LIMIT 10
-        ")->fetchAll();
+        ");
+        $losers->execute([':cutoff' => $recencyCutoff]);
+        $losers = $losers->fetchAll();
 
         // Data freshness
         $freshness = $this->pdo->query("

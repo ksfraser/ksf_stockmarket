@@ -11,19 +11,21 @@ $principal = $data['principal'] ?? 200000;
 $alloc = $data['allocation'] ?? ['CA'=>0.60, 'US'=>0.25, 'INTL'=>0.15];
 $runway = $data['runway'] ?? 10;
 
-function geo_label($k) {
-    return ['CA'=>'🇨🇦 Canadian', 'US'=>'🇺🇸 US', 'INTL'=>'🌍 International'][$k] ?? $k;
+if (!function_exists('geo_label')) {
+    function geo_label($k) {
+        return ['CA'=>'🇨🇦 Canadian', 'US'=>'🇺🇸 US', 'INTL'=>'🌍 International'][$k] ?? $k;
+    }
 }
-function fmt_pct($v) {
-    if ($v === null || $v === '') return '—';
-    return number_format((float)$v, 1) . '%';
+if (!function_exists('fmt_mer')) {
+    function fmt_mer($v) {
+        if ($v === null || $v === '') return '—';
+        return number_format((float)$v, 2) . '%';
+    }
 }
-function fmt_mer($v) {
-    if ($v === null || $v === '') return '—';
-    return number_format((float)$v, 2) . '%';
-}
-function fmt_money($v) {
-    return '$' . number_format((float)$v, 0);
+if (!function_exists('fmt_money')) {
+    function fmt_money($v) {
+        return '$' . number_format((float)$v, 0);
+    }
 }
 ?>
 

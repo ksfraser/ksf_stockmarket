@@ -459,6 +459,12 @@ case 'strategy_timing':
         $pageTitle = 'Stock Screener - TradingView';
         $template = 'screener';
         break;
+    case 'zacks_eps_screener':
+        $ctrl = new StockController();
+        $data = array_merge($data, $ctrl->zacksEpsScreener());
+        $pageTitle = 'Zacks EPS Revision Screener (MIT Formula)';
+        $template = 'zacks_eps_screener';
+        break;
     case 'upload':
         require_once $GLOBALS['APP_ROOT'] . '/src/Controller/DocumentUploadController.php';
         $ctrl = new DocumentUploadController();

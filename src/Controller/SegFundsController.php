@@ -11,37 +11,78 @@ class SegFundsController {
 
     /**
      * GET /?action=seg_funds — List all seg funds with filters.
+     * Supports BR-11/FR-11 risk_rating, death_pct, mat_pct, and bucket_1y/5y/10y/ytd.
      */
-    public function listFunds(string $carrier = '', string $category = '', string $series = '', string $search = '', string $sortBy = 'fund_name', string $sortDir = 'ASC'): array {
-        $allowedSort = ['fund_name', 'carrier', 'category', 'series', 'mer', 'return_1yr', 'return_3yr', 'return_5yr', 'return_10yr'];
+    public function listFunds(
+        string $carrier = '',
+        string $category = '',
+        string $series = '',
+        string $search = '',
+        string $sortBy = 'fund_name',
+        string $sortDir = 'ASC',
+        array  $risk_rating = [],
+        array  $death_pct = [],
+        array  $mat_pct = [],
+        string $bucket_1y = '',
+        string $bucket_5y = '',
+        string $bucket_10y = '',
+        string $bucket_ytd = ''
+    ): array {
+        $allowedSort = ['fund_name', 'carrier', 'category', 'series', 'mer', 'return_1yr', 'return_3yr', 'return_5yr', 'return_10yr', 'risk_rating', 'death_benefit_pct', 'maturity_benefit_pct'];
         if (!in_array($sortBy, $allowedSort)) $sortBy = 'fund_name';
         $sortDir = strtoupper($sortDir) === 'DESC' ? 'DESC' : 'ASC';
 
-        $where = ['is_active = 1'];
-        $params = [];
+        $filterSpec = [
+            'carrier'     => $carrier,
+            'category'    => $category,
+            'series'      => $series,
+            'search'      => $search,
+            'risk_rating' => $risk_rating,
+            'death_pct'   => $death_pct,
+            'mat_pct'     => $mat_pct,
+        ];
 
-        if ($carrier) {
-            $where[] = 'carrier = :carrier';
-            $params[':carrier'] = $carrier;
-        }
-        if ($category) {
-            $where[] = 'category = :category';
-            $params[':category'] = $category;
-        }
-        if ($series) {
-            $where[] = 'series = :series';
-            $params[':series'] = $series;
-        }
-        if ($search) {
-            $where[] = '(fund_name LIKE :search1 OR carrier LIKE :search2)';
-            $params[':search1'] = '%' . $search . '%';
-            $params[':search2'] = '%' . $search . '%';
-        }
+        $built = SegFundFilter::buildWhere($filterSpec);
+        $whereSql = $built['where'];
+        $params = $built['params'];
 
-        $whereSql = 'WHERE ' . implode(' AND ', $where);
+        // Bucket filters: resolve label → NTILE(5) range, append extra clause
+        $bucketSelections = [
+            'bucket_1y'  => $bucket_1y,
+            'bucket_5y'  => $bucket_5y,
+            'bucket_10y' => $bucket_10y,
+            'bucket_ytd' => $bucket_ytd,
+        ];
+        $bucketExtra = [];   // for boundary computation
+        $bucketApplied = []; // for UI display
+        foreach ($bucketSelections as $key => $label) {
+            if (!$label) continue;
+            // Recompute boundaries over the universe WITHOUT the current bucket (others still apply)
+            $boundaries = SegFundFilter::bucketBoundaries($this->pdo, SegFundFilter::BUCKET_COLS[$key], $built['has'] ? substr($whereSql, 6) : '');
+            $resolved = SegFundFilter::resolveBucket($key, $label, $boundaries);
+            if (!$resolved) continue;
+            $col = $resolved['col'];
+            $lo  = $resolved['lo'];
+            $hi  = $resolved['hi'];
+            $ph  = ':' . $key . '_lo';
+            $ph2 = ':' . $key . '_hi';
+            $clause = "({$col} >= {$ph} AND {$col} <= {$ph2})";
+            $bucketExtra[] = $clause;
+            $params[$ph]  = $lo;
+            $params[$ph2] = $hi;
+            $bucketApplied[$key] = [
+                'col' => $col, 'lo' => $lo, 'hi' => $hi, 'label' => $label, 'boundaries' => $boundaries,
+            ];
+        }
+        if ($bucketExtra) {
+            $whereSql = $whereSql
+                ? $whereSql . ' AND ' . implode(' AND ', $bucketExtra)
+                : 'WHERE ' . implode(' AND ', $bucketExtra);
+        }
 
         $sql = "SELECT id, fund_name, carrier, category, series, mer,
-                       return_1yr, return_3yr, return_5yr, return_10yr
+                       risk_rating, death_benefit_pct, maturity_benefit_pct,
+                       return_1yr, return_3yr, return_5yr, return_10yr, ytd_pct
                 FROM seg_funds
                 {$whereSql}
                 ORDER BY {$sortBy} {$sortDir}
@@ -54,11 +95,17 @@ class SegFundsController {
         // Get filter options
         $carriers = $this->pdo->query("SELECT DISTINCT carrier FROM seg_funds WHERE is_active = 1 ORDER BY carrier")->fetchAll(PDO::FETCH_COLUMN);
         $categories = $this->pdo->query("SELECT DISTINCT category FROM seg_funds WHERE is_active = 1 ORDER BY category")->fetchAll(PDO::FETCH_COLUMN);
-        $seriesList = $this->pdo->query("SELECT DISTINCT series FROM seg_funds WHERE is_active = 1 ORDER BY series")->fetchAll(PDO::FETCH_COLUMN);
+        $seriesList = $this->pdo->query("SELECT DISTINCT series FROM seg_funds WHERE is_active = 1 AND series IS NOT NULL ORDER BY series")->fetchAll(PDO::FETCH_COLUMN);
 
         // Stats
         $totalActive = $this->pdo->query("SELECT COUNT(*) FROM seg_funds WHERE is_active = 1")->fetchColumn();
         $totalCarriers = count($carriers);
+
+        // Bucket boundaries for all four return cols (universe = full active; UI shows labels)
+        $bucketLabels = [];
+        foreach (SegFundFilter::BUCKET_COLS as $key => $col) {
+            $bucketLabels[$key] = SegFundFilter::bucketBoundaries($this->pdo, $col, '');
+        }
 
         return [
             'funds' => $funds,
@@ -69,6 +116,15 @@ class SegFundsController {
             'filter_category' => $category,
             'filter_series' => $series,
             'search' => $search,
+            'filter_risk_rating' => $risk_rating,
+            'filter_death_pct'   => $death_pct,
+            'filter_mat_pct'     => $mat_pct,
+            'filter_bucket_1y'   => $bucket_1y,
+            'filter_bucket_5y'   => $bucket_5y,
+            'filter_bucket_10y'  => $bucket_10y,
+            'filter_bucket_ytd'  => $bucket_ytd,
+            'bucket_labels'      => $bucketLabels,
+            'bucket_applied'     => $bucketApplied,
             'sortBy' => $sortBy,
             'sortDir' => $sortDir,
             'total_active' => $totalActive,

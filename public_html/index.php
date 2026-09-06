@@ -568,15 +568,24 @@ case 'strategy_timing':
         }
         break;
     case 'seg_funds':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Util/SegFundFilter.php';
         require_once $GLOBALS['APP_ROOT'] . '/src/Controller/SegFundsController.php';
         $ctrl = new SegFundsController();
+        $riskArg = isset($_GET['risk']) ? array_filter((array)$_GET['risk'], 'is_string') : [];
         $data = array_merge($data, $ctrl->listFunds(
             $_GET['carrier'] ?? '',
             $_GET['category'] ?? '',
             $_GET['series'] ?? '',
             $_GET['search'] ?? '',
             $_GET['sort'] ?? 'fund_name',
-            $_GET['dir'] ?? 'ASC'
+            $_GET['dir'] ?? 'ASC',
+            $riskArg,
+            isset($_GET['death'])    ? array_map('intval', (array)$_GET['death'])         : [],
+            isset($_GET['maturity']) ? array_map('intval', (array)$_GET['maturity'])      : [],
+            $_GET['bucket_1y']  ?? '',
+            $_GET['bucket_5y']  ?? '',
+            $_GET['bucket_10y'] ?? '',
+            $_GET['bucket_ytd'] ?? ''
         ));
         $pageTitle = 'Segregated Funds';
         $template = 'seg_funds';

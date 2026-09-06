@@ -41,7 +41,6 @@ class SegFundsController {
             'death_pct'   => $death_pct,
             'mat_pct'     => $mat_pct,
         ];
-
         $built = SegFundFilter::buildWhere($filterSpec);
         $whereSql = $built['where'];
         $params = $built['params'];

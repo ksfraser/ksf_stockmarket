@@ -1,51 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="/home/ksf_stockmarket/ksf_stockmarket/phpunit.xml" tests="24" assertions="39" errors="0" failures="0" skipped="5" time="0.070064">
-    <testsuite name="Unit" tests="19" assertions="39" errors="0" failures="0" skipped="0" time="0.070064">
-      <testsuite name="Ksf\StockMarket\Tests\Unit\AppTest" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" tests="5" assertions="7" errors="0" failures="0" skipped="0" time="0.028073">
-        <testcase name="testGetInstanceReturnsSingleton" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="62" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="1" time="0.006924"/>
-        <testcase name="testBootstrapLoadsConfig" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="70" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="2" time="0.013559"/>
-        <testcase name="testGetReturnsDefaultForMissingKey" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="79" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="2" time="0.002692"/>
-        <testcase name="testRootDirReturnsProjectRoot" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="88" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="1" time="0.002623"/>
-        <testcase name="testBootstrapIsIdempotent" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/AppTest.php" line="97" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="1" time="0.002275"/>
-      </testsuite>
-      <testsuite name="StockControllerTest" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" tests="10" assertions="25" errors="0" failures="0" skipped="0" time="0.037478">
-        <testcase name="test_controller_class_exists_and_is_loadable" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" line="72" class="StockControllerTest" classname="StockControllerTest" assertions="1" time="0.002381"/>
-        <testcase name="test_controller_has_new_methods_and_properties" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" line="76" class="StockControllerTest" classname="StockControllerTest" assertions="3" time="0.001649"/>
-        <testcase name="test_detail_prefers_direct_symbol_over_to_suffix" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" line="83" class="StockControllerTest" classname="StockControllerTest" assertions="3" time="0.006204"/>
-        <testcase name="test_detail_falls_back_to_to_suffix_when_direct_missing" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" line="100" class="StockControllerTest" classname="StockControllerTest" assertions="2" time="0.006447"/>
-        <testcase name="test_getTableData_tries_to_suffix_when_empty" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" line="114" class="StockControllerTest" classname="StockControllerTest" assertions="2" time="0.002662"/>
-        <testcase name="test_current_div_yield_calculation" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" line="130" class="StockControllerTest" classname="StockControllerTest" assertions="3" time="0.004579"/>
-        <testcase name="test_getLatestIndicators_falls_back_to_to_suffix" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" line="147" class="StockControllerTest" classname="StockControllerTest" assertions="1" time="0.002158"/>
-        <testcase name="test_getTableData_returns_empty_array_when_no_rows" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" line="162" class="StockControllerTest" classname="StockControllerTest" assertions="2" time="0.003315"/>
-        <testcase name="test_screener_returns_sorted_and_filtered_results" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" line="175" class="StockControllerTest" classname="StockControllerTest" assertions="7" time="0.005498"/>
-        <testcase name="test_portfolio_holdings_include_safety_rating_keys" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/Controller/StockControllerTest.php" line="197" class="StockControllerTest" classname="StockControllerTest" assertions="1" time="0.002586"/>
-      </testsuite>
-      <testsuite name="Ksf\StockMarket\Tests\Unit\ValidationTest" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" tests="4" assertions="7" errors="0" failures="0" skipped="0" time="0.004512">
-        <testcase name="testNegativeSharesRejected" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" line="19" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="1" time="0.001447"/>
-        <testcase name="testNegativeCostRejected" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" line="30" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="1" time="0.000570"/>
-        <testcase name="testZeroValuesAccepted" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" line="40" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="4" time="0.001972"/>
-        <testcase name="testSymbolNormalization" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Unit/ValidationTest.php" line="52" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="1" time="0.000524"/>
-      </testsuite>
+  <testsuite name="CLI Arguments" tests="19" assertions="18" errors="8" failures="0" skipped="0" time="0.167085">
+    <testsuite name="Ksf\StockMarket\Tests\Unit\AppTest" file="/var/www/stockmarket-app/tests/Unit/AppTest.php" tests="5" assertions="7" errors="0" failures="0" skipped="0" time="0.082305">
+      <testcase name="testGetInstanceReturnsSingleton" file="/var/www/stockmarket-app/tests/Unit/AppTest.php" line="62" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="1" time="0.020220"/>
+      <testcase name="testBootstrapLoadsConfig" file="/var/www/stockmarket-app/tests/Unit/AppTest.php" line="70" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="2" time="0.037627"/>
+      <testcase name="testGetReturnsDefaultForMissingKey" file="/var/www/stockmarket-app/tests/Unit/AppTest.php" line="79" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="2" time="0.009155"/>
+      <testcase name="testRootDirReturnsProjectRoot" file="/var/www/stockmarket-app/tests/Unit/AppTest.php" line="88" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="1" time="0.007636"/>
+      <testcase name="testBootstrapIsIdempotent" file="/var/www/stockmarket-app/tests/Unit/AppTest.php" line="97" class="Ksf\StockMarket\Tests\Unit\AppTest" classname="Ksf.StockMarket.Tests.Unit.AppTest" assertions="1" time="0.007667"/>
     </testsuite>
-    <testsuite name="Integration" tests="5" assertions="0" errors="0" failures="0" skipped="5" time="0.000000">
-      <testsuite name="Ksf\StockMarket\Tests\Integration\PortfolioIntegrationTest" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Integration/PortfolioIntegrationTest.php" tests="5" assertions="0" errors="0" failures="0" skipped="5" time="0.000000">
-        <testcase name="testGetPositionsReturnsArray" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Integration/PortfolioIntegrationTest.php" line="44" class="Ksf\StockMarket\Tests\Integration\PortfolioIntegrationTest" classname="Ksf.StockMarket.Tests.Integration.PortfolioIntegrationTest" assertions="0" time="0.000000">
-          <skipped/>
-        </testcase>
-        <testcase name="testSetAndGetPosition" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Integration/PortfolioIntegrationTest.php" line="52" class="Ksf\StockMarket\Tests\Integration\PortfolioIntegrationTest" classname="Ksf.StockMarket.Tests.Integration.PortfolioIntegrationTest" assertions="0" time="0.000000">
-          <skipped/>
-        </testcase>
-        <testcase name="testRemovePosition" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Integration/PortfolioIntegrationTest.php" line="67" class="Ksf\StockMarket\Tests\Integration\PortfolioIntegrationTest" classname="Ksf.StockMarket.Tests.Integration.PortfolioIntegrationTest" assertions="0" time="0.000000">
-          <skipped/>
-        </testcase>
-        <testcase name="testSetPositionRejectsNegativeShares" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Integration/PortfolioIntegrationTest.php" line="80" class="Ksf\StockMarket\Tests\Integration\PortfolioIntegrationTest" classname="Ksf.StockMarket.Tests.Integration.PortfolioIntegrationTest" assertions="0" time="0.000000">
-          <skipped/>
-        </testcase>
-        <testcase name="testSetPositionRejectsNegativeCost" file="/home/ksf_stockmarket/ksf_stockmarket/tests/Integration/PortfolioIntegrationTest.php" line="90" class="Ksf\StockMarket\Tests\Integration\PortfolioIntegrationTest" classname="Ksf.StockMarket.Tests.Integration.PortfolioIntegrationTest" assertions="0" time="0.000000">
-          <skipped/>
-        </testcase>
-      </testsuite>
+    <testsuite name="StockControllerTest" file="/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php" tests="10" assertions="4" errors="8" failures="0" skipped="0" time="0.075573">
+      <testcase name="test_controller_class_exists_and_is_loadable" file="/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php" line="72" class="StockControllerTest" classname="StockControllerTest" assertions="1" time="0.006797"/>
+      <testcase name="test_controller_has_new_methods_and_properties" file="/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php" line="76" class="StockControllerTest" classname="StockControllerTest" assertions="3" time="0.004875"/>
+      <testcase name="test_detail_prefers_direct_symbol_over_to_suffix" file="/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php" line="83" class="StockControllerTest" classname="StockControllerTest" assertions="0" time="0.024635">
+        <error type="Error">StockControllerTest::test_detail_prefers_direct_symbol_over_to_suffix
+Error: Class "SymbolResolver" not found
+
+/home/ksf_stockmarket/ksf_stockmarket/php/src/Controller/StockController.php:12
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:58
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:92</error>
+      </testcase>
+      <testcase name="test_detail_falls_back_to_to_suffix_when_direct_missing" file="/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php" line="100" class="StockControllerTest" classname="StockControllerTest" assertions="0" time="0.005653">
+        <error type="Error">StockControllerTest::test_detail_falls_back_to_to_suffix_when_direct_missing
+Error: Class "SymbolResolver" not found
+
+/home/ksf_stockmarket/ksf_stockmarket/php/src/Controller/StockController.php:12
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:58
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:107</error>
+      </testcase>
+      <testcase name="test_getTableData_tries_to_suffix_when_empty" file="/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php" line="114" class="StockControllerTest" classname="StockControllerTest" assertions="0" time="0.005045">
+        <error type="Error">StockControllerTest::test_getTableData_tries_to_suffix_when_empty
+Error: Class "SymbolResolver" not found
+
+/home/ksf_stockmarket/ksf_stockmarket/php/src/Controller/StockController.php:12
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:58
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:115</error>
+      </testcase>
+      <testcase name="test_current_div_yield_calculation" file="/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php" line="130" class="StockControllerTest" classname="StockControllerTest" assertions="0" time="0.005303">
+        <error type="Error">StockControllerTest::test_current_div_yield_calculation
+Error: Class "SymbolResolver" not found
+
+/home/ksf_stockmarket/ksf_stockmarket/php/src/Controller/StockController.php:12
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:58
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:139</error>
+      </testcase>
+      <testcase name="test_getLatestIndicators_falls_back_to_to_suffix" file="/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php" line="147" class="StockControllerTest" classname="StockControllerTest" assertions="0" time="0.005239">
+        <error type="Error">StockControllerTest::test_getLatestIndicators_falls_back_to_to_suffix
+Error: Class "SymbolResolver" not found
+
+/home/ksf_stockmarket/ksf_stockmarket/php/src/Controller/StockController.php:12
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:58
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:154</error>
+      </testcase>
+      <testcase name="test_getTableData_returns_empty_array_when_no_rows" file="/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php" line="162" class="StockControllerTest" classname="StockControllerTest" assertions="0" time="0.004586">
+        <error type="Error">StockControllerTest::test_getTableData_returns_empty_array_when_no_rows
+Error: Class "SymbolResolver" not found
+
+/home/ksf_stockmarket/ksf_stockmarket/php/src/Controller/StockController.php:12
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:58
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:164</error>
+      </testcase>
+      <testcase name="test_screener_returns_sorted_and_filtered_results" file="/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php" line="175" class="StockControllerTest" classname="StockControllerTest" assertions="0" time="0.006469">
+        <error type="Error">StockControllerTest::test_screener_returns_sorted_and_filtered_results
+Error: Class "SymbolResolver" not found
+
+/home/ksf_stockmarket/ksf_stockmarket/php/src/Controller/StockController.php:12
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:58
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:185</error>
+      </testcase>
+      <testcase name="test_portfolio_holdings_include_safety_rating_keys" file="/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php" line="197" class="StockControllerTest" classname="StockControllerTest" assertions="0" time="0.006972">
+        <error type="Error">StockControllerTest::test_portfolio_holdings_include_safety_rating_keys
+Error: Class "SymbolResolver" not found
+
+/home/ksf_stockmarket/ksf_stockmarket/php/src/Controller/StockController.php:12
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:58
+/var/www/stockmarket-app/tests/Unit/Controller/StockControllerTest.php:204</error>
+      </testcase>
+    </testsuite>
+    <testsuite name="Ksf\StockMarket\Tests\Unit\ValidationTest" file="/var/www/stockmarket-app/tests/Unit/ValidationTest.php" tests="4" assertions="7" errors="0" failures="0" skipped="0" time="0.009208">
+      <testcase name="testNegativeSharesRejected" file="/var/www/stockmarket-app/tests/Unit/ValidationTest.php" line="19" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="1" time="0.002142"/>
+      <testcase name="testNegativeCostRejected" file="/var/www/stockmarket-app/tests/Unit/ValidationTest.php" line="30" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="1" time="0.001295"/>
+      <testcase name="testZeroValuesAccepted" file="/var/www/stockmarket-app/tests/Unit/ValidationTest.php" line="40" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="4" time="0.004342"/>
+      <testcase name="testSymbolNormalization" file="/var/www/stockmarket-app/tests/Unit/ValidationTest.php" line="52" class="Ksf\StockMarket\Tests\Unit\ValidationTest" classname="Ksf.StockMarket.Tests.Unit.ValidationTest" assertions="1" time="0.001428"/>
     </testsuite>
   </testsuite>
 </testsuites>

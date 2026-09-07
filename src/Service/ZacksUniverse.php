@@ -71,7 +71,9 @@ final class ZacksUniverse
         $this->loadBase();
         $this->loadPrices();
         $this->loadFundamentals();
-        $this->loadWindows();
+        if (!$this->loadPrecomputedWindows()) {
+            $this->loadWindows();
+        }
         if ($this->needVol20) {
             $this->loadVol20();
         }
@@ -126,6 +128,57 @@ final class ZacksUniverse
             }
             $this->rows[$sym]['fund'] = $r;
         }
+    }
+
+    /**
+     * Fast path: read windows from the precomputed stock_performance_windows
+     * table (refreshed nightly by scripts/refresh_perf_windows.php) when the
+     * stored anchor matches the current universe anchor; otherwise recompute
+     * at runtime. Keeps window computation in one canonical place.
+     */
+    private function loadPrecomputedWindows(): bool
+    {
+        try {
+            $meta = $this->pdo->query(
+                "SELECT as_of_date, anchor_date
+                 FROM stock_performance_windows
+                 ORDER BY as_of_date DESC, id DESC LIMIT 1"
+            )->fetch();
+        } catch (\Throwable) {
+            return false; // table not present yet
+        }
+        if ($meta === false) {
+            return false;
+        }
+        $asOf = (string) $meta['as_of_date'];
+        if ((string) $meta['anchor_date'] !== $this->anchorDate) {
+            return false; // stale relative to current prices
+        }
+        $stmt = $this->pdo->query(
+            "SELECT symbol, chg_1w, chg_4w, chg_12w, chg_24w, chg_52w, chg_ytd,
+                    high_52w, low_52w, hl_range_pct, chg_vs_high_52w
+             FROM stock_performance_windows
+             WHERE as_of_date = " . $this->pdo->quote($asOf)
+        );
+        foreach ($stmt as $r) {
+            $sym = (string) $r['symbol'];
+            if (!isset($this->rows[$sym])) {
+                continue;
+            }
+            $this->rows[$sym]['win'] = [
+                'chg_1w'          => $r['chg_1w'] !== null ? (float) $r['chg_1w'] : null,
+                'chg_4w'          => $r['chg_4w'] !== null ? (float) $r['chg_4w'] : null,
+                'chg_12w'         => $r['chg_12w'] !== null ? (float) $r['chg_12w'] : null,
+                'chg_24w'         => $r['chg_24w'] !== null ? (float) $r['chg_24w'] : null,
+                'chg_52w'         => $r['chg_52w'] !== null ? (float) $r['chg_52w'] : null,
+                'chg_ytd'         => $r['chg_ytd'] !== null ? (float) $r['chg_ytd'] : null,
+                'high_52w'        => $r['high_52w'] !== null ? (float) $r['high_52w'] : null,
+                'low_52w'         => $r['low_52w'] !== null ? (float) $r['low_52w'] : null,
+                'hl_range_pct'    => $r['hl_range_pct'] !== null ? (float) $r['hl_range_pct'] : null,
+                'chg_vs_high_52w' => $r['chg_vs_high_52w'] !== null ? (float) $r['chg_vs_high_52w'] : null,
+            ];
+        }
+        return true;
     }
 
     private function loadWindows(): void

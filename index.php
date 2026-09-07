@@ -426,6 +426,20 @@ case 'strategy_timing':
         $pageTitle = 'Stock Screener - TradingView';
         $template = 'screener';
         break;
+    case 'rw_screens':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/ZacksScreenController.php';
+        $ctrl = new ZacksScreenController();
+        $data = array_merge($data, $ctrl->listScreens());
+        $pageTitle = 'Zacks RW Screens';
+        $template = 'rw_screens';
+        break;
+    case 'run_rw_screen':
+        require_once $GLOBALS['APP_ROOT'] . '/src/Controller/ZacksScreenController.php';
+        $ctrl = new ZacksScreenController();
+        $data = array_merge($data, $ctrl->runScreen((int)($_GET['id'] ?? 0)));
+        $pageTitle = 'Run Zacks RW Screen';
+        $template = 'run_rw_screen';
+        break;
     case 'upload':
         require_once $GLOBALS['APP_ROOT'] . '/src/Controller/DocumentUploadController.php';
         $ctrl = new DocumentUploadController();

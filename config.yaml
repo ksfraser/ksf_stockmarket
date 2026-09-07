@@ -503,6 +503,13 @@ data:
   db_user:                    "ksfraser_stockmarket"
   backup_dir:                 "/root/.hermes/workspace/ksf_stockmarket/backups/"
 
+# ZACKS RESEARCH WIZARD IMPORT
+#════════════════════════════════
+zacks_rw:
+  inputs_dir:                 "/root/Inputs"     # .und/.rpd corpus directory
+  import_owner:               "zacks_rw"         # system user owning imported screens
+  max_rules_per_screen:       0                  # 0 = store all rules
+
 logging:
   level:                      "INFO"
   log_dir:                    "/root/.hermes/workspace/ksf_stockmarket/logs/"

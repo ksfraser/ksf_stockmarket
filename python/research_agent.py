@@ -143,7 +143,7 @@ def fetch_atr_top_results(conn: Any, limit: int = 10) -> List[Dict[str, Any]]:
     """Recommended ATR multiple per symbol (lowest bounce-back rate first)."""
     cursor = conn.cursor(dictionary=True)
     cursor.execute(f"""
-        SELECT symbol, atr_multiple, bounce_back_rate, n_drops, avg_recovery_days, max_drawdown_atr
+        SELECT symbol, atr_multiple, bounce_back_rate, n_drops, max_drawdown_atr, avg_recovery_days
         FROM `atr_stop_optimization`
         WHERE recommended = 1
         ORDER BY bounce_back_rate ASC
@@ -201,10 +201,10 @@ def build_internal_brief(conn: Any) -> Dict[str, Any]:
         for r in atr_top[:5]:
             sections.append(
                 f"- **{r['symbol']}** stop={r['atr_multiple']}× "
-                f"bounce_back_rate={r['bounce_back_rate']}% "
-                f"n_drops={r['n_drops']} "
-                f"avg_recovery={r['avg_recovery_days']}d "
-                f"max_drawdown={r['max_drawdown_atr']} ATR"
+                f"bounce-back={r['bounce_back_rate']*100:.1f}% "
+                f"max-DD={r['max_drawdown_atr']:.1f}atr "
+                f"({r['n_drops']} drops, "
+                f"~{r['avg_recovery_days']:.1f}d recovery"
             )
         sections.append("")
 

@@ -128,7 +128,7 @@ def resolve_for_yfinance(symbol: str, use_db_lookup: bool = True) -> str:
                 row = cur.fetchone()
                 if row and row.get('exchange'):
                     ex = str(row['exchange']).upper()
-                    if 'TSX' in ex or 'TSXV' in ex:
+                    if any(x in ex for x in ('TSX', 'TSXV', 'TOR', 'CAD')):
                         return symbol + '.TO'
         except Exception:
             pass

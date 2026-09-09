@@ -362,6 +362,245 @@ A screen backtest runs the screen on a periodic cadence (holding period H = reba
 - `stock_performance_windows` serves both the filter engine's price-change-window needs (Section 3) and the Zacks runner's window needs (chg_* columns). One table, one nightly refresh, two consumers — keep them in sync.
 - If Big Pickle's `calcZacksStyleScore()` work ends up storing Zacks scores in a table, decide whether that table duplicates `fundamentals.zacks_rank/composite/grades` or replaces it, and update both `StockFilter.php` and `ZacksFieldResolver.php` to point at the same source.
 
+---
+
+## 7b. Zacks RW screen pipeline (BR-14 / FR-14) — architecture notes
+
+This section captures the schema, data-flow, and integration points for the Zacks Research Wizard screen import + execution + signal dispatch + backtest/Advisor-portfolio work, so the filter-engine work and the Zacks pipeline work stay compatible.
+
+### 7b.1 Schema the Zacks pipeline depends on (verified live 2026-09-07)
+
+| Table | Rows (live) | Key columns | Purpose |
+|---|---|---|---|
+| `user_screens` | 194 | id, user_id, name, description, universe (enum stocks/segfunds), filters_json (longtext), is_public, is_deleted, created_at, updated_at | Stores imported `.und` screens under a dedicated system owner (`zacks_rw`); filters_json is the authoritative runnable rule set. |
+| `zacks_broker_recommendations` | 0 | id, symbol, firm, analyst, grade, price_target, action, rec_date, fetch_date, raw_json | Per-firm broker rows scraped from Zacks recommendations page; refreshed per fetch_date. |
+| `zacks_ratios_history` | 71,718 | id, symbol, ratio_name, period_label, ratio_value, fetch_date, raw_text | Multi-year ratio series scraped from the Zacks ratios page. |
+| `stock_performance_windows` | 6,655 | id, symbol, as_of_date, anchor_date, perf_1q/2q/4q/2a/3a/5a/10a, chg_1w/4w/12w/24w/52w/ytd, high_52w, low_52w, hl_range_pct, chg_vs_high_52w, close, created_at | Precomputed price windows — both Hermes (perf_*) and RW (chg_*) sets — refreshed nightly; runtime fallback in ZacksUniverse when absent/stale. Unique on (symbol, as_of_date). |
+| `fundamentals` | 17,131 | symbol, fetch_date, + 30 zacks_* columns (zacks_rank, zacks_rank_text, zacks_composite, zacks_value_grade, zacks_growth_grade, zacks_momentum_grade, zacks_vgm_grade, zacks_eps_change_f1_4w, _f1_12w, _f2_4w, _f2_1w, _f1_1w, zacks_eps_growth_q0_q4, _5yr, _lt_3_5yr, zacks_eps_pct_change_f1_f0, _f2_f1, zacks_sales_growth_reported_q, zacks_roi, zacks_net_profit_margin, zacks_lt_debt_capital_pct, zacks_num_analysts, zacks_price_change_52w/12w/24w/4w, zacks_recommendation, zacks_asset_turnover_ttm, zacks_fcf_f0, zacks_inventory_turnover_5yr) | Latest-fetch per-symbol Zacks valuation + EPS-revision + ratio data; also the target for ZacksRankPopulator's composite/rank/grades. |
+| `alert_queue` | — | id, alert_type, symbol, severity, payload (JSON), status, created_at | Target for `zacks_signal_dispatcher.py` EPS-revision signals. |
+| `symbol_master` | 3,923 | symbol, is_active, exchange, sector, industry, name, ... | Active-symbol universe source. |
+| `stockprices` | 10,748,066 | symbol, price_date, open, high, low, close, volume, adj_close, dividend, split_ratio, currency | Price history — the sole source for all window calculations. |
+
+All four Zacks-side tables (`user_screens`, `zacks_broker_recommendations`, `zacks_ratios_history`, `stock_performance_windows`) exist on the live DB with the columns above. All 30 `zacks_*` columns exist in `fundamentals`. No schema migration is required to run the pipeline today — the code creates `zacks_ratios_history` and `zacks_broker_recommendations` via `CREATE TABLE IF NOT EXISTS` at scrape time, and `refresh_perf_windows.php` creates `stock_performance_windows` the same way. For production discipline, the recommended next step is a versioned migration that declares all four tables + the zacks_* columns explicitly (see remaining work 7b.x).
+
+### 7b.2 Data flow (nightly pipeline)
+
+```
+zacks_scraper.py --all
+  ├─ fetch main page   → fundamentals (valuation + zacks_* + EPS revision deltas)
+  ├─ fetch ratios page → zacks_ratios_history
+  ├─ fetch recs page   → zacks_broker_recommendations
+  └─ fetch estimates   → fundamentals zacks_eps_change_f1_1w/4w, f2_1w/4w, forward_eps
+
+ZacksRankPopulator::populateAll()
+  └─ reads latest fundamentals + stock_performance_windows → writes zacks_rank/composite/grades
+
+scripts/refresh_perf_windows.php
+  └─ recomputes stock_performance_windows for CURDATE() anchor; prunes to last 14 as_of dates
+
+zacks_signal_dispatcher.py
+  └─ reads latest fetch_date per symbol with EPS data → top-5 bullish + top-5 bearish → Discord + alert_queue
+
+(ZacksScreenImporter — separate, on-demand or pre-imported)
+  └─ .und files → user_screens.filters_json (engine='zacks_rw')
+
+(ZacksScreenRunner + ZacksScreenController — on-demand or scheduled)
+  └─ user_screens row → ZacksUniverse → evaluate rules → matched symbols + skipped report
+```
+
+### 7b.3 Field contract (single source of truth)
+
+`src/Util/ZacksFieldResolver.php` SPECS table is the contract between RW field codes and live data sources. It maps each supported code to (semantic, type, source, key, approx). Sources are: `base` (symbol_master), `price` (latest stockprices), `fund` (latest fundamentals), `win` (computed price windows), `vol20` (20d average volume, in-memory only), `formula` (derived). Codes not in SPECS are stored faithfully by the importer but reported as skipped by the runner.
+
+### 7b.4 Window anchoring (must be identical across nightly + runtime)
+
+Universe anchor = `MAX(price_date)` across `stockprices` at universe-build time. For a W-week window, historical close = `close` at `MAX(price_date) WHERE symbol = s AND price_date <= anchor - W weeks`. YTD = first close with `price_date >= year(anchor)-01-01`. 52w high/low = MAX/MIN close over `price_date >= anchor - 52 weeks`. `refresh_perf_windows.php` and `ZacksUniverse::loadWindows()` must use identical logic.
+
+### 7b.5 Zacks-style rank is an approximation
+
+`ZacksRankPopulator` computes a local VGM-style composite (0.40·Value + 0.30·Growth + 0.20·Momentum + 0.10·VGM) and maps the percentile to a 1–5 rank (top 5%→1, next 25%→2, middle 40%→3, next 25%→4, bottom 5%→5). This is NOT a genuine Zacks Rank feed. Any UI that shows `zacks_rank` must make this distinction visible (the detail partial `templates/partials/detail/zacks.php` renders the composite; the requirement spec FR-14 §1.2 calls this out).
+
+### 7b.6 Backtest / Advisor portfolio model
+
+A screen backtest runs the screen on a periodic cadence (holding period H = rebalance cadence), sells all prior holdings and buys the new set at each rebalance, applies optional stop-loss/trailing-stop, prices from `stockprices.close` at each rebalance date, and reports the full RW-equivalent stat set (total compounded return %/$, CAGR, win ratio, avg stocks held, avg turnover, stops, avg/largest winning & losing period, max drawdown, avg/best/worst winning & losing stretches). A running Advisor portfolio uses the same model but persists state between runs so stats accumulate over the portfolio's life rather than being a closed historical simulation. Both report the same stat categories.
+
+### 7b.7 Files involved (Zacks pipeline)
+
+| File | Role |
+|---|---|
+| `python/zacks_scraper.py` | Fetches Zacks pages, parses, upserts fundamentals + ratios + broker recs |
+| `src/Util/ZacksFieldResolver.php` | RW field-code → live-source contract (SPECS table) |
+| `src/Util/ZacksRwConfig.php` | Reads `zacks_rw:` block from config.yaml (inputs_dir, import_owner, max_rules_per_screen) |
+| `src/Service/ZacksUniverse.php` | Builds live universe (base/price/fund/win/vol20) with fallback from precomputed windows |
+| `src/Service/ZacksScreenImporter.php` | Parses `.und` files, upserts `user_screens` rows |
+| `src/Service/ZacksScreenRunner.php` | Evaluates stored rules against a universe (AND/OR grouping, rank operators, skip semantics) |
+| `src/Service/ZacksRankPopulator.php` | Computes Zacks-style composite + rank + grades, writes fundamentals |
+| `src/Controller/ZacksScreenController.php` | `?action=rw_screens` list + `?action=run_rw_screen&id=N` run |
+| `scripts/import_zacks_screens.php` | CLI entrypoint for import (optionally also runs rank populator) |
+| `scripts/refresh_perf_windows.php` | Nightly window pre-compute + prune |
+| `templates/rw_screens.php` | Screens list UI |
+| `templates/run_rw_screen.php` | Run-result UI |
+| `templates/zacks_eps_screener.php` | EPS-revision screener UI (bullish/bearish, min delta, limit) |
+### 7b.8 Integration points with the filter engine
+
+- `StockFilter.php` exposes zacks_* fundamental columns as filterable (added in the 2026-09-05 corrections). The Zacks pipeline populates those columns, so the filter engine and the Zacks pipeline share the same data.
+- `stock_performance_windows` serves both the filter engine's price-change-window needs (Section 3) and the Zacks runner's window needs (chg_* columns). One table, one nightly refresh, two consumers — keep them in sync.
+- If Big Pickle's `calcZacksStyleScore()` work ends up storing Zacks scores in a table, decide whether that table duplicates `fundamentals.zacks_rank/composite/grades` or replaces it, and update both `StockFilter.php` and `ZacksFieldResolver.php` to point at the same source.
+
+---
+
+## 7c. Stock price storage refactor (BR-15 / FR-15) — architecture notes
+
+This section captures the per-symbol / per-exchange storage design so the price-storage refactor and the filter-engine / Zacks-pipeline work stay compatible. The guiding constraint: **the DB host has requested the database stay under 1 GB**, and today `stockprices` (10.7M rows, ~174 MB, ~93% of DB size) is the only table that matters for size. Everything else (fundamentals, zacks_*, perf windows, symbol_master, user_screens, settings) is collectively a few MB.
+
+### 7c.1 Why split price storage
+
+- No cross-symbol price calculations exist in the current code — prices are used for per-symbol lookups (latest close, MACD, per-symbol return windows) and the precomputed window table. Cross-symbol work is limited to comparisons (sector-relative, exchange-relative) that read the *recent* table or the precomputed window table.
+- `symbol_master.exchange` is a stable, first-class attribute. Routing by exchange is formulaic and already mirrors how the exchange databases are organized (`ksfraser_sm_tsx`, `_nasdaq`, `_nyse`, `_v`, `_cse`, `_amex`).
+- The price-history schema has been stable for 5+ years — splitting into per-symbol tables does not increase schema-change risk.
+
+### 7c.2 Exchange database inventory (live-verified, 2026-09-09)
+
+| Database (to-be) | exchange value(s) routed here | Active symbols (live) | Notes |
+|---|---|---|---|
+| `ksfraser_sm_tsx` | TSX | 880 | |
+| `ksfraser_sm_nasdaq` | NASDAQ | 2,691 | Largest; monitor size |
+| `ksfraser_sm_nyse` | NYSE, NYQ (and AMEX-coded if any appear) | 184 | NYSE + NYSE-American |
+| `ksfraser_sm_v` | TSX.V | 15 | |
+| `ksfraser_sm_cse` | CSE | 0 (today) | Future-proofing |
+| `ksfraser_sm_amex` | AMEX | 0 (today) | Future-proofing |
+| `ksfraser_sm_other` | OTC, TOR, EUR, GBP, CNY, HKD, and all other minor codes | ~20 | Fallback for exchanges without a dedicated DB |
+
+The `cse` and `amex` databases have zero active symbols today but are created anyway so the routing table is complete and future symbols land correctly without a schema change.
+
+### 7c.3 Per-symbol history table
+
+Inside each exchange database, each active symbol gets its own table:
+
+```sql
+CREATE TABLE stockprices_<symbol> (
+    price_date     DATE            NOT NULL,
+    open           DOUBLE          NULL,
+    high           DOUBLE          NULL,
+    low            DOUBLE          NULL,
+    close          DOUBLE          NULL,
+    volume         BIGINT          NULL,
+    adj_close      DOUBLE          NULL,
+    dividend       DOUBLE          DEFAULT 0,
+    split_ratio    DOUBLE          DEFAULT 1,
+    split_factor   DOUBLE          DEFAULT 1,  -- cumulative factor as of this row
+    currency       VARCHAR(3)      NOT NULL DEFAULT 'USD',
+    PRIMARY KEY (price_date),
+    INDEX idx_close (close)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+`<symbol>` is the sanitized symbol string from `symbol_master.symbol`, composed by the routing layer. `split_factor` is the cumulative split adjustment factor as of this row — see §7c.6.
+
+### 7c.4 Recent (cross-symbol) price table per exchange
+
+One table per exchange database holding the last N days (1 year / 200 trading days) of prices for all active symbols in that exchange — the table the filter engine, screen runner, MACD, and Advisor backtest hit for "current" price work:
+
+```sql
+CREATE TABLE stockprices_recent_<exchange> (
+    symbol         VARCHAR(20)     NOT NULL,
+    price_date     DATE            NOT NULL,
+    open           DOUBLE          NULL,
+    high           DOUBLE          NULL,
+    low            DOUBLE          NULL,
+    close          DOUBLE          NULL,
+    volume         BIGINT          NULL,
+    adj_close      DOUBLE          NULL,
+    dividend       DOUBLE          DEFAULT 0,
+    split_ratio    DOUBLE          DEFAULT 1,
+    PRIMARY KEY (symbol, price_date),
+    INDEX idx_date (price_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+Retention: keep the last **1 year** of daily prices (or last **200 trading days** for indicators like MACD 200). When a new row is inserted for a symbol, the oldest row beyond the retention window is dropped. This keeps the recent table bounded and small.
+
+### 7c.5 Routing (formulaic from symbol_master)
+
+`SymbolTableRouter::routeForSymbol(string $symbol)` returns `(db_name, history_table, recent_table, exchange, connection)`. The db name comes from `symbol_master.exchange` via the exchange→db mapping; the history table is `'stockprices_' . sanitized_symbol`; the recent table is `'stockprices_recent_' . exchange_suffix`. No consumer hardcodes a database or table name. The exchange→db mapping is derived from the live `symbol_master.exchange` values and regenerated if a new exchange appears.
+
+### 7c.6 Adjusted prices and split-factor tracking
+
+The existing `stockprices` has `adj_close` and `split_ratio` but no explicit cumulative split-factor tracking. The refactor adds `split_factor` per row (cumulative factor as of that row) so `adj_close` is always derivable and auditable:
+- `split_factor` on row N = `split_factor` on row N-1 × `split_ratio` on row N (cumulative product of all split ratios through this row).
+- `adj_close = close / split_factor` (convention: cumulative factor starts at 1 and is multiplied by each split_ratio on a split row).
+- `symbol_master.split_factor_current` = `split_factor` from the latest row for the symbol — cached convenience so the latest adjusted close is always available without scanning the whole table.
+- Nightly ingestion recomputes `adj_close` and `split_factor` for the new row from the prior row's `split_factor` × the new row's `split_ratio`.
+- Backfill: during migration, compute `split_factor` history from the existing `split_ratio` column in the old `stockprices`.
+
+### 7c.7 Nightly ingestion (dual-write, per-exchange transaction)
+
+For each new price row:
+1. Resolve the route for the symbol.
+2. Begin a transaction on the exchange database (which contains both the per-symbol table and the recent table — same DB, so one transaction covers both).
+3. Insert/replace into `stockprices_<symbol>`.
+4. Insert/replace into `stockprices_recent_<exchange>`.
+5. If the recent table exceeds retention for this symbol, delete the oldest row for this symbol.
+6. Update `symbol_master.split_factor_current` if the new `split_factor` is higher.
+7. Commit.
+
+Both writes are in the same database and same transaction — atomicity is guaranteed per symbol per night. No cross-database transaction is needed.
+
+### 7c.8 Precomputed performance windows — refresh cadence change
+
+The price-change windows and fundamental-based scores move to their own tables with a changed cadence:
+- **Short windows (1Q, 4W, 12W, 24W, 52W, YTD):** refreshed nightly from the recent table via a lightweight rollup (cheap: small table, bounded rows per symbol).
+- **Long windows (2Y, 3Y, 5Y, 10Y):** recalculated **quarterly** or after earnings release for the symbol, stored in `stock_performance_windows` with `last_recomputed`.
+- **Buffett-tenet / fundamental-based scores:** recalculated **quarterly** or **after earnings**, stored in their own table(s) with `last_recomputed`.
+
+This cuts nightly compute for long windows from "all symbols every night" to "only symbols that had an earnings release or hit a quarterly boundary."
+
+### 7c.9 Zacks data (current only — no history)
+
+Zacks ratings and fundamental attributes are **point-in-time only**. There is no historical Zacks rating archive available, and Zacks does not expose a feed that lets us see what rank a stock had on a past date. The `zacks_*` columns in `fundamentals` remain latest-fetch only. This is accepted as a limitation. (If a historical Zacks feed becomes available in the future, it would get its own archive table in the relevant exchange DB.)
+
+### 7c.10 Centralized schema management
+
+All price-table schema operations go through a centralized schema manager — never raw SQL with hardcoded table names:
+- `SchemaManager::ensurePriceHistoryTable($symbol, $exchange)` — creates `stockprices_<symbol>` if absent.
+- `SchemaManager::ensureRecentTable($exchange)` — creates `stockprices_recent_<exchange>` if absent.
+- `SchemaManager::ensureExchangeDatabase($exchange)` — creates the exchange DB if absent.
+- `SchemaManager::dropPriceHistoryTable($symbol, $exchange)` — drops a per-symbol table on permanent symbol removal.
+
+### 7c.11 Integration with filter engine and Zacks pipeline
+
+- The filter engine and Zacks screen runner read prices through `StockPriceRepository` (the router-backed repository), not directly from `stockprices`. The recent table is the primary source for "current" price work; `stock_performance_windows` is the source for precomputed windows.
+- The Zacks pipeline reads `fundamentals.zacks_*` (latest-fetch) and `stock_performance_windows` (precomputed) — unaffected by the price-storage split except that `stock_performance_windows` is now refreshed on a changed cadence (short windows nightly, long windows quarterly).
+- The Advisor backtest reads prices through the repository; where it needs cross-symbol price history in one query, it uses a scratch table (validated in UC-15e). We audit the backtest in the follow-up phase to confirm no path truly needs the old monolithic `stockprices`.
+
+### 7c.12 DB size picture (live-verified, 2026-09-09)
+
+The current `ksfraser_stock_market` database is approximately **187 MB** total. The breakdown that matters:
+
+| Table | Rows (live) | Approx. size | % of DB |
+|---|---|---|---|
+| `stockprices` | 10,748,066 | ~174 MB | ~93% |
+| `symbol_master` | 3,923 | small | <1% |
+| `fundamentals` | 17,131 | small | <1% |
+| `zacks_ratios_history` | 71,718 | small | <1% |
+| `stock_performance_windows` | 6,655 | small | <1% |
+| `user_screens` | 194 | tiny | <1% |
+| All other tables (lippper_scores, evalsummary, settings, auth, etc.) | — | collectively a few MB | <5% |
+
+**Implication:** Moving `stockprices` out of the primary DB into the per-exchange databases is the change that addresses the host's size concern. After migration, the primary DB drops from ~187 MB to well under 10 MB (everything except `stockprices`). Each exchange DB is individually smaller and manageable; the largest (NASDAQ, 2,691 symbols) is the one to monitor. The recent tables are bounded by retention (1 year / 200 days), so they never grow unbounded.
+
+### 7c.13 Migration sequence (high level)
+
+1. Create exchange databases + per-symbol tables + recent tables (schema manager).
+2. Migrate existing `stockprices` rows into per-symbol history tables (with `split_factor` backfill) and recent tables (last N days) — `migrate_prices_to_exchange_dbs.php`.
+3. Cut over reads to `StockPriceRepository` (router-based).
+4. Switch nightly ingestion to dual-write.
+5. Deploy the changed performance-window refresh cadence (short nightly, long quarterly).
+6. Trim / drop the old `stockprices` table from the primary DB once reads are fully cut over.
+7. Backtest cross-symbol audit (UC-15e) — confirm Advisor/portfolio code works against the new storage.
+
+---
+
 ## 8. Validation performed
 
 - DB connection verified live from this host (192.168.1.102 → ksfraser.ca:3306) using the app's actual credentials from `config.yaml`/`database.php` (`ksfraser_stockmarket` / `Zaqwsx9sm1@`)
@@ -369,6 +608,9 @@ A screen backtest runs the screen on a periodic cadence (holding period H = reba
 - Full schema inventory SQL run against all relevant tables (counts, columns, samples for `symbol_performance`, `performance_history`, `evalsummary`, `lippper_scores`, `fundamentals`)
 - `StockFilter::filterOptions()` verified to return correct shape (with real `symbol_master` exchange/sector lists pulled live)
 - `StockFilter::buildWhere()` verified to produce valid SQL for all filter scenarios (base, search, exchange, sector, price-change windows, score, recommendation, fundamentals, market cap, OR mode, bucket placeholders)
+- **New (2026-09-09):** exchange inventory from `symbol_master` verified live — 25 distinct exchange values; 6 primary exchange databases mapped; NASDAQ 2,691 / TSX 880 / NYSE+NQY 184 are the big three; CSE/AMEX have 0 active symbols today.
+
+---
 
 ## 9. Remaining work (not done in this session)
 
@@ -389,6 +631,21 @@ A screen backtest runs the screen on a periodic cadence (holding period H = reba
 7. **Signal-dispatch end-to-end** — run `zacks_signal_dispatcher.py` against the live DB to confirm Discord webhook resolution, top-5 selection, send + insert behavior, and the no-signals summary path.
 8. **Unit tests per UT-14** (FR-14 §8) — `ZacksFieldResolver`, `ZacksScreenRunner` evaluation/grouping/rank/skips, `ZacksRankPopulator::scoreFor`/`rankForPercentile`, window calculation helper, dispatcher pure logic.
 
+### 9.3 Stock price storage refactor (BR-15 / FR-15) — new
+
+1. **`SymbolTableRouter`** — implement the routing helper that derives (db, history table, recent table, exchange) from `symbol_master.exchange` + `symbol_master.symbol`. Must handle the 25 distinct exchange values and the `ksfraser_sm_other` fallback for minor exchanges.
+2. **`StockPriceRepository`** — implement per-symbol and recent price reads/writes via the router; migrate all existing `stockprices` readers to use this repository.
+3. **`PriceIngestionService` dual-write** — update nightly ingestion to write to both the per-symbol history table and the recent table in a per-exchange transaction, and trim the recent table to retention.
+4. **`SchemaManager`** — implement the centralized CREATE/ALTER/DROP layer for price tables; eliminate all raw SQL with hardcoded `stockprices_<symbol>` or `ksfraser_sm_<exchange>` names.
+5. **`symbol_master.split_factor_current`** — add the column and keep it updated by the ingestion service.
+6. **`split_factor` backfill** — compute cumulative split factors from the existing `split_ratio` column during migration; verify adjusted-price accuracy for split-history symbols.
+7. **Performance-window cadence change** — implement quarterly / post-earnings recalculation for long windows and tenet-based scores; implement nightly short-window rollup from the recent table.
+8. **`config.yaml` per-exchange DB blocks** — add connection config for each exchange database (or a single block + exchange→db mapping).
+9. **Migration script** — `migrate_prices_to_exchange_dbs.php` to split the existing `stockprices` into per-symbol + recent tables across exchange databases.
+10. **Backtest cross-symbol audit (UC-15e)** — review Advisor backtest / portfolio-selection code for cross-symbol price queries; add scratch tables where needed; verify results match pre-refactor behavior.
+
 ---
 
-*Generated: 2026-09-05. Based on live DB inventory from ksfraser_stock_market (MariaDB 10.6.27) on ksfraser.ca.*
+## 10. Source material for this update
+
+- BR-15 / FR-15 / UC-15a–e written alongside this update (see `docs/requirements/BR-15-stock-price-storage-refactor.md`, `FR-15-stock-price-storage-refactor.md`, `UC-15-stock-price-storage-refactor.md`).

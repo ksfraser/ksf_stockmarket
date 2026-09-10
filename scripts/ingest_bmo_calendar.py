@@ -12,7 +12,8 @@ The local schema only stores yr_2019..yr_2025, so 2016/2017/2018 are dropped.
 Matching: by fund_name (exact, then normalized lower/collapse-space fallback).
 Reports matched / unmatched so gaps are visible.
 """
-import os, re, sqlite3, sys
+import os, re, sys
+import segfund_db
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
@@ -55,27 +56,31 @@ def load_portal():
 def main():
     portal = load_portal()
     print(f"portal funds loaded: {len(portal)}")
-    if not os.path.exists(DB_PATH):
-        print("DB not found:", DB_PATH)
+    conn, backend = segfund_db.get_conn()
+    # The local SQLite cache is only a fallback now (MySQL is primary); do not
+    # block when MySQL is the target. Only hard-fail if we're forced onto the
+    # local cache and it is genuinely absent.
+    if backend == "sqlite" and not os.path.exists(DB_PATH):
+        print("Local SQLite cache not found:", DB_PATH)
         sys.exit(1)
-    con = sqlite3.connect(DB_PATH)
-    cur = con.cursor()
+
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
+
     # find BMO carrier id
-    cur.execute("SELECT carrier_id, name FROM carriers WHERE lower(name) LIKE '%bmo%'")
-    carriers = cur.fetchall()
+    carriers = q("SELECT carrier_id, name FROM carriers WHERE lower(name) LIKE '%bmo%'").fetchall()
     print("BMO carriers:", carriers)
     if not carriers:
         print("no BMO carrier row")
         sys.exit(1)
     bmo_ids = [c[0] for c in carriers]
     ph = ",".join("?" * len(bmo_ids))
-    cur.execute(
+    rows = q(
         f"""SELECT fs.series_id, fs.series_name, f.fund_name, fs.series_code
             FROM fund_series fs JOIN funds f ON f.fund_id=fs.fund_id
             WHERE f.carrier_id IN ({ph})""",
         bmo_ids,
-    )
-    rows = cur.fetchall()
+    ).fetchall()
     print(f"local BMO series: {len(rows)}")
 
     by_series = {norm(r[1]): r for r in rows}
@@ -97,11 +102,11 @@ def main():
             sets.append(f"yr_{yr}=?")
             params.append(rec.get(yr))
         params.append(sid)
-        cur.execute(f"UPDATE fund_series SET {','.join(sets)} WHERE series_id=?", params)
+        q(f"UPDATE fund_series SET {','.join(sets)} WHERE series_id=?", params)
         updated += 1
 
-    con.commit()
-    con.close()
+    conn.commit()
+    conn.close()
     print(f"matched: {matched}  updated: {updated}  unmatched: {len(unmatched)}")
     if unmatched:
         print("--- UNMATCHED (first 30) ---")

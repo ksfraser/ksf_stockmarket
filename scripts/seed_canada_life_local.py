@@ -17,7 +17,8 @@ seeder adds the well-sourced Fundata shelf as a separate, comparable dataset.
 Returns are the underlying fund calendar-year figures (volatility proxy for the
 seg-fund wrapper, which subtracts a small insurance MER).
 """
-import os, re, sqlite3, sys, json
+import os, re, sys, json
+import segfund_db
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
@@ -67,8 +68,11 @@ def to_num(v):
 def main():
     rows = json.load(open(JSON_SRC))
     print(f"loaded {len(rows)} Canada Life rows from {JSON_SRC}")
-    con = sqlite3.connect(LOCAL_DB)
-    cur = con.cursor()
+    conn, backend = segfund_db.get_conn()
+
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
+
     inserted = updated = skipped = 0
     for r in rows:
         raw = r["name"]
@@ -80,43 +84,40 @@ def main():
         yr = [to_num(r.get(f"yr_{y}")) for y in YEARS]
         mer = to_num(r.get("mer"))
         # upsert fund
-        cur.execute("SELECT fund_id FROM funds WHERE carrier_id=? AND fund_name=?",
-                    (CL_CARRIER_ID, name))
-        row = cur.fetchone()
+        row = q("SELECT fund_id FROM funds WHERE carrier_id=? AND fund_name=?",
+                (CL_CARRIER_ID, name)).fetchone()
         if row:
             fid = row[0]
         else:
-            cur.execute(
+            ins = q(
                 "INSERT INTO funds (family_id, carrier_id, fund_name, fund_name_clean, category, is_active) "
                 "VALUES (0,?,?,?,?,1)",
                 (CL_CARRIER_ID, name, name, category(name)),
             )
-            fid = cur.lastrowid
+            fid = ins.lastrowid
             inserted += 1
         # upsert series
-        cur.execute("SELECT series_id FROM fund_series WHERE fund_id=? AND series_code=?",
-                    (fid, code))
-        srow = cur.fetchone()
+        srow = q("SELECT series_id FROM fund_series WHERE fund_id=? AND series_code=?",
+                 (fid, code)).fetchone()
         if srow:
-            cur.execute(
+            q(
                 "UPDATE fund_series SET yr_2019=?,yr_2020=?,yr_2021=?,yr_2022=?,yr_2023=?,yr_2024=?,yr_2025=?,"
                 "mer=?,series_name=?,updated_at=datetime('now') WHERE series_id=?",
                 (yr[0], yr[1], yr[2], yr[3], yr[4], yr[5], yr[6], mer, name, srow[0]),
             )
             updated += 1
         else:
-            cur.execute(
+            q(
                 "INSERT INTO fund_series (fund_id, series_code, series_name, load_type, mer, "
                 "yr_2019, yr_2020, yr_2021, yr_2022, yr_2023, yr_2024, yr_2025) "
                 "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                 (fid, code, name, None, mer, yr[0], yr[1], yr[2], yr[3], yr[4], yr[5], yr[6]),
             )
-    con.commit()
-    cur.execute(
+    conn.commit()
+    have = q(
         "SELECT COUNT(*) FROM fund_series fs JOIN funds f ON f.fund_id=fs.fund_id "
-        "WHERE f.carrier_id=? AND yr_2025 IS NOT NULL", (CL_CARRIER_ID,))
-    have = cur.fetchone()[0]
-    con.close()
+        "WHERE f.carrier_id=? AND yr_2025 IS NOT NULL", (CL_CARRIER_ID,)).fetchone()[0]
+    conn.close()
     print(f"inserted {inserted} new funds, updated {updated} series, skipped {skipped}; "
           f"Canada Life series with yr_2025 populated: {have}")
 

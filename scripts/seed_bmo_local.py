@@ -13,7 +13,8 @@ inserts BMO from scratch (idempotent: clears existing BMO first).
 NOTE: production min_initial_investment is NULL for BMO, so series minimums use the
 class heuristic (Class F / Prestige / Plus => fee-based ~100k; Class A => 0).
 """
-import os, re, sqlite3, sys, decimal
+import os, re, sys, decimal
+import segfund_db
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
@@ -75,27 +76,23 @@ def fnum(x):
 
 def main():
     portal = load_portal()
-    sys.path.insert(0, REPO)
-    from python.db_connector import get_connection
-    pc = get_connection()
-    pcur = pc.cursor()
-    pcur.execute(
+    conn, backend = segfund_db.get_conn()
+
+    def q(sql, params=()):
+        return segfund_db.run(conn, backend, sql, params)
+
+    prows = q(
         """SELECT fund_name, carrier, series, category, mer, mer_pct, load_type,
                   min_initial_investment, launch_date, return_1yr, return_3yr, return_5yr,
                   return_10yr, return_inception, fund_code
            FROM seg_funds WHERE carrier='BMO'"""
-    )
-    prows = pcur.fetchall()
-    pc.close()
+    ).fetchall()
     print(f"production BMO rows: {len(prows)}")
 
-    lc = sqlite3.connect(LOCAL_DB)
-    lcur = lc.cursor()
-    lcur.execute("SELECT fund_id FROM funds WHERE carrier_id=?", (BMO_CARRIER_ID,))
-    fids = [r[0] for r in lcur.fetchall()]
+    fids = [r[0] for r in q("SELECT fund_id FROM funds WHERE carrier_id=?", (BMO_CARRIER_ID,)).fetchall()]
     if fids:
-        lcur.execute("DELETE FROM fund_series WHERE fund_id IN (%s)" % ",".join("?" * len(fids)), fids)
-        lcur.execute("DELETE FROM funds WHERE carrier_id=?", (BMO_CARRIER_ID,))
+        q("DELETE FROM fund_series WHERE fund_id IN (%s)" % ",".join("?" * len(fids)), fids)
+        q("DELETE FROM funds WHERE carrier_id=?", (BMO_CARRIER_ID,))
         print(f"cleared {len(fids)} existing local BMO funds")
 
     ins_f = "INSERT INTO funds (family_id, carrier_id, fund_name, fund_name_clean, category, inception_date, is_active) VALUES (0,?,?,?,?,?,1)"
@@ -119,13 +116,13 @@ def main():
         launch = p[8]
         ret1y, ret3y, ret5y, ret10y, retincept = (fnum(p[9]), fnum(p[10]), fnum(p[11]), fnum(p[12]), fnum(p[13]))
         gua = parse_guarantee(fname)
-        lcur.execute(ins_f, (BMO_CARRIER_ID, fname, fname, category, launch))
-        fid = lcur.lastrowid
+        ins = q(ins_f, (BMO_CARRIER_ID, fname, fname, category, launch))
+        fid = ins.lastrowid
         yr = [rec.get(y) for y in YEARS]
-        lcur.execute(ins_s, (fid, p[2] or p[14], fname, p[6], mer, gua,
-                              ret1y, ret3y, ret5y, ret10y, retincept, *yr))
-    lc.commit()
-    lc.close()
+        q(ins_s, (fid, p[2] or p[14], fname, p[6], mer, gua,
+                   ret1y, ret3y, ret5y, ret10y, retincept, *yr))
+    conn.commit()
+    conn.close()
     print(f"seeded matched: {matched}  unmatched: {len(unmatched)}")
     for u in unmatched[:20]:
         print("  unmatched:", u)

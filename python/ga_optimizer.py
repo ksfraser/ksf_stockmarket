@@ -5,17 +5,18 @@ ga_optimizer.py — Genetic Algorithm optimizer for retirement portfolio.
 Uses DEAP to evolve population of portfolio allocations.
 Fitness = after-tax terminal value − λ × max_drawdown − penalty × cash_depletion
 
-Walk-forward: train on 2014-2018, test on 2019-2024, step forward 1 year.
+Walk-forward: train on 1990-2018, test on 2019-2024, step forward 1 year.
 
 Usage:
-    python3 ga_optimizer.py [--train-start 2014] [--train-end 2018] [--test-start 2019] [--test-end 2024]
+    python3 ga_optimizer.py [--train-start 1990] [--train-end 2018] [--test-start 2019] [--test-end 2024]
 """
 import sys, os, json, argparse, random, time
 import numpy as np
-import pymysql
 from datetime import date
 
 sys.path.insert(0, os.path.dirname(__file__))
+from db import Database, MySQLAdapter, SQLiteAdapter
+
 from config_loader import Config
 from retirement_simulator import RetirementSimulator, SimConfig
 
@@ -27,14 +28,13 @@ except ImportError:
 # Credentials loaded from Ansible Vault via config_loader
 _cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config.yaml')
 _cfg = Config(_cfg_path) if os.path.exists(_cfg_path) else Config()
-MYSQL = dict(
-    host=_cfg.data.db_host,
-    user=_cfg.data.db_user,
-    password=_cfg.db_password,
-    database=_cfg.data.db_name,
-    charset='utf8mb4',
-    cursorclass=pymysql.cursors.DictCursor
-)
+db = Database(MySQLAdapter(
+        host='_cfg.data.db_host',
+        user='_cfg.data.db_user',
+        password=getattr(_cfg, 'db_password', None) or os.getenv('DB_PASSWORD', ''),
+        database='_cfg.data.db_name',
+        port=3306,
+    ))
 
 # ── Gene Encoding ──────────────────────────────────────────────────────────
 # Each individual = list of (symbol, weight) pairs + continuous params
@@ -54,8 +54,7 @@ N_CONTINUOUS = len(CONTINUOUS_PARAMS)
 
 def load_prices_from_db(symbols, start, end):
     """Load price data from MySQL."""
-    conn = pymysql.connect(**MYSQL); c = conn.cursor()
-    placeholders = ','.join(['%s'] * len(symbols))
+    conn = db.connect();     placeholders = ','.join(['%s'] * len(symbols))
     c.execute(f"SELECT symbol, price_date, close FROM stockprices "
               f"WHERE symbol IN ({placeholders}) AND price_date BETWEEN %s AND %s "
               f"ORDER BY symbol, price_date", list(symbols) + [start, end])
@@ -63,16 +62,15 @@ def load_prices_from_db(symbols, start, end):
     for r in c.fetchall():
         sym, d = r['symbol'], str(r['price_date'])
         data.setdefault(sym, {})[d] = float(r['close'])
-    conn.close()
+    
     return data
 
 
 def get_candidate_symbols(config):
     """Get symbols from screener or DB."""
-    conn = pymysql.connect(**MYSQL); c = conn.cursor()
-    c.execute("SELECT DISTINCT symbol FROM indicators_json ORDER BY symbol LIMIT 30")
+    conn = db.connect();     c.execute("SELECT DISTINCT symbol FROM indicators_json ORDER BY symbol LIMIT 30")
     syms = [r['symbol'] for r in c.fetchall()]
-    conn.close()
+    
     return syms
 
 
@@ -284,12 +282,11 @@ def run_ga(config, symbols, prices, train_start, train_end, test_start, test_end
             print(f"  Outperformance: {outperf:>+.1f}%")
 
         # Save results
-        conn = pymysql.connect(**MYSQL); c = conn.cursor()
-        c.execute("""INSERT INTO after_tax_returns 
+        conn = db.connect();         c.execute("""INSERT INTO after_tax_returns 
             (date, strategy_name, account_type, total_return, after_tax_return, tax_drag_pct)
             VALUES (CURDATE(), 'GA_optimized', 'MARGINAL', %s, %s, %s)""",
             (terminal_ga, terminal_ga, 0))
-        conn.commit(); conn.close()
+        conn.commit(); 
     else:
         test_result = None
         print("  Insufficient test data — skipping walk-forward test")
@@ -306,7 +303,7 @@ def run_ga(config, symbols, prices, train_start, train_end, test_start, test_end
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--train-start', type=int, default=2014)
+    parser.add_argument('--train-start', type=int, default=1990)
     parser.add_argument('--train-end', type=int, default=2018)
     parser.add_argument('--test-start', type=int, default=2019)
     parser.add_argument('--test-end', type=int, default=2024)

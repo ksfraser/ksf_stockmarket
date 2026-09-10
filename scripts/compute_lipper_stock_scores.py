@@ -133,69 +133,75 @@ def main():
     asof_o = asof.toordinal()
     print("as_of:", asof, "| symbols with attributes & prices:", len(pg))
 
-    # ---- per-symbol metrics ----
+    # ---- per-symbol metrics (batch-fetch prices in chunks to minimise DB round-trips) ----
     metrics = {}
-    q = "SELECT price_date, adj_close FROM stockprices WHERE symbol=%s ORDER BY price_date"
-    for s in pg:
-        cur2.execute(q, (s,))
-        rows = cur2.fetchall()
-        if not rows:
-            continue
-        pairs = [(r['price_date'].toordinal(), float(r['adj_close']))
-                 for r in rows if r['adj_close'] is not None and float(r['adj_close']) > 0]
-        if len(pairs) < 60:
-            continue
-        last_c = pairs[-1][1]
+    syms = list(pg.keys())
+    CH = 300
+    for ci in range(0, len(syms), CH):
+        chunk = syms[ci:ci + CH]
+        ph = ', '.join(['%s'] * len(chunk))
+        cur.execute(
+            f"SELECT symbol, price_date, adj_close FROM stockprices "
+            f"WHERE symbol IN ({ph}) ORDER BY symbol, price_date", chunk)
+        buf = defaultdict(list)
+        for r in cur.fetchall():
+            if r['adj_close'] is not None and float(r['adj_close']) > 0:
+                buf[r['symbol']].append((r['price_date'].toordinal(), float(r['adj_close'])))
+        for s in chunk:
+            pairs = buf.get(s, [])
+            if len(pairs) < 60:
+                continue
+            last_c = pairs[-1][1]
 
-        def close_at(years):
-            tgt = asof_o - years * 365.25
-            for d, c in reversed(pairs):
-                if d <= tgt:
-                    return c
-            return None
-
-        def ret(years):
-            c0 = close_at(years)
-            return (last_c / c0 - 1) if c0 else None
-
-        jan1 = datetime.date.fromordinal(asof_o).replace(month=1, day=1).toordinal()
-        ytd0 = None
-        for d, c in reversed(pairs):
-            if d <= jan1:
-                ytd0 = c
-                break
-        ytd = (last_c / ytd0 - 1) if ytd0 else None
-        r1, r3, r5, r10 = ret(1), ret(3), ret(5), ret(10)
-
-        win = [(d, c) for d, c in pairs if d >= asof_o - 3 * 365.25]
-        vol = dd = sharpe = sortino = None
-        if len(win) >= 60:
-            rets = [win[i][1] / win[i - 1][1] - 1 for i in range(1, len(win)) if win[i - 1][1] > 0]
-            if rets:
-                mean_r = sum(rets) / len(rets)
-                var = sum((x - mean_r) ** 2 for x in rets) / len(rets)
-                vol = math.sqrt(var) * math.sqrt(252)
-                downs = [x for x in rets if x < 0]
-                dd = math.sqrt(sum(x * x for x in downs) / len(rets)) * math.sqrt(252)
-                ann = mean_r * 252
-                sharpe = (ann - RF) / vol if vol else None
-                sortino = (ann - RF) / dd if dd else None
-
-        def monthly_neg_sum(years):
-            tgt = asof_o - years * 365.25
-            sub = [(d, c) for d, c in pairs if d >= tgt]
-            if len(sub) < 2:
+            def close_at(years):
+                tgt = asof_o - years * 365.25
+                for d, c in reversed(pairs):
+                    if d <= tgt:
+                        return c
                 return None
-            mlast = {}
-            for d, c in sub:
-                mlast[d // 30] = c
-            ms = sorted(v for v in mlast.values() if v > 0)
-            mrets = [ms[i] / ms[i - 1] - 1 for i in range(1, len(ms)) if ms[i - 1] > 0]
-            return sum(x for x in mrets if x < 0)
 
-        p3, p5, p10 = monthly_neg_sum(3), monthly_neg_sum(5), monthly_neg_sum(10)
-        metrics[s] = dict(peer_groups=pg[s], ret_1y=r1, ret_3y=r3, ret_5y=r5, ret_10y=r10, ytd=ytd,
-                          vol=vol, dd=dd, sharpe=sharpe, sortino=sortino, p3=p3, p5=p5, p10=p10)
+            def ret(years):
+                c0 = close_at(years)
+                return (last_c / c0 - 1) if c0 else None
+
+            jan1 = datetime.date.fromordinal(asof_o).replace(month=1, day=1).toordinal()
+            ytd0 = None
+            for d, c in reversed(pairs):
+                if d <= jan1:
+                    ytd0 = c
+                    break
+            ytd = (last_c / ytd0 - 1) if ytd0 else None
+            r1, r3, r5, r10 = ret(1), ret(3), ret(5), ret(10)
+
+            win = [(d, c) for d, c in pairs if d >= asof_o - 3 * 365.25]
+            vol = dd = sharpe = sortino = None
+            if len(win) >= 60:
+                rets = [win[i][1] / win[i - 1][1] - 1 for i in range(1, len(win)) if win[i - 1][1] > 0]
+                if rets:
+                    mean_r = sum(rets) / len(rets)
+                    var = sum((x - mean_r) ** 2 for x in rets) / len(rets)
+                    vol = math.sqrt(var) * math.sqrt(252)
+                    downs = [x for x in rets if x < 0]
+                    dd = math.sqrt(sum(x * x for x in downs) / len(rets)) * math.sqrt(252)
+                    ann = mean_r * 252
+                    sharpe = (ann - RF) / vol if vol else None
+                    sortino = (ann - RF) / dd if dd else None
+
+            def monthly_neg_sum(years):
+                tgt = asof_o - years * 365.25
+                sub = [(d, c) for d, c in pairs if d >= tgt]
+                if len(sub) < 2:
+                    return None
+                mlast = {}
+                for d, c in sub:
+                    mlast[d // 30] = c
+                ms = sorted(v for v in mlast.values() if v > 0)
+                mrets = [ms[i] / ms[i - 1] - 1 for i in range(1, len(ms)) if ms[i - 1] > 0]
+                return sum(x for x in mrets if x < 0)
+
+            p3, p5, p10 = monthly_neg_sum(3), monthly_neg_sum(5), monthly_neg_sum(10)
+            metrics[s] = dict(peer_groups=pg[s], ret_1y=r1, ret_3y=r3, ret_5y=r5, ret_10y=r10, ytd=ytd,
+                              vol=vol, dd=dd, sharpe=sharpe, sortino=sortino, p3=p3, p5=p5, p10=p10)
     print("computed metrics for", len(metrics), "symbols")
 
     # ---- ranking within each peer group ----
@@ -233,15 +239,19 @@ def main():
       total_return_score=VALUES(total_return_score),consistent_score=VALUES(consistent_score),
       composite_score=VALUES(composite_score),sector_rank_pct=VALUES(sector_rank_pct)"""
     cnt = 0
+    lipper_rows = []
     for (s, pgt), sc in all_scores.items():
         pgv = metrics[s]['peer_groups'].get(pgt)
         grp = by_pg[pgt].get(pgv, [])
         le = sum(1 for x in grp if all_scores.get((x, pgt), {}).get('comp', 0) <= sc['comp'])
         pct = round(le / len(grp) * 100, 2) if grp else None
         m = metrics[s]
-        cur.execute(ins, (s, pgt, pgv, asof, m['ret_1y'], m['ret_3y'], m['ret_5y'], m['ret_10y'], m['ytd'],
-                          m['vol'], m['dd'], m['sharpe'], m['sortino'], sc['pr'], sc['tr'], sc['co'], sc['comp'], pct))
+        lipper_rows.append((s, pgt, pgv, asof, m['ret_1y'], m['ret_3y'], m['ret_5y'], m['ret_10y'], m['ytd'],
+                            m['vol'], m['dd'], m['sharpe'], m['sortino'], sc['pr'], sc['tr'], sc['co'], sc['comp'], pct))
         cnt += 1
+    BATCH = 1000
+    for i in range(0, len(lipper_rows), BATCH):
+        cur.executemany(ins, lipper_rows[i:i + BATCH])
     conn.commit()
     print("stored lipper_scores:", cnt)
 

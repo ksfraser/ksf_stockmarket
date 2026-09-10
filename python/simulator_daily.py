@@ -11,30 +11,30 @@ Complete rewrite of retirement_simulator.py. Key differences:
   - Transaction cost modeling (CIBC Investor's Edge pricing)
 
 Usage:
-    python3 simulator_daily.py --start 2019-01-01 --end 2024-12-31
+    python3 simulator_daily.py --start 1990-01-01 --end 2024-12-31
 """
 
 import sys, os, json, argparse
 import numpy as np
-import pymysql
 from datetime import date, datetime, timedelta
 from dataclasses import dataclass, field
 from typing import Optional, Dict, List, Tuple
 
 sys.path.insert(0, os.path.dirname(__file__))
+from db import Database, MySQLAdapter, SQLiteAdapter
+
 from config_loader import Config
 
 # Credentials loaded from Ansible Vault via config_loader
 _cfg_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'config.yaml')
 _cfg = Config(_cfg_path) if os.path.exists(_cfg_path) else Config()
-MYSQL = dict(
-    host=_cfg.data.db_host,
-    user=_cfg.data.db_user,
-    password=_cfg.db_password,
-    database=_cfg.data.db_name,
-    charset='utf8mb4',
-    cursorclass=pymysql.cursors.DictCursor
-)
+db = Database(MySQLAdapter(
+        host='ksfraser.ca',
+        user='ksfraser_stockmarket',
+        password=getattr(_cfg, 'db_password', None) or os.getenv('DB_PASSWORD', ''),
+        database='ksfraser_stock_market',
+        port=3306,
+    ))
 
 # ── Transaction Costs (CIBC Investor's Edge) ──────────────────────────────
 COMMISSION_TSX = 0.0       # Free for TSX-listed
@@ -76,7 +76,7 @@ class DailyState:
 
 @dataclass
 class SimConfig:
-    start_date: str = '2019-01-01'
+    start_date: str = '1990-01-01'
     end_date: str = '2024-12-31'
     initial_capital: float = 50000.0
     tfsa_pct: float = 0.40     # 40% in TFSA
@@ -820,7 +820,7 @@ class WalkForwardEngine:
 # ── CLI ─────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Daily portfolio simulator')
-    parser.add_argument('--start', default='2019-01-01')
+    parser.add_argument('--start', default='1990-01-01')
     parser.add_argument('--end', default='2024-12-31')
     parser.add_argument('--capital', type=float, default=50000)
     parser.add_argument('--atr-stop', type=float, default=2.0)
@@ -830,22 +830,21 @@ if __name__ == '__main__':
     parser.add_argument('--verbose', action='store_true')
     args = parser.parse_args()
 
-    conn = pymysql.connect(**MYSQL)
-    c = conn.cursor()
-
+    conn = db.connect()
+    
     # Load prices
-    c.execute("SELECT symbol, price_date, close FROM stockprices "
+    conn.execute("SELECT symbol, price_date, close FROM stockprices "
               "WHERE price_date BETWEEN %s AND %s ORDER BY symbol, price_date",
               (args.start, args.end))
     prices = {}
-    for r in c.fetchall():
+    for r in conn.fetchall():
         prices.setdefault(r['symbol'], {})[str(r['price_date'])] = float(r['close'])
 
     # Load ATR from indicators_json
-    c.execute("SELECT symbol, price_date, data FROM indicators_json "
+    conn.execute("SELECT symbol, price_date, data FROM indicators_json "
               "WHERE price_date BETWEEN %s AND %s", (args.start, args.end))
     atr_data = {}
-    for r in c.fetchall():
+    for r in conn.fetchall():
         try:
             ind = json.loads(r['data'])
             atr = ind.get('atr_14', ind.get('atr_20', ind.get('natr_14', None)))
@@ -879,4 +878,4 @@ if __name__ == '__main__':
         sim = DailySimulator(config, prices, weights, atr_data)
         results = sim.simulate(verbose=True)
 
-    conn.close()
+    

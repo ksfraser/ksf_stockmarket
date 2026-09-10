@@ -23,6 +23,15 @@ from pathlib import Path
 _src_dir = Path(__file__).resolve().parent / 'src'
 if str(_src_dir) not in sys.path:
     sys.path.insert(0, str(_src_dir))
+
+# Ensure the repo root is importable so `import python.db_connector` works
+# regardless of how this script is invoked (e.g. `python3
+# python/ingest_screener_symbols.py` would otherwise only put `python/` on
+# sys.path, not the repo root). tv_screener.py works because it lives at the
+# repo root; this script lives inside python/.
+_repo_root = Path(__file__).resolve().parents[1]
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
 from symbol_resolver import normalize_symbol
 
 TRADING_VIEW_TABLE = "tradingview_screener_results"
@@ -99,7 +108,7 @@ def _results_for_run(conn, window_start, window_end) -> List[Dict]:
     """Return all rows whose run_at falls within the latest batch window."""
     with conn.cursor() as cur:
         cur.execute(
-            f"SELECT symbol, data FROM {TRADING_VIEW_TABLE} "
+            f"SELECT preset_name, market, symbol, data FROM {TRADING_VIEW_TABLE} "
             "WHERE run_at >= %s AND run_at <= %s",
             (window_start, window_end),
         )
@@ -109,7 +118,12 @@ def _results_for_run(conn, window_start, window_end) -> List[Dict]:
             payload = row.get("data")
             if isinstance(payload, str):
                 payload = json.loads(payload)
-            results.append({"symbol": row.get("symbol"), "payload": payload or {}})
+            results.append({
+                "preset_name": row.get("preset_name"),
+                "market": row.get("market"),
+                "symbol": row.get("symbol"),
+                "payload": payload or {},
+            })
         return results
 
 
@@ -248,10 +262,35 @@ def main() -> int:
             candidates[norm] = r.get("payload") or {}
             if norm != raw:
                 with conn.cursor() as cur:
+                    # A canonical (preset_name, market, norm) row may already
+                    # exist: TradingView often emits the same security under two
+                    # spellings across runs (e.g. 'SF/PB' and 'SF-PB'). Folding
+                    # the fresh raw payload into the canonical row and dropping
+                    # the redundant variant keeps the unique key intact without
+                    # losing screening data.
                     cur.execute(
-                        f"UPDATE {TRADING_VIEW_TABLE} SET symbol=%s WHERE symbol=%s",
-                        (norm, raw),
+                        f"SELECT id FROM {TRADING_VIEW_TABLE} "
+                        "WHERE preset_name=%s AND market=%s AND symbol=%s",
+                        (r.get("preset_name"), r.get("market"), norm),
                     )
+                    canon = cur.fetchone()
+                    if canon:
+                        cur.execute(
+                            f"UPDATE {TRADING_VIEW_TABLE} SET data=%s, run_at=NOW() "
+                            "WHERE id=%s",
+                            (json.dumps(r.get("payload") or {}), canon["id"]),
+                        )
+                        cur.execute(
+                            f"DELETE FROM {TRADING_VIEW_TABLE} "
+                            "WHERE preset_name=%s AND market=%s AND symbol=%s",
+                            (r.get("preset_name"), r.get("market"), raw),
+                        )
+                    else:
+                        cur.execute(
+                            f"UPDATE {TRADING_VIEW_TABLE} SET symbol=%s "
+                            "WHERE preset_name=%s AND market=%s AND symbol=%s",
+                            (norm, r.get("preset_name"), r.get("market"), raw),
+                        )
         conn.commit()
         if not candidates:
             print("No valid candidate symbols")

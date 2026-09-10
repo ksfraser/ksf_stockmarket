@@ -1,0 +1,95 @@
+# BMO segregated fund Calendar Year Returns — page 3 — source digital.lipperweb.com/bmoinsurance (LSEG Lipper), as of 2026-07-31
+# columns: fund_name | 2025 | 2024 | 2023 | 2022 | 2021 | 2020 | 2019 | 2018 | 2017 | 2016
+# "-" = not available (pre-inception / N/A)
+BMO Monthly High Income II GIF 75/75 Class F|26.88|11.46|6.09|0.03|29.18|-7.01|18.06|-|-|-
+BMO Monthly High Income II GIF 75/75 Class F Prestige|27.29|11.83|-|-|-|-|-|-|-|-
+BMO Monthly Income GIF 100/100 Class A|8.84|9.85|6.02|-10.75|9.78|2.56|12.07|-3.60|-|-
+BMO Monthly Income GIF 100/100 Class A Prestige|9.32|10.33|6.51|-10.36|10.27|3.00|12.54|-3.19|-|-
+BMO Monthly Income GIF 100/100 Class F|10.03|11.05|7.20|-9.76|10.99|3.70|13.30|-|-|-
+BMO Monthly Income GIF 75/100 Class A|9.26|10.26|6.46|-10.40|10.20|2.97|12.50|-3.19|-|-
+BMO Monthly Income GIF 75/100 Class A Prestige|9.54|10.57|6.72|-10.18|10.48|3.15|-|-|-|-
+BMO Monthly Income GIF 75/100 Class F|10.45|11.46|7.60|-9.42|11.40|4.09|13.72|-|-|-
+BMO Monthly Income GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Monthly Income GIF 75/75 Class A|9.56|10.56|6.74|-10.17|10.49|3.29|12.79|-3.03|-|-
+BMO Monthly Income GIF 75/75 Class A Prestige|9.95|11.02|6.95|-10.01|10.69|3.30|-|-|-|-
+BMO Monthly Income GIF 75/75 Class F|10.76|11.78|7.90|-9.17|11.72|4.39|14.04|-|-|-
+BMO Monthly Income GIF 75/75 Class F Prestige|11.01|12.03|-|-|-|-|-|-|-|-
+BMO Monthly Income GIF 75/75 Plus Class A|9.26|-|-|-|-|-|-|-|-|-
+BMO Monthly Income GIF 75/75 Plus Class A Prestige|9.54|-|-|-|-|-|-|-|-|-
+BMO Monthly Income GIF 75/75 Plus Class F|10.45|-|-|-|-|-|-|-|-|-
+BMO MSCI EAFE Index ETF GIF 75/100 Class A|-|-|-|-|-|-|-|-|-|-
+BMO MSCI EAFE Index ETF GIF 75/100 Class A Prestige|-|-|-|-|-|-|-|-|-|-
+BMO MSCI EAFE Index ETF GIF 75/100 Class F|-|-|-|-|-|-|-|-|-|-
+BMO MSCI EAFE Index ETF GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO MSCI EAFE Index ETF GIF 75/75 Class A|-|-|-|-|-|-|-|-|-|-
+BMO MSCI EAFE Index ETF GIF 75/75 Class A Prestige|-|-|-|-|-|-|-|-|-|-
+BMO MSCI EAFE Index ETF GIF 75/75 Class F|-|-|-|-|-|-|-|-|-|-
+BMO MSCI EAFE Index ETF GIF 75/75 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO NASDAQ 100 Equity Index ETF GIF 75/100 Class A|12.24|-|-|-|-|-|-|-|-|-
+BMO NASDAQ 100 Equity Index ETF GIF 75/100 Class A Prestige|12.60|-|-|-|-|-|-|-|-|-
+BMO NASDAQ 100 Equity Index ETF GIF 75/100 Class F|13.27|-|-|-|-|-|-|-|-|-
+BMO NASDAQ 100 Equity Index ETF GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO NASDAQ 100 Equity Index ETF GIF 75/75 Class A|12.60|-|-|-|-|-|-|-|-|-
+BMO NASDAQ 100 Equity Index ETF GIF 75/75 Class A Prestige|13.01|-|-|-|-|-|-|-|-|-
+BMO NASDAQ 100 Equity Index ETF GIF 75/75 Class F|13.79|-|-|-|-|-|-|-|-|-
+BMO NASDAQ 100 Equity Index ETF GIF 75/75 Class F Prestige|14.01|-|-|-|-|-|-|-|-|-
+BMO North American Income Strategy GIF 100/100 Class A|10.06|13.43|5.17|-8.60|10.16|-1.27|10.91|-3.31|2.67|2.43
+BMO North American Income Strategy GIF 100/100 Class A Prestige|10.49|13.88|5.58|-8.26|10.57|-0.88|11.35|-2.93|3.15|2.92
+BMO North American Income Strategy GIF 100/100 Class F|11.23|14.65|6.29|-7.64|11.33|-0.21|12.09|-|-|-
+BMO S&P 500 Index ETF GIF 75/100 Class A|8.70|-|-|-|-|-|-|-|-|-
+BMO S&P 500 Index ETF GIF 75/100 Class A Prestige|8.96|-|-|-|-|-|-|-|-|-
+BMO S&P 500 Index ETF GIF 75/100 Class F|9.79|-|-|-|-|-|-|-|-|-
+BMO S&P 500 Index ETF GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO S&P 500 Index ETF GIF 75/75 Class A|9.30|-|-|-|-|-|-|-|-|-
+BMO S&P 500 Index ETF GIF 75/75 Class A Prestige|9.40|-|-|-|-|-|-|-|-|-
+BMO S&P 500 Index ETF GIF 75/75 Class F|10.32|-|-|-|-|-|-|-|-|-
+BMO S&P 500 Index ETF GIF 75/75 Class F Prestige|10.58|-|-|-|-|-|-|-|-|-
+BMO S&P/TSX Capped Composite Index ETF GIF 75/100 Class A|-|-|-|-|-|-|-|-|-|-
+BMO S&P/TSX Capped Composite Index ETF GIF 75/100 Class A Prestige|-|-|-|-|-|-|-|-|-|-
+BMO S&P/TSX Capped Composite Index ETF GIF 75/100 Class F|-|-|-|-|-|-|-|-|-|-
+BMO S&P/TSX Capped Composite Index ETF GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO S&P/TSX Capped Composite Index ETF GIF 75/75 Class A|-|-|-|-|-|-|-|-|-|-
+BMO S&P/TSX Capped Composite Index ETF GIF 75/75 Class A Prestige|-|-|-|-|-|-|-|-|-|-
+BMO S&P/TSX Capped Composite Index ETF GIF 75/75 Class F|-|-|-|-|-|-|-|-|-|-
+BMO S&P/TSX Capped Composite Index ETF GIF 75/75 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Sustainable Global Balanced GIF 100/100 Class A|2.43|12.42|7.17|-17.18|4.74|5.61|-|-|-|-
+BMO Sustainable Global Balanced GIF 100/100 Class A Prestige|2.86|12.85|7.61|-16.83|4.88|8.12|-|-|-|-
+BMO Sustainable Global Balanced GIF 100/100 Class F|3.50|13.61|8.34|-16.26|5.69|7.48|-|-|-|-
+BMO Sustainable Global Balanced GIF 75/100 Class A|2.83|12.82|7.60|-16.79|5.00|6.72|-|-|-|-
+BMO Sustainable Global Balanced GIF 75/100 Class A Prestige|3.12|13.14|7.89|-16.62|5.23|6.95|-|-|-|-
+BMO Sustainable Global Balanced GIF 75/100 Class F|4.08|14.19|8.90|-15.83|6.23|7.91|-|-|-|-
+BMO Sustainable Global Balanced GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Sustainable Global Balanced GIF 75/75 Class A|3.26|13.25|7.92|-16.66|5.21|7.02|-|-|-|-
+BMO Sustainable Global Balanced GIF 75/75 Class A Prestige|3.42|13.47|8.13|-16.48|5.43|7.19|-|-|-|-
+BMO Sustainable Global Balanced GIF 75/75 Class F|4.22|14.35|9.05|-15.71|6.38|8.19|-|-|-|-
+BMO Sustainable Global Balanced GIF 75/75 Class F Prestige|4.31|14.47|-|-|-|-|-|-|-|-
+BMO Sustainable Global Multi-Sector Bond GIF 100/100 Class A|3.21|1.94|5.56|-|-|-|-|-|-|-
+BMO Sustainable Global Multi-Sector Bond GIF 100/100 Class A Prestige|3.56|2.27|6.02|-|-|-|-|-|-|-
+BMO Sustainable Global Multi-Sector Bond GIF 100/100 Class F|4.32|3.08|6.76|-|-|-|-|-|-|-
+BMO Sustainable Global Multi-Sector Bond GIF 75/100 Class A|3.57|2.34|5.99|-|-|-|-|-|-|-
+BMO Sustainable Global Multi-Sector Bond GIF 75/100 Class A Prestige|3.74|2.51|6.19|-|-|-|-|-|-|-
+BMO Sustainable Global Multi-Sector Bond GIF 75/100 Class F|4.78|3.46|7.23|-|-|-|-|-|-|-
+BMO Sustainable Global Multi-Sector Bond GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Sustainable Global Multi-Sector Bond GIF 75/75 Class A|4.08|2.82|6.26|-|-|-|-|-|-|-
+BMO Sustainable Global Multi-Sector Bond GIF 75/75 Class A Prestige|4.19|2.95|6.63|-|-|-|-|-|-|-
+BMO Sustainable Global Multi-Sector Bond GIF 75/75 Class F|5.01|3.74|7.44|-|-|-|-|-|-|-
+BMO Sustainable Global Multi-Sector Bond GIF 75/75 Class F Prestige|5.25|4.01|-|-|-|-|-|-|-|-
+BMO Sustainable Opportunities Global Equity GIF 75/100 Class A|2.59|21.25|10.26|-20.09|-|-|-|-|-|-
+BMO Sustainable Opportunities Global Equity GIF 75/100 Class A Prestige|2.85|21.81|10.59|-19.93|-|-|-|-|-|-
+BMO Sustainable Opportunities Global Equity GIF 75/100 Class F|3.64|22.72|11.50|-19.25|-|-|-|-|-|-
+BMO Sustainable Opportunities Global Equity GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Sustainable Opportunities Global Equity GIF 75/75 Class A|2.87|21.82|10.70|-19.72|-|-|-|-|-|-
+BMO Sustainable Opportunities Global Equity GIF 75/75 Class A Prestige|3.47|22.53|10.98|-19.61|-|-|-|-|-|-
+BMO Sustainable Opportunities Global Equity GIF 75/75 Class F|3.97|23.09|11.84|-19.00|-|-|-|-|-|-
+BMO Sustainable Opportunities Global Equity GIF 75/75 Class F Prestige|4.38|23.59|-|-|-|-|-|-|-|-
+BMO Tactical Balanced GIF 75/100 Class A|13.23|3.63|5.11|-6.46|2.45|2.11|4.83|-|-|-
+BMO Tactical Balanced GIF 75/100 Class A Prestige|13.55|3.91|5.36|-6.22|2.76|2.30|-|-|-|-
+BMO Tactical Balanced GIF 75/100 Class F|14.53|4.75|6.24|-5.42|3.55|3.15|6.06|-|-|-
+BMO Tactical Balanced GIF 75/100 Class F Prestige|-|-|-|-|-|-|-|-|-|-
+BMO Tactical Balanced GIF 75/75 Class A|13.67|4.04|5.44|-6.18|2.79|2.38|5.16|-|-|-
+BMO Tactical Balanced GIF 75/75 Class A Prestige|13.80|4.15|5.57|-6.08|2.85|2.46|-|-|-|-
+BMO Tactical Balanced GIF 75/75 Class F|14.79|5.07|6.57|-5.13|3.87|3.47|6.39|-|-|-
+BMO Tactical Balanced GIF 75/75 Class F Prestige|14.94|5.17|-|-|-|-|-|-|-|-
+BMO U.S. Balanced Growth GIF 100/100 Class A|0.10|22.55|14.44|-15.30|14.65|6.20|11.48|-0.59|3.92|-0.79
+BMO U.S. Balanced Growth GIF 100/100 Class A Prestige|0.48|23.04|14.89|-14.97|15.09|6.62|11.91|-0.18|4.40|-0.33
+BMO U.S. Balanced Growth GIF 100/100 Class F|1.21|23.93|15.66|-14.38|15.88|7.35|12.69|-|-|-

@@ -911,7 +911,7 @@ def _save_run(conn, user_id, slug, display_name, strategy, start, end, initial, 
                 initial_capital, final_value, total_return, annualized_return, sharpe_ratio, max_drawdown, num_trades, win_rate, status, error_message, completed_at)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'complete', NULL, NOW())
             """,
-            (user_id, f"rules:{strategy}:{slug}", json.dumps({"advisor": slug, "mode": "rules"}), start.isoformat(), end.isoformat(), initial, final, total_return, annualized_return, 0.0, max_drawdown, num_trades, win_rate),
+            (user_id, f"rules:{strategy}:{slug}", json.dumps({"advisor": slug, "mode": "rules"}), start.isoformat(), end.isoformat(), initial, final, total_return * 100, annualized_return * 100, 0.0, max_drawdown * 100, num_trades, win_rate * 100),
         )
         run_id = int(cur.lastrowid)
         for t in trades:

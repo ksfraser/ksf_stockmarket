@@ -499,12 +499,12 @@ class BacktestEngine:
             self.end_date.isoformat() if hasattr(self.end_date, 'isoformat') else self.end_date,
             self.initial_capital,
             results['final_value'],
-            results['total_return'] / 100,
-            results['annualized_return'] / 100,
+            results['total_return'],
+            results['annualized_return'],
             results['sharpe_ratio'],
-            results['max_drawdown'] / 100,
+            results['max_drawdown'],
             results['num_trades'],
-            results['win_rate'] / 100,
+            results['win_rate'],
             _dt.now().isoformat(),
         ))
 

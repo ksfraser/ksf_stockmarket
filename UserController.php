@@ -243,10 +243,35 @@ class UserController {
                     ON sp1.symbol = sp2.symbol AND sp1.price_date = sp2.max_date
             ) latest ON COALESCE(p.price_symbol, p.symbol) = latest.symbol
             LEFT JOIN (
-                SELECT i1.symbol, i1.data
-                FROM indicators_json i1
-                INNER JOIN (SELECT symbol, MAX(price_date) as max_date FROM indicators_json GROUP BY symbol) i2
-                    ON i1.symbol = i2.symbol AND i1.price_date = i2.max_date
+                SELECT i1.symbol,
+                       i1.rsi_14, i1.rsi_7, i1.rsi_21,
+                       i1.macd_12_26_9, i1.macd_12_26_9_signal, i1.macd_12_26_9_hist,
+                       i1.macd, i1.macd_signal, i1.macd_hist,
+                       i1.sma_20, i1.sma_50, i1.sma_200,
+                       i1.ema_20, i1.ema_50, i1.ema_200,
+                       i1.atr_14, i1.natr_14, i1.atr_7, i1.atr_20, i1.natr_7, i1.natr_20,
+                       i1.bb_20_2_0_upper, i1.bb_20_2_0_mid, i1.bb_20_2_0_lower,
+                       i1.bb_50_2_0_upper, i1.bb_50_2_0_mid, i1.bb_50_2_0_lower,
+                       i1.stoch_14_3_3_k, i1.stoch_14_3_3_d,
+                       i1.cci_14, i1.cci_7, i1.cci_21,
+                       i1.willr_14, i1.willr_7, i1.willr_21, i1.wild_will_r,
+                       i1.adx_14, i1.adx_7, i1.adx_21, i1.adxr_14, i1.adxr_7, i1.adxr_21,
+                       i1.mfi_14, i1.mfi_7, i1.mfi_21,
+                       i1.obv, i1.ad, i1.adosc, i1.vwap, i1.trix_14, i1.trix_7, i1.trix_21,
+                       i1.roc_14, i1.roc_7, i1.roc_21,
+                       i1.apo_7, i1.apo_14, i1.apo_21, i1.ppo_7, i1.ppo_14, i1.ppo_21,
+                       i1.aroonosc_14, i1.aroonosc_7, i1.aroonosc_21,
+                       i1.uo, i1.vhf,
+                       i1.ht_trendline, i1.ht_trendmode,
+                       i1.high_60, i1.medprice, i1.typprice, i1.wclprice, i1.avgprice,
+                       i1.linreg_5, i1.linreg_10, i1.linreg_14,
+                       i1.kama_10, i1.kama_20, i1.kama_50,
+                       i1.tsf_5, i1.tsf_10, i1.tsf_14,
+                       i1.xsignals, i1.zigzag, i1.zigzag_1, i1.zigzag_2, i1.zigzag_3
+                FROM indicators i1
+                INNER JOIN (
+                    SELECT symbol, MAX(price_date) as max_date FROM indicators GROUP BY symbol
+                ) i2 ON i1.symbol = i2.symbol AND i1.price_date = i2.max_date
             ) ind ON COALESCE(p.price_symbol, p.symbol) = ind.symbol
             WHERE p.user_id = :uid AND p.shares > 0
             ORDER BY p.symbol
@@ -258,12 +283,11 @@ class UserController {
         $recs = [];
         foreach ($rows as $r) {
             $price = $r['current_price'] ?? 0;
-            $ind = json_decode($r['indicators'] ?? '{}', true);
-            $rsi = $ind['rsi_14'] ?? 50;
-            $macd = $ind['macd'] ?? 0;
-            $sma50 = $ind['sma_50'] ?? 0;
-            $sma200 = $ind['sma_200'] ?? 0;
-            $atr14 = $ind['atr_14'] ?? 0;
+            $rsi = $r['rsi_14'] ?? 50;
+            $macd = $r['macd'] ?? 0;
+            $sma50 = $r['sma_50'] ?? 0;
+            $sma200 = $r['sma_200'] ?? 0;
+            $atr14 = $r['atr_14'] ?? 0;
 
             // Simple recommendation logic
             $score = 0;
@@ -427,7 +451,7 @@ class UserController {
 
         $stmt = $pdo->prepare("
             SELECT COUNT(DISTINCT COALESCE(p.price_symbol, p.symbol)) FROM portfolio p
-            LEFT JOIN indicators_json ij ON COALESCE(p.price_symbol, p.symbol) = ij.symbol
+            LEFT JOIN indicators i ON COALESCE(p.price_symbol, p.symbol) = i.symbol
             WHERE p.user_id = :uid AND p.shares > 0
         ");
         $stmt->execute([':uid' => $userId]);

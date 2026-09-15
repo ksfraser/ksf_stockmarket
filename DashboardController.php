@@ -14,9 +14,9 @@ class DashboardController {
         // Summary stats — ALL symbols (app level, no portfolio data)
         $stats = [
             'total_symbols'       => $this->pdo->query("SELECT COUNT(DISTINCT symbol) FROM stockprices")->fetchColumn(),
-            'with_indicators'     => $this->pdo->query("SELECT COUNT(DISTINCT symbol) FROM indicators_json")->fetchColumn(),
+            'with_indicators'     => $this->pdo->query("SELECT COUNT(DISTINCT symbol) FROM indicators")->fetchColumn(),
             'total_prices'        => $this->pdo->query("SELECT COUNT(*) FROM stockprices")->fetchColumn(),
-            'total_indicators'    => $this->pdo->query("SELECT COUNT(*) FROM indicators_json")->fetchColumn(),
+            'total_indicators'    => $this->pdo->query("SELECT COUNT(*) FROM indicators")->fetchColumn(),
             'active_fetching'     => $this->pdo->query("SELECT COUNT(*) FROM symbol_master WHERE is_active = 1")->fetchColumn(),
             'last_update'         => date('Y-m-d H:i:s'),
         ];

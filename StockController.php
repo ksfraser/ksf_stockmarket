@@ -143,38 +143,89 @@ class StockController {
         // Indicators: latest + 60 days for charts — check both symbol formats
         $indHistory = [];
         $indicators = [];
+        $prefSym = $symbol;
 
         // Check if this is a TSX symbol (has .TO variant) and which has more data
         $hasTO = str_ends_with($symbol, '.TO');
         $baseSym = $hasTO ? substr($symbol, 0, -3) : $symbol;
         $altSym = $hasTO ? null : $symbol . '.TO';
 
-        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM indicators_json WHERE symbol = :sym");
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM indicators WHERE symbol = :sym");
         $stmt->execute([':sym' => $symbol]);
         $mainCount = $stmt->fetchColumn();
 
         $altCount = 0;
         if ($altSym) {
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM indicators_json WHERE symbol = :sym");
+            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM indicators WHERE symbol = :sym");
             $stmt->execute([':sym' => $altSym]);
             $altCount = $stmt->fetchColumn();
         }
 
         // Prefer the format with more data
         $preferredSym = ($altCount > $mainCount && $altSym) ? $altSym : $symbol;
+        $prefSym = $preferredSym;
 
-        $indSql = "SELECT price_date, data FROM indicators_json WHERE symbol = :sym ORDER BY price_date DESC LIMIT 60";
+        $indSql = "SELECT symbol, price_date,
+                          rsi_14, rsi_7, rsi_21,
+                          macd_12_26_9, macd_12_26_9_signal, macd_12_26_9_hist,
+                          macd_8_21_5, macd_8_21_5_signal, macd_8_21_5_hist,
+                          macd_24_52_18, macd_24_52_18_signal, macd_24_52_18_hist,
+                          macd, macd_signal, macd_hist,
+                          macd_10_50_10, macd_10_50_10_signal, macd_10_50_10_hist,
+                          macd_5_35_5, macd_5_35_5_signal, macd_5_35_5_hist,
+                          sma_5, sma_8, sma_10, sma_20, sma_50, sma_100, sma_200,
+                          ema_5, ema_8, ema_10, ema_20, ema_50, ema_100, ema_200,
+                          wma_5, wma_8, wma_10, wma_20, wma_50, wma_100, wma_200,
+                          tema_5, tema_8, tema_10, tema_20, tema_50, tema_100,
+                          dema_5, dema_8, dema_10, dema_20, dema_50, dema_8, dema_100,
+                          trima_5, trima_8, trima_10, trima_20, trima_50, trima_100,
+                          rsi_3,
+                          atr_7, atr_14, atr_20, natr_7, natr_14, natr_20,
+                          bb_5_2_0_upper, bb_5_2_0_mid, bb_5_2_0_lower,
+                          bb_5_2_5_upper, bb_5_2_5_mid, bb_5_2_5_lower,
+                          bb_10_2_0_upper, bb_10_2_0_mid, bb_10_2_0_lower,
+                          bb_10_2_5_upper, bb_10_2_5_mid, bb_10_2_5_lower,
+                          bb_20_2_0_upper, bb_20_2_0_mid, bb_20_2_0_lower,
+                          bb_20_2_5_upper, bb_20_2_5_mid, bb_20_2_5_lower,
+                          bb_50_1_5_upper, bb_50_1_5_mid, bb_50_1_5_lower,
+                          bb_50_2_0_upper, bb_50_2_0_mid, bb_50_2_0_lower,
+                          bb_50_2_5_upper, bb_50_2_5_mid, bb_50_2_5_lower,
+                          stoch_14_3_3_k, stoch_14_3_3_d, stoch_5_3_3_k, stoch_5_3_3_d,
+                          stoch_21_5_5_k, stoch_21_5_5_d,
+                          stoch_k_5, stoch_d_5, stoch_k_14, stoch_d_14,
+                          cci_7, cci_14, cci_21,
+                          uo, vhf, trix_7, trix_14, trix_21,
+                          willr_7, willr_14, willr_21, wild_will_r,
+                          adx_7, adx_14, adx_21, adxr_7, adxr_14, adxr_21,
+                          aroonosc_7, aroonosc_14, aroonosc_21,
+                          mfi_7, mfi_14, mfi_21,
+                          apo_7, apo_14, apo_21, ppo_7, ppo_14, ppo_21,
+                          mom_7, mom_14, mom_21,
+                          roc_7, roc_14, roc_21, rocp_7, rocp_14, rocp_21,
+                          rocr_7, rocr_14, rocr_21, rocr100_7, rocr100_14, rocr100_21,
+                          linreg_5, linreg_10, linreg_14,
+                          linreg_slope_10, linreg_slope_14,
+                          linreg_angle_10, linreg_angle_14,
+                          linreg_intercept_5, linreg_intercept_10, linreg_intercept_14,
+                          tsf_5, tsf_10, tsf_14,
+                          kama_10, kama_20, kama_50,
+                          obv, ad, adosc,
+                          ht_dcperiod, ht_dcphase,
+                          ht_phasor_inphase, ht_phasor_quadrature,
+                          ht_sine_sine, ht_sine_leadsine, ht_leadsine,
+                          ht_trendline, ht_trendmode,
+                          vwap, medprice, typprice, wclprice, avgprice, high_60,
+                          xsignals, zigzag, zigzag_1, zigzag_2, zigzag_3
+                FROM indicators WHERE symbol = :sym ORDER BY price_date DESC LIMIT 60";
         $stmt = $this->pdo->prepare($indSql);
-        $stmt->execute([':sym' => $preferredSym]);
+        $stmt->execute([':sym' => $prefSym]);
         $indRows = array_reverse($stmt->fetchAll());
 
         // Update symbol for consistency (use the format we're querying)
-        $symbol = $preferredSym;
+        $symbol = $prefSym;
 
         foreach ($indRows as $i => $row) {
-            $d = json_decode($row['data'], true);
-            $d['price_date'] = $row['price_date'];
-            $indHistory[] = $d;
+            $indHistory[] = $row;
         }
         if ($indHistory) $indicators = end($indHistory);
 
@@ -670,26 +721,76 @@ class StockController {
      */
     private function getLatestIndicators(string $symbol): array {
         $stmt = $this->pdo->prepare("
-            SELECT data FROM indicators_json
+            SELECT symbol, price_date,
+                   rsi_14, rsi_7, rsi_21,
+                   macd_12_26_9, macd_12_26_9_signal, macd_12_26_9_hist,
+                   macd, macd_signal, macd_hist,
+                   sma_20, sma_50, sma_200,
+                   ema_20, ema_50, ema_200,
+                   atr_14, natr_14, atr_7, atr_20, natr_7, natr_20,
+                   bb_20_2_0_upper, bb_20_2_0_mid, bb_20_2_0_lower,
+                   bb_50_2_0_upper, bb_50_2_0_mid, bb_50_2_0_lower,
+                   stoch_14_3_3_k, stoch_14_3_3_d,
+                   cci_14, cci_7, cci_21,
+                   willr_14, willr_7, willr_21, wild_will_r,
+                   adx_14, adx_7, adx_21, adxr_14, adxr_7, adxr_21,
+                   mfi_14, mfi_7, mfi_21,
+                   obv, ad, adosc, vwap, trix_14, trix_7, trix_21,
+                   roc_14, roc_7, roc_21,
+                   apo_7, apo_14, apo_21, ppo_7, ppo_14, ppo_21,
+                   aroonosc_14, aroonosc_7, aroonosc_21,
+                   uo, vhf,
+                   ht_trendline, ht_trendmode,
+                   high_60, medprice, typprice, wclprice, avgprice,
+                   linreg_5, linreg_10, linreg_14,
+                   kama_10, kama_20, kama_50,
+                   tsf_5, tsf_10, tsf_14,
+                   xsignals, zigzag, zigzag_1, zigzag_2, zigzag_3
+            FROM indicators
             WHERE symbol = :sym
             ORDER BY price_date DESC LIMIT 1
         ");
         $stmt->execute([':sym' => $symbol]);
         $row = $stmt->fetch();
-        
+
         // If no match, try .TO suffix for Canadian symbols
         if (!$row && preg_match('/^[A-Z]/', $symbol)) {
             $stmt = $this->pdo->prepare("
-                SELECT data FROM indicators_json
+                SELECT symbol, price_date,
+                       rsi_14, rsi_7, rsi_21,
+                       macd_12_26_9, macd_12_26_9_signal, macd_12_26_9_hist,
+                       macd, macd_signal, macd_hist,
+                       sma_20, sma_50, sma_200,
+                       ema_20, ema_50, ema_200,
+                       atr_14, natr_14, atr_7, atr_20, natr_7, natr_20,
+                       bb_20_2_0_upper, bb_20_2_0_mid, bb_20_2_0_lower,
+                       bb_50_2_0_upper, bb_50_2_0_mid, bb_50_2_0_lower,
+                       stoch_14_3_3_k, stoch_14_3_3_d,
+                       cci_14, cci_7, cci_21,
+                       willr_14, willr_7, willr_21, wild_will_r,
+                       adx_14, adx_7, adx_21, adxr_14, adxr_7, adxr_21,
+                       mfi_14, mfi_7, mfi_21,
+                       obv, ad, adosc, vwap, trix_14, trix_7, trix_21,
+                       roc_14, roc_7, roc_21,
+                       apo_7, apo_14, apo_21, ppo_7, ppo_14, ppo_21,
+                       aroonosc_14, aroonosc_7, aroonosc_21,
+                       uo, vhf,
+                       ht_trendline, ht_trendmode,
+                       high_60, medprice, typprice, wclprice, avgprice,
+                       linreg_5, linreg_10, linreg_14,
+                       kama_10, kama_20, kama_50,
+                       tsf_5, tsf_10, tsf_14,
+                       xsignals, zigzag, zigzag_1, zigzag_2, zigzag_3
+                FROM indicators
                 WHERE symbol = :sym
                 ORDER BY price_date DESC LIMIT 1
             ");
             $stmt->execute([':sym' => $symbol . '.TO']);
             $row = $stmt->fetch();
         }
-        
+
         if (!$row) return [];
-        return json_decode($row['data'] ?: $row[0], true) ?: [];
+        return $row;
     }
 
     /**

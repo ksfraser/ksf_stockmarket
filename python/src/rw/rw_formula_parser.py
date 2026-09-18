@@ -48,6 +48,7 @@ class TokenType(Enum):
     LITERAL_BOOL = "BOOL"   # TRUE, FALSE
     LPAREN = "("
     RPAREN = ")"
+    SKIP = "SKIP"           # whitespace
     EOF = "EOF"
 
 
@@ -102,7 +103,17 @@ class Lexer:
                         self.pos += len(raw)
                         matched = True
                         break
-                    token_type = TokenType[name.upper()] if name.upper() in TokenType.__members__ else TokenType.FIELD
+                    token_type_name = {
+                        "GTE": "OP", "LTE": "OP", "NEQ": "OP", "EQ": "OP", "GT": "OP", "LT": "OP",
+                        "AND": "LOGIC", "OR": "LOGIC", "NOT": "LOGIC",
+                        "STR": "LITERAL_STR", "BOOL": "LITERAL_BOOL",
+                        "NUM": "LITERAL_NUM",
+                        "FIELD": "FIELD",
+                        "LPAREN": "LPAREN",
+                        "RPAREN": "RPAREN",
+                        "SKIP": "SKIP",
+                    }.get(name, "FIELD")
+                    token_type = TokenType[token_type_name]
                     if name == "FIELD":
                         # Check if it's actually a keyword we missed
                         upper = raw.upper()

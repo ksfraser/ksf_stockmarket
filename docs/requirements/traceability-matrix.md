@@ -1,29 +1,39 @@
 # Requirements Traceability Matrix
 ## KSF Stock Market Analysis System
 
-| Business Req | Functional Req | User Story | DB Table(s) | PHP Class | Python Script | Status |
-|---|---|---|---|---|---|---|
-| BR-1: Portfolio Tracking | FR-5 User Mgmt | US-12 Manage Users | users, roles | UserController, UserModel | — | Phase 1 |
-| BR-1 | FR-5 | US-2 Add Transaction | user_trades, portfolio | TransactionController | — | Phase 1 |
-| BR-1 | FR-5 | US-1 View Dashboard | portfolio, portfolio_history | PortfolioController | — | Phase 1 |
-| BR-1 | FR-5 | US-3 Track History | portfolio_history | PortfolioHistoryModel | — | Phase 1 |
-| BR-2: Stock & ETF Analysis | FR-2 TA | US-4 View TA | stockprices, daily_indicators, daily_tier2, ta_values | TAController, PythonBridge | ta_calculator.py | Phase 1 |
-| BR-2 | FR-2 | US-5 Run Screen | motleyfool, investorplace, tenets | ScreenController | screener.py | Phase 2 |
-| BR-2 | FR-3 Screening | US-6 ETF Screener | etf_metadata, etf_scores | ETFScreenerController | etf_screener.py | Phase 2 |
-| BR-2 | FR-1 Data Import | — | stockprices, data_import_log | — | migrate_legacy_prices.py | Phase 1 |
-| BR-3: Scoring Preservation | FR-2 | — | evalsummary, motleyfool, investorplace, tenets, evalbusiness, ratios, quarter_statement, evalmanagement, evalmarket, evalvalue, scoring_history | ScoringController | scoring_engine.py, llm_analyzer.py | Phase 2 |
-| BR-3 | — | — | signal_weights | — | correlation_analysis.py | Phase 3 |
-| BR-4: Backtesting | FR-4 | US-7 Configure | backtest_runs | BacktestController | backtest_engine.py | Phase 1 |
-| BR-4 | FR-4 | US-8 View Results | backtest_runs, backtest_trades | BacktestResultsController | — | Phase 1 |
-| BR-5: Data Reliability | FR-1 | — | stockprices (partitioned) | — | migrate_legacy_prices.py | Phase 1 |
-| BR-5 | — | — | All tier tables | — | backup_cron.py | Phase 1 |
-| — | FR-6 FA Integration | US-10 Record Transfer | fa_transfers | FAController | — | Phase 2 |
-| — | FR-6 | US-11 Revalue Assets | portfolio, fa_transfers | FARevaluationController | revalue.py | Phase 2 |
-| — | FR-5 | US-13 Watchlists | watchlists, watchlist_symbols | WatchlistController | — | Phase 2 |
-|| BR-6: External Strategy Research | FR-7 Research Agent | — | research_briefs | AdvisorController | research_agent.py | Phase 3 |
-|| BR-6 | FR-8 External Auth | — | external_auth_tokens, system_settings | ExternalAuthController | — | Phase 3 |
-|| BR-6 | FR-9 Risk Gate | — | risk_thresholds.json, strategy_registry | AdvisorController (preTradeGate) | — | Phase 3 |
-|| BR-6 | FR-10 Automation | — | research_briefs | AdvisorController | research_agent.py + cron | Phase 3 |
+|| Business Req | Functional Req | User Story | DB Table(s) | PHP Class | Python Script | Status |
+|---|---|---|---|---|---|---|---|
+|| BR-1: Portfolio Tracking | FR-5 User Mgmt | US-12 Manage Users | users, roles | UserController, UserModel | — | Phase 1 |
+|| BR-1 | FR-5 | US-2 Add Transaction | user_trades, portfolio | TransactionController | — | Phase 1 |
+|| BR-1 | FR-5 | US-1 View Dashboard | portfolio, portfolio_history | PortfolioController | — | Phase 1 |
+|| BR-1 | FR-5 | US-3 Track History | portfolio_history | PortfolioHistoryModel | — | Phase 1 |
+|| BR-2: Stock & ETF Analysis | FR-2 TA | US-4 View TA | stockprices, daily_indicators, daily_tier2, ta_values | TAController, PythonBridge | ta_calculator.py | Phase 1 |
+|| BR-2 | FR-2 | US-5 Run Screen | motleyfool, investorplace, tenets | ScreenController | screener.py | Phase 2 |
+|| BR-2 | FR-3 Screening | US-6 ETF Screener | etf_metadata, etf_scores | ETFScreenerController | etf_screener.py | Phase 2 |
+|| BR-2 | FR-1 Data Import | — | stockprices, data_import_log | — | migrate_legacy_prices.py | Phase 1 |
+|| BR-3: Scoring Preservation | FR-2 | — | evalsummary, motleyfool, investorplace, tenets, evalbusiness, ratios, quarter_statement, evalmanagement, evalmarket, evalvalue, scoring_history | ScoringController | scoring_engine.py, llm_analyzer.py | Phase 2 |
+|| BR-3 | — | — | signal_weights | — | correlation_analysis.py | Phase 3 |
+|| BR-4: Backtesting | FR-4 | US-7 Configure | backtest_runs | BacktestController | backtest_engine.py | Phase 1 |
+|| BR-4 | FR-4 | US-8 View Results | backtest_runs, backtest_trades | BacktestResultsController | — | Phase 1 |
+|| BR-5: Data Reliability | FR-1 | — | stockprices (partitioned) | — | migrate_legacy_prices.py | Phase 1 |
+|| BR-5 | — | — | All tier tables | — | backup_cron.py | Phase 1 |
+|| — | FR-6 FA Integration | US-10 Record Transfer | fa_transfers | FAController | — | Phase 2 |
+|| — | FR-6 | US-11 Revalue Assets | portfolio, fa_transfers | FARevaluationController | revalue.py | Phase 2 |
+|| — | FR-5 | US-13 Watchlists | watchlists, watchlist_symbols | WatchlistController | — | Phase 2 |
+|| — | FR-7 Research Agent | — | research_briefs | AdvisorController | research_agent.py | Phase 3 |
+|| — | FR-8 External Auth | — | external_auth_tokens, system_settings | ExternalAuthController | — | Phase 3 |
+|| — | FR-9 Risk Gate | — | risk_thresholds.json, strategy_registry | AdvisorController (preTradeGate) | — | Phase 3 |
+|| — | FR-10 Automation | — | research_briefs | AdvisorController | research_agent.py + cron | Phase 3 |
+|| BR-07: AI-Advisor Personas | FR-11 LLM Fundamental Data | Public reference portfolios, LLM-enhanced fundamental analysis | llm_insider_trading, llm_news_events, llm_product_dev, llm_regulatory, evalsummary, evalbusiness, evalmanagement, evalvalue | AdvisorController, LLM Fundamental Analyzer | llm_fundamental_analyzer.py, llm_client.py | Phase 3 (new) |
+|| BR-07 | FR-12 RW Formula Integration | RW formula-based advisor screening | user_screens, formula_cache, symbol_master, stockprices, scoring tables | RWFormulaParser, RwFormulaAdvisor | rw_formula_parser.py, rw_field_resolver.py | Phase 3 (new) |
+|| BR-07 | FR-13 LLM Admin Screen | Admin LLM endpoint configuration | system_settings, advisor_llm_profiles | AdminSettingsController | llm_config_service.py | Phase 3 (new) |
+|| BR-07 | FR-16 Timing Variables | Timing-optimized advisor backtesting | advisors (timing_config), backtest_runs, portfolio, portfolio_history | BacktestController, TimingService | timing_service.py, backtest_engine.py (timing extension) | Phase 3 (new) |
+|| BR-08: Zacks/RW Filter Integration | FR-12 RW Formula Integration | Parse and execute RW pre-defined filters as advisor criteria | formula_cache, symbol_master, stockprices, scoring tables | RWFormulaParser, RwFormulaAdvisor | rw_formula_parser.py, rw_field_resolver.py, rw_formula_cache.py | Phase 3 (new) |
+|| BR-09: LLM-Enhanced Fundamental Analysis | FR-11 LLM Fundamental Data Tables | LLM advisors read/update guidance, news, product dev, regulatory tables | llm_insider_trading, llm_news_events, llm_product_dev, llm_regulatory | LLM Fundamental Analyzer, AdvisorController | llm_fundamental_analyzer.py, llm_client.py, llm_news_fetcher.py | Phase 3 (new) |
+|| BR-10: Timing-Aware Backtesting | FR-16 Timing Variables | Optimize entry/exit timing, market-cap position limits, sector rotation | advisors (timing_config), backtest_runs, backtest_trades, portfolio, portfolio_history, stockprices | BacktestController, TimingService | timing_service.py, backtest_engine.py (timing extension), optimize.py | Phase 3 (new) |
+|| BR-10 | FR-16 | Timing optimization scan (day-of-week, day-of-month) | backtest_runs, portfolio_history | BacktestController | optimize.py, timing_service.py | Phase 3 (new) |
+|| BR-11: LLM Admin & Configuration | FR-13 LLM Advisor Admin Screen | Configure LLM endpoints, per-advisor profiles, fallback chain | system_settings, advisor_llm_profiles | AdminSettingsController | llm_config_service.py, llm_client.py | Phase 3 (new) |
+|| BR-11 | FR-13 | Connection health dashboard, credential security | system_settings, advisor_llm_profiles | AdminSettingsController | llm_config_service.py | Phase 3 (new) |
 || BR-14: Zacks RW Screen Pipeline | FR-14: Data pipeline, schema, field contract, backtest/stat computation | UC-14a Import and run screens · UC-14b Backtest & Advisor portfolio · UC-14c Nightly pipeline | user_screens, zacks_broker_recommendations, zacks_ratios_history, stock_performance_windows, fundamentals (zacks_*), alert_queue | ZacksScreenController, ZacksScreenImporter, ZacksScreenRunner, ZacksUniverse, ZacksRankPopulator, ZacksFieldResolver, ZacksRwConfig | zacks_scraper.py, refresh_perf_windows.php, zacks_signal_dispatcher.py, import_zacks_screens.php | Phase 3 (in progress) |
 || BR-14 | FR-14 | UC-14c Nightly EPS-revision signal dispatch | fundamentals (zacks_eps_change_f1_4w, forward_eps), alert_queue, system_settings | — | zacks_signal_dispatcher.py | Phase 3 (in progress) |
 || BR-14 | FR-14 | UC-14b Backtest & Advisor portfolio | stockprices, stock_performance_windows, user_screens, portfolio + portfolio_history (Advisor portfolio running totals) | ZacksScreenRunner, ZacksUniverse | refresh_perf_windows.php (window pre-compute for backtest pricing) | Phase 3 (in progress) |

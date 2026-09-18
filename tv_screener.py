@@ -8,9 +8,12 @@ Designed for cron job integration.
 import urllib.request
 import json
 import os
-from datetime import datetime
+from datetime import datetime, date
+from decimal import Decimal
+from pathlib import Path
 
 from python.db_connector import get_connection
+from db.stockprice_dao import PriceRow, create_central_stockprice_dao  # noqa: E402
 
 API_BASE = "https://scanner.tradingview.com"
 
@@ -259,7 +262,12 @@ def build_index_fund_screener_results(conn) -> None:
 
 
 def update_bond_average_from_db(conn) -> None:
-    """Refresh synthetic BOND_AVG.TO price from representative Canadian bond ETFs."""
+    """Refresh synthetic BOND_AVG.TO price from representative Canadian bond ETFs.
+
+    Reads latest closes from stockprices via the existing connection (central DB),
+    then writes the computed average back through the StockPricesDAO so it benefits
+    from central-write + optional exchange dual-write.
+    """
     from update_bond_average import BOND_BASKET, AVERAGE_SYMBOL
     cur = conn.cursor()
     placeholders = ",".join(["%s"] * len(BOND_BASKET))
@@ -278,20 +286,29 @@ def update_bond_average_from_db(conn) -> None:
         BOND_BASKET,
     )
     prices = {r[0]: float(r[1]) for r in cur.fetchall()}
+    cur.close()
     if not prices:
         print("  No bond prices available")
         return
     avg = sum(prices.values()) / len(prices)
-    cur.execute(
-        """
-        INSERT INTO stockprices (symbol, price_date, open, high, low, close, volume)
-        VALUES (%s, CURDATE() - INTERVAL 1 DAY, %s, %s, %s, %s, %s)
-        ON DUPLICATE KEY UPDATE close = VALUES(close), open = VALUES(open), high = VALUES(high), low = VALUES(low)
-        """,
-        (AVERAGE_SYMBOL, avg, avg, avg, avg, 0),
+
+    # Write through the DAO (central + optional exchange dual-write).
+    dao = create_central_stockprice_dao(central_db=conn)
+    row = PriceRow(
+        symbol=AVERAGE_SYMBOL,
+        price_date=date.today(),
+        open=Decimal(str(avg)),
+        high=Decimal(str(avg)),
+        low=Decimal(str(avg)),
+        close=Decimal(str(avg)),
+        volume=0,
+        adj_close=Decimal(str(avg)),
+        currency='CAD',
+        dividend=None,
+        split_ratio=Decimal('1'),
     )
-    conn.commit()
-    print(f"Updated {AVERAGE_SYMBOL} = {avg:.4f}")
+    affected = dao.write_prices([row])
+    print(f"Updated {AVERAGE_SYMBOL} = {avg:.4f} ({affected} row(s) affected)")
 
 
 def main():

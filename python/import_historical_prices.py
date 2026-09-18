@@ -1,25 +1,22 @@
 #!/usr/bin/env python3
 """
-Import loaded2stockprices CSVs into stockprices with IGNORE guards for deduplication.
+Import loaded2stockprices CSVs into stockprices via the central DAO.
 """
 import os
 import sys
 import re
 import glob
-import pymysql
-from datetime import datetime
+from datetime import date, datetime
+from decimal import Decimal
+from pathlib import Path
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Ensure python/src/ is importable so we can use the stockprice DAO
+_repo_root = Path(__file__).resolve().parents[1]
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+sys.path.insert(0, str(_repo_root / 'python' / 'src'))
 
-DB_CFG = {
-    'host': 'ksfraser.ca',
-    'port': 3306,
-    'user': 'ksfraser_stockmarket',
-    'password': 'Zaqwsx9sm1@',
-    'database': 'ksfraser_stock_market',
-    'charset': 'utf8mb4',
-    'cursorclass': pymysql.cursors.DictCursor,
-}
+from db.stockprice_dao import PriceRow, create_central_stockprice_dao  # noqa: E402
 
 CSV_DIR = '/home/ksf_stockmarket/ksf_stockmarket/currentdata/loaded2stockprices'
 
@@ -78,7 +75,9 @@ def determine_currency(symbol):
     return 'USD'
 
 def main():
-    conn = pymysql.connect(**DB_CFG)
+    # Create the central stockprice DAO (central DB write + optional exchange dual-write).
+    dao = create_central_stockprice_dao()
+
     csv_files = sorted(glob.glob(os.path.join(CSV_DIR, '*.csv')))
     print(f"Found {len(csv_files)} CSV files")
 
@@ -93,44 +92,41 @@ def main():
             continue
 
         currency = determine_currency(symbol)
-        rows_batch = []
+        rows_batch: list[PriceRow] = []
         with open(fpath, 'r', encoding='utf-8', errors='ignore') as f:
             for line in f:
                 row = parse_row(line)
                 if row:
-                    row['symbol'] = symbol
-                    row['currency'] = currency
-                    row['split_ratio'] = 1.0
-                    row['dividend'] = 0.0
-                    rows_batch.append(row)
+                    rows_batch.append(PriceRow(
+                        symbol=symbol,
+                        price_date=date.fromisoformat(row['price_date']),
+                        open=Decimal(str(row['open'])) if row['open'] is not None else None,
+                        high=Decimal(str(row['high'])) if row['high'] is not None else None,
+                        low=Decimal(str(row['low'])) if row['low'] is not None else None,
+                        close=Decimal(str(row['close'])),
+                        volume=row['volume'],
+                        adj_close=Decimal(str(row['adj_close'])) if row['adj_close'] is not None else None,
+                        currency=currency,
+                        dividend=Decimal('0'),
+                        split_ratio=Decimal('1'),
+                    ))
                     total_rows += 1
 
         if not rows_batch:
             continue
 
-        # Insert batch
+        # Insert batch via the DAO (INSERT ... ON DUPLICATE KEY UPDATE, idempotent).
         try:
-            with conn.cursor() as cur:
-                sql = """
-                    INSERT IGNORE INTO stockprices
-                        (symbol, price_date, open, high, low, close, volume, adj_close, currency, dividend, split_ratio)
-                    VALUES
-                        (%(symbol)s, %(price_date)s, %(open)s, %(high)s, %(low)s, %(close)s, %(volume)s, %(adj_close)s, %(currency)s, %(dividend)s, %(split_ratio)s)
-                """
-                cur.executemany(sql, rows_batch)
-                affected = cur.rowcount
-                imported += affected
-                skipped += (len(rows_batch) - affected)
-            conn.commit()
+            affected = dao.write_prices(rows_batch)
+            imported += affected
+            skipped += (len(rows_batch) - affected)
         except Exception as e:
             errors += 1
             print(f"  Error inserting {fpath}: {e}")
-            conn.rollback()
 
         if total_rows % 100000 == 0:
             print(f"  Progress: {total_rows} rows processed, {imported} imported, {skipped} skipped")
 
-    conn.close()
     print(f"Done. Total: {total_rows}, Imported: {imported}, Skipped: {skipped}, Errors: {errors}")
 
 if __name__ == '__main__':

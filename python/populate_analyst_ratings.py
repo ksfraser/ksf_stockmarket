@@ -7,14 +7,15 @@ Priority order per run:
   2. Symbols present in screener results
   3. Remaining known symbols from fundamentals
 
-Writes to analyst_ratings, analyst_recommendations, and analyst_targets.
+Writes to analyst_recommendations and analyst_targets (central-only tables,
+not exchange-split). Reads symbol_master, portfolio, screener results, and
+fundamentals via get_connection() from db_connector.
 
 DB handling (refactored):
   * ONE database connection is opened for the whole run and reused — we no
     longer open/close a connection per symbol.
   * Recommendation and price-target rows are accumulated and written with a
-    single multi-row executemany() per flush ("insert multiple rows at a time")
-    instead of one INSERT per row.
+    single multi-row executemany() per flush instead of one INSERT per row.
   * Commits happen every ANALYST_COMMIT_EVERY symbols (default 25), not once per
     symbol, so the run uses far fewer transactions. The job is resumable via
     already_has_recs(), so an uncommitted batch that is lost to a budget/kill
@@ -28,8 +29,8 @@ import time
 from datetime import date
 from typing import Any
 
-from python.db_connector import get_connection
-from python.src.symbol_resolver import resolve_for_yfinance
+from python.db_connector import get_connection  # type: ignore[import-untyped]
+from python.src.symbol_resolver import resolve_for_yfinance  # type: ignore[import-untyped]
 import yfinance as yf
 
 LIMIT_PER_RUN = 1000

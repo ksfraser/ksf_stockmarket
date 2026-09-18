@@ -19,10 +19,13 @@ import pymysql
 import sys
 from pathlib import Path
 
-# Ensure python/src/ is importable so we can reuse the shared symbol normalizer
-_src_dir = Path(__file__).resolve().parent / 'src'
-if str(_src_dir) not in sys.path:
-    sys.path.insert(0, str(_src_dir))
+# Ensure python/src/ is importable so we can use the stockprice DAO
+_repo_root = Path(__file__).resolve().parents[1]
+if str(_repo_root) not in sys.path:
+    sys.path.insert(0, str(_repo_root))
+sys.path.insert(0, str(_repo_root / 'python' / 'src'))
+
+from db.stockprice_dao import PriceRow, create_central_stockprice_dao  # noqa: E402
 
 # Ensure the repo root is importable so `import python.db_connector` works
 # regardless of how this script is invoked (e.g. `python3

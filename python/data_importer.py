@@ -3,24 +3,16 @@
 data_importer.py — Stock Price & Fundamental Data Importer
 ==========================================================
 Imports OHLCV price data and fundamental metadata into the partitioned
-stockprices / stockinfo tables.
+stockprices table via the central StockPricesDAO.
 
-Modes (run_import):
-    daily  — fetch latest prices via yfinance for all tracked symbols
-    csv    — parse legacy CSV files from the currentdata/ directory
-    full   — daily + csv
+Columns written (matching ksfraser_stock_market.stockprices):
+    symbol, price_date, open, high, low, close, volume,
+    adj_close, currency, dividend, split_ratio
 
-Every import operation is logged to data_import_log.
-
-Usage:
-    python3 data_importer.py                  # default daily mode
-    python3 data_importer.py --mode csv       # CSV-only import
-    python3 data_importer.py --mode full      # both
-    python3 data_importer.py --mode daily --symbols AAPL,MSFT,RY.TO
-
-DB columns (stockprices):
-    symbol, price_date, day_open, day_high, day_low, day_close,
-    previous_close, day_change, adj_close, volume, bid, ask, source, updated_at
+All writes go through CentralStockPricesDAO (python/src/db/stockprice_dao.py),
+which handles central-write + optional exchange dual-write. Credentials come
+from environment variables (DB_HOST, DB_USER, DB_PASS, DB_NAME) — same source
+of truth as db_connector.py. No hardcoded credentials.
 
 Author:  ksf_stockmarket
 """
@@ -34,11 +26,12 @@ import re
 import sys
 import time
 from datetime import datetime, date
+from decimal import Decimal
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 
-import mysql.connector
-from mysql.connector import Error as MySQLError
+import pymysql
+from pymysql import err as pymysql_err
 
 try:
     import yfinance as yf
@@ -46,44 +39,42 @@ except ImportError:
     yf = None  # graceful handling at function level
 from symbol_resolver import resolve_for_yfinance
 
-try:
-    import pandas as pd
-except ImportError:
-    pd = None
+# Ensure python/src/ is importable so we can use the StockPricesDAO
+_src_root = Path(__file__).resolve().parent.parent / 'python' / 'src'
+if str(_src_root) not in sys.path:
+    sys.path.insert(0, str(_src_root))
 
-# ---------------------------------------------------------------------------
-# Configuration
-# ---------------------------------------------------------------------------
-
-DB_CONFIG = {
-    'host': 'localhost',
-    'user': 'ksf_stockmarket',
-    'password': 'change_me',
-    'database': 'ksf_stockmarket',
-    'charset': 'utf8mb4',
-    'use_unicode': True,
-    'autocommit': False,
-}
-
-BATCH_SIZE = 500  # rows per executemany batch
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
-)
-logger = logging.getLogger('data_importer')
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
+from db.stockprice_dao import PriceRow, create_central_stockprice_dao  # noqa: E402
 
 # TSX symbols in DB are stored without suffix; yfinance needs ".TO"
 TSX_PATTERN = re.compile(r'^[A-Z][A-Z0-9]*\.TO$', re.IGNORECASE)
 
+logger = logging.getLogger(__name__)
+
 def get_conn(config: Optional[Dict] = None):
-    """Return a new mysql.connector connection."""
-    cfg = config or DB_CONFIG
-    return mysql.connector.connect(**cfg)
+    """Return a new pymysql connection using env vars or an override config."""
+    if config:
+        return pymysql.connect(**config, charset='utf8mb4',
+                                cursorclass=pymysql.cursors.DictCursor)
+    return pymysql.connect(
+        host=os.environ.get('DB_HOST', 'localhost'),
+        user=os.environ.get('DB_USER', 'ksf_stockmarket'),
+        password=os.environ.get('DB_PASS', ''),
+        database=os.environ.get('DB_NAME', 'ksfraser_stock_market'),
+        charset='utf8mb4',
+        cursorclass=pymysql.cursors.DictCursor,
+        connect_timeout=20,
+        read_timeout=120,
+        write_timeout=120,
+    )
+
+
+def _db_open(conn) -> bool:
+    """Return True if *conn* is still open (pymysql)."""
+    try:
+        return conn.open
+    except Exception:
+        return False
 
 
 def _df_to_prices_df(prices_df: Any, symbol: str) -> List[Dict]:
@@ -249,135 +240,40 @@ def write_prices(
     source: str = 'yfinance',
 ) -> int:
     """
-    Batch-INSERT *prices* into stockprices with ON DUPLICATE KEY UPDATE.
+    Batch-INSERT *prices* into stockprices via the central StockPricesDAO.
 
-    For each incoming row we:
-        - look up the previous day's close so we can populate previous_close
-          and derive day_change
-        - set *source* ('yfinance' | 'csv' | ...)
-        - let updated_at default to NOW() (table default)
-
-    Returns the number of rows actually inserted/updated.
+    Prices must carry keys: symbol, date, open, high, low, close,
+    adj_close, volume. The DAO handles ON DUPLICATE KEY UPDATE, exchange
+    dual-write, DECIMAL coercion, and currency='CAD'.
     """
     if not prices:
         return 0
-
-    cursor = conn.cursor()
-
-    # Pre-fetch existing latest close per symbol to compute previous_close
-    unique_symbols = {p['symbol'] for p in prices if p.get('symbol')}
-    prev_close_map: Dict[str, float] = {}
-    if unique_symbols:
-        placeholders = ','.join(['%s'] * len(unique_symbols))
-        # Get the latest close for each symbol prior to the import dates
-        cursor.execute(f"""
-            SELECT symbol, day_close
-            FROM stockprices
-            WHERE symbol IN ({placeholders})
-            ORDER BY price_date DESC
-        """, tuple(unique_symbols))
-        seen = set()
-        for row in cursor.fetchall():
-            if row[0] not in seen:
-                prev_close_map[row[0]] = row[1]
-                seen.add(row[0])
-
-        # Also count rows per symbol before import for logging
-        cursor.execute(
-            "SELECT COUNT(*) FROM stockprices WHERE symbol IN ({})".format(placeholders),
-            tuple(unique_symbols),
-        )
-        _before_total = cursor.fetchone()[0]
-    else:
-        _before_total = 0
-
-    insert_sql = """
-        INSERT INTO stockprices
-            (symbol, price_date, day_open, day_high, day_low, day_close,
-             previous_close, day_change, adj_close, volume,
-             bid, ask, source, updated_at)
-        VALUES
-            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
-        ON DUPLICATE KEY UPDATE
-            day_open       = VALUES(day_open),
-            day_high       = VALUES(day_high),
-            day_low        = VALUES(day_low),
-            day_close      = VALUES(day_close),
-            previous_close = VALUES(previous_close),
-            day_change     = VALUES(day_change),
-            adj_close      = VALUES(adj_close),
-            volume         = VALUES(volume),
-            bid            = VALUES(bid),
-            ask            = VALUES(ask),
-            source         = VALUES(source),
-            updated_at     = NOW()
-    """
-
-    batch = []
+    rows: List[PriceRow] = []
     for p in prices:
         sym = p.get('symbol', '').upper()
-        d = p.get('date')
-        o = p.get('open')
-        h = p.get('high')
-        lo = p.get('low')
         c = p.get('close')
-        adj = p.get('adj_close')
-        vol = p.get('volume')
-
-        # previous_close: last close we have for this symbol
-        prev = prev_close_map.get(sym)
-        if prev is None:
-            # This is the first row for the symbol — use the same close
-            prev = c
-
-        # day_change = close - previous_close
-        chg = None
-        if c is not None and prev is not None:
-            chg = round(c - prev, 4)
-
-        batch.append((
-            sym, d, o, h, lo, c,
-            prev, chg, adj, vol,
-            None, None,  # bid, ask — not available from yfinance
-            source,
+        if c is None:
+            continue
+        rows.append(PriceRow(
+            symbol=sym,
+            price_date=p.get('date'),
+            open=Decimal(str(p['open'])) if p.get('open') is not None else None,
+            high=Decimal(str(p['high'])) if p.get('high') is not None else None,
+            low=Decimal(str(p['low'])) if p.get('low') is not None else None,
+            close=Decimal(str(c)),
+            volume=p.get('volume'),
+            adj_close=Decimal(str(p['adj_close'])) if p.get('adj_close') is not None else None,
+            currency='CAD',
+            dividend=None,
+            split_ratio=Decimal('1'),
         ))
-
-        # Update prev_close_map as we go for intra-batch previous_close
-        # (yesterday's close within this batch can become previous_close
-        #  for tomorrow's row in the same batch)
-        if c is not None:
-            prev_close_map[sym] = c
-
-    inserted = 0
-    try:
-        # Execute in chunks
-        for i in range(0, len(batch), BATCH_SIZE):
-            chunk = batch[i:i + BATCH_SIZE]
-            cursor.executemany(insert_sql, chunk)
-            conn.commit()
-            inserted += len(chunk)
-    except MySQLError as exc:
-        conn.rollback()
-        logger.error("Batch insert failed: %s", exc)
-        raise
-
-    # Count after
-    if unique_symbols:
-        cursor.execute(
-            "SELECT COUNT(*) FROM stockprices WHERE symbol IN ({})".format(
-                ','.join(['%s'] * len(unique_symbols))
-            ),
-            tuple(unique_symbols),
-        )
-        _after_total = cursor.fetchone()[0]
-    else:
-        _after_total = _before_total
-
-    added = _after_total - _before_total
-    logger.info("write_prices: %d rows written, %d new records", inserted, added)
-
-    cursor.close()
-    return inserted
+    if not rows:
+        return 0
+    dao = create_central_stockprice_dao(central_db=conn)
+    affected = dao.write_prices(rows)
+    logger.info("write_prices: %d rows via DAO, %d symbols",
+                affected, len({r.symbol for r in rows}))
+    return affected
 
 
 # ---------------------------------------------------------------------------
@@ -438,7 +334,7 @@ def fetch_fundamentals(
     Returns the number of symbols successfully updated.
 
     If *conn* is provided the function writes directly; otherwise a new
-    connection is opened using DB_CONFIG.
+    connection is opened using environment variables.
     """
     if yf is None:
         logger.error("yfinance is not installed.")
@@ -501,7 +397,7 @@ def fetch_fundamentals(
             updated += 1
             logger.info("Updated fundamentals for %s", db_sym)
 
-        except MySQLError as exc:
+        except pymysql_err.MySQLError as exc:
             conn.rollback()
             logger.error("DB error writing fundamentals for %s: %s", raw_sym, exc)
         except Exception as exc:
@@ -510,7 +406,7 @@ def fetch_fundamentals(
         time.sleep(0.2)
 
     cursor.close()
-    if close_after and conn.is_connected():
+    if close_after and _db_open(conn):
         conn.close()
 
     logger.info("fetch_fundamentals: %d/%d symbols updated", updated, len(symbols))
@@ -657,7 +553,7 @@ def import_csv(
             except Exception:
                 pass
 
-    if close_after and conn.is_connected():
+    if close_after and _db_open(conn):
         conn.close()
 
     logger.info("import_csv: %d total rows imported", total_imported)
@@ -713,9 +609,14 @@ def run_import(
     symbols – explicit list of symbols; if None all symbols from stockprices
               are auto-discovered
     csv_dir – path to CSV directory (used for / defaults csv and full modes)
-    db_config – override DB_CONFIG
+    db_config – override connection params (defaults to env vars)
     """
-    cfg = db_config or DB_CONFIG
+    cfg = db_config or {
+        'host': os.environ.get('DB_HOST', 'ksfraser.ca'),
+        'user': os.environ.get('DB_USER', 'ksfraser_stockmarket'),
+        'password': os.environ.get('DB_PASS', ''),
+        'database': os.environ.get('DB_NAME', 'ksfraser_stock_market'),
+    }
     start = time.time()
     conn = get_conn(cfg)
 
@@ -845,7 +746,7 @@ def run_import(
             conn.commit()
             cur.close()
 
-        if conn.is_connected():
+        if _db_open(conn):
             conn.close()
 
     elapsed = int((time.time() - start) * 1000)
@@ -875,16 +776,16 @@ def main():
         help='Directory containing CSV files (default: ../../currentdata)',
     )
     parser.add_argument(
-        '--host', type=str, default=DB_CONFIG['host'],
+        '--host', type=str, default=os.environ.get('DB_HOST', 'ksfraser.ca'),
     )
     parser.add_argument(
-        '--user', type=str, default=DB_CONFIG['user'],
+        '--user', type=str, default=os.environ.get('DB_USER', 'ksfraser_stockmarket'),
     )
     parser.add_argument(
-        '--password', type=str, default=DB_CONFIG['password'],
+        '--password', type=str, default=os.environ.get('DB_PASS', ''),
     )
     parser.add_argument(
-        '--database', type=str, default=DB_CONFIG['database'],
+        '--database', type=str, default=os.environ.get('DB_NAME', 'ksfraser_stock_market'),
     )
     parser.add_argument(
         '--period', type=str, default='5d',
@@ -893,7 +794,7 @@ def main():
 
     args = parser.parse_args()
 
-    # Override DB_CONFIG with CLI args
+    # Override with CLI args (CLI args take priority over env vars)
     db_cfg = {
         'host': args.host,
         'user': args.user,

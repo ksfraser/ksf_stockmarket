@@ -3,20 +3,29 @@
 fetch_prices.py — Download OHLCV price data from yfinance for symbols.
 
 Respects 500MB disk budget by fetching incrementally and inserting into
-partitioned MySQL stockprices table. Skips symbols already in DB unless
-explicitly requested with --symbols or --full-history.
+partitioned MySQL stockprices table via the central StockPricesDAO.
+Skips symbols already in DB unless explicitly requested with --symbols or
+--full-history.
+
+Writes go through CentralStockPricesDAO (python/src/db/stockprice_dao.py),
+which handles:
+  - INSERT ... ON DUPLICATE KEY UPDATE against ksfraser_stock_market.stockprices
+  - Optional dual-write to per-exchange DB (ksfraser_sm_<exchange>.stockprices)
+  - The nightly migrate_stockprices stored proc catches any missed rows.
 
 Usage:
-    python3 fetch_prices.py [--max 100] [--start-from SYMBOL] [--days N] [--full-history] [--symbols A,B]
+    python3 fetch_prices.py [--max 100] [--start-from SYMBOL] [--days N]
+                            [--full-history] [--symbols A,B]
 """
+
 import pymysql, yfinance as yf, pandas as pd, re, csv
 import sys, os, time, argparse
 from datetime import date, timedelta
+from decimal import Decimal
 from pathlib import Path
 from config_loader import Config
 
 # Ensure python/, python/src/ and repo root are importable from any cwd
-# (symbol_resolver and other shared modules live under python/src/).
 _script_dir = Path(__file__).resolve().parent
 if str(_script_dir) not in sys.path:
     sys.path.insert(0, str(_script_dir))
@@ -27,8 +36,8 @@ _repo_root = _script_dir.parent
 if str(_repo_root) not in sys.path:
     sys.path.insert(0, str(_repo_root))
 
-# Try relative first (CWD = python/), fallback to package-style import
 from src.events.publisher import EventPublisher
+from db.stockprice_dao import PriceRow, create_central_stockprice_dao
 
 # ALL yfinance calls MUST resolve through symbol_resolver first.
 from symbol_resolver import resolve_for_yfinance, normalize_symbol
@@ -40,6 +49,7 @@ try:
     _cfg = Config(_cfg_path) if os.path.exists(_cfg_path) else Config()
 except FileNotFoundError:
     _cfg = None
+
 
 def _load_env_db():
     env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '.env')
@@ -104,74 +114,47 @@ def _update_manifest(manifest: dict, sym: str, status: str, rows: int = 0,
         'error': error,
     }
 
-if _cfg is not None:
-    # db_password normally comes from the decrypted Ansible vault; fall back to
-    # the DB_PASSWORD env var / .env (consistent with the other scripts) when
-    # the vault is unavailable in this environment.
-    _env = _load_env_db() or {}
-    _db_password = (
-        getattr(_cfg, 'db_password', None)
-        or os.environ.get('DB_PASSWORD')
-        or _env.get('DB_PASS')
-        or ''
-    )
-    MYSQL = dict(
-        host=_cfg.data.db_host,
-        user=_cfg.data.db_user,
-        password=_db_password,
-        database=_cfg.data.db_name,
+
+def _build_mysql_config():
+    """Build MYSQL config dict from config_loader + .env (mirrors original MYSQL dict)."""
+    env = _load_env_db() or {}
+    if _cfg is not None:
+        password = getattr(_cfg, 'db_password', None) or os.environ.get('DB_PASSWORD') or env.get('DB_PASS') or ''
+        return dict(
+            host=getattr(_cfg.data, 'db_host', None) or env.get('DB_HOST', 'localhost'),
+            user=getattr(_cfg.data, 'db_user', None) or env.get('DB_USER', ''),
+            password=password,
+            database=getattr(_cfg.data, 'db_name', None) or env.get('DB_NAME', ''),
+            charset='utf8mb4',
+            cursorclass=pymysql.cursors.DictCursor,
+            connect_timeout=20,
+            read_timeout=120,
+            write_timeout=120,
+        )
+    # Fallback: pure env
+    return dict(
+        host=env.get('DB_HOST', 'localhost'),
+        user=env.get('DB_USER', ''),
+        password=env.get('DB_PASS', ''),
+        database=env.get('DB_NAME', ''),
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor,
         connect_timeout=20,
         read_timeout=120,
         write_timeout=120,
     )
-else:
-    _env = _load_env_db() or {}
-    MYSQL = dict(
-        host=_env.get('DB_HOST', 'localhost'),
-        user=_env.get('DB_USER', ''),
-        password=_env.get('DB_PASS', ''),
-        database=_env.get('DB_NAME', ''),
-        charset='utf8mb4',
-        cursorclass=pymysql.cursors.DictCursor,
-        connect_timeout=20,
-        read_timeout=120,
-        write_timeout=120,
-    )
 
 
-def _retry(fn, label="operation", attempts=4):
-    """Reconnect on transient MySQL connection errors, then retry."""
-    delay = 1
-    last = RuntimeError(f"_retry() failed after {attempts} attempts for {label}")
-    for i in range(1, attempts + 1):
-        try:
-            return fn()
-        except Exception as e:
-            last = e
-            name = type(e).__name__
-            if name in ("OperationalError", "InterfaceError"):
-                print(f"  WARN {label} attempt {i}/{attempts} failed ({name}), reconnecting in {delay}s...")
-                try:
-                    conn.ping(reconnect=True)
-                except Exception:
-                    pass
-                time.sleep(delay)
-                delay = min(delay * 2, 30)
-            else:
-                raise
-    raise last
+def get_existing_symbols(cur):
+    """Return set of symbols that already have price data in the central DB."""
+    cur.execute("SELECT DISTINCT symbol FROM stockprices")
+    return set(r['symbol'] for r in cur.fetchall())
 
 
-def get_existing_symbols(c):
-    c.execute("SELECT DISTINCT symbol FROM stockprices")
-    return set(r['symbol'] for r in c.fetchall())
-
-
-def get_pending_symbols(c, existing):
-    c.execute("SELECT symbol FROM symbol_master WHERE is_active = 1 ORDER BY symbol")
-    all_syms = set(r['symbol'] for r in c.fetchall())
+def get_pending_symbols(cur, existing):
+    """Return symbols needing price sync (active in symbol_master, not in stockprices)."""
+    cur.execute("SELECT symbol FROM symbol_master WHERE is_active = 1 ORDER BY symbol")
+    all_syms = set(r['symbol'] for r in cur.fetchall())
     # Skip synthetic / manually-maintained symbols
     skip = {"BOND_AVG.TO"}
     all_syms -= skip
@@ -179,17 +162,10 @@ def get_pending_symbols(c, existing):
 
 
 def is_yfinance_resolvable(sym: str) -> bool:
-    """Return False for tickers yfinance consistently cannot resolve.
-
-    Runs the symbol through normalize_symbol() first so exchange-prefixed
-    (AMEX:/OTC:/NYSE:/NASDAQ:) and share-class (/, class '.') forms are no
-    longer auto-skipped — they are normalized to a yfinance-resolvable ticker
-    and tried. Only the genuinely problematic TSX ETF series suffixes remain
-    blocked.
-    """
-    sym = normalize_symbol(sym)
+    """Return False for tickers yfinance consistently cannot resolve."""
+    norm = normalize_symbol(sym)
     # Common ETF series suffix patterns on TSX that trip up yfinance
-    if re.search(r'\.[A-Z]\.TO$', sym):
+    if re.search(r'\.[A-Z]\.TO$', norm):
         return False
     return True
 
@@ -294,44 +270,38 @@ def fetch_symbol(sym, start='2014-01-01', end=None):
     return None, norm
 
 
-def insert_prices(c, sym, hist):
-    """Insert OHLCV rows into stockprices. Skip existing."""
-    if not hasattr(insert_prices, '_conn'):
-        raise RuntimeError('insert_prices requires conn attribute set by caller')
+def insert_prices(dao, sym, hist):
+    """Insert OHLCV rows into stockprices via the DAO. Skip existing.
+
+    Builds PriceRow objects from the DataFrame and writes them through the
+    central stockprice DAO (which handles INSERT ... ON DUPLICATE KEY UPDATE
+    against ksfraser_stock_market.stockprices, with optional dual-write to
+    the exchange DB).
+    """
     rows = []
-    for idx, row in hist.iterrows():
+    for idx in hist.index:
+        row = hist.loc[idx]
         d = idx.strftime('%Y-%m-%d')
         close = row['Close']
         adj = row.get('Adj Close', close)
         if pd.isna(close):
             continue
-        rows.append((
-            sym,
-            d,
-            float(row['Open']) if pd.notna(row['Open']) else None,
-            float(row['High']) if pd.notna(row['High']) else None,
-            float(row['Low']) if pd.notna(row['Low']) else None,
-            float(close),
-            int(row['Volume']) if pd.notna(row['Volume']) else None,
-            float(adj) if pd.notna(adj) else float(close),
-            float(row.get('Dividends', 0)) if pd.notna(row.get('Dividends', 0)) else 0,
-            float(row.get('Stock Splits', 1)) if pd.notna(row.get('Stock Splits', 1)) else 1,
+        rows.append(PriceRow(
+            symbol=sym,
+            price_date=date.fromisoformat(d),
+            open=(Decimal(str(row['Open'])) if pd.notna(row['Open']) else None),
+            high=(Decimal(str(row['High'])) if pd.notna(row['High']) else None),
+            low=(Decimal(str(row['Low'])) if pd.notna(row['Low']) else None),
+            close=Decimal(str(close)),
+            volume=(int(row['Volume']) if pd.notna(row['Volume']) else None),
+            adj_close=(Decimal(str(adj)) if pd.notna(adj) else Decimal(str(close))),
+            currency=None,
+            dividend=(Decimal(str(row.get('Dividends', 0))) if pd.notna(row.get('Dividends', 0)) else None),
+            split_ratio=(Decimal(str(row.get('Stock Splits', 1))) if pd.notna(row.get('Stock Splits', 1)) else None),
         ))
     if not rows:
         return 0
-    try:
-        c.executemany(
-            'INSERT IGNORE INTO stockprices (symbol,price_date,open,high,low,close,volume,adj_close,dividend,split_ratio) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
-            rows,
-        )
-    except pymysql.err.InterfaceError:
-        insert_prices._conn.ping(reconnect=True)
-        c = insert_prices._conn.cursor()
-        c.executemany(
-            'INSERT IGNORE INTO stockprices (symbol,price_date,open,high,low,close,volume,adj_close,dividend,split_ratio) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
-            rows,
-        )
-    return len(rows)
+    return dao.write_prices(rows)
 
 
 def main():
@@ -345,9 +315,10 @@ def main():
     parser.add_argument('--manifest', default=None, help='Path to CSV manifest for resumable fetches')
     args = parser.parse_args()
 
-    conn = pymysql.connect(**MYSQL)
-    c = conn.cursor()
-    insert_prices._conn = conn
+    # Get the DAO's central connection (a pymysql connection to ksfraser_stock_market).
+    dao = create_central_stockprice_dao()
+    conn = dao._central_db
+    cur = conn.cursor()
 
     custom_symbols = None
     if args.symbols:
@@ -355,18 +326,19 @@ def main():
         if not custom_symbols:
             custom_symbols = None
 
+    # Determine pending symbol list
     if custom_symbols:
         pending = custom_symbols
         print(f"Force-fetching specified symbols: {len(pending)}")
     else:
-        existing = _retry(lambda: get_existing_symbols(c), label="existing symbols")
+        existing = get_existing_symbols(cur)
         print(f"Already have price data for: {len(existing)} symbols")
 
         if args.full_history or (args.days and args.days > 0):
-            c.execute("SELECT symbol FROM symbol_master WHERE is_active = 1 ORDER BY symbol")
-            pending = [r['symbol'] for r in c.fetchall()]
+            cur.execute("SELECT symbol FROM symbol_master WHERE is_active = 1 ORDER BY symbol")
+            pending = [r['symbol'] for r in cur.fetchall()]
         else:
-            pending = get_pending_symbols(c, existing)
+            pending = get_pending_symbols(cur, existing)
         if args.start_from:
             pending = [s for s in pending if s >= args.start_from]
 
@@ -413,7 +385,8 @@ def main():
             time.sleep(1)
             continue
 
-        n = _retry(lambda: insert_prices(c, norm, hist), label=f"insert {norm}")
+        # Insert via DAO (handles central + optional exchange dual-write).
+        n = insert_prices(dao, norm, hist)
         conn.commit()
         ok += 1
         total_rows += n
@@ -428,41 +401,48 @@ def main():
         # Rate limit: max ~100/hour
         time.sleep(1.5)
 
+        # Publish event (uses the same central connection).
         publisher = EventPublisher(conn)
         try:
-            publisher.publish(
-                'prices_loaded',
-                {'symbol': norm},
-            )
+            publisher.publish('prices_loaded', {'symbol': norm})
         except Exception:
             pass
-        _retry(lambda: c.execute("UPDATE symbol_master SET data_start=%s, last_updated=CURRENT_TIMESTAMP WHERE symbol=%s",
-                  (hist.index[0].date().isoformat(), norm)), label=f"update symbol_master {norm}")
+
+        # Update symbol_master data_start / last_updated.
+        cur.execute(
+            "UPDATE symbol_master SET data_start=%s, last_updated=CURRENT_TIMESTAMP WHERE symbol=%s",
+            (hist.index[0].date().isoformat(), norm)
+        )
         conn.commit()
 
     if manifest_path:
         _save_manifest(manifest_path, manifest)
         print(f"Manifest saved to {manifest_path}")
 
-    print(f"\n✓ Fetched {ok} symbols, {fail} failed, {total_rows:,} total rows")
+    print(f"\nDone: Fetched {ok} symbols, {fail} failed, {total_rows:,} total rows")
 
     # Final summary with retry/health-check
     try:
         conn.ping(reconnect=True)
     except Exception:
         try:
-            conn = pymysql.connect(**MYSQL)
-            c = conn.cursor()
+            cur.close()
+            conn.close()
+            new_conn = pymysql.connect(**_build_mysql_config())
+            dao._central_db = new_conn
+            conn = new_conn
+            cur = conn.cursor()
         except Exception as e:
             print(f"WARN: could not reconnect for summary query: {e}")
             return
 
     try:
-        c.execute("SELECT COUNT(DISTINCT symbol) as cnt FROM stockprices")
-        print(f"  Total symbols with prices: {c.fetchone()['cnt']}")
+        cur.execute("SELECT COUNT(DISTINCT symbol) as cnt FROM stockprices")
+        print(f"  Total symbols with prices: {cur.fetchone()['cnt']}")
     except Exception as e:
         print(f"WARN: summary count failed after reconnect: {e}")
     finally:
+        cur.close()
         conn.close()
 
 

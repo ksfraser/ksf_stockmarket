@@ -1,7 +1,5 @@
 # Architecture Document
-
 ## 1. System Overview
-
 KSF Stock Market Analysis is a hybrid PHP + Python application for:
 - Portfolio tracking and management
 - Technical and fundamental analysis
@@ -16,55 +14,55 @@ KSF Stock Market Analysis is a hybrid PHP + Python application for:
 **Hybrid Architecture: PHP (Presentation) + Python (Analysis) + MariaDB (Data)**
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        Apache 2.4                                │
-│  ┌──────────────────────┐    ┌──────────────────────────────┐   │
-│  │   PHP 8.1+           │    │  mod_proxy                   │   │
-│  │   Front Controller   │    │                              │   │
-│  │   ┌──────────────┐   │    │  /api/* → 127.0.0.1:5000    │   │
-│  │   │ Controllers  │   │    └──────────┬───────────────────┘   │
-│  │   ├──────────────┤   │               │                       │
-│  │   │ Services     │   │               │                       │
-│  │   ├──────────────┤   │               │                       │
-│  │   │ Models (PDO) │   │               │                       │
-│  │   ├──────────────┤   │               │                       │
-│  │   │ PythonBridge │◄──┼───────────────┼──── HTTP ──────────┐ │
-│  │   └──────────────┘   │               │                    │ │
-│  └──────────────────────┘               │                    │ │
-│                                         │                    │ │
-└─────────────────────────────────────────┼────────────────────┼─┘
-                                          │                    │
-                                          ▼                    │
-                              ┌──────────────────────┐         │
-                              │  Python 3.11+         │         │
-                              │  Flask API :5000      │         │
-                              │  ┌────────────────┐  │         │
-                              │  │ TA Engine      │  │         │
-                              │  │ Backtest Engine│  │         │
-                              │  │ Strategies     │  │         │
-                              │  │ Data Import    │  │         │
-                              │  │ Reports        │  │         │
-                              │  └────────────────┘  │         │
-                              └──────────┬───────────┘         │
-                                         │                     │
-                                         ▼                     │
-                              ┌──────────────────────┐         │
-                              │  MariaDB 10.6+        │◄────────┘
-                              │  ┌────────────────┐  │
-                              │  │ Portfolio data  │  │
-                              │  │ OHLCV prices    │  │
-                              │  │ Transactions    │  │
-                              │  │ Backtest results│  │
-                              │  │ User accounts   │  │
-                              │  └────────────────┘  │
-                              └──────────────────────┘
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++                        Apache 2.4                                +
++  ++++++++++++++++++++++++    ++++++++++++++++++++++++++++++++   +
++  +   PHP 8.1+           +    +  mod_proxy                   +   +
++  +   Front Controller   +    +                              +   +
++  +   ++++++++++++++++   +    +  /api/* -> 127.0.0.1:5000    +   +
++  +   + Controllers  +   +    ++++++++++++++++++++++++++++++++   +
++  +   ++++++++++++++++   +               +                       +
++  +   + Services     +   +               +                       +
++  +   ++++++++++++++++   +               +                       +
++  +   + Models (PDO) +   +               +                       +
++  +   ++++++++++++++++   +               +                       +
++  +   + PythonBridge +<+++++++++++++++++++++++ HTTP +++++++++++ +
++  +   ++++++++++++++++   +               +                    + +
++  ++++++++++++++++++++++++               +                    + +
++                                         +                    + +
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+                                          +                    +
+                                          v                    +
+                              ++++++++++++++++++++++++         +
+                              +  Python 3.11+         +         +
+                              +  Flask API :5000      +         +
+                              +  ++++++++++++++++++  +         +
+                              +  + TA Engine      +  +         +
+                              +  + Backtest Engine+  +         +
+                              +  + Strategies     +  +         +
+                              +  + Data Import    +  +         +
+                              +  + Reports        +  +         +
+                              +  ++++++++++++++++++  +         +
+                              ++++++++++++++++++++++++         +
+                                         +                     +
+                                         v                     +
+                              ++++++++++++++++++++++++         +
+                              +  MariaDB 10.6+        +<+++++++++
+                              +  ++++++++++++++++++  +
+                              +  + Portfolio data  +  +
+                              +  + OHLCV prices    +  +
+                              +  + Transactions    +  +
+                              +  + Backtest results+  +
+                              +  + User accounts   +  +
+                              +  ++++++++++++++++++  +
+                              ++++++++++++++++++++++++
 ```
 
 ## 3. Database Schema Architecture
 
 ### 3.1 Strategy: Partitioned Tables + Tiered Indicators
 
-The legacy `stock_market` DB had ~130 tables with no partitioning and the `back_finance` DB had 21 tables — both using MyISAM with latin1 charset. The modernized schema consolidates to ~25 focused tables on InnoDB with utf8mb4, using:
+The legacy `stock_market` DB had ~130 tables with no partitioning and the `back_finance` DB had 21 tables -- both using MyISAM with latin1 charset. The modernized schema consolidates to ~25 focused tables on InnoDB with utf8mb4, using:
 
 1. **Partition by YEAR**: `stockprices`, `daily_indicators`, `daily_tier2` all partitioned by `YEAR(date)` into ~10 partitions. Enables partition pruning for backtest queries and per-year backup.
 2. **Tier 1 indicators via trigger**: `daily_indicators` table populated on each INSERT into `stockprices` (daily return, gap, SMA-20/50/200, volume SMA-20).
@@ -83,282 +81,178 @@ The legacy `stock_market` DB had ~130 tables with no partitioning and the `back_
 
 **Decision: Materialized table `daily_tier2`, not a VIEW.**
 - Window functions (Bollinger, ATR) need 14-20 rows per symbol per calculation
-- Calculating on every INSERT would be O(n_symbols) per insert — prohibitive
+- Calculating on every INSERT would be O(n_symbols) per insert -- prohibitive
 - Daily refresh is sufficient because indicator weightings change slowly (weeks/months)
 - Populated by MySQL event scheduler at 10 PM ET daily (after market data refresh)
 - Python cron can also populate this as an alternative to MySQL events
 - `signal_weights` table stores per-symbol, per-signal-type weights that evolve over time via backtesting optimization
 
-### 3.4 Signal Weights: Evolving Over Time
+## 4. Application Design
 
-The `signal_weights` table stores optimized weights for each indicator/signal type per symbol:
-- `signal_type`: e.g., `RSI_OVERSOLD`, `MACD_CROSS`, `BB_TOUCH`, `GOLDEN_CROSS`
-- `weight`: Optimized weight (decreases for unreliable signals, increases for reliable ones)
-- `win_rate`: Historical win rate tracked per signal per symbol
-- `updated_by`: `backtest`, `manual`, or `python_ml`
-- Weights start at 1.0 (default) and are refined by backtesting
+### 4.1 PHP Layer
+- Front controller pattern (`index.php`)
+- PSR-4 autoloading under `Ksf\StockMarket\`
+- Controllers, Services, Models (PDO)
+- Twig templates for views
+- PythonBridge HTTP client for Flask API calls
 
-This means the system learns which indicators work best for each stock over time, rather than using fixed thresholds.
+### 4.2 Python Layer
+- Flask REST API on port 5000
+- TA-Lib for technical analysis
+- pandas for data manipulation
+- SQLAlchemy for ORM (or raw SQL for performance)
+- Celery or cron for async tasks
+- Multiple strategy modules: Motley Fool, Buffett, Turtle, ETF, Seg Fund
 
-### 3.5 Backup Strategy
-
-Each partition is backed up independently:
-```bash
-# Full backup: one file per year
-for year in $(seq 2008 2026); do
-  mysqldump --single-transaction --where "YEAR(price_date)=${year}" \
-    ksf_stockmarket stockprices > stockprices_${year}.sql
-done
-
-# Incremental: today's partition only
-mysqldump --single-transaction --where "YEAR(price_date)=YEAR(CURDATE())" \
-  ksf_stockmarket stockprices > stockprices_current.sql
-
-# Tier tables (small, full dump)
-mysqldump ksf_stockmarket daily_indicators daily_tier2 signal_weights > indicators.sql
+### 4.3 Data Flow
+```
+Daily Processing Flow:
+1. Market closes (4 PM ET)
+2. yfinance fetches latest prices -> stockprices (trigger fires Tier 1)
+3. MySQL event runs Tier 2 (window functions)
+4. Python cron runs Tier 3 (TA-Lib vectorized batch)
+5. Python cron runs scoring analysis (LLM + fundamental)
+6. Python cron updates signal_weights (correlation analysis)
+7. Results available for UI and monitoring
 ```
 
-## 3. Legacy Schema Comparison
+## 5. Integration Points
 
-| Property | `stock_market` (old) | `back_finance` (new) | `ksf_stockmarket` (modern) |
+### 5.1 FrontAccounting Integration
+- FA module uses SOAP/REST API or direct DB access
+- Portfolio syncs with FA accounts
+- Transactions flow between systems
+- Asset revaluation triggers FA journal entries
+
+### 5.2 External Data Sources
+- yfinance: Stock prices, fundamentals
+- Optional: Alpha Vantage, IEX Cloud, Polygon.io
+- CSV imports for legacy data migration
+
+### 5.3 Authentication & Authorization
+- User table with roles (admin, trader, viewer)
+- Session management via PHP sessions
+- RBAC enforced at controller level
+- API tokens for Python service authentication
+
+## 6. Testing Strategy
+
+### 6.1 Unit Tests
+- PHP: PHPUnit for controllers, services, models
+- Python: pytest for TA calculations, strategy logic
+- Target: >80% coverage for business logic
+
+### 6.2 Integration Tests
+- PHP-to-Python API communication
+- Database migration scripts
+- FrontAccounting sync
+
+### 6.3 Performance Tests
+- Page load times under load
+- Backtest execution time
+- Data import throughput
+
+## 7. Deployment
+
+### 7.1 Environments
+- Development: Local Docker or VM
+- Staging: mirror of production
+- Production: ksfraser.ca (or similar)
+
+### 7.2 CI/CD
+- Git-based workflow
+- Automated testing before merge
+- Database migrations as part of deployment
+- Rollback capability
+
+### 7.3 Monitoring
+- Application logs
+- Database performance
+- API response times
+- Cron job execution status
+
+## 8. Security Considerations
+
+### 8.1 Data Protection
+- Password hashing (bcrypt/argon2)
+- SQL injection prevention (prepared statements)
+- XSS prevention (output encoding)
+- HTTPS in production
+
+### 8.2 Access Control
+- RBAC at application level
+- Database user permissions (least privilege)
+- API authentication for Python service
+
+### 8.3 Audit Trail
+- User action logging
+- Portfolio change history
+- Backtest run archives
+
+## 9. Scalability Considerations
+
+### 9.1 Database
+- Partitioning for large tables
+- Index strategy for common queries
+- Read replicas for reporting queries (future)
+
+### 9.2 Application
+- Stateless PHP layer (horizontal scaling)
+- Python service can scale independently
+- Caching layer for expensive calculations (future: Redis)
+
+### 9.3 Data Volume
+- Historical data retention policy
+- Archive old data to cheaper storage
+- Partition pruning for query performance
+
+## 10. BABOK and PMBOK Alignment
+
+### 10.1 BABOK Knowledge Areas and Process Groups
+
+| KSF Activity | BABOK Knowledge Area | BABOK Process Group | Primary Artifacts |
 |---|---|---|---|
-| Origin | Original web app | Finance/trading module | Modernized PHP app |
-| Tables | ~130 (FA + legacy SQL) | 21 tables | ~25 focused tables |
-| Engine | MyISAM / InnoDB mix | MyISAM mostly | InnoDB |
-| Charset | latin1 | latin1 | utf8mb4 |
-| Partitioned | No | No | **Yes** (prices, indicators) |
-| Tier 1 (trigger) | No | No | **Yes** |
-| Tier 2 (materialized) | No | No | **Yes** |
-| Signal weights | No | No | **Yes** |
-| RBAC | No | No | **Yes** |
-
-See `database-comparison.md` for detailed column-level comparison.
-
-## 4. Component Responsibilities
-
-### PHP Layer (Web Application)
-| Component    | Responsibility                                      |
-|--------------|-----------------------------------------------------|
-| Controllers  | Handle HTTP requests, input validation, routing     |
-| Services     | Business logic, orchestration                       |
-| Models       | Data access via PDO, domain objects                |
-| Views        | Twig templates, HTML rendering                      |
-| PythonBridge | HTTP client to Flask API                            |
-| FA Module    | FrontAccounting journal entry creation              |
-
-### Python Layer (Analysis Engine)
-| Component        | Responsibility                                      |
-|------------------|-----------------------------------------------------|
-| Flask API        | REST endpoints for PHP bridge                       |
-| Backtest Engine  | Portfolio simulation, trade execution, metrics      |
-| TA Library       | Candlestick patterns, indicators, Turtle system     |
-| Strategies       | Motley Fool, Buffett, Combined screening            |
-| Fetchers         | yFinance/Google/SEDAR/SEC → normalized DTOs         |
-| Repositories     | DTO ↔ SQLite/MariaDB storage, column mapping        |
-| Detection        | Volume/NATR/RSI/gap triggers read from local DB     |
-|| Reports          | HTML/PDF report generation                          |
-|| Advisor Notifier | Email/Discord/WhatsApp recommendation delivery      |
-|| Risk Engine      | Optional rules enforcement in backtest + live        |
-
-### Database Layer
-| Table Group       | Tables                                               |
-|-------------------|------------------------------------------------------|
-| Portfolio         | portfolio, portfolio_history, user_trades           |
-| Market Data       | stockprices (partitioned), dividends, stockinfo     |
-| Tier 1 Indicators | daily_indicators (partitioned, trigger-populated)   |
-| Tier 2 Indicators | daily_tier2 (partitioned, daily event-populated)   |
-| Signal Weights    | signal_weights (per-symbol, evolving)               |
-| Backtesting       | backtest_runs, backtest_trades                      |
-| Users & RBAC      | users, roles, watchlists, watchlist_symbols         |
-|| Advisors          | user_advisors, advisor_recommendations, strategy_rules.risk_rules.optional_rules, kb_articles |
-| Alerts            | alerts, alerts_raised                               |
-| Screener          | tradingview_screener_results (preset_name+market+symbol unique), symbol_master |
-| FA Integration    | fa_transfers                                        |
-| Operations        | data_import_log                                     |
-
-## 5. Technology Stack
-
-| Layer        | Technology         | Version  | Notes                              |
-|--------------|--------------------|----------|------------------------------------|
-| Web Server   | Apache             | 2.4+     | mod_proxy, mod_rewrite             |
-| Backend      | PHP                | 8.1+     | PSR-4 autoloading, typed           |
-| Backend      | Python             | 3.11+    | Flask, pandas, numpy               |
-| Database     | MariaDB            | 10.6+    | InnoDB, utf8mb4, partitioning      |
-| ORM/DBAL     | PDO (native)       | —        | No ORM — raw PDO for performance   |
-| Templating   | Twig               | 3.x      | Auto-escaping, sandboxing          |
-| Logging      | Monolog            | 3.x      | PSR-3 compatible                   |
-| Config       | phpdotenv          | 5.x      | .env files                         |
-| Testing      | PHPUnit            | 10.x     | Unit + integration tests           |
-| Analysis     | yfinance           | —        | Yahoo Finance data                 |
-| Analysis     | ta-lib / pandas-ta | —        | Technical indicators               |
-| CSS Framework| Custom/Tailwind    | —        | To be decided in Phase 4           |
-
-## 6. Deployment Architecture
-
-### Container Structure (via ksf_Infrastructure Ansible)
-
-```
-Pod: ksf-stockmarket
-├── Container: ksf-stockmarket-web
-│   ├── Apache 2.4 + PHP 8.1
-│   ├── Document root: /var/www/html/public
-│   └── Port: {{ http_port }} (default 8080)
-├── Container: ksf-stockmarket-api
-│   ├── Python 3.11 + Flask
-│   ├── Port: 5000 (internal)
-│   └── Gunicorn WSGI server
-├── Container: ksf-stockmarket-db
-│   ├── MariaDB 10.6
-│   ├── Port: {{ db_port }} (default 3306)
-│   └── Volume: /var/lib/mysql
-└── Shared Volumes:
-    ├── {{ app_dir }}:/var/www/html
-    ├── {{ data_dir }}:/var/lib/mysql
-    └── {{ csv_data_dir }}:/var/www/html/data/csv
-```
-
-### Ansible Recipe Requirements (from ksf_Infrastructure)
-The existing recipe needs these additions:
-1. Configurable ports: `{{ http_port }}`, `{{ db_port }}`
-2. Named containers with prefix: `{{ app_name }}-web`, `{{ app_name }}-db`, `{{ app_name }}-api`
-3. Bind mounts from host paths
-4. Environment variables via `.env` file
-5. Python API container (new)
-
-## 7. API Contract (PHP ↔ Python)
-
-### Endpoints
-
-| Method | Path                       | Request Body              | Response           |
-|--------|----------------------------|---------------------------|--------------------|
-| POST   | /api/backtest/run          | strategy, params, dates   | { run_id, status } |
-| GET    | /api/backtest/status/{id}  | —                         | { status, metrics }|
-| GET    | /api/backtest/results/{id} | —                         | { trades, metrics }|
-| POST   | /api/ta/analyze            | symbol, indicators        | { signals, values }|
-| POST   | /api/screen/run            | screen_type, universe     | { results: [...] } |
-| GET    | /api/data/prices/{symbol}  | ?from=&to=                | { prices: [...] }  |
-| POST   | /api/data/import           | symbols[], source         | { import_log }     |
-| GET    | /api/health                | —                         | { status: "ok" }   |
-|| GET    | api_screener               | ?preset=                  | HTML fragment      |
-|| GET    | /api/advisor/recommendations | ?user_id=N              | { recommendations: [...] } |
-|| GET/POST | /api/advisor/preferences | ?user_id=N                | { prefs } |
-|| POST   | /api/advisor/notifications/whatsapp/send | to, message | { message_id } |
-|| POST   | /api/advisor/notifications/whatsapp/status | provider payload | { status } |
-
-## 7.1 Screener AJAX Flow (Sequence)
-
-The Screener page no longer performs full-page reloads on preset changes.
-
-**Participants**: Browser → Front Controller (`index.php`) → `StockController::screener()` → Database (`tradingview_screener_results`) → Browser DOM update
-
-**Flow**:
-1. User selects a preset in `#screener-preset`
-2. Browser fires `fetch()` to `?action=api_screener&preset=X`
-3. Front controller invokes `StockController::screener(preset)`
-4. Controller queries latest `tradingview_screener_results` rows for that preset
-5. Controller renders inline HTML (table + summary line)
-6. Front controller returns HTML fragment (no layout)
-7. Browser replaces `#screener-results` innerHTML
-
-## 7.2 Routing Overview
-
-```
-?action=screener           → StockController::screener()
-?action=api_screener       → inline API fragment (StockController::screener())
-?action=screener/          → redirect ?action=screener (canonical trailing-slash)
-```
-
-## 8. Security Model
-
-### Authentication
-- PHP session-based authentication for web UI
-- Password hashing via `password_hash()` (bcrypt)
-- API key for PHP ↔ Python bridge (localhost only)
-
-### Authorization (RBAC)
-| Role    | Permissions                                              |
-|---------|----------------------------------------------------------|
-| admin   | Full access: manage users, run backtests, modify data    |
-| trader  | View data, run backtests, manage own watchlists          |
-| viewer  | View-only: dashboards, reports, watchlists               |
-
-## 9. Migration Strategy
-
-### Parallel Operation
-The legacy PHP application runs alongside the new code during migration:
-- Legacy code: untouched in original directories (`application/`, `class/`, `model/`, etc.)
-- New code: under `src/` with PSR-4 autoloading
-- Shared database: old tables preserved, new tables added
-- Feature flags in config control which code path is active
-
-### Migration Sequence
-1. Phase 1: Foundation (this phase) — parallel structure
-2. Phase 2: Core models — port `class/` and `model/` incrementally
-3. Phase 3: Analysis engine — Python takes over backtesting/TA
-4. Phase 4: UI — port controllers to front controller pattern
-5. Phase 5: FA integration — new module
-6. Phase 6: Reporting + data migration
-
-## 9. Optional Python Worker Fallback
-
-### 9.1 Problem
-When the stockmarket app runs in a container, the PHP process cannot `proc_open()` a local Python interpreter. To preserve the existing bare-metal behaviour while supporting containerized deployments, controllers now use a curl-fallback to a FastAPI worker.
-
-### 9.2 Worker Endpoint
-`POST /worker/refresh_prices` accepts:
-- `symbol` — single ticker to fetch/update
-- `full_history` — boolean; bypass day calc
-- `days` — optional day window
-
-The worker shells out to `fetch_prices.py` and returns HTTP status.
-
-### 9.3 Configuration
-| Variable | Purpose | Default |
-|----------|---------|---------|
-| `PYTHON_WORKER_URL` | URL of FastAPI worker | unset (bare metal uses `proc_open`) |
-| `WORKER_PORT` | Worker container port | `8000` |
-| `STOCKMARKET_PYTHON_DIR` | Host path mounted into the worker container | `/home/ksf_stockmarket/ksf_stockmarket/python` |
-
-### 9.4 Container Deployment (optional)
-`ksf_Infrastructure` defines an optional service `stockmarket-python-worker` on profile `stockmarket`. Enable via Ansible with `enable_stockmarket_python_worker=true` or via Podman Compose with `--profile stockmarket`.
-
-## 10. Methodology Alignment (BABOK / PMBOK)
-
-### 10.1 Knowledge Area Mapping
-
-| System Capability | BABOK Knowledge Area | PMBOK Process Group | Primary Artifacts |
-|-------------------|---------------------|---------------------|-------------------|
-| Portfolio tracking + taxonomies | Business Analysis Planning and Monitoring, Requirements Analysis | Planning, Executing | `requirements-specification.md`, `traceability-matrix.md`, `architecture-document.md` |
-| Advisor hiring + recommendations | Requirements Analysis, Solution Evaluation | Planning, Executing, Monitoring | `business-requirements.md`, `solution-design.md`, advisor migrations/backends |
-| T+2 settlement + cash flow | Requirements Analysis, Solution Assessment and Validation | Executing, Monitoring and Controlling | `strategy_pipeline.py`, `runner.py`, `rules_backtest.py` |
-| Optional risk rules (leverage/buffer/blacklist) | Requirements Analysis, Solution Evaluation | Planning, Executing | `strategy_rules` schema seeds, `AdminSettingsController` |
-| ATR trailing stops + backtest | Requirements Analysis, Solution Assessment and Validation | Planning, Executing | `risk.py`, `rules_backtest.py`, `atr_methodology.php` |
+| Portfolio tracking, transaction recording, watchlists, user mgmt | Requirements Analysis and Design Definition; Business Analysis Planning and Monitoring | Elicitation and Collaboration; Life Cycle Management | `business-requirements.md` BR-1, FR-5 |
+| Stock/ETF analysis, technical indicators, candlestick patterns, signal weights | Requirements Analysis and Design Definition; Solution Evaluation | Requirements Life Cycle Management; Solution Assessment | `architecture-document.md` Sec.3, `stock-filter-engine.md` Sec.3 |
+| Strategy backtesting (Motley Fool, Buffett, Turtle, ETF, seg funds) | Requirements Analysis and Design Definition; Solution Assessment and Validation | Requirements Life Cycle Management; Executing; Monitoring and Controlling | `docs/requirements/FR-4-backtesting.md`, `backtest_engine.py`, `optimize.py`, `five_year_backtest.py` |
+| Seg fund screening (12+ carriers, MER <= 2.5%, guarantee >= 75%) | Requirements Analysis and Design Definition; Solution Assessment and Validation | Requirements Life Cycle Management; Executing | `docs/requirements/BR-4-seg-funds.md`, `SegFundFilter.php`, `SegFundController.php`, `docs/requirements/UT-04-seg-fund-filter.md` |
+| LLM admin screen (primary/secondary/fallback URLs, models, tokens) | Requirements Analysis and Design Definition; Solution Evaluation | Elicitation and Collaboration; Requirements Life Cycle Management; Solution Assessment and Validation | `docs/requirements/FR-13-llm-admin-screen.md`, `docs/requirements/UT-11-06-llm-admin-console.md`, `AdminSettingsController.php` (PHP), `docs/advisors/REQUIREMENTS_DESIGN.md` Sec.LLM Admin Screen, `docs/architecture/architecture-document.md` Sec.10.8 |
+| LLM-enhanced fundamental analysis (guidance, news, product dev, regulatory tables) | Requirements Analysis and Design Definition; Solution Evaluation | Elicitation and Collaboration; Requirements Life Cycle Management; Solution Assessment and Validation | `docs/requirements/FR-11-llm-fundamental-data.md`, `docs/requirements/UT-11-llm-fundamental-data.md`, `LLM Fundamental Analyzer` (Python), `docs/advisors/REQUIREMENTS_DESIGN.md` Sec.LLM Fundamental Data (Python + DB layer) |
+| Research Wizard formula integration (pre-defined filters as reusable advisor criteria) | Requirements Analysis and Design Definition; Solution Evaluation | Elicitation and Collaboration; Requirements Life Cycle Management; Solution Assessment and Validation | `docs/requirements/FR-12-rw-formula-integration.md`, `docs/requirements/UT-12-rw-formula-advisors.md`, `RW Formula Parser` (Python), `docs/advisors/REQUIREMENTS_DESIGN.md` Sec.Research Wizard Formula Integration, `docs/architecture/architecture-document.md` Sec.10.6 |
+| Timing-aware backtesting (day-of-week, day-of-month, market-cap limits, sector rotation) | Requirements Analysis and Design Definition; Solution Assessment and Validation | Requirements Life Cycle Management; Executing; Monitoring and Controlling | `docs/requirements/FR-16-timing-variables.md`, `docs/requirements/UT-16-timing-backtesting.md`, `Timing Service` (Python), `Backtest Engine` (timing-variable support) |
 | Multi-gateway delivery (email/Discord/WhatsApp) | Requirements Analysis, Solution Evaluation | Executing, Monitoring and Controlling | `advisor_notifier.py`, `AdvisorNotificationController` |
 | Heat maps + performance reports | Requirements Analysis, Solution Assessment and Validation | Planning, Executing | `performance.py`, `reports.php` template |
 | Rebalancing workflows | Requirements Analysis, Solution Evaluation | Planning, Executing | `rebalancing.py`, `RebalancingController` |
 
 ### 10.2 BABOK Alignment Summary
 
-- **Strategy Analysis**: requirements/BRD, stakeholder elicitation captured in `business-requirements.md` BR-1..BR-8.
-- **Requirements Analysis**: formalized in `requirements-specification.md` with FR/NFR IDs aligned to BR traceability.
-- **Solution Assessment and Validation**: ATR methodology, backtest results, and T+2 settlement validation feed acceptance criteria.
-- **Business Analysis Planning and Monitoring**: documentation versioning, change log, traceability matrix maintained in `docs/`.
+- **Strategy Analysis**: BR-1 through BR-11 capture stakeholder needs across portfolio tracking, analysis, screening, backtesting, LLM-enhanced fundamental analysis, RW formula integration, timing-aware trading, and multi-gateway delivery.
+- **Requirements Analysis and Design Definition**: Each requirement maps to a design artifact (architecture doc sections, filter engine sections, advisor design doc sections, test outlines). Design options documented for partitioned schema, tiered indicators, and LLM fallback chains.
+- **Solution Assessment and Validation**: ATR methodology, backtest results, T+2 settlement validation, LLM accuracy testing (`UT-11-llm-fundamental-data.md`), RW formula accuracy (`UT-12-rw-formula-advisors.md`), timing optimization results (`UT-16-timing-backtesting.md`).
+- **Business Analysis Planning and Monitoring**: Documentation versioning, change log in `requirements-specification.md`, traceability matrix (`traceability-matrix.md`), methodology index (`methodology/index.md`).
+- **Elicitation and Collaboration**: Stakeholder interviews captured in business-requirements.md; user stories mapped to requirements; multi-gateway delivery patterns defined.
+- **Requirements Life Cycle Management**: Requirements traced from BR -> FR -> US -> DB table -> PHP class -> Python script -> test. Change log tracks evolution.
+- **Solution Evaluation**: Solution performance measured against requirements; backtest results validate trading strategies; LLM accuracy testing validates fundamental analysis quality.
 
 ### 10.3 PMBOK Alignment Summary
 
-- **Scope Management**: PortfolioPerformance parity target list = formal scope baseline; traceability matrix links requirements to design and tests.
-- **Schedule Management**: nightly cron, weekly backtest cadence, and advisor daily signal cadence modeled as scheduled deliverables.
-- **Cost Management**: backtest simulation validates capital-at-risk rules before live deployment.
-- **Quality Management**: validation scripts (`validate_t2_settlement.py`), syntax checks, and schema migrations enforce build quality.
-- **Risk Management**: emergency buffer, leverage/margin rules, and ATR stops are formal risk response strategies.
+- **Scope Management**: BR-1 through BR-11 and their FR variants form the scope baseline. Traceability matrix links scope to design and tests.
+- **Schedule Management**: Nightly cron, weekly backtest cadence, LLM analysis runs, RW formula screen runs, and advisor daily signal cadence modeled as scheduled deliverables.
+- **Cost Management**: Backtest simulation validates capital-at-risk rules before live deployment. Position sizing controls (3%/5%/10% max) limit exposure.
+- **Quality Management**: Validation scripts, syntax checks, schema migrations, LLM accuracy tests, RW formula accuracy tests, timing-variable backtests enforce build quality.
+- **Resource Management**: LLM provider fallback chain (primary/secondary/fallback) ensures resource availability. Admin screen manages LLM credentials.
+- **Communications Management**: Multi-gateway delivery (email/Discord/WhatsApp) for alerts and reports. Cron output to origin chat.
+- **Risk Management**: Emergency buffer, leverage/margin rules, ATR trailing stops, risk gate (Sharpe/drawdown checks), LLM fallback chain, paper-trading default.
+- **Procurement Management**: External data sources (yfinance, optional APIs) treated as procurement. LLM provider API keys managed via admin screen.
+- **Stakeholder Management**: Public-facing AI advisor personas for reference; user roles (admin/trader/viewer) for access control.
 
-+### 10.4 Supporting Diagrams
+### 10.4 Supporting Diagrams
 
 +Architecture UML views are in `docs/methodology/uml/`:
-+- `deployment.puml` — deployment context
-+- `class.puml` — core class diagram
-+- `sequence.puml` — advisor recommendation sequence
-+- `state.puml` — alert lifecycle state machine
-+- `activity.puml` — daily run activity flow
-+
++- `deployment.puml` -- deployment context
++- `class.puml` -- core class diagram
++- `sequence.puml` -- advisor recommendation sequence
++- `state.puml` -- alert lifecycle state machine
++- `activity.puml` -- daily run activity flow
+
 +All diagrams map to the knowledge areas and process groups above.

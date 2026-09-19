@@ -105,4 +105,22 @@ Modernize a legacy PHP/MySQL stock market analysis application to a hybrid PHP+P
 - [ ] Briefs stored in `research_briefs` table and markdown institutional memory folder
 - [ ] All execution is forward/real-time paper testing only — no live trades
 - [ ] External provider auth via OAuth (Reddit) and API keys (TradingView, arXiv)
-- [ ] Tokens stored as [REDACTED] in `external_auth_tokens` table
+|- [ ] Tokens stored as [REDACTED] in `external_auth_tokens` table
+
+### BR-7: Periodic Stock Analysis Write-ups
+**Statement**: The system shall generate and store periodic qualitative write-ups for portfolio and watchlist symbols: pre-earnings (2 weeks before report), post-earnings (3-5 days after report), and quarterly checks (~1st of month). Each write-up is stored as a row in `stock_analysis` with a Markdown body, captured data snapshot, and source symbol list.
+**Rationale**: Recurring write-ups let us compare predictions vs outcomes over time and display the latest analysis on the stock detail page. Competitor data from `stock_competitors` and fundamentals from `fundamentals` are used so write-ups compare the symbol against its peer group.
+**Priority**: Should Have
+**Acceptance Criteria**:
+- [ ] `stock_competitors` table maps each symbol to primary + peer competitors
+- [ ] `stock_analysis` table stores one row per (symbol, period_type, period_date) write-up
+- [ ] Pre-earnings write-ups generated for symbols with earnings in next 14 days
+- [ ] Post-earnings write-ups generated for symbols that reported in last 5 days
+- [ ] Quarterly check write-ups generated for all portfolio/watchlist symbols
+- [ ] Each write-up double-checks symbol identity (name, sector, industry from symbol_master) before generation
+- [ ] Earnings calendar cross-check: symbols with no entries in next 3 months flagged in `stock_news_alerts`
+- [ ] News freshness check: symbols with no news in last 14 days flagged in `stock_news_alerts`
+- [ ] News LLM analysis queued per symbol with 2-day rate limit (batch all news at once)
+- [ ] `stock_news_alerts` table tracks open/resolved alerts with severity, owner, flag count
+- [ ] Write-ups are idempotent — re-running doesn't create duplicates
+- [ ] Write-ups display on stock detail page via `analysis.php` partial

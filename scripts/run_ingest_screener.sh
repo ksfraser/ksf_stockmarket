@@ -4,6 +4,7 @@
 set -uo pipefail
 REPO_DIR="/home/ksf_stockmarket/ksf_stockmarket"
 cd "$REPO_DIR"
+export PYTHONPATH="$REPO_DIR/python/src:$REPO_DIR/python"
 if [[ -f ".env" ]]; then
     set -a && . ./.env && set +a
 fi

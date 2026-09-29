@@ -1,4 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Controller;
+
+use Ksf\StockMarket\Model\Database;
+
+
+
 /**
  * DocumentUploadController — Handles PDF/CSV upload, parsing, and import to transactions table.
  *

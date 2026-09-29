@@ -1,4 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Controller;
+
+use Ksf\StockMarket\Model\Database;
+
+
+
 /**
  * TransactionController — transaction history with filters, recording, and validation.
  */

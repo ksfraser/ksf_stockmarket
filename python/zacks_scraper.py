@@ -558,8 +558,8 @@ class ZacksStore:
             """
             try:
                 with self.adapter as conn:
-                    affected = conn.execute(sql, tuple(vals) + (data["symbol"],))
-                return affected > 0
+                    conn.execute(sql, tuple(vals) + (data["symbol"],))
+                return True
             except Exception as e:
                 print(f"  update error: {e}")
                 return False
@@ -783,8 +783,8 @@ def main():
             print("✗ (DB error)")
             fail += 1
 
-        if i < len(symbols) - 1:
-            time.sleep(RATE_LIMIT)
+        if (i + 1) % 15 == 0:
+            time.sleep(3.0)
 
     print(f"\nDone. {ok} ok, {fail} failed, {len(symbols)} total")
 

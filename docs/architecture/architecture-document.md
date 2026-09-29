@@ -1,4 +1,7 @@
 # Architecture Document
+## KSF Stock Market Analysis System
+
+---
 
 ## 1. System Overview
 
@@ -10,6 +13,8 @@ KSF Stock Market Analysis is a hybrid PHP + Python application for:
 - Screener-driven universe building (US + Canadian dividends, value, quality compounders, low-cost index funds)
 - Symbol master synchronization with screener data
 - AI advisor runs (sector, balanced fund, bond basket strategies)
+
+---
 
 ## 2. Architecture Pattern
 
@@ -59,6 +64,8 @@ KSF Stock Market Analysis is a hybrid PHP + Python application for:
                               │  └────────────────┘  │
                               └──────────────────────┘
 ```
+
+---
 
 ## 3. Database Schema Architecture
 
@@ -118,6 +125,21 @@ mysqldump --single-transaction --where "YEAR(price_date)=YEAR(CURDATE())" \
 mysqldump ksf_stockmarket daily_indicators daily_tier2 signal_weights > indicators.sql
 ```
 
+### 3.6 Advisor & LLM Data Tables
+
+The system includes advisor, LLM fundamental data, and Zacks RW tables:
+
+| Table Group | Tables |
+|---|---|
+| Advisors | `advisor_accounts`, `portfolio_visibilities`, `advisor_runs`, `advisor_trades` |
+| LLM Fundamental Data | `llm_guidance`, `llm_news`, `llm_regulatory`, `llm_product_dev`, `llm_analysis_sessions` |
+| Timing | `timing_buckets` (extended with day_of_week, day_of_month, period_of_month, month_of_year, near_month_end, near_options_expiry) |
+| Zacks RW | `user_screens`, `zacks_broker_recommendations`, `zacks_ratios_history`, `stock_performance_windows`, `fundamentals` (zacks_* columns) |
+
+See `docs/advisors/REQUIREMENTS_DESIGN.md` for full LLM and advisor table schemas. See `docs/requirements/FR-14-zacks-rw-pipeline.md` for Zacks RW table schemas.
+
+---
+
 ## 3. Legacy Schema Comparison
 
 | Property | `stock_market` (old) | `back_finance` (new) | `ksf_stockmarket` (modern) |
@@ -137,6 +159,7 @@ See `database-comparison.md` for detailed column-level comparison.
 ## 4. Component Responsibilities
 
 ### PHP Layer (Web Application)
+
 | Component    | Responsibility                                      |
 |--------------|-----------------------------------------------------|
 | Controllers  | Handle HTTP requests, input validation, routing     |
@@ -144,23 +167,35 @@ See `database-comparison.md` for detailed column-level comparison.
 | Models       | Data access via PDO, domain objects                |
 | Views        | Twig templates, HTML rendering                      |
 | PythonBridge | HTTP client to Flask API                            |
-| FA Module    | FrontAccounting journal entry creation              |
+|| FA Module    | FrontAccounting journal entry creation              |
 
 ### Python Layer (Analysis Engine)
-| Component        | Responsibility                                      |
-|------------------|-----------------------------------------------------|
-| Flask API        | REST endpoints for PHP bridge                       |
-| Backtest Engine  | Portfolio simulation, trade execution, metrics      |
-| TA Library       | Candlestick patterns, indicators, Turtle system     |
-| Strategies       | Motley Fool, Buffett, Combined screening            |
-| Fetchers         | yFinance/Google/SEDAR/SEC → normalized DTOs         |
-| Repositories     | DTO ↔ SQLite/MariaDB storage, column mapping        |
-| Detection        | Volume/NATR/RSI/gap triggers read from local DB     |
+
+|| Component        | Responsibility                                      |
+||------------------|-----------------------------------------------------|
+|| Flask API        | REST endpoints for PHP bridge                       |
+|| Backtest Engine  | Portfolio simulation, trade execution, metrics — timing-aware (UPDATED) |
+|| TA Library       | Candlestick patterns, indicators, Turtle system     |
+|| Strategies       | Motley Fool, Buffett, Combined screening            |
+|| RW Formula Engine | Formula parser + field resolver for advisor picking (NEW) |
+|| LLM Fundamental Analyzer | Reads/writes llm_* tables for guidance/news/regulatory/product (NEW) |
+|| Timing Analyzer  | Captures/aggragates day-of-week/day-of-month timing dimensions (NEW) |
+|| Fetchers         | yFinance/Google/SEDAR/SEC → normalized DTOs         |
+|| Repositories     | DTO ↔ SQLite/MariaDB storage, column mapping        |
+|| Detection        | Volume/NATR/RSI/gap triggers read from local DB     |
 || Reports          | HTML/PDF report generation                          |
 || Advisor Notifier | Email/Discord/WhatsApp recommendation delivery      |
 || Risk Engine      | Optional rules enforcement in backtest + live        |
+|| LLM Client       | Centralized LLM provider chain with fallback (NEW)  |
 
 ### Database Layer
+| Detection        | Volume/NATR/RSI/gap triggers read from local DB     |
+| Reports          | HTML/PDF report generation                          |
+| Advisor Notifier | Email/Discord/WhatsApp recommendation delivery      |
+| Risk Engine      | Optional rules enforcement in backtest + live        |
+
+### Database Layer
+
 | Table Group       | Tables                                               |
 |-------------------|------------------------------------------------------|
 | Portfolio         | portfolio, portfolio_history, user_trades           |
@@ -170,11 +205,13 @@ See `database-comparison.md` for detailed column-level comparison.
 | Signal Weights    | signal_weights (per-symbol, evolving)               |
 | Backtesting       | backtest_runs, backtest_trades                      |
 | Users & RBAC      | users, roles, watchlists, watchlist_symbols         |
-|| Advisors          | user_advisors, advisor_recommendations, strategy_rules.risk_rules.optional_rules, kb_articles |
+| Advisors          | user_advisors, advisor_recommendations, strategy_rules.risk_rules.optional_rules, kb_articles |
 | Alerts            | alerts, alerts_raised                               |
 | Screener          | tradingview_screener_results (preset_name+market+symbol unique), symbol_master |
 | FA Integration    | fa_transfers                                        |
 | Operations        | data_import_log                                     |
+
+---
 
 ## 5. Technology Stack
 
@@ -192,6 +229,8 @@ See `database-comparison.md` for detailed column-level comparison.
 | Analysis     | yfinance           | —        | Yahoo Finance data                 |
 | Analysis     | ta-lib / pandas-ta | —        | Technical indicators               |
 | CSS Framework| Custom/Tailwind    | —        | To be decided in Phase 4           |
+
+---
 
 ## 6. Deployment Architecture
 
@@ -218,12 +257,15 @@ Pod: ksf-stockmarket
 ```
 
 ### Ansible Recipe Requirements (from ksf_Infrastructure)
+
 The existing recipe needs these additions:
 1. Configurable ports: `{{ http_port }}`, `{{ db_port }}`
 2. Named containers with prefix: `{{ app_name }}-web`, `{{ app_name }}-db`, `{{ app_name }}-api`
 3. Bind mounts from host paths
 4. Environment variables via `.env` file
 5. Python API container (new)
+
+---
 
 ## 7. API Contract (PHP ↔ Python)
 
@@ -239,52 +281,36 @@ The existing recipe needs these additions:
 | GET    | /api/data/prices/{symbol}  | ?from=&to=                | { prices: [...] }  |
 | POST   | /api/data/import           | symbols[], source         | { import_log }     |
 | GET    | /api/health                | —                         | { status: "ok" }   |
-|| GET    | api_screener               | ?preset=                  | HTML fragment      |
-|| GET    | /api/advisor/recommendations | ?user_id=N              | { recommendations: [...] } |
-|| GET/POST | /api/advisor/preferences | ?user_id=N                | { prefs } |
-|| POST   | /api/advisor/notifications/whatsapp/send | to, message | { message_id } |
-|| POST   | /api/advisor/notifications/whatsapp/status | provider payload | { status } |
+| GET    | api_screener               | ?preset=                  | HTML fragment      |
+| GET    | /api/advisor/recommendations | ?user_id=N              | { recommendations: [...] } |
+| GET/POST | /api/advisor/preferences | ?user_id=N                | { prefs } |
+| POST   | /api/advisor/notifications/whatsapp/send | to, message | { message_id } |
+| POST   | /api/advisor/notifications/whatsapp/status | provider payload | { status } |
 
-## 7.1 Screener AJAX Flow (Sequence)
-
-The Screener page no longer performs full-page reloads on preset changes.
-
-**Participants**: Browser → Front Controller (`index.php`) → `StockController::screener()` → Database (`tradingview_screener_results`) → Browser DOM update
-
-**Flow**:
-1. User selects a preset in `#screener-preset`
-2. Browser fires `fetch()` to `?action=api_screener&preset=X`
-3. Front controller invokes `StockController::screener(preset)`
-4. Controller queries latest `tradingview_screener_results` rows for that preset
-5. Controller renders inline HTML (table + summary line)
-6. Front controller returns HTML fragment (no layout)
-7. Browser replaces `#screener-results` innerHTML
-
-## 7.2 Routing Overview
-
-```
-?action=screener           → StockController::screener()
-?action=api_screener       → inline API fragment (StockController::screener())
-?action=screener/          → redirect ?action=screener (canonical trailing-slash)
-```
+---
 
 ## 8. Security Model
 
 ### Authentication
+
 - PHP session-based authentication for web UI
 - Password hashing via `password_hash()` (bcrypt)
 - API key for PHP ↔ Python bridge (localhost only)
 
 ### Authorization (RBAC)
+
 | Role    | Permissions                                              |
 |---------|----------------------------------------------------------|
 | admin   | Full access: manage users, run backtests, modify data    |
 | trader  | View data, run backtests, manage own watchlists          |
 | viewer  | View-only: dashboards, reports, watchlists               |
 
+---
+
 ## 9. Migration Strategy
 
 ### Parallel Operation
+
 The legacy PHP application runs alongside the new code during migration:
 - Legacy code: untouched in original directories (`application/`, `class/`, `model/`, etc.)
 - New code: under `src/` with PSR-4 autoloading
@@ -292,6 +318,7 @@ The legacy PHP application runs alongside the new code during migration:
 - Feature flags in config control which code path is active
 
 ### Migration Sequence
+
 1. Phase 1: Foundation (this phase) — parallel structure
 2. Phase 2: Core models — port `class/` and `model/` incrementally
 3. Phase 3: Analysis engine — Python takes over backtesting/TA
@@ -299,35 +326,14 @@ The legacy PHP application runs alongside the new code during migration:
 5. Phase 5: FA integration — new module
 6. Phase 6: Reporting + data migration
 
-## 9. Optional Python Worker Fallback
-
-### 9.1 Problem
-When the stockmarket app runs in a container, the PHP process cannot `proc_open()` a local Python interpreter. To preserve the existing bare-metal behaviour while supporting containerized deployments, controllers now use a curl-fallback to a FastAPI worker.
-
-### 9.2 Worker Endpoint
-`POST /worker/refresh_prices` accepts:
-- `symbol` — single ticker to fetch/update
-- `full_history` — boolean; bypass day calc
-- `days` — optional day window
-
-The worker shells out to `fetch_prices.py` and returns HTTP status.
-
-### 9.3 Configuration
-| Variable | Purpose | Default |
-|----------|---------|---------|
-| `PYTHON_WORKER_URL` | URL of FastAPI worker | unset (bare metal uses `proc_open`) |
-| `WORKER_PORT` | Worker container port | `8000` |
-| `STOCKMARKET_PYTHON_DIR` | Host path mounted into the worker container | `/home/ksf_stockmarket/ksf_stockmarket/python` |
-
-### 9.4 Container Deployment (optional)
-`ksf_Infrastructure` defines an optional service `stockmarket-python-worker` on profile `stockmarket`. Enable via Ansible with `enable_stockmarket_python_worker=true` or via Podman Compose with `--profile stockmarket`.
+---
 
 ## 10. Methodology Alignment (BABOK / PMBOK)
 
 ### 10.1 Knowledge Area Mapping
 
 | System Capability | BABOK Knowledge Area | PMBOK Process Group | Primary Artifacts |
-|-------------------|---------------------|---------------------|-------------------|
+|---|---|---|---|
 | Portfolio tracking + taxonomies | Business Analysis Planning and Monitoring, Requirements Analysis | Planning, Executing | `requirements-specification.md`, `traceability-matrix.md`, `architecture-document.md` |
 | Advisor hiring + recommendations | Requirements Analysis, Solution Evaluation | Planning, Executing, Monitoring | `business-requirements.md`, `solution-design.md`, advisor migrations/backends |
 | T+2 settlement + cash flow | Requirements Analysis, Solution Assessment and Validation | Executing, Monitoring and Controlling | `strategy_pipeline.py`, `runner.py`, `rules_backtest.py` |
@@ -352,13 +358,13 @@ The worker shells out to `fetch_prices.py` and returns HTTP status.
 - **Quality Management**: validation scripts (`validate_t2_settlement.py`), syntax checks, and schema migrations enforce build quality.
 - **Risk Management**: emergency buffer, leverage/margin rules, and ATR stops are formal risk response strategies.
 
-+### 10.4 Supporting Diagrams
+### 10.4 Supporting Diagrams
 
-+Architecture UML views are in `docs/methodology/uml/`:
-+- `deployment.puml` — deployment context
-+- `class.puml` — core class diagram
-+- `sequence.puml` — advisor recommendation sequence
-+- `state.puml` — alert lifecycle state machine
-+- `activity.puml` — daily run activity flow
-+
-+All diagrams map to the knowledge areas and process groups above.
+Architecture UML views are in `docs/methodology/uml/`:
+- `deployment.puml` — deployment context
+- `class.puml` — core class diagram
+- `sequence.puml` — advisor recommendation sequence
+- `state.puml` — alert lifecycle state machine
+- `activity.puml` — daily run activity flow
+
+All diagrams map to the knowledge areas and process groups above.

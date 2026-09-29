@@ -1,4 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Controller;
+
+use Ksf\StockMarket\Model\Database;
+
+
+
 /**
  * BrokerStopController - Track stops you've actually placed with your brokerage.
  */

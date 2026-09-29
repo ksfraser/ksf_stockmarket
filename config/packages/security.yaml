@@ -1,0 +1,119 @@
+# Symfony Security configuration — stockmarket-app
+#
+# Environment: Apache serving /var/www/html/stockmarket/index.php via
+#   ?action=XXX routing (no Symfony router). This config wires the
+#   security firewall, user provider, password hasher, and access control
+#   without requiring a Symfony kernel or route collection.
+#
+# Roles (from DB `role` column):
+#   admin  -> ROLE_ADMIN
+#   advisor-> ROLE_ADVISOR
+#   user   -> ROLE_USER
+#   viewer -> ROLE_VIEWER
+#
+# Access rules:
+#   - Public: login, register, forgot-password, reset-password, reset-password-success
+#   - Protected (ROLE_USER): everything else (portfolio, transactions, settings, admin_settings, etc.)
+#   - Admin-only (ROLE_ADMIN): admin_settings POST actions, user management
+
+security:
+    # ── Password hashing ──────────────────────────────────────────────────────
+    #
+    # NativePasswordHasher auto-selects the best available algorithm
+    # (currently bcrypt/Argon2) and supports migration of existing hashes.
+    # Our existing passwords are already Argon2id (from User.php::create()),
+    # so they verify cleanly.
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    # ── User provider ─────────────────────────────────────────────────────────
+    providers:
+        app_user_provider:
+            id: Ksf\StockMarket\Security\UserRepository
+
+    # ── Firewalls ─────────────────────────────────────────────────────────────
+    #
+    # All requests pass through the "main" firewall. Anonymous users are
+    # allowed on public pages; protected pages redirect to login.
+    #
+    # form_login: handles ?action=login POST (credentials -> user provider ->
+    #   StockmarketUser -> session). The login_path/logout_path match our
+    #   index.php routes.
+    #
+    # The firewall entry point for anonymous users on protected pages is
+    # the form_login login page (?action=login).
+    firewalls:
+        main:
+            pattern: ^/
+            lazy: true
+            provider: app_user_provider
+
+            form_login:
+                login_path: /
+                check_path: /
+                username_parameter: username
+                password_parameter: password
+                default_target_path: /?action=overview
+                enable_csrf: true
+                csrf_parameter: _csrf_token
+                csrf_token_id: authenticate
+
+            logout:
+                path: /?action=logout
+                invalidate_session: true
+                delete_cookies:
+                    - owl_session
+                target: /?action=login
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 2592000   # 30 days, matches existing owl_session cookie
+                path: /
+                cookie_name: owl_remember_me
+                always_remember_me: false
+
+            # Session-based authentication — no stateless API here.
+            # The app relies on $_SESSION + remember-me cookie.
+            session_fixation_strategy: none
+
+    # ── Access control ────────────────────────────────────────────────────────
+    #
+    # Since routing is query-parameter based (?action=X), access_control
+    # uses URL-path matching on the query string via a custom voter (see
+    # src/Security/voter/ActionVoter.php). The rules below cover the
+    # login/register/public pages; everything else falls through to the
+    # ROLE_USER rule.
+    #
+    # IMPORTANT: access_control patterns match against the REQUEST URI path,
+    # not the query string. Since all requests hit / (or /index.php), the
+    # path-based patterns below are placeholders. The real dispatch is done
+    # by the ActionVoter, which inspects ?action=XXX.
+    #
+    # For reference, the equivalent access decisions are:
+    #   public actions:   login, register, forgot-password,
+    #                     reset-password, reset-password-success,
+    #                     oauth-redirect, oauth-callback
+    #   admin actions:    admin_settings (when POST contains admin_*),
+    #                     admin_setup_wizard
+    #   protected actions: everything else
+    access_control:
+        # Public pages — no authentication required.
+        -
+            path: ^/$
+            roles: PUBLIC_ACCESS
+        -
+            path: ^/index\.php$
+            roles: PUBLIC_ACCESS
+
+        # Everything else requires at least ROLE_USER.
+        -
+            path: ^.*
+            roles: ROLE_USER
+
+    # ── Role hierarchy ────────────────────────────────────────────────────────
+    #
+    # ROLE_ADMIN implies ROLE_USER (already implicit via provider mapping,
+    # but explicit for voters/IS_AUTHENTICATED_FULLY checks).
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER, ROLE_ADVISOR]
+        ROLE_ADVISOR: [ROLE_USER]

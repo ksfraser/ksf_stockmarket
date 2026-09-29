@@ -1,4 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Controller;
+
+use Ksf\StockMarket\Model\Database;
+
+
+
 /**
  * AdvisorController — Risk gate + research brief router for the paper-trading firm.
  *

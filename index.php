@@ -24,6 +24,10 @@ if (session_status() === PHP_SESSION_NONE) {
 // Autoload — PSR-4 for App namespace + Composer vendor
 require_once $GLOBALS['APP_ROOT'] . '/vendor/autoload.php';
 
+// Bootstrap: load .env so DB credentials are available
+use Ksf\StockMarket\App;
+App::getInstance()->bootstrap($APP_ROOT);
+
 spl_autoload_register(function ($class) {
     // App\ namespace → src/ via Composer PSR-4 (fallback for manual includes)
     if (strpos($class, 'App\\') === 0) {
@@ -62,9 +66,11 @@ if (is_string($action) && str_ends_with($action, '/')) {
     exit;
 }
 
-// Check auth status
-$currentUser = AuthController::checkSession();
-$userId = $currentUser ? (int) $currentUser['id'] : null;
+// Auth status — uses Symfony Security token when available, falls back to
+// legacy session-based check during the transition.
+require_once $GLOBALS['APP_ROOT'] . '/src/Security/AuthStatus.php';
+$currentUser = AuthStatus::getCurrentUser();
+$userId = $currentUser ? ((is_array($currentUser) ? ($currentUser['id'] ?? null) : null)) : null;
 
 // JSON API endpoints (public)
 if ($action === 'api_chart' && isset($_GET['symbol'])) {
@@ -156,6 +162,7 @@ if ($action === 'api_screener') {
 
 // Auth routes (no login required)
 if ($action === 'login') {
+    require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AuthController.php';
     $ctrl = new AuthController();
     $result = $ctrl->login();
     if (is_array($result)) {
@@ -168,12 +175,14 @@ if ($action === 'login') {
 }
 
 if ($action === 'logout') {
+    require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AuthController.php';
     $ctrl = new AuthController();
     $ctrl->logout();
     exit;
 }
 
 if ($action === 'register') {
+    require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AuthController.php';
     $ctrl = new AuthController();
     $result = $ctrl->register();
     $pageTitle = 'Register';
@@ -183,13 +192,61 @@ if ($action === 'register') {
     exit;
 }
 
-// Routes requiring authentication (portfolio, transactions, personal data)
-$protectedRoutes = ['portfolio', 'transactions', 'my_dashboard', 'settings', 'alerts_status', 'upload', 'stop_orders', 'broker_stops', 'admin_settings', 'admin_setup_wizard', 'shared_with_me', 'refresh_price', 'refresh_all_prices'];
-if (in_array($action, $protectedRoutes, true) && !AuthController::checkSession()) {
-    $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
-    header('Location: ?action=login');
+if ($action === 'oauth-redirect') {
+    require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AuthController.php';
+    $ctrl = new AuthController();
+    $ctrl->oauthRedirect();
     exit;
 }
+
+if ($action === 'oauth-callback') {
+    require_once $GLOBALS['APP_ROOT'] . '/src/Auth/OAuthCallbackDispatcher.php';
+    exit;
+}
+
+if ($action === 'forgot-password') {
+    require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AuthController.php';
+    $ctrl = new AuthController();
+    $result = $ctrl->forgotPassword();
+    $pageTitle = $result['pageTitle'] ?? 'Forgot Password';
+    $template = $result['template'] ?? 'forgot_password';
+    $data = $result;
+    require $GLOBALS['APP_ROOT'] . '/templates/layout.php';
+    exit;
+}
+
+if ($action === 'reset-password') {
+    require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AuthController.php';
+    $ctrl = new AuthController();
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $result = $ctrl->handleResetPassword();
+    } else {
+        $result = $ctrl->showResetPasswordForm();
+    }
+    $pageTitle = $result['pageTitle'] ?? 'Reset Password';
+    $template = $result['template'] ?? 'reset_password';
+    $data = $result;
+    require $GLOBALS['APP_ROOT'] . '/templates/layout.php';
+    exit;
+}
+
+if ($action === 'reset-password-success') {
+    require_once $GLOBALS['APP_ROOT'] . '/src/Controller/AuthController.php';
+    $ctrl = new AuthController();
+    $result = $ctrl->resetPasswordSuccess();
+    $pageTitle = $result['pageTitle'] ?? 'Password Reset';
+    $template = $result['template'] ?? 'reset_password_success';
+    $data = $result;
+    require $GLOBALS['APP_ROOT'] . '/templates/layout.php';
+    exit;
+}
+
+require_once $GLOBALS['APP_ROOT'] . '/src/Security/AuthStatus.php';
+
+// Access control: replaced hardcoded $protectedRoutes with
+// AuthStatus::requireAuthOrRedirect(), which uses the ActionVoter
+// to decide based on ?action= value.
+\Ksf\StockMarket\Security\AuthStatus::requireAuthOrRedirect();
 
 // Route to controller
 $pageTitle = 'Dashboard';

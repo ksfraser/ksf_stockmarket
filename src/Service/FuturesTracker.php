@@ -1,4 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Service;
+
+
 /**
  * Futures Tracker - For ES, NQ, CL, GC, etc.
  * 

@@ -1,18 +1,22 @@
 <?php
 
 /**
- * Refresh the precomputed stock price-window table.
+ * Refresh the precomputed stock price-window + volume tables.
  *
- * Hermes' architecture note (docs/architecture/stock-filter-engine.md §3):
- * price-change windows must be pre-computed into a dedicated table refreshed
- * nightly after prices load — the same pattern as symbol_performance (ETF) and
- * performance_history (seg funds). This keeps the computation in ONE place.
+ * Hermes' architecture note (docs/architecture/stock-filter-engine.md §3/§4):
+ * price-change windows and 20-session average volumes must be pre-computed
+ * into dedicated tables refreshed nightly after prices load — the same
+ * pattern as symbol_performance (ETF) and performance_history (seg funds).
+ * This keeps the computation in ONE place.
  *
  * This script computes, per active symbol:
  *   Hermes perf windows  — perf_1q..perf_10a (3mo/6mo/12mo/2y/3y/5y/10y %chg)
  *   Research Wizard wins  — chg_1w/4w/12w/24w/52w/ytd + 52w high/low + range %
- * using EXACTLY the same anchored lookback logic as ZacksUniverse::loadWindows()
- * (close at MAX(price_date) <= anchor - W, anchor = universe MAX price_date).
+ *   Volume stats (Hermes §4) — avg_volume_20d / volume_20d_ago /
+ *                              relative_volume_today
+ * using EXACTLY the same anchored lookback logic as ZacksUniverse
+ * (close at MAX(price_date) <= anchor - W, anchor = universe MAX price_date;
+ * 20-session avg volume mirroring loadVol20's price_date >= anchor-45d).
  *
  * Upserts on (symbol, as_of_date = CURDATE()) and prunes to the last 14 days.
  *
@@ -188,36 +192,38 @@ foreach ($stmt as $r) {
 }
 
 // ---------------------------------------------------------------------------
-// 4. Assemble + upsert
+// 4. Assemble + batched upsert
 // ---------------------------------------------------------------------------
-$upsert = $pdo->prepare(
-    "INSERT INTO stock_performance_windows
-        (symbol, as_of_date, anchor_date,
-         perf_1q, perf_2q, perf_4q, perf_2a, perf_3a, perf_5a, perf_10a,
-         chg_1w, chg_4w, chg_12w, chg_24w, chg_52w, chg_ytd,
-         high_52w, low_52w, hl_range_pct, chg_vs_high_52w, close)
-     VALUES
-        (?, ?, ?,
-         ?, ?, ?, ?, ?, ?, ?,
-         ?, ?, ?, ?, ?, ?,
-         ?, ?, ?, ?, ?)
-     ON DUPLICATE KEY UPDATE
-         anchor_date = VALUES(anchor_date),
-         perf_1q = VALUES(perf_1q), perf_2q = VALUES(perf_2q),
-         perf_4q = VALUES(perf_4q), perf_2a = VALUES(perf_2a),
-         perf_3a = VALUES(perf_3a), perf_5a = VALUES(perf_5a),
-         perf_10a = VALUES(perf_10a),
-         chg_1w = VALUES(chg_1w), chg_4w = VALUES(chg_4w),
-         chg_12w = VALUES(chg_12w), chg_24w = VALUES(chg_24w),
-         chg_52w = VALUES(chg_52w), chg_ytd = VALUES(chg_ytd),
-         high_52w = VALUES(high_52w), low_52w = VALUES(low_52w),
-         hl_range_pct = VALUES(hl_range_pct),
-         chg_vs_high_52w = VALUES(chg_vs_high_52w),
-         close = VALUES(close)"
-);
+/**
+ * Multi-row upsert — avoids per-symbol round trips on high-latency DB links.
+ *
+ * @param  array<int,array<string,mixed>> $rows
+ * @return int rows written
+ */
+$batchedUpsert = static function (PDO $pdo, string $table, array $cols, array $rows, int $chunk = 500): int {
+    $colList = implode(', ', $cols);
+    $updateSql = implode(', ', array_map(static fn (string $c) => "{$c} = VALUES({$c})", $cols));
+    $n = 0;
+    foreach (array_chunk($rows, $chunk) as $batch) {
+        $sql = "INSERT INTO {$table} ({$colList}) VALUES\n";
+        $parts = [];
+        $args = [];
+        foreach ($batch as $row) {
+            $parts[] = '(' . implode(', ', array_fill(0, count($cols), '?')) . ')';
+            foreach ($cols as $c) {
+                $args[] = $row[$c];
+            }
+        }
+        $sql .= implode(",\n", $parts) . "\nON DUPLICATE KEY UPDATE {$updateSql}";
+        $pdo->prepare($sql)->execute($args);
+        $n += count($batch);
+    }
+    return $n;
+};
 
 $done = 0;
 $skipped = 0;
+$perfRows = [];
 foreach ($activeSymbols as $i => $symbol) {
     if ($rowLimit > 0 && $i >= $rowLimit) {
         break;
@@ -250,20 +256,138 @@ foreach ($activeSymbols as $i => $symbol) {
         ? $close / (float) $high * 100.0
         : null;
 
-    $upsert->execute([
-        $symbol, $asOf, $anchor,
-        $row['perf_1q'], $row['perf_2q'], $row['perf_4q'], $row['perf_2a'],
-        $row['perf_3a'], $row['perf_5a'], $row['perf_10a'],
-        $row['chg_1w'], $row['chg_4w'], $row['chg_12w'], $row['chg_24w'],
-        $row['chg_52w'], $row['chg_ytd'],
-        $row['high_52w'], $row['low_52w'], $row['hl_range_pct'], $row['chg_vs_high_52w'],
-        $close,
-    ]);
+    $perfRows[] = [
+        'symbol'             => $symbol,
+        'as_of_date'         => $asOf,
+        'anchor_date'        => $anchor,
+        'perf_1q'            => $row['perf_1q'],
+        'perf_2q'            => $row['perf_2q'],
+        'perf_4q'            => $row['perf_4q'],
+        'perf_2a'            => $row['perf_2a'],
+        'perf_3a'            => $row['perf_3a'],
+        'perf_5a'            => $row['perf_5a'],
+        'perf_10a'           => $row['perf_10a'],
+        'chg_1w'             => $row['chg_1w'],
+        'chg_4w'             => $row['chg_4w'],
+        'chg_12w'            => $row['chg_12w'],
+        'chg_24w'            => $row['chg_24w'],
+        'chg_52w'            => $row['chg_52w'],
+        'chg_ytd'            => $row['chg_ytd'],
+        'high_52w'           => $row['high_52w'],
+        'low_52w'            => $row['low_52w'],
+        'hl_range_pct'       => $row['hl_range_pct'],
+        'chg_vs_high_52w'    => $row['chg_vs_high_52w'],
+        'close'              => $close,
+    ];
     $done++;
 }
+$batchedUpsert($pdo, 'stock_performance_windows', [
+    'symbol', 'as_of_date', 'anchor_date',
+    'perf_1q', 'perf_2q', 'perf_4q', 'perf_2a', 'perf_3a', 'perf_5a', 'perf_10a',
+    'chg_1w', 'chg_4w', 'chg_12w', 'chg_24w', 'chg_52w', 'chg_ytd',
+    'high_52w', 'low_52w', 'hl_range_pct', 'chg_vs_high_52w', 'close',
+], $perfRows);
 
 // ---------------------------------------------------------------------------
-// 5. Prune to last 14 as_of days
+// 5. Volume stats (Hermes arch §4 — stock_volume_stats)
+// ---------------------------------------------------------------------------
+$pdo->exec(
+    "CREATE TABLE IF NOT EXISTS stock_volume_stats (
+        id                    BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        symbol                VARCHAR(20)   NOT NULL,
+        as_of_date            DATE          NOT NULL,
+        anchor_date           DATE          NULL,
+        avg_volume_20d        DOUBLE        NULL,
+        volume_20d_ago        DOUBLE        NULL,
+        relative_volume_today DOUBLE        NULL,
+        created_at            TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE INDEX unq_symbol_asof (symbol, as_of_date),
+        INDEX idx_asof (as_of_date)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+);
+// Upgrade path for tables created before anchor_date existed.
+$pdo->exec(
+    "ALTER TABLE stock_volume_stats
+     ADD COLUMN IF NOT EXISTS anchor_date DATE NULL AFTER as_of_date"
+);
+
+// 20-session rolling average volume (mirrors ZacksUniverse::loadVol20).
+$from = date('Y-m-d', strtotime($anchor . ' - 45 days'));
+$volStmt = $pdo->prepare(
+    "SELECT symbol, volume, rn
+     FROM (
+         SELECT symbol, volume,
+                ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY price_date DESC) rn
+         FROM stockprices
+         WHERE price_date >= ?
+     ) t"
+);
+$volStmt->execute([$from]);
+$volBySym = [];
+foreach ($volStmt as $r) {
+    $sym = (string) $r['symbol'];
+    if (!isset($volBySym[$sym])) {
+        $volBySym[$sym] = [];
+    }
+    $volBySym[$sym][(int) $r['rn']] = $r['volume'];
+}
+
+$volRows = [];
+$volDone = 0;
+$volSkipped = 0;
+foreach ($activeSymbols as $i => $symbol) {
+    if ($rowLimit > 0 && $i >= $rowLimit) {
+        break;
+    }
+    $lp = $latest[$symbol] ?? null;
+    if ($lp === null || !isset($volBySym[$symbol])) {
+        $volSkipped++;
+        continue;
+    }
+    $seq = $volBySym[$symbol];
+    ksort($seq);
+    $take = array_slice($seq, 0, 20, true);
+    $count = count($take);
+    if ($count === 0) {
+        $volSkipped++;
+        continue;
+    }
+    $sum = 0.0;
+    foreach ($take as $v) {
+        $sum += (float) $v;
+    }
+    $avg = $sum / $count;
+    // "today" volume = the symbol's latest session volume (the row at rn=1).
+    $todayVol = $seq[1] ?? null;
+    $ago20 = $seq[20] ?? null;
+    $rel = $todayVol !== null && $todayVol > 0 && $avg > 0
+        ? (float) $todayVol / $avg
+        : null;
+    $volRows[] = [
+        'symbol'                => $symbol,
+        'as_of_date'            => $asOf,
+        'anchor_date'           => $anchor,
+        'avg_volume_20d'        => $avg,
+        'volume_20d_ago'        => $ago20 !== null ? (float) $ago20 : null,
+        'relative_volume_today' => $rel,
+    ];
+    $volDone++;
+}
+$batchedUpsert($pdo, 'stock_volume_stats', [
+    'symbol', 'as_of_date', 'anchor_date', 'avg_volume_20d', 'volume_20d_ago', 'relative_volume_today',
+], $volRows);
+
+$pdo->exec(
+    "DELETE svs FROM stock_volume_stats svs
+     LEFT JOIN (
+         SELECT DISTINCT as_of_date FROM stock_volume_stats
+         ORDER BY as_of_date DESC LIMIT 14
+     ) keep ON keep.as_of_date = svs.as_of_date
+     WHERE keep.as_of_date IS NULL"
+);
+
+// ---------------------------------------------------------------------------
+// 6. Prune to last 14 as_of days
 // ---------------------------------------------------------------------------
 $pdo->exec(
     "DELETE spw FROM stock_performance_windows spw
@@ -274,9 +398,11 @@ $pdo->exec(
      WHERE keep.as_of_date IS NULL"
 );
 
-echo "PERF WINDOWS REFRESH\n";
-echo "  as_of:        {$asOf}\n";
-echo "  anchor:       {$anchor}\n";
-echo "  active:       " . count($activeSymbols) . "\n";
-echo "  updated:      {$done}\n";
-echo "  skipped:      {$skipped}\n";
+echo "PERF WINDOWS + VOLUME REFRESH\n";
+echo "  as_of:            {$asOf}\n";
+echo "  anchor:           {$anchor}\n";
+echo "  active:           " . count($activeSymbols) . "\n";
+echo "  windows updated:  {$done}\n";
+echo "  windows skipped:  {$skipped}\n";
+echo "  volume updated:   {$volDone}\n";
+echo "  volume skipped:   {$volSkipped}\n";

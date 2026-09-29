@@ -1,4 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Controller;
+
+use Ksf\StockMarket\Model\Database;
+
+
+
 /**
  * AdminSettingsController - System-level configuration (webhooks, LLM settings).
  * Requires admin role - for settings that affect all users.
@@ -23,8 +32,33 @@ class AdminSettingsController {
         $pdo = Database::get();
         $message = '';
         $error = '';
+        $users = [];
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Admin user password reset (POST from user list)
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action']) && $_POST['action'] === 'admin_reset_password') {
+            $userId = (int) ($_POST['user_id'] ?? 0);
+            $newPass = $_POST['new_password'] ?? '';
+            if ($userId > 0 && strlen($newPass) >= 8) {
+                try {
+                    $userModel = new \Ksf\StockMarket\Model\User();
+                    $userModel->adminResetPassword($userId, $newPass);
+                    $message = 'Password reset for user ID ' . $userId . '.';
+                } catch (\Exception $e) {
+                    $error = 'Reset failed: ' . $e->getMessage();
+                }
+            } else {
+                $error = 'Invalid user or password (min 8 chars).';
+            }
+        }
+
+        // Load user list for admin view
+        try {
+            $users = $pdo->query('SELECT id, username, email, role, is_active FROM users ORDER BY username')->fetchAll();
+        } catch (\Exception $e) {
+            // ignore
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') !== 'admin_reset_password') {
             $message = $this->saveSettings($pdo);
         }
 
@@ -37,6 +71,7 @@ class AdminSettingsController {
             'message' => $message,
             'error' => $error,
             'user' => $this->currentUser,
+            'users' => $users,
         ];
     }
 

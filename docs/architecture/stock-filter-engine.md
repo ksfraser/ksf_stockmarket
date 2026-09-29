@@ -29,6 +29,42 @@ All counts are from `ksfraser_stock_market` on `ksfraser.ca` (MariaDB 10.6.27), 
 
 **Implication:** There is no single "total score" column for stocks. The filter engine exposes `lippper_scores.composite_score` as the score filter. Zacks-style component scores (alpha, relative strength, rank, estimate revisions) are computed in PHP by `StockController::calcZacksStyleScore()` per-symbol and are NOT stored in DB — they are not SQL-filterable in this version. Full Zacks-component filtering requires a precomputed scores table (see Section 3).
 
+### 1.4 Research Wizard Formula Engine (NEW — FR-12)
+
+The `ksfraser/research-wizard-reader` package (`vendor/ksfraser/research-wizard-reader/`) provides the formula engine that advisors use to define picking criteria as runnable formulas:
+
+| Component | Purpose |
+|---|---|
+| `RwFormulaParser` | Parses RW formula syntax into an AST: field refs with time-lag offsets (`i95[Recent-4Q]`), MovingMean/N period calls (`MovingMean2(i5)`), scoped refs (`i13[,qqq]>0`), AND/OR connective grouping, coalesce fallback chains (`(1/(i192=1)) | (3/(i192=2))`) |
+| `ZacksFieldResolver` | Binds RW field codes to live data sources via SPECS table: maps field code → (source, key, approx) so the formula engine knows which column/dataset to read for each `iX` reference |
+| `UndParser` | Parses `.und` screen files into rule atoms (field code, operator, value, connective, timeframe, raw text) |
+
+**Formula evaluation flow:**
+1. Advisor strategy stores a formula string (e.g. `i158 + 0.75*i159 > 50`) in its profile or as a `.und` screen import
+2. `RwFormulaParser::parse()` produces an AST
+3. `ZacksFieldResolver::spec()` binds each `iX` field code in the AST to a live data source (which DB column or computed value)
+4. For each candidate symbol, the formula engine evaluates the AST against the symbol's data
+5. Symbols that satisfy the formula are selected; formulas referencing unavailable fields are skipped with a report (`fully_executed = false`), not silently ignored
+
+**Field code coverage:**
+- The SPECS table in `ZacksFieldResolver` maps field codes to live sources: price fields (close, volume, 52w high/low, chg_4w, etc.), fundamental fields (PE, PEG, ROE, market_cap, etc.), Zacks fields (rank, composite, grades, eps_change), and computed windows (perf_1q, chg_12w, etc.)
+- Fields absent from SPECS are skipped with reason "field code N has no data source" — the runner reports these in `skipped` and continues
+- Custom formulas (formulas not expressible as field refs) are also skipped with reason "custom formula: not executed"
+
+**Advisor picking with formulas:**
+- Hand-coded strategies: use `IStrategy::score(array $indicators)` — existing pattern
+- RW-imported screens: use `filters_json` with `engine='zacks_rw'` — existing FR-14 pattern
+- RW formula strategies: formula AST evaluated by the formula engine against each candidate symbol's data — new FR-12 pattern
+- The advisor's `profile_json` stores which picking method is active and the formula/screen reference
+
+**Performance:**
+- Formula evaluation is O(n_symbols × formula_complexity) per screen run
+- For a 3000-symbol universe and a 10-rule formula, target is < 60 seconds (NFR-1.5)
+- Field binding is cached per formula so repeated runs don't re-resolve field codes
+- Time-lag offsets (`i95[Recent-4Q]`) require historical data lookups; these are cached per symbol per offset
+
+See `docs/requirements/FR-14-zacks-rw-pipeline.md` for the full Zacks RW pipeline design and `docs/advisors/REQUIREMENTS_DESIGN.md` §Research Wizard Formula Integration for advisor-specific integration.
+
 ### 1.3 Fundamental attributes (the big one)
 
 The `fundamentals` table (17,111 rows, keyed by `symbol` + `fetch_date`) is rich and is the primary source for the stock-side fundamental filters. Usable (non-null, non-zero, non-empty) row counts:

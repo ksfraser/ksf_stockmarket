@@ -1,4 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Controller;
+
+use Ksf\StockMarket\Model\Database;
+
+
+
 /**
  * UserController — per-user settings and profile.
  */
@@ -204,7 +213,7 @@ class UserController {
 
         $allUsers = [];
         try {
-            $stmt = $pdo->query("SELECT id, username, display_name, role FROM users WHERE is_active = 1 AND id != :me ORDER BY role DESC, username ASC");
+            $stmt = $pdo->prepare("SELECT id, username, display_name, role FROM users WHERE is_active = 1 AND id != :me ORDER BY role DESC, username ASC");
             $stmt->execute([':me' => $userId]);
             $allUsers = $stmt->fetchAll();
         } catch (Exception $e) {}

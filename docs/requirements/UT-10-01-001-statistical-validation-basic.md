@@ -26,3 +26,13 @@ reasonable ranges when given a realistic daily return series.
 
 ## Regression Risk
 None — new test only, touches new code.
+
+## Related Test Outlines
+- `docs/requirements/UT-10-01-001-statistical-validation-basic.md` — this document
+- `docs/requirements/UT-10-02-001-route-hypothesis-keywords.md` — FR-10-02
+- `docs/requirements/UT-10-03-statistical-validation-layer3.md` — FR-10-03
+- `docs/requirements/UT-10-04-half-kelly-sizing.md` — FR-10-04
+- `docs/requirements/UT-11-llm-fundamental-data.md` — FR-11 LLM data
+- `docs/requirements/UT-11-06-llm-admin-console.md` — FR-11.6 LLM admin
+- `docs/requirements/UT-12-rw-formula-advisors.md` — FR-12 RW formulas
+- `docs/requirements/UT-16-timing-backtesting.md` — FR-16 timing-aware backtesting

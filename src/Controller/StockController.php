@@ -1,4 +1,15 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Controller;
+use Ksf\StockMarket\Util\SymbolResolver;
+
+use Ksf\StockMarket\Model\Database;
+use PDO;
+
+
+
 /**
  * StockController — handles all stock-related pages.
  */
@@ -169,7 +180,7 @@ class StockController {
         $dividends = $fctrl->getDividends($symbol);
 
         // Calculate current dividend yield (annual dividend / current price)
-        $closePrice = $latest['close'] ?? 0;
+        $closePrice = (float)($latest['close'] ?? 0);
         $annualDivPerShare = $fundamentals['dividend_rate'] ?? 0;
         $fundamentals['current_div_yield'] = $closePrice > 0 ? ($annualDivPerShare / $closePrice) * 100 : null;
 
@@ -275,7 +286,7 @@ class StockController {
         }
 
         // Buffett quality score (pass close price since it's in stockprices, not indicators)
-        $closePrice = $latest['close'] ?? 0;
+        $closePrice = (float)($latest['close'] ?? 0);
         $buffettScore = $this->calcBuffettScore($fundamentals, $indicators, $closePrice);
 
         // ---- WealthSystem methodology deep-dive data ----
@@ -363,7 +374,7 @@ class StockController {
         $regime = $this->getRegimeAnalysis($symbol);
 
         // Exit signal risk assessment
-        $closePrice = $latest['close'] ?? 0;
+        $closePrice = (float)($latest['close'] ?? 0);
         $exitSignals = $this->calcExitSignals($fundamentals, $indicators, $closePrice);
 
         // VectorVest 5-point checklist (detail-page lightweight version)

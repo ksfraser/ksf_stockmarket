@@ -1,24 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
-namespace App\Performance\Service;
+namespace Ksf\StockMarket\Service;
 
-use KSF\Performance\Contracts\TransactionRepositoryInterface;
-use KSF\Performance\Contracts\TWRCalculatorInterface;
-use KSF\Performance\Contracts\IRRCalculatorInterface;
-use KSF\Performance\Contracts\DrawdownCalculatorInterface;
-use KSF\Performance\Contracts\VolatilityCalculatorInterface;
-use KSF\Performance\Services\TWRCalculatorService;
-use KSF\Performance\Services\IRRCalculatorService;
-use KSF\Performance\Services\DrawdownCalculatorService;
-use KSF\Performance\Services\VolatilityCalculatorService;
-use App\Performance\Repository\StockmarketPerformanceRepository;
+
 
 /**
  * Thin wrapper: stockmarket app entry point into portfolio-math.
  *
  * All calculation logic lives in ksfraser/portfolio-math.
  * This class only adapts the stockmarket repository and formats results.
+ */
+class only adapts the stockmarket repository and formats results.
  */
 class PerformanceService
 {

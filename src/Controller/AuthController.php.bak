@@ -1,0 +1,351 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Controller;
+
+use Ksf\StockMarket\Auth\AuthManager;
+use Ksf\StockMarket\Auth\AuthServiceProvider;
+use Ksf\StockMarket\Auth\AuthProviderException;
+use Ksf\StockMarket\Auth\SessionHelper;
+
+/**
+ * AuthController — handles login, logout, registration, password reset,
+ * and OAuth/SSO callback initiation.
+ *
+ * Social auth flow:
+ *   Login page → user clicks "Google" → GET ?action=oauth-redirect&provider=google
+ *             → this controller redirects to the provider
+ *             → provider redirects back to ?action=oauth-callback&provider=google
+ *             → OAuthCallbackDispatcher.php (dispatched from index.php)
+ *             → SessionHelper::loginSuccess() → redirect to overview
+ *
+ * FA-style auth plugin pattern:
+ *   - AuthProviderInterface: contract every auth backend must implement.
+ *   - AuthManager: provider registry + authentication orchestration.
+ *   - AuthServiceProvider: wires up providers (local + OAuth + OIDC + future LDAP/Kerberos).
+ *   - Individual providers in src/Auth/Provider/ can be swapped/added without
+ *     touching this controller or index.php.
+ */
+class AuthController
+{
+    /**
+     * Get the AuthManager with all registered providers.
+     */
+    private function getManager(): AuthManager
+    {
+        return AuthServiceProvider::createManager();
+    }
+
+    /**
+     * Check if a valid session exists. Returns user array or null.
+     */
+    public static function checkSession(): ?array
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Check PHP session
+        if (!empty($_SESSION['user_id'])) {
+            return $_SESSION['user'] ?? null;
+        }
+
+        // Check remember-me cookie
+        if (!empty($_COOKIE['owl_session'])) {
+            try {
+                $pdo = \Ksf\StockMarket\Model\Database::get();
+                $stmt = $pdo->prepare("
+                    SELECT s.user_id, s.expires_at, u.username, u.email, u.display_name, u.role, u.is_active
+                    FROM user_sessions s
+                    JOIN users u ON s.user_id = u.id
+                    WHERE s.id = :sid AND s.expires_at > NOW() AND u.is_active = 1
+                ");
+                $stmt->execute([':sid' => $_COOKIE['owl_session']]);
+                $row = $stmt->fetch();
+                if ($row) {
+                    $_SESSION['user_id'] = $row['user_id'];
+                    $_SESSION['user'] = $row;
+                    return $row;
+                }
+            } catch (\Exception $e) {
+                // Silently fail
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Require authenticated user. Redirects to login if not authenticated.
+     */
+    public static function requireAuth(): array
+    {
+        $user = self::checkSession();
+        if (!$user) {
+            $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
+            header('Location: ?action=login');
+            exit;
+        }
+        return $user;
+    }
+
+    // ── Login ────────────────────────────────────────────────────────────────
+
+    /**
+     * GET/POST /?action=login
+     */
+    public function login(): array
+    {
+        $error = $_SESSION['auth_error'] ?? '';
+        unset($_SESSION['auth_error']);
+
+        // Generate CSRF token for the login form.
+        $csrfToken = SessionHelper::generateCsrfToken();
+
+        // Gather redirect-based providers for the login template.
+        $manager = $this->getManager();
+        $providers = AuthServiceProvider::getRedirectProviderMeta($manager);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate CSRF.
+            $submittedToken = $_POST['csrf_token'] ?? '';
+            if (!SessionHelper::validateCsrfToken($submittedToken)) {
+                $error = 'Invalid form submission. Please try again.';
+            } else {
+                $username = trim($_POST['username'] ?? '');
+                $password = $_POST['password'] ?? '';
+                $remember = !empty($_POST['remember']);
+
+                try {
+                    $result = $manager->authenticate('local', [
+                        'username' => $username,
+                        'password' => $password,
+                    ]);
+
+                    if ($result) {
+                        SessionHelper::loginSuccess($result, $remember);
+
+                        $redirect = $_SESSION['redirect_after_login'] ?? '?action=overview';
+                        unset($_SESSION['redirect_after_login']);
+                        header("Location: $redirect");
+                        exit;
+                    } else {
+                        $error = 'Invalid username or password.';
+                    }
+                } catch (AuthProviderException $e) {
+                    $error = 'Login error. Please try again.';
+                    error_log('[Auth] Local auth error: ' . $e->getMessage());
+                }
+            }
+        }
+
+        return [
+            'error'      => $error,
+            'success'    => '',
+            'csrf_token' => $csrfToken,
+            'providers'  => $providers,
+            'pageTitle'  => 'Login',
+            'template'   => 'login',
+        ];
+    }
+
+    /**
+     * Initiate OAuth redirect for a named provider.
+     *
+     * Called via GET /?action=oauth-redirect&provider=<name>.
+     * The login template links to this action; it is NOT the callback.
+     */
+    public function oauthRedirect(): void
+    {
+        $providerName = $_GET['provider'] ?? '';
+
+        if ($providerName === '') {
+            header('Location: ?action=login');
+            exit;
+        }
+
+        $manager = $this->getManager();
+        $provider = $manager->getProvider($providerName);
+
+        if ($provider === null || !$provider->isAvailable()) {
+            $_SESSION['auth_error'] = 'That sign-in method is not available.';
+            header('Location: ?action=login');
+            exit;
+        }
+
+        $loginUrl = $provider->getLoginUrl();
+        if ($loginUrl === null) {
+            $_SESSION['auth_error'] = 'That sign-in method is not available.';
+            header('Location: ?action=login');
+            exit;
+        }
+
+        // Store the provider name in session so the callback handler can use it
+        // if the query parameter is stripped by the provider.
+        $_SESSION['pending_provider'] = $providerName;
+
+        header("Location: $loginUrl");
+        exit;
+    }
+
+    // ── Logout ───────────────────────────────────────────────────────────────
+
+    /**
+     * GET /?action=logout
+     */
+    public function logout(): void
+    {
+        SessionHelper::logout();
+        header('Location: ?action=login');
+        exit;
+    }
+
+    // ── Registration ─────────────────────────────────────────────────────────
+
+    /**
+     * GET/POST /?action=register
+     */
+    public function register(): array
+    {
+        $error = '';
+        $success = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = trim($_POST['username'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = $_POST['password'] ?? '';
+            $password2 = $_POST['password2'] ?? '';
+
+            // Validation
+            if (strlen($username) < 3) {
+                $error = 'Username must be at least 3 characters.';
+            } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $error = 'Please enter a valid email address.';
+            } elseif (strlen($password) < 8) {
+                $error = 'Password must be at least 8 characters.';
+            } elseif ($password !== $password2) {
+                $error = 'Passwords do not match.';
+            } else {
+                try {
+                    $userModel = new \Ksf\StockMarket\Model\User();
+                    // Use Argon2id to match the hashing strategy in User.php.
+                    $hash = password_hash($password, PASSWORD_ARGON2ID);
+                    $userId = $userModel->create($username, $email, $password);
+                    $success = 'Account created! You can now log in.';
+                } catch (\PDOException $e) {
+                    if ($e->getCode() == 23000) {
+                        $error = 'Username or email already exists.';
+                    } else {
+                        $error = 'Registration error. Please try again.';
+                    }
+                }
+            }
+        }
+
+        return compact('error', 'success', 'pageTitle', 'template');
+    }
+
+    // ── Password reset ───────────────────────────────────────────────────────
+
+    /**
+     * GET/POST /?action=forgot-password
+     */
+    public function forgotPassword(): array
+    {
+        $error = '';
+        $success = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $csrfToken = $_POST['csrf_token'] ?? '';
+            if (!SessionHelper::validateCsrfToken($csrfToken)) {
+                $error = 'Invalid form submission.';
+            } else {
+                $email = trim($_POST['email'] ?? '');
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $error = 'Please enter a valid email address.';
+                } else {
+                    $userModel = new \Ksf\StockMarket\Model\User();
+                    $result = $userModel->requestPasswordReset($email);
+                    if ($result['success']) {
+                        $success = $result['message'];
+                    } else {
+                        $error = $result['message'];
+                    }
+                }
+            }
+        }
+
+        return [
+            'error'     => $error,
+            'success'   => $success,
+            'csrf_token'=> SessionHelper::generateCsrfToken(),
+            'pageTitle' => 'Forgot Password',
+            'template'  => 'forgot_password',
+        ];
+    }
+
+    /**
+     * GET /?action=reset-password (show form)
+     */
+    public function showResetPasswordForm(): array
+    {
+        $error = '';
+        $token = $_GET['token'] ?? '';
+
+        if ($token !== '' && !preg_match('/^[a-f0-9]{128}$/', $token)) {
+            $error = 'Invalid or expired reset token.';
+        }
+
+        return compact('error', 'token', 'pageTitle', 'template');
+    }
+
+    /**
+     * POST /?action=reset-password (process reset)
+     */
+    public function handleResetPassword(): array
+    {
+        $error = '';
+        $token = trim($_POST['token'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $password2 = $_POST['password2'] ?? '';
+
+        if (!preg_match('/^[a-f0-9]{128}$/', $token)) {
+            $error = 'Invalid or expired reset token.';
+        } elseif (strlen($password) < 8) {
+            $error = 'Password must be at least 8 characters.';
+        } elseif ($password !== $password2) {
+            $error = 'Passwords do not match.';
+        } else {
+            try {
+                $userModel = new \Ksf\StockMarket\Model\User();
+                $user = $userModel->validateResetToken($token);
+
+                if ($user === null) {
+                    $error = 'Invalid or expired reset token. Please request a new one.';
+                } else {
+                    $userModel->resetPassword($password);
+                    $userModel->consumeToken();
+                    header('Location: ?action=login&reset=success');
+                    exit;
+                }
+            } catch (\Exception $e) {
+                $error = 'Password reset failed. Please try again.';
+                error_log('[Auth] Reset password error: ' . $e->getMessage());
+            }
+        }
+
+        return compact('error', 'token', 'pageTitle', 'template');
+    }
+
+    /**
+     * GET /?action=reset-password-success
+     */
+    public function resetPasswordSuccess(): array
+    {
+        return [
+            'pageTitle' => 'Password Reset',
+            'template'  => 'reset_password_success',
+        ];
+    }
+}

@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+namespace Ksf\StockMarket\Controller;
+
 class KnowledgeBaseController
 {
     private const WIKI_DIR = __DIR__ . '/../../../../docs/wiki';

@@ -29,6 +29,7 @@ Project management lifecycle aligned to **BABOK®** (Business Analysis) and **PM
 - Incremental delivery by phase
 - Advisor hiring framework, multi-gateway recommendations, optional rules executed in Phase 3
 - ATR 2.5x methodology validated via backtest
+- **Phase 4 (planned, 2026-09-18+)**: LLM admin console + fallback chain (BR-10/FR-11.6), LLM fundamental data tables (BR-9/FR-11), timing-aware backtesting (BR-11/FR-16), Research Wizard formula advisors (BR-3/BR-7/FR-12). Test outlines: UT-11-06, UT-11, UT-16, UT-12.
 
 ### 2.4 Monitoring & Controlling
 - Traceability matrix maps BR → FR → US → DB/PHP/Python/Status
@@ -50,5 +51,9 @@ Project management lifecycle aligned to **BABOK®** (Business Analysis) and **PM
 | Solution Design | BABOK Strategy Analysis | `docs/requirements/solution-design.md` |
 | Architecture Document | PMBOK Scope Management | `docs/architecture/architecture-document.md` |
 | ADRs | BABOK Knowledge Management | `docs/architecture/` |
-| Test Plans | BABOK Solution Evaluation, PMBOK Quality | `docs/` planned |
+|| Test Plans | BABOK Solution Evaluation, PMBOK Quality | `docs/requirements/UT-*.md` (UT-10 series, UT-11, UT-11-06, UT-12, UT-14, UT-15, UT-16) |
 | User Stories | BABOK Elicitation | `docs/user-stories/user-stories.md` |
+| LLM Admin Console Design | BABOK Strategy Analysis | `docs/advisors/REQUIREMENTS_DESIGN.md` §LLM Admin Screen |
+| LLM Fundamental Data Design | BABOK Strategy Analysis | `docs/advisors/REQUIREMENTS_DESIGN.md` §Database Design |
+| Timing-Aware Backtesting Design | BABOK Strategy Analysis | `docs/advisors/REQUIREMENTS_DESIGN.md` §Timing-Aware Trading |
+| RW Formula Advisor Design | BABOK Strategy Analysis | `docs/advisors/REQUIREMENTS_DESIGN.md` §Research Wizard Formula Integration |

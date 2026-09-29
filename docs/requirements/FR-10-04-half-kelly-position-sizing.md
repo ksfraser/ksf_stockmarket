@@ -18,7 +18,16 @@ Where:
 Persisted to `evalvalue.kellyoptimization` via `write_scores()`.
 
 ## Priority
-Should Have
+Must Have
+
+## Related test outlines
+
+- `docs/requirements/UT-10-01-001-statistical-validation-basic.md` — FR-10-01 Layer 1 tests
+- `docs/requirements/UT-10-02-001-route-hypothesis-keywords.md` — FR-10-02 LLM hypothesis routing
+- `docs/requirements/UT-10-03-statistical-validation-layer3.md` — FR-10-03 advisor configurable rules
+- `docs/requirements/UT-10-04-half-kelly-sizing.md` — this requirement (FR-10-04)
+- `docs/requirements/UT-11-llm-fundamental-data.md` — FR-11 LLM data tables
+- `docs/requirements/UT-12-rw-formula-advisors.md` — FR-12 RW formula advisors
 
 ## Acceptance Criteria
 - [ ] `compute_statistical_validation()` returns `kelly_pct` (percentage, 4 decimal places)

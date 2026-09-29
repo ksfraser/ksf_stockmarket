@@ -1,6 +1,11 @@
 <?php
 declare(strict_types=1);
 
+namespace Ksf\StockMarket\Controller;
+
+use Ksf\StockMarket\Model\Database;
+
+
 /**
  * SymbolAdminController — manage symbol master data, exchange mappings, active/inactive status.
  */

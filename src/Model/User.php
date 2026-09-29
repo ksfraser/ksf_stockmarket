@@ -6,6 +6,9 @@ namespace Ksf\StockMarket\Model;
 
 use PDO;
 use RuntimeException;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
 
 /**
  * User model — modern user accounts with RBAC.
@@ -20,6 +23,36 @@ class User
     {
         $this->db = Database::getConnection();
     }
+
+    // ── Fields ──────────────────────────────────────────────────────────────
+
+    /** @var string Canonical username (lowest-case) */
+    private string $username;
+
+    /**
+     * @var string|null  One-time password-reset token (nullable).
+     *
+     * Stored as plain hex in the DB column `password_reset_token`.
+     * Cleared after a successful reset or when a new token is issued.
+     */
+    private ?string $token = null;
+
+    /**
+     * @var \DateTimeImmutable|null  Token expiry window.
+     *
+     * Computed during validation (token + expires_at from DB) so the model
+     * can answer "is this token still valid?" without re-querying.
+     */
+    private ?\DateTimeImmutable $tokenExpiresAt = null;
+
+    /**
+     * @var bool  True once the password has been reset via a valid token.
+     *
+     * Cleared after the next successful login (not yet wired — reserved).
+     */
+    private bool $passwordJustReset = false;
+
+    // ── Queries ─────────────────────────────────────────────────────────────
 
     /**
      * Find a user by ID.
@@ -38,6 +71,37 @@ class User
     {
         $stmt = $this->db->prepare('SELECT * FROM users WHERE username = :u AND is_active = 1');
         $stmt->execute(['u' => $username]);
+        return $stmt->fetch() ?: null;
+    }
+
+    /**
+     * Find a user by email address (case-insensitive).
+     *
+     * Used by the "forgot password" flow to locate the account.
+     */
+    public function findByEmail(string $email): ?array
+    {
+        $stmt = $this->db->prepare('SELECT * FROM users WHERE email = :e AND is_active = 1');
+        $stmt->execute(['e' => $email]);
+        return $stmt->fetch() ?: null;
+    }
+
+    /**
+     * Find a user by their password-reset token.
+     *
+     * Returns the user row only when the token matches AND has not expired.
+     * The caller is expected to call {@see consumeToken()} immediately after
+     * a successful reset so the token cannot be replayed.
+     */
+    public function findByToken(string $token): ?array
+    {
+        $stmt = $this->db->prepare(
+            'SELECT * FROM users
+             WHERE password_reset_token = :t
+               AND password_reset_expires_at > NOW()
+               AND is_active = 1'
+        );
+        $stmt->execute(['t' => $token]);
         return $stmt->fetch() ?: null;
     }
 
@@ -84,5 +148,174 @@ class User
     public function getAll(): array
     {
         return $this->db->query('SELECT id, username, email, role, first_name, last_name, is_active, created_at FROM users ORDER BY username')->fetchAll();
+    }
+
+    // ── Password reset flow ─────────────────────────────────────────────────
+
+    /**
+     * Generate and persist a one-time password-reset token for the given email.
+     *
+     * @return string[]  ['success' => bool, 'message' => string]
+     */
+    public function requestPasswordReset(string $email): array
+    {
+        $user = $this->findByEmail($email);
+
+        // Security: never reveal whether the email exists or not.
+        if ($user === null) {
+            return ['success' => false, 'message' => 'If that email is registered, a reset link has been sent.'];
+        }
+
+        // Generate a 64-byte hex token (128 hex chars).
+        $token = bin2hex(random_bytes(64));
+        $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+        $stmt = $this->db->prepare(
+            'UPDATE users
+             SET password_reset_token = :t, password_reset_expires_at = :e
+             WHERE id = :id'
+        );
+        $stmt->execute([
+            't' => $token,
+            'e' => $expires,
+            'id' => $user['id'],
+        ]);
+
+        // Build the reset URL that the user will click.
+        // Adjust the domain/path to match your deployment.
+        $domain = ($_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+        $resetUrl = $domain . '/?action=reset-password&token=' . $token;
+
+        // Send via Symfony Mailer (uses SMTP config from .env when available).
+        try {
+            $dsn = 'smtp://' . ($_ENV['EMAIL_ADDRESS'] ?? 'hermes@ksfraser.ca');
+            if (!empty($_ENV['EMAIL_SMTP_HOST'])) {
+                $dsn = 'smtp://' . ($_ENV['EMAIL_ADDRESS'] ?? 'hermes@ksfraser.ca')
+                    . ':' . ($_ENV['EMAIL_PASSWORD'] ?? '') . '@' . $_ENV['EMAIL_SMTP_HOST']
+                    . ':' . ($_ENV['EMAIL_SMTP_PORT'] ?? '587');
+            }
+            $transport = Transport::fromDsn($dsn);
+            $mailer = new Mailer($transport);
+
+            $emailMsg = (new Email())
+                ->from($_ENV['EMAIL_ADDRESS'] ?? 'hermes@ksfraser.ca')
+                ->to($email)
+                ->subject('OWI Password Reset')
+                ->text('Reset your password: ' . $resetUrl)
+                ->html('<p>Reset your password: <a href="' . $resetUrl . '">' . $resetUrl . '</a></p>');
+
+            $mailer->send($emailMsg);
+        } catch (\Exception $e) {
+            // Fallback: log for admin relay if SMTP is unavailable.
+            error_log('[StockMarket] Password reset email FAILED for ' . $email
+                . '. URL: ' . $resetUrl . ' Error: ' . $e->getMessage());
+        }
+
+        $message = 'A password reset link has been sent to ' . $email . '.';
+
+        return ['success' => true, 'message' => $message, 'resetUrl' => $resetUrl];
+    }
+
+    /**
+     * Validate a reset token and return the user row if valid.
+     *
+     * @return array|null  User row when token is valid, null otherwise.
+     */
+    public function validateResetToken(string $token): ?array
+    {
+        // Basic sanity: token must be exactly 128 hex chars.
+        if (!preg_match('/^[a-f0-9]{128}$/', $token)) {
+            return null;
+        }
+
+        $row = $this->findByToken($token);
+        if ($row === null) {
+            return null;
+        }
+
+        // Store on the instance so subsequent calls on the same object can
+        // reference it (not strictly required, but convenient for the controller).
+        $this->token = $token;
+        $this->tokenExpiresAt = new \DateTimeImmutable($row['password_reset_expires_at'] ?? '');
+        $this->username = $row['username'];
+
+        return $row;
+    }
+
+    /**
+     * Consume (clear) the current token after a successful password reset.
+     *
+     * Call this immediately after {@see resetPassword()} succeeds so the token
+     * cannot be reused.
+     */
+    public function consumeToken(): void
+    {
+        if ($this->token === null) {
+            return;
+        }
+
+        $stmt = $this->db->prepare(
+            'UPDATE users
+             SET password_reset_token = NULL, password_reset_expires_at = NULL
+             WHERE username = :u'
+        );
+        $stmt->execute(['u' => $this->username]);
+
+        $this->token = null;
+        $this->tokenExpiresAt = null;
+    }
+
+    /**
+     * Reset the password using the currently validated token.
+     *
+     * @throws RuntimeException  When no token has been validated on this instance.
+     * @return array  Updated user row.
+     */
+    public function resetPassword(string $newPassword): array
+    {
+        if ($this->token === null || $this->username === '') {
+            throw new RuntimeException('No validated reset token on this User instance.');
+        }
+
+        $hash = password_hash($newPassword, PASSWORD_ARGON2ID);
+        $stmt = $this->db->prepare(
+            'UPDATE users
+             SET password_hash = :h, password_reset_token = NULL, password_reset_expires_at = NULL
+             WHERE username = :u'
+        );
+        $stmt->execute([
+            'h' => $hash,
+            'u' => $this->username,
+        ]);
+
+        $this->passwordJustReset = true;
+
+        // Return the updated row so the controller can log the event if needed.
+        return $this->findByUsername($this->username);
+    }
+
+    /**
+     * Admin-only: reset a user's password directly (bypassing the email flow).
+     *
+     * @throws RuntimeException  When the user does not exist or is inactive.
+     * @return array  Updated user row.
+     */
+    public function adminResetPassword(int $userId, string $newPassword): array
+    {
+        $user = $this->findById($userId);
+        if ($user === null) {
+            throw new RuntimeException('User not found or inactive.');
+        }
+
+        $hash = password_hash($newPassword, PASSWORD_ARGON2ID);
+        $stmt = $this->db->prepare(
+            'UPDATE users
+             SET password_hash = :h, password_reset_token = NULL, password_reset_expires_at = NULL
+             WHERE id = :id'
+        );
+        $stmt->execute(['h' => $hash, 'id' => $userId]);
+
+        $this->passwordJustReset = true;
+        return $this->findById($userId);
     }
 }

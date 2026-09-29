@@ -1,4 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Util;
+
+
 /**
  * SegFundFilter — encapsulates filter spec parsing, bucket boundary computation,
  * and WHERE-clause building for the seg_funds list (BR-11, FR-11).

@@ -1,4 +1,9 @@
 <?php
+declare(strict_types=1);
+namespace Ksf\StockMarket\Controller;
+use Ksf\StockMarket\Model\Database;
+
+
 /**
  * DashboardController — APP LEVEL overview/dashboard data.
  * Provides system-wide stats: all symbols, all gainers/losers, full coverage.

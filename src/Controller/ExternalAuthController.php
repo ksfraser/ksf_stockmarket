@@ -1,4 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Controller;
+
+use Ksf\StockMarket\Model\Database;
+
+
+
 /**
  * ExternalAuthController — OAuth / API-key auth for external providers
  * (Reddit, TradingView, arXiv, etc.).

@@ -280,6 +280,44 @@ $error = $data['error'] ?? '';
             </form>
             </div>
 
+<div class="card" style="margin-top:24px;">
+    <div class="card-header">&#x1F510; User Management — Admin Password Reset</div>
+    <p style="font-size:0.85em;color:var(--text3);margin-bottom:12px;">
+        Admin-only: reset any user's password directly (bypasses email flow).
+    </p>
+
+    <?php $users = $data['users'] ?? []; ?>
+    <?php if (count($users) === 0): ?>
+        <p style="font-size:0.85em;color:var(--text3);">No users found.</p>
+    <?php else: ?>
+        <table style="width:100%;font-size:0.85em;border-collapse:collapse;">
+            <tr style="border-bottom:1px solid var(--border);font-weight:bold;color:var(--text3);">
+                <th style="text-align:left;padding:6px 0;">Username</th>
+                <th style="text-align:left;padding:6px 0;">Email</th>
+                <th style="text-align:left;padding:6px 0;">Role</th>
+                <th style="text-align:left;padding:6px 0;">Status</th>
+                <th style="text-align:left;padding:6px 0;">Reset</th>
+            </tr>
+            <?php foreach ($users as $u): ?>
+            <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:6px 0;"><?= htmlspecialchars($u['username']) ?></td>
+                <td style="padding:6px 0;color:var(--text3);font-family:monospace;"><?= htmlspecialchars($u['email']) ?></td>
+                <td style="padding:6px 0;"><?= htmlspecialchars($u['role']) ?></td>
+                <td style="padding:6px 0;"><?= $u['is_active'] ? '<span style="color:var(--green);">Active</span>' : '<span style="color:var(--red);">Inactive</span>' ?></td>
+                <td style="padding:6px 0;">
+                    <form method="POST" action="?action=admin_settings" style="display:inline;" onsubmit="return confirm('Reset password for <?= htmlspecialchars($u['username']) ?>?');">
+                        <input type="hidden" name="action" value="admin_reset_password">
+                        <input type="hidden" name="user_id" value="<?= (int)$u['id'] ?>">
+                        <input type="password" name="new_password" placeholder="New pass (8+)" minlength="8" required style="width:140px;font-size:0.8em;">
+                        <button type="submit" style="font-size:0.8em;padding:3px 8px;background:var(--red);color:#fff;border:none;border-radius:3px;cursor:pointer;">Reset</button>
+                    </form>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php endif; ?>
+</div>
+
 <div style="display:flex;gap:12px;margin-top:24px;justify-content:center;">
     <a href="?action=alerts_status" class="btn">&larr; Alerts Status</a>
     <a href="?action=admin_symbols" class="btn">&#x1F4B0; Symbol Admin</a>

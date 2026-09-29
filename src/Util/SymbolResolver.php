@@ -1,4 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Util;
+use PDO;
+
+
 /**
  * SymbolResolver — centralized TSX/US ticker disambiguation for PHP.
  *

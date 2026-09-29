@@ -1,26 +1,84 @@
 <?php
+
+declare(strict_types=1);
+
+namespace Ksf\StockMarket\Controller;
+
+use Ksf\StockMarket\Auth\AuthManager;
+use Ksf\StockMarket\Auth\AuthServiceProvider;
+use Ksf\StockMarket\Auth\AuthProviderException;
+use Ksf\StockMarket\Auth\SessionHelper;
+
 /**
- * AuthController — handles login, logout, registration, and session management.
+ * AuthController — handles login, logout, registration, password reset,
+ * and OAuth/SSO callback initiation.
+ *
+ * Social auth flow:
+ *   Login page → user clicks "Google" → GET ?action=oauth-redirect&provider=google
+ *             → this controller redirects to the provider
+ *             → provider redirects back to ?action=oauth-callback&provider=google
+ *             → OAuthCallbackDispatcher.php (dispatched from index.php)
+ *             → SessionHelper::loginSuccess() → redirect to overview
+ *
+ * FA-style auth plugin pattern:
+ *   - AuthProviderInterface: contract every auth backend must implement.
+ *   - AuthManager: provider registry + authentication orchestration.
+ *   - AuthServiceProvider: wires up providers (local + OAuth + OIDC + future LDAP/Kerberos).
+ *   - Individual providers in src/Auth/Provider/ can be swapped/added without
+ *     touching this controller or index.php.
  */
-class AuthController {
+class AuthController
+{
+    /**
+     * Get the AuthManager with all registered providers.
+     */
+    private function getManager(): AuthManager
+    {
+        return AuthServiceProvider::createManager();
+    }
 
     /**
      * Check if a valid session exists. Returns user array or null.
+     *
+     * Uses Symfony Security's token storage when available (after migration),
+     * falling back to the legacy session/cookie check during the transition.
      */
-    public static function checkSession(): ?array {
+    public static function checkSession(): ?array
+    {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
-        // Check PHP session
+        // Prefer Symfony Security token when available.
+        try {
+            if (class_exists(\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage::class)) {
+                $tokenStorage = self::getTokenStorage();
+                $token = $tokenStorage->getToken();
+                if ($token instanceof \Symfony\Component\Security\Core\Authentication\Token\AnonymousToken) {
+                    return null;
+                }
+                if ($token !== null && $token->isAuthenticated()) {
+                    $user = $token->getUser();
+                    if ($user instanceof \Ksf\StockMarket\Security\StockmarketUser) {
+                        return self::userRowFromStockmarketUser($user);
+                    }
+                    if (is_array($user)) {
+                        return $user;
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // Symfony not bootstrapped — fall through to legacy.
+        }
+
+        // Legacy: PHP session + remember-me cookie.
         if (!empty($_SESSION['user_id'])) {
             return $_SESSION['user'] ?? null;
         }
 
-        // Check remember-me cookie
         if (!empty($_COOKIE['owl_session'])) {
             try {
-                $pdo = Database::get();
+                $pdo = \Ksf\StockMarket\Model\Database::get();
                 $stmt = $pdo->prepare("
                     SELECT s.user_id, s.expires_at, u.username, u.email, u.display_name, u.role, u.is_active
                     FROM user_sessions s
@@ -34,7 +92,7 @@ class AuthController {
                     $_SESSION['user'] = $row;
                     return $row;
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 // Silently fail
             }
         }
@@ -43,9 +101,33 @@ class AuthController {
     }
 
     /**
+     * Convert a StockmarketUser to the legacy array shape expected by
+     * controllers and templates (id, username, email, display_name, role, etc.).
+     */
+    private static function userRowFromStockmarketUser(\Ksf\StockMarket\Security\StockmarketUser $user): array
+    {
+        $row = $user->getRow();
+        return [
+            'id'          => $user->getId(),
+            'username'    => $user->getUserIdentifier(),
+            'email'       => $user->getEmail(),
+            'display_name'=> $user->getDisplayName(),
+            'first_name'  => $row['first_name'] ?? '',
+            'last_name'   => $row['last_name'] ?? '',
+            'role'        => $user->getRole(),
+            'is_active'   => (bool) ($row['is_active'] ?? true),
+            'created_at'  => $row['created_at'] ?? null,
+            'last_login'  => $row['last_login'] ?? null,
+            'provider'    => $row['provider'] ?? null,
+            'provider_id' => $row['provider_id'] ?? null,
+        ];
+    }
+
+    /**
      * Require authenticated user. Redirects to login if not authenticated.
      */
-    public static function requireAuth(): array {
+    public static function requireAuth(): array
+    {
         $user = self::checkSession();
         if (!$user) {
             $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
@@ -56,89 +138,162 @@ class AuthController {
     }
 
     /**
+     * Get or lazy-create the Symfony TokenStorage singleton.
+     *
+     * This app does NOT use the full Symfony DI container, so we instantiate
+     * TokenStorage directly.  Session is already started before this is called
+     * (see checkSession()), so TokenStorage can read/write to $_SESSION.
+     */
+    private static function getTokenStorage(): \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
+    {
+        static $storage = null;
+        if ($storage === null) {
+            $storage = new \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage();
+        }
+        return $storage;
+    }
+
+    // ── Login ────────────────────────────────────────────────────────────────
+
+    /**
      * GET/POST /?action=login
      */
-    public function login(): array {
-        $error = '';
+    public function login(): array
+    {
+        $error = $_SESSION['auth_error'] ?? '';
+        unset($_SESSION['auth_error']);
+
+        // Generate CSRF token for the login form.
+        $csrfToken = SessionHelper::generateCsrfToken();
+
+        // Gather redirect-based providers for the login template.
+        $manager = $this->getManager();
+        $providers = AuthServiceProvider::getRedirectProviderMeta($manager);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = trim($_POST['username'] ?? '');
-            $password = $_POST['password'] ?? '';
-            $remember = !empty($_POST['remember']);
+            // Validate CSRF.
+            $submittedToken = $_POST['csrf_token'] ?? '';
+            if (!SessionHelper::validateCsrfToken($submittedToken)) {
+                $error = 'Invalid form submission. Please try again.';
+            } else {
+                $username = trim($_POST['username'] ?? '');
+                $password = $_POST['password'] ?? '';
+                $remember = !empty($_POST['remember']);
 
-            try {
-                $pdo = Database::get();
-                $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :u AND is_active = 1");
-                $stmt->execute([':u' => $username]);
-                $user = $stmt->fetch();
+                try {
+                    $result = $manager->authenticate('local', [
+                        'username' => $username,
+                        'password' => $password,
+                    ]);
 
-                if ($user && password_verify($password, $user['password_hash'])) {
-                    // Login successful
-                    if (session_status() === PHP_SESSION_NONE) session_start();
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['user'] = $user;
+                    if ($result) {
+                        // Populate Symfony Security token so subsequent requests
+                        // see an authenticated user via TokenStorage (Phase 4).
+                        // Legacy SessionHelper::loginSuccess() still runs for
+                        // backward compatibility with remember-me cookie + user_sessions.
+                        SessionHelper::loginSuccess($result, $remember);
 
-                    // Update last login
-                    $pdo->prepare("UPDATE users SET last_login = NOW() WHERE id = :id")
-                        ->execute([':id' => $user['id']]);
+                        // Write the Symfony token — uses the raw DB row to build
+                        // a StockmarketUser, matching what UserRepository does.
+                        $tokenStorage = self::getTokenStorage();
+                        $smUser = new \Ksf\StockMarket\Security\StockmarketUser(
+                            $result['username'] ?? '',
+                            $result['email'] ?? '',
+                            $result['password_hash'] ?? '',
+                            self::rolesFromRow($result),
+                            $result,
+                        );
+                        $tokenStorage->setToken(
+                            new \Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken(
+                                $smUser,
+                                $password ?? '',             // submitted raw password (used for verification refresh)
+                                $smUser->getRoles(),         // roles array
+                                'main',                      // firewall name
+                            ),
+                        );
 
-                    // Remember me
-                    if ($remember) {
-                        $sid = bin2hex(random_bytes(64));
-                        $expires = date('Y-m-d H:i:s', strtotime('+30 days'));
-                        $pdo->prepare("INSERT INTO user_sessions (id, user_id, ip_address, user_agent, expires_at) VALUES (:sid, :uid, :ip, :ua, :exp)")
-                            ->execute([
-                                ':sid' => $sid,
-                                ':uid' => $user['id'],
-                                ':ip' => $_SERVER['REMOTE_ADDR'] ?? '',
-                                ':ua' => $_SERVER['HTTP_USER_AGENT'] ?? '',
-                                ':exp' => $expires,
-                            ]);
-                        setcookie('owl_session', $sid, strtotime('+30 days'), '/', '', false, true);
+                        $redirect = $_SESSION['redirect_after_login'] ?? '?action=overview';
+                        unset($_SESSION['redirect_after_login']);
+                        header("Location: $redirect");
+                        exit;
+                    } else {
+                        $error = 'Invalid username or password.';
                     }
-
-                    // Redirect
-                    $redirect = $_SESSION['redirect_after_login'] ?? '?action=overview';
-                    unset($_SESSION['redirect_after_login']);
-                    header("Location: $redirect");
-                    exit;
-                } else {
-                    $error = 'Invalid username or password.';
+                } catch (AuthProviderException $e) {
+                    $error = 'Login error. Please try again.';
+                    error_log('[Auth] Local auth error: ' . $e->getMessage());
                 }
-            } catch (Exception $e) {
-                $error = 'Login error. Please try again.';
             }
         }
 
-        // Return template data
-        return ['error' => $error, 'pageTitle' => 'Login', 'template' => 'login'];
+        return [
+            'error'      => $error,
+            'success'    => '',
+            'csrf_token' => $csrfToken,
+            'providers'  => $providers,
+            'pageTitle'  => 'Login',
+            'template'   => 'login',
+        ];
     }
+
+    /**
+     * Initiate OAuth redirect for a named provider.
+     *
+     * Called via GET /?action=oauth-redirect&provider=<name>.
+     * The login template links to this action; it is NOT the callback.
+     */
+    public function oauthRedirect(): void
+    {
+        $providerName = $_GET['provider'] ?? '';
+
+        if ($providerName === '') {
+            header('Location: ?action=login');
+            exit;
+        }
+
+        $manager = $this->getManager();
+        $provider = $manager->getProvider($providerName);
+
+        if ($provider === null || !$provider->isAvailable()) {
+            $_SESSION['auth_error'] = 'That sign-in method is not available.';
+            header('Location: ?action=login');
+            exit;
+        }
+
+        $loginUrl = $provider->getLoginUrl();
+        if ($loginUrl === null) {
+            $_SESSION['auth_error'] = 'That sign-in method is not available.';
+            header('Location: ?action=login');
+            exit;
+        }
+
+        // Store the provider name in session so the callback handler can use it
+        // if the query parameter is stripped by the provider.
+        $_SESSION['pending_provider'] = $providerName;
+
+        header("Location: $loginUrl");
+        exit;
+    }
+
+    // ── Logout ───────────────────────────────────────────────────────────────
 
     /**
      * GET /?action=logout
      */
-    public function logout(): void {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-
-        // Remove remember-me cookie
-        if (!empty($_COOKIE['owl_session'])) {
-            try {
-                $pdo = Database::get();
-                $pdo->prepare("DELETE FROM user_sessions WHERE id = :sid")
-                    ->execute([':sid' => $_COOKIE['owl_session']]);
-            } catch (Exception $e) {}
-            setcookie('owl_session', '', time() - 3600, '/');
-        }
-
-        session_destroy();
+    public function logout(): void
+    {
+        SessionHelper::logout();
         header('Location: ?action=login');
         exit;
     }
 
+    // ── Registration ─────────────────────────────────────────────────────────
+
     /**
      * GET/POST /?action=register
      */
-    public function register(): array {
+    public function register(): array
+    {
         $error = '';
         $success = '';
 
@@ -159,12 +314,12 @@ class AuthController {
                 $error = 'Passwords do not match.';
             } else {
                 try {
-                    $pdo = Database::get();
-                    $hash = password_hash($password, PASSWORD_DEFAULT);
-                    $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, display_name) VALUES (?, ?, ?, ?)");
-                    $stmt->execute([$username, $email, $hash, $username]);
+                    $userModel = new \Ksf\StockMarket\Model\User();
+                    // Use Argon2id to match the hashing strategy in User.php.
+                    $hash = password_hash($password, PASSWORD_ARGON2ID);
+                    $userId = $userModel->create($username, $email, $password);
                     $success = 'Account created! You can now log in.';
-                } catch (PDOException $e) {
+                } catch (\PDOException $e) {
                     if ($e->getCode() == 23000) {
                         $error = 'Username or email already exists.';
                     } else {
@@ -175,5 +330,125 @@ class AuthController {
         }
 
         return compact('error', 'success', 'pageTitle', 'template');
+    }
+
+    // ── Password reset ───────────────────────────────────────────────────────
+
+    /**
+     * GET/POST /?action=forgot-password
+     */
+    public function forgotPassword(): array
+    {
+        $error = '';
+        $success = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $csrfToken = $_POST['csrf_token'] ?? '';
+            if (!SessionHelper::validateCsrfToken($csrfToken)) {
+                $error = 'Invalid form submission.';
+            } else {
+                $email = trim($_POST['email'] ?? '');
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $error = 'Please enter a valid email address.';
+                } else {
+                    $userModel = new \Ksf\StockMarket\Model\User();
+                    $result = $userModel->requestPasswordReset($email);
+                    if ($result['success']) {
+                        $success = $result['message'];
+                    } else {
+                        $error = $result['message'];
+                    }
+                }
+            }
+        }
+
+        return [
+            'error'     => $error,
+            'success'   => $success,
+            'csrf_token'=> SessionHelper::generateCsrfToken(),
+            'pageTitle' => 'Forgot Password',
+            'template'  => 'forgot_password',
+        ];
+    }
+
+    /**
+     * GET /?action=reset-password (show form)
+     */
+    public function showResetPasswordForm(): array
+    {
+        $error = '';
+        $token = $_GET['token'] ?? '';
+
+        if ($token !== '' && !preg_match('/^[a-f0-9]{128}$/', $token)) {
+            $error = 'Invalid or expired reset token.';
+        }
+
+        return compact('error', 'token', 'pageTitle', 'template');
+    }
+
+    /**
+     * POST /?action=reset-password (process reset)
+     */
+    public function handleResetPassword(): array
+    {
+        $error = '';
+        $token = trim($_POST['token'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $password2 = $_POST['password2'] ?? '';
+
+        if (!preg_match('/^[a-f0-9]{128}$/', $token)) {
+            $error = 'Invalid or expired reset token.';
+        } elseif (strlen($password) < 8) {
+            $error = 'Password must be at least 8 characters.';
+        } elseif ($password !== $password2) {
+            $error = 'Passwords do not match.';
+        } else {
+            try {
+                $userModel = new \Ksf\StockMarket\Model\User();
+                $user = $userModel->validateResetToken($token);
+
+                if ($user === null) {
+                    $error = 'Invalid or expired reset token. Please request a new one.';
+                } else {
+                    $userModel->resetPassword($password);
+                    $userModel->consumeToken();
+                    header('Location: ?action=login&reset=success');
+                    exit;
+                }
+            } catch (\Exception $e) {
+                $error = 'Password reset failed. Please try again.';
+                error_log('[Auth] Reset password error: ' . $e->getMessage());
+            }
+        }
+
+        return compact('error', 'token', 'pageTitle', 'template');
+    }
+
+    /**
+     * GET /?action=reset-password-success
+     */
+    public function resetPasswordSuccess(): array
+    {
+        return [
+            'pageTitle' => 'Password Reset',
+            'template'  => 'reset_password_success',
+        ];
+    }
+
+    // ── Symfony Security adapter helpers ──────────────────────────────────────
+
+    /**
+     * Map DB `role` column to Symfony ROLE_* array.
+     */
+    private static function rolesFromRow(array $row): array
+    {
+        $raw = strtolower(trim((string) ($row['role'] ?? 'user')));
+        $roles = ['ROLE_USER'];
+        return match ($raw) {
+            'admin'    => array_merge($roles, ['ROLE_ADMIN']),
+            'advisor'  => array_merge($roles, ['ROLE_ADVISOR']),
+            'viewer'   => array_merge($roles, ['ROLE_VIEWER']),
+            default    => $roles,
+        };
     }
 }

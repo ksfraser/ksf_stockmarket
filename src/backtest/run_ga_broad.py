@@ -13,7 +13,7 @@ sys.path.insert(0, 'src/db')
 sys.path.insert(0, 'src/config')
 sys.path.insert(0, '.')
 
-import sqlite3
+from db.connection import DataSource
 from backtest.optimize import BacktestEngine, GeneticOptimizer, PORTFOLIO_TICKERS
 from db.data_cache import DataCache
 
@@ -47,7 +47,7 @@ else:
     MAX_DAYS = 500
 
 # Create SQLite connection for the optimizer
-db_conn = sqlite3.connect('analysis_results.db')
+db_conn = DataSource.sqlite_connection('analysis_results.db')
 
 # Narrow mutation settings for fast execution
 print(f"\nConfiguration: mutation_rate=0.20, population=5, generations=3 (minimal for quick test)")

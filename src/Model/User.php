@@ -188,11 +188,15 @@ class User
 
         // Send via Symfony Mailer (uses SMTP config from .env when available).
         try {
-            $dsn = 'smtp://' . ($_ENV['EMAIL_ADDRESS'] ?? 'hermes@ksfraser.ca');
-            if (!empty($_ENV['EMAIL_SMTP_HOST'])) {
-                $dsn = 'smtp://' . ($_ENV['EMAIL_ADDRESS'] ?? 'hermes@ksfraser.ca')
-                    . ':' . ($_ENV['EMAIL_PASSWORD'] ?? '') . '@' . $_ENV['EMAIL_SMTP_HOST']
-                    . ':' . ($_ENV['EMAIL_SMTP_PORT'] ?? '587');
+            $smtpUser = $_ENV['EMAIL_ADDRESS'] ?? 'hermes@ksfraser.ca';
+            $smtpPass = urlencode($_ENV['EMAIL_PASSWORD'] ?? '');
+            $smtpHost = $_ENV['EMAIL_SMTP_HOST'] ?? '';
+            $smtpPort = $_ENV['EMAIL_SMTP_PORT'] ?? '587';
+
+            if (!empty($smtpHost)) {
+                $dsn = 'smtp://' . $smtpUser . ':' . $smtpPass . '@' . $smtpHost . ':' . $smtpPort;
+            } else {
+                $dsn = 'smtp://' . $smtpUser;
             }
             $transport = Transport::fromDsn($dsn);
             $mailer = new Mailer($transport);

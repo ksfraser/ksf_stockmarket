@@ -24,10 +24,7 @@ from typing import List, Optional, Sequence
 from .stock_price_dto import StockPriceDTO
 from .stock_price_repository import StockPriceRepository
 from .connection import DataSource
-
-# Make symbol_resolver importable regardless of caller cwd.
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'python', 'src'))
-from symbol_resolver import resolve_for_yfinance, decompose_ticker
+from .symbol_resolver import resolve_for_yfinance, decompose_ticker
 
 
 class SQLitePriceRepository(StockPriceRepository):

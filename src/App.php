@@ -52,6 +52,14 @@ class App
         $dotenv = Dotenv::createImmutable($rootDir);
         $dotenv->safeLoad();
 
+        // Also populate OS environment (getenv()) so config files that use
+        // getenv() — like config/database.php — can read credentials from .env
+        foreach ($_ENV as $key => $val) {
+            if (getenv($key) === false) {
+                putenv($key . '=' . $val);
+            }
+        }
+
         // Store config
         $this->config = $_ENV;
 

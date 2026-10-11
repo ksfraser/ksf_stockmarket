@@ -45,11 +45,11 @@ import random
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, SCRIPT_DIR)
+sys.path.insert(0, os.path.dirname(SCRIPT_DIR))  # src/
+sys.path.insert(0, os.path.join(SCRIPT_DIR, '..', 'optimization'))  # src/optimization/
 
-import yfinance as yf
-from investment_monitor import SymbolResolver, TechnicalAnalyzer
-from analysis_db import get_db
-from data_cache import DataCache
+from db.connection import DataSource
+from db.data_cache import DataCache
 from weight_optimizer import (
     WeightedSignalGenerator, RollingCoherenceScorer,
     DEFAULT_WEIGHTS, WEIGHT_BOUNDS

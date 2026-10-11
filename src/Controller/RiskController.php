@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ksf\StockMarket\Controller;
 
 use Ksf\StockMarket\Model\Database;
+use Ksf\StockMarket\Util\SymbolResolver;
 
 
 

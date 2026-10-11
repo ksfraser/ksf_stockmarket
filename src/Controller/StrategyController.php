@@ -6,6 +6,7 @@ namespace Ksf\StockMarket\Controller;
 
 use App\Strategy\StrategyRegistry;
 use App\Strategy\StrategyFactory;
+use Ksf\StockMarket\Util\SymbolResolver;
 
 /**
  * StrategyController — Displays backtested strategy results and methodology.

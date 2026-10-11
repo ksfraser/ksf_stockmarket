@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ksf\StockMarket\Controller;
 
 use Ksf\StockMarket\Model\Database;
+use Ksf\StockMarket\Util\SegFundFilter;
 
 
 
@@ -20,9 +21,8 @@ class SegFundsController {
 
     /**
      * GET /?action=seg_funds — List all seg funds with filters.
-     * Supports BR-11/FR-11 risk_rating, death_pct, mat_pct, and bucket_1y/5y/10y/ytd.
      */
-    public function listFunds(
+    public function index(
         string $carrier = '',
         string $category = '',
         string $series = '',

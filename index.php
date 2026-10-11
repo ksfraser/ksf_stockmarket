@@ -26,6 +26,7 @@ require_once $GLOBALS['APP_ROOT'] . '/vendor/autoload.php';
 
 // Bootstrap: load .env so DB credentials are available
 use Ksf\StockMarket\App;
+use Ksf\StockMarket\Security\AuthStatus;
 App::getInstance()->bootstrap($APP_ROOT);
 
 spl_autoload_register(function ($class) {

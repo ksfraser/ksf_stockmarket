@@ -21,8 +21,9 @@ from db.dao.base import BaseDAO
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, SCRIPT_DIR)
+sys.path.insert(0, os.path.dirname(SCRIPT_DIR))  # src/
+sys.path.insert(0, os.path.join(SCRIPT_DIR, '..', 'indicators'))  # src/indicators/
 
-import yfinance as yf
 from investment_monitor import SymbolResolver
 from analysis_db import get_db
 

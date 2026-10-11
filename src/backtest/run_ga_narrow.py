@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Phase 3 GA — Narrow mutation pass (mutation_rate=0.08) per ticker."""
-import sys, os, sqlite3, random
+import sys, os, random
 sys.path.insert(0, 'src')
 sys.path.insert(0, 'src/indicators')
 sys.path.insert(0, 'src/backtest')
@@ -12,6 +12,7 @@ sys.path.insert(0, '.')
 import os
 os.environ['PYTHONPATH'] = 'src:src/indicators:src/backtest:src/optimization:src/db:src/config:.'
 
+from db.connection import DataSource
 from backtest.optimize import GeneticOptimizer, DEFAULT_WEIGHTS, WEIGHT_BOUNDS, PORTFOLIO_TICKERS
 
 # Mock engine for quick fitness verification (no yfinance fetch needed for framework test)
@@ -41,9 +42,9 @@ if not os.path.exists(os.path.dirname(db_path) if '/' in db_path else '.'):
     db_path = ':memory:'
 
 try:
-    db = sqlite3.connect(db_path)
+    db = DataSource.sqlite_connection(db_path)
 except:
-    db = sqlite3.connect(':memory:')
+    db = DataSource.sqlite_connection(':memory:')
 
 # Initialize weight table
 c = db.cursor()

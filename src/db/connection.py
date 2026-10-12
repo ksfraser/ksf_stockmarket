@@ -18,7 +18,15 @@ try:
 except ImportError:  # pragma: no cover - pymysql required only for MariaDB
     pymysql = None
 
-from config.db import get_mariadb_config
+# Lazy import for config - avoids circular/import ordering issues
+# config is only needed when opening MariaDB connections
+_get_mariadb_config = None
+def _get_config():
+    global _get_mariadb_config
+    if _get_mariadb_config is None:
+        from config.db import get_mariadb_config
+        _get_mariadb_config = get_mariadb_config
+    return _get_mariadb_config()
 
 
 class DataSource:
@@ -43,7 +51,7 @@ class DataSource:
             raise RuntimeError(
                 "pymysql is not installed; cannot open a MariaDB connection"
             )
-        cfg = dict(config or get_mariadb_config())
+        cfg = dict(config or _get_config())
         return pymysql.connect(
             host=cfg.get("host", "ksfraser.ca"),
             user=cfg.get("user", "ksfraser_stockmarket"),

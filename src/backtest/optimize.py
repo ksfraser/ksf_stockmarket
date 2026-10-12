@@ -50,7 +50,8 @@ sys.path.insert(0, os.path.join(SCRIPT_DIR, '..', 'optimization'))  # src/optimi
 
 from db.connection import DataSource
 from db.data_cache import DataCache
-from weight_optimizer import (
+from investment_monitor import SymbolResolver, TechnicalAnalyzer
+from optimization.weight_optimizer import (
     WeightedSignalGenerator, RollingCoherenceScorer,
     DEFAULT_WEIGHTS, WEIGHT_BOUNDS
 )

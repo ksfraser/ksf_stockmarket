@@ -5,18 +5,18 @@ FIXED: Pulls ALL data from SQLite DB cache, NOT YFinance.
 Uses max_days parameter for fast execution.
 """
 import sys, os
+# Order matters: src/db (package with __init__.py) must come BEFORE
+# src/config (which contains db.py that shadows the db package)
 sys.path.insert(0, 'src')
 sys.path.insert(0, 'src/indicators')
 sys.path.insert(0, 'src/backtest')
 sys.path.insert(0, 'src/optimization')
-sys.path.insert(0, 'src/db')
-sys.path.insert(0, 'src/config')
+sys.path.insert(0, 'src/db')   # db package
+sys.path.insert(0, 'src/indicators')  # investment_monitor (SymbolResolver)
 sys.path.insert(0, '.')
 
-from db.connection import DataSource
-from backtest.optimize import BacktestEngine, GeneticOptimizer, PORTFOLIO_TICKERS
 from db.data_cache import DataCache
-
+from backtest.optimize import BacktestEngine, GeneticOptimizer, PORTFOLIO_TICKERS
 # BROAD first pass: wider mutation for exploration
 print("=" * 80)
 print("PHASE 3 — GENETIC ALGORITHM OPTIMIZATION")
@@ -47,7 +47,12 @@ else:
     MAX_DAYS = 500
 
 # Create SQLite connection for the optimizer
-db_conn = DataSource.sqlite_connection('analysis_results.db')
+import sqlite3
+db_conn = sqlite3.connect('analysis_results.db')
+db_conn.row_factory = sqlite3.Row
+db_conn.execute("PRAGMA journal_mode=WAL")
+db_conn.execute("PRAGMA busy_timeout=5000")
+db_conn.execute("PRAGMA foreign_keys=ON")
 
 # Narrow mutation settings for fast execution
 print(f"\nConfiguration: mutation_rate=0.20, population=5, generations=3 (minimal for quick test)")

@@ -13,7 +13,7 @@
 
 set -euo pipefail
 
-REPO_DIR="/home/ksf_stockmarket/ksf_stockmarket"
+REPO_DIR="/root/Documents/stockmarket/php/stockmarket-app"
 
 # Source DB credentials from .env (required — no hardcoded fallback)
 if [[ -f "${REPO_DIR}/.env" ]]; then

@@ -2,6 +2,7 @@
 /**
  * StockController — handles all stock-related pages.
  */
+
 class StockController {
     private $pdo;
     /** @var SymbolResolver */
@@ -137,14 +138,21 @@ class StockController {
         $stmt->execute([':sym' => $symbol]);
         $history = array_reverse($stmt->fetchAll());
 
-        // Indicators: latest + 60 days for charts
+        // Indicators: latest + 60 days for charts — prefer the resolved symbol
+        $this->refreshIndicatorsJsonIfStale($resolved);
         $indHistory = [];
         $indicators = [];
 
         $indSql = "SELECT price_date, data FROM indicators_json WHERE symbol = :sym ORDER BY price_date DESC LIMIT 60";
         $stmt = $this->pdo->prepare($indSql);
-        $stmt->execute([':sym' => $symbol]);
+        $stmt->execute([':sym' => $resolved]);
         $indRows = array_reverse($stmt->fetchAll());
+
+        if (empty($indRows) && $resolved !== $symbol) {
+            // Fallback to input symbol if resolved form has no data yet
+            $stmt->execute([':sym' => $symbol]);
+            $indRows = array_reverse($stmt->fetchAll());
+        }
 
         foreach ($indRows as $i => $row) {
             $d = json_decode($row['data'], true);
@@ -153,10 +161,14 @@ class StockController {
         }
         if ($indHistory) $indicators = end($indHistory);
 
-        // Fundamentals
+        // Fundamentals — use resolved symbol first, fallback to original
         $stmt = $this->pdo->prepare("SELECT * FROM fundamentals WHERE symbol = :sym ORDER BY fetch_date DESC LIMIT 1");
-        $stmt->execute([':sym' => $symbol]);
+        $stmt->execute([':sym' => $resolved]);
         $fundamentals = $stmt->fetch() ?: [];
+        if (empty($fundamentals) && $resolved !== $symbol) {
+            $stmt->execute([':sym' => $symbol]);
+            $fundamentals = $stmt->fetch() ?: [];
+        }
 
         // Portfolio position
         $stmt = $this->pdo->prepare("SELECT * FROM portfolio WHERE symbol = :sym");
@@ -184,14 +196,6 @@ class StockController {
 
         // Analyst recommendations
         $recommendations = $this->getTableData('analyst_recommendations', $symbol, 'rec_date DESC', 30);
-
-        // Zacks broker recommendations
-        $zacksBrokerRecs = [];
-        try {
-            $stmt = $this->pdo->prepare("SELECT firm, analyst, grade, price_target, action, rec_date FROM zacks_broker_recommendations WHERE symbol = :sym ORDER BY fetch_date DESC, rec_date DESC LIMIT 20");
-            $stmt->execute([':sym' => $symbol]);
-            $zacksBrokerRecs = $stmt->fetchAll();
-        } catch (\Exception $e) {}
 
         // News — use news_feeds table populated by news_monitor.py, fallback to symbol_news
         $news = [];
@@ -344,21 +348,7 @@ class StockController {
 
         // Performance
         $perf = $this->calcPerformance($symbol);
-
-        // Lipper-style peer-relative scores (sector / industry / style_box)
-        $lipperScores = [];
-        try {
-            $stmt = $this->pdo->prepare(
-                "SELECT peer_group_type, peer_group_value, total_return_score, preservation_score,
-                        consistent_score, composite_score, sector_rank_pct
-                 FROM lipper_scores WHERE symbol = :sym"
-            );
-            $stmt->execute([':sym' => $symbol]);
-            foreach ($stmt->fetchAll() as $row) {
-                $lipperScores[$row['peer_group_type']] = $row;
-            }
-        } catch (\Exception $e) {}
-
+        
         // Markov regime analysis
         $regime = $this->getRegimeAnalysis($symbol);
 
@@ -375,13 +365,12 @@ class StockController {
             'analystRatings', 'analystTargets', 'news', 'optionsData',
             'buffettScore', 'zacksScore', 'perf', 'regime', 'exitSignals',
             'recommendations', 'holders', 'financials', 'estimates',
-            'vectorVest', 'iplaceCalc', 'lipperScores', 'zacksBrokerRecs'
+            'vectorVest', 'iplaceCalc'
         );
         $result['analyst_ratings'] = $result['analystRatings'];
         $result['analyst_targets'] = $result['analystTargets'];
         $result['buffett_score'] = $result['buffettScore'];
         $result['zacks_score'] = $result['zacksScore'] ?? [];
-        $result['zacks_broker_recs'] = $result['zacksBrokerRecs'] ?? [];
         $result['options'] = $result['optionsData'];
         $result['ind_history'] = $result['indHistory'];
         $result['dividend_safety'] = $result['dividendSafety'];
@@ -547,9 +536,10 @@ class StockController {
      */
     private function getTableData(string $table, string $symbol, string $order = 'date DESC', int $limit = 10): array {
         try {
+            $resolved = $this->resolver->resolve($symbol);
             $sql = "SELECT * FROM {$table} WHERE symbol = :sym ORDER BY {$order} LIMIT :lim";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->bindValue(':sym', $symbol);
+            $stmt->bindValue(':sym', $resolved);
             $stmt->bindValue(':lim', $limit, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetchAll();
@@ -564,33 +554,6 @@ class StockController {
      * "Great Company at a Fair Price" — focuses on business fundamentals (moat, financials).
      * Price-related checks moved to separate valuation assessment.
      */
-    /**
-     * Generic helper: fetch the latest row from a table for a given key column.
-     * Tries common timestamp columns to determine "latest"; falls back to any
-     * matching row. Returns [] on any failure (table/column missing or empty).
-     */
-    private function getLatestRow(string $table, string $keyCol, string $symbol): array {
-        $table  = preg_replace('/[^A-Za-z0-9_]/', '', $table);
-        $keyCol = preg_replace('/[^A-Za-z0-9_]/', '', $keyCol);
-        $dateCols = ['date_calculated', 'date', 'created_at', 'analysis_date', 'as_of', 'updated_at'];
-        foreach ($dateCols as $dc) {
-            try {
-                $stmt = $this->pdo->prepare("SELECT * FROM `{$table}` WHERE `{$keyCol}` = :sym ORDER BY `{$dc}` DESC LIMIT 1");
-                $stmt->execute([':sym' => $symbol]);
-                if ($row = $stmt->fetch()) return $row;
-            } catch (\Exception $e) {
-                // column missing — try next candidate
-            }
-        }
-        try {
-            $stmt = $this->pdo->prepare("SELECT * FROM `{$table}` WHERE `{$keyCol}` = :sym LIMIT 1");
-            $stmt->execute([':sym' => $symbol]);
-            return $stmt->fetch() ?: [];
-        } catch (\Exception $e) {
-            return [];
-        }
-    }
-
     private function calcBuffettScore(array $f, array $ind, float $closePrice = 0): array {
         $checks = [];
         $score = 0;
@@ -1015,26 +978,6 @@ class StockController {
 
         $fctrl = new FundamentalsController();
 
-        // Preload all fundamentals in one query to avoid N×1 loop overhead
-        $fundamentalsMap = [];
-        if (!empty($holdings)) {
-            $allSymbols = array_column($holdings, 'symbol');
-            $inFund = implode(',', array_fill(0, count($allSymbols), '?'));
-            $stmtFund = $this->pdo->prepare("
-                SELECT f.* FROM fundamentals f
-                INNER JOIN (
-                    SELECT symbol, MAX(fetch_date) as max_date
-                    FROM fundamentals
-                    WHERE symbol IN ($inFund)
-                    GROUP BY symbol
-                ) latest ON f.symbol = latest.symbol AND f.fetch_date = latest.max_date
-            ");
-            $stmtFund->execute($allSymbols);
-            foreach ($stmtFund->fetchAll() as $fr) {
-                $fundamentalsMap[$fr['symbol']] = $fr;
-            }
-        }
-
         $totalCost = 0;
         $totalValue = 0;
         foreach ($holdings as &$h) {
@@ -1044,14 +987,6 @@ class StockController {
             $currentValue = $h['shares'] * $currentPrice;
             $pnl = $currentValue - $costTotal;
             $pnlPct = $costTotal > 0 ? ($pnl / $costTotal) * 100 : 0;
-
-            // Use preloaded fundamentals
-            $fund = $fundamentalsMap[$symbol] ?? [];
-            $pe = $fund['trailing_pe'] ?? null;
-            $divYield = $fund['dividend_yield'] ?? null;
-            $annualDivPerShare = $fund['dividend_rate'] ?? 0;
-            $costBasisDivYield = $h['cost_basis'] > 0 ? ($annualDivPerShare / $h['cost_basis']) * 100 : null;
-            $currentDivYield = $currentPrice > 0 ? ($annualDivPerShare / $currentPrice) * 100 : null;
 
             // Annualized P&L (years held)
             $entryDate = $h['entry_date'] ?? null;
@@ -1063,8 +998,16 @@ class StockController {
                 $daysHeld = null;
                 $annualizedPnlPct = null;
             }
-            $h['annualized_pnl_pct'] = $annualizedPnlPct;
-            $h['days_held'] = $daysHeld;
+
+            // Fundamentals
+            $fund = $fctrl->getSymbol($symbol);
+            $pe = $fund['trailing_pe'] ?? null;
+            $divYield = $fund['dividend_yield'] ?? null;
+
+            // Cost-basis dividend yield (annual income / cost)
+            $annualDivPerShare = ($fund['dividend_rate'] ?? 0);
+            $costBasisDivYield = $h['cost_basis'] > 0 ? ($annualDivPerShare / $h['cost_basis']) * 100 : null;
+            $currentDivYield = $currentPrice > 0 ? ($annualDivPerShare / $currentPrice) * 100 : null;
 
             // Dividend safety
             $divSafety = $fctrl->getDividendSafety($symbol);
@@ -1121,48 +1064,16 @@ class StockController {
         $settlementMap = [];
         if ($user_id > 0 && !empty($holdings)) {
             $symbols = array_column($holdings, 'symbol');
-            $in = implode(',', array_fill(0, count($symbols), '?'));
-            $params = array_merge([$user_id], $symbols);
-            $stmt = $this->pdo->prepare("
-                SELECT symbol, MAX(settlement_date) as settlement_date
-                FROM transactions
-                WHERE user_id = ?
-                  AND symbol IN ($in)
-                  AND settlement_date IS NOT NULL
-                GROUP BY symbol
-            ");
-            $stmt->execute($params);
-            foreach ($stmt->fetchAll() as $row) {
-                $settlementMap[$row['symbol']] = $row['settlement_date'];
-            }
+            $txnRepo = new TransactionRepository($this->pdo);
+            $settlementMap = $txnRepo->getLatestTradeDates($user_id, $symbols);
         }
 
         // Available cash = all cash movements (BUY/SELL/DEPOSIT/WITHDRAWAL/etc.)
         // on the portfolio + accrual accounts that have settled (date <= today)
         $availableCash = 0.0;
         if ($user_id > 0) {
-            $stmt = $this->pdo->prepare("
-                SELECT COALESCE(SUM(
-                    CASE type
-                        WHEN 'BUY' THEN -total
-                        WHEN 'SELL' THEN total
-                        WHEN 'DEPOSIT' THEN total
-                        WHEN 'WITHDRAWAL' THEN -total
-                        WHEN 'DIVIDEND' THEN total
-                        WHEN 'INTEREST_CHARGE' THEN -total
-                        WHEN 'TAX' THEN -total
-                        WHEN 'DELIVERY' THEN -total
-                        ELSE 0
-                    END
-                ), 0) as cash
-                FROM transactions
-                WHERE user_id = :uid
-                  AND account_type IN ('RRSP','TFSA','MARGIN','CSA','JRSP')
-                  AND symbol = 'CASH'
-                  AND trade_date <= CURRENT_DATE()
-            ");
-            $stmt->execute([':uid' => $user_id]);
-            $availableCash = (float)($stmt->fetchColumn() ?: 0);
+            $txnRepo = new TransactionRepository($this->pdo);
+            $availableCash = $txnRepo->getAvailableCash($user_id);
         }
 
         $totalPnl = $totalValue - $totalCost;
@@ -1214,16 +1125,48 @@ class StockController {
      * Uses resolver so Canadian symbols hit the canonical DB symbol.
      */
     private function getLatestIndicators(string $symbol): array {
+        $this->refreshIndicatorsJsonIfStale($symbol);
+        $resolved = $this->resolver->resolve($symbol);
         $stmt = $this->pdo->prepare("
             SELECT data FROM indicators_json
             WHERE symbol = :sym
             ORDER BY price_date DESC LIMIT 1
         ");
-        $stmt->execute([':sym' => $symbol]);
+        $stmt->execute([':sym' => $resolved]);
         $row = $stmt->fetch();
-
+        
         if (!$row) return [];
         return json_decode($row['data'] ?: $row[0], true) ?: [];
+    }
+
+    /**
+     * Get the latest row from an evaluation table by symbol.
+     *
+     * @param string $table Table name (evalbusiness, evalfinancial, evalmanagement, evalmarket)
+     * @param string $symbolColumn Column name for symbol (default 'symbol')
+     * @param string $symbol Symbol to look up
+     * @return array
+     */
+    private function getLatestRow(string $table, string $symbolColumn, string $symbol): array
+    {
+        // Map each table to its auto-increment primary key column
+        $idColumnMap = [
+            'evalbusiness'    => 'idevalbusiness',
+            'evalfinancial'   => 'idevalfinancial',
+            'evalmanagement'  => 'idevalmanagement',
+            'evalmarket'      => 'idevalmarket',
+        ];
+
+        $idColumn = $idColumnMap[$table] ?? 'id';
+
+        $stmt = $this->pdo->prepare("
+            SELECT * FROM {$table}
+            WHERE {$symbolColumn} = :sym
+            ORDER BY {$idColumn} DESC
+            LIMIT 1
+        ");
+        $stmt->execute([':sym' => $symbol]);
+        return $stmt->fetch() ?: [];
     }
 
     private function getTaxonomyAssignmentsForUser(int $user_id): array {
@@ -1243,18 +1186,22 @@ class StockController {
     }
 
     private function refreshIndicatorsJsonIfStale(string $symbol): void {
+        $resolved = $this->resolver->resolve($symbol);
         $stmt = $this->pdo->prepare("
             SELECT updated_date FROM indicators_json
             WHERE symbol = :sym
             ORDER BY price_date DESC LIMIT 1
         ");
-        $stmt->execute([':sym' => $symbol]);
+        $stmt->execute([':sym' => $resolved]);
         $row = $stmt->fetch();
 
         $today = date('Y-m-d');
         $last = $row ? substr($row['updated_date'], 0, 10) : '';
         if ($last !== $today) {
-            $this->refreshIndicatorsJson($symbol);
+            $this->refreshIndicatorsJson($resolved);
+            if ($resolved !== $symbol) {
+                $this->refreshIndicatorsJson($symbol);
+            }
         }
     }
 
@@ -2297,61 +2244,6 @@ class StockController {
             $this->pdo->rollBack();
             return false;
         }
-    }
-
-    public function zacksEpsScreener(): array
-    {
-        $minChange = (float)($_GET['min_change'] ?? 0.1);
-        $limit = (int)($_GET['limit'] ?? 25);
-        $direction = strtolower($_GET['direction'] ?? 'bullish'); // bullish | bearish
-
-        if ($direction === 'bearish') {
-            $where = 'f.zacks_eps_change_f1_4w <= :min';
-            $order = 'f.zacks_eps_change_f1_4w ASC';
-        } else {
-            $where = 'f.zacks_eps_change_f1_4w >= :min';
-            $order = 'f.zacks_eps_change_f1_4w DESC';
-        }
-
-        $sql = "
-            SELECT f.symbol,
-                   f.zacks_recommendation,
-                   f.zacks_num_analysts,
-                   f.zacks_eps_change_f1_4w,
-                   f.zacks_eps_change_f2_4w,
-                   f.zacks_eps_change_f1_1w,
-                   f.zacks_eps_change_f2_1w,
-                   f.forward_eps,
-                   f.trailing_pe,
-                   f.forward_pe,
-                   f.roe,
-                   f.beta,
-                   f.industry
-            FROM fundamentals f
-            INNER JOIN (
-                SELECT symbol, MAX(fetch_date) AS max_date
-                FROM fundamentals
-                WHERE zacks_eps_change_f1_4w IS NOT NULL
-                GROUP BY symbol
-            ) latest ON latest.symbol = f.symbol AND latest.max_date = f.fetch_date
-            WHERE $where
-            ORDER BY $order
-            LIMIT :limit
-        ";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':min' => $direction === 'bearish' ? -abs($minChange) : $minChange,
-            ':limit' => $limit,
-        ]);
-        $rows = $stmt->fetchAll();
-
-        return [
-            'rows' => $rows,
-            'min_change' => $minChange,
-            'direction' => $direction,
-            'limit' => $limit,
-            'count' => count($rows),
-        ];
     }
 
     private function ensureTables(array $tables): void

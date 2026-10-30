@@ -261,3 +261,13 @@ To bring the codebase into compliance without breaking what runs:
 
 This document is living. Update it when new layers, event types, or conventions are
 introduced.
+
+---
+
+## Appendix: BR-7 Updates (Periodic Stock Analysis Write-ups) — 2026-09-22
+
+- Added `stock_analysis_writer.py` (scripts/) — 4 modes (`--pre`, `--post`, `--quarterly`, `--atr`).
+- Added `analysis.php` partial (`php/templates/partials/ws/analysis.php`) — displays latest `stock_analysis` row.
+- Added `stock_analysis` table (migration 021) + `stock_news_alerts` (022) + `news_analysis_queue` (023).
+- PYTHONPATH convention: all `run_*.sh` wrappers now set `export PYTHONPATH="$REPO_DIR/python/src:$REPO_DIR/python"`.
+- See `docs/requirements/business-requirements.md` (BR-7) and `KB/KYC_FNA_*` (ksfii_app).

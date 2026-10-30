@@ -1,0 +1,538 @@
+2026-08-10 02:01:23,642 - INFO - Testing 33 portfolio symbols: ['BNS557', 'BPF.UN', 'CASH-CAD', 'CDZ', 'CEF', 'CM', 'CNR', 'EULIF', 'FEZ', 'GLD', 'IEV', 'MICC', 'MMTMF', 'MTY', 'MX', 'PDC', 'PMCUF', 'PMDIY', 'PZA', 'RGLD', 'RUS', 'RY', 'SPEU', 'SRV.UN', 'SU', 'TFII', 'THXPF', 'UL', 'VET.TO', 'WDOFF', 'WJX', 'WVN613', 'WVN618']
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:01:24,750 - WARNING - No data for BNS557
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:01:26,273 - INFO - BPF.UN stop=1.5× trailing=0.05: PnL=-1.38%, Trades=36
+2026-08-10 02:01:27,163 - INFO - BPF.UN stop=1.5× trailing=0.07: PnL=-0.39%, Trades=25
+2026-08-10 02:01:28,046 - INFO - BPF.UN stop=1.5× trailing=0.1: PnL=-0.32%, Trades=18
+2026-08-10 02:01:28,916 - INFO - BPF.UN stop=1.5× trailing=0.12: PnL=-0.49%, Trades=18
+2026-08-10 02:01:29,810 - INFO - BPF.UN stop=2.0× trailing=0.05: PnL=-1.27%, Trades=33
+2026-08-10 02:01:30,642 - INFO - BPF.UN stop=2.0× trailing=0.07: PnL=-0.03%, Trades=20
+2026-08-10 02:01:31,536 - INFO - BPF.UN stop=2.0× trailing=0.1: PnL=-0.09%, Trades=14
+2026-08-10 02:01:32,406 - INFO - BPF.UN stop=2.0× trailing=0.12: PnL=-0.26%, Trades=14
+2026-08-10 02:01:33,299 - INFO - BPF.UN stop=2.5× trailing=0.05: PnL=-1.21%, Trades=31
+2026-08-10 02:01:34,174 - INFO - BPF.UN stop=2.5× trailing=0.07: PnL=-0.16%, Trades=19
+2026-08-10 02:01:35,081 - INFO - BPF.UN stop=2.5× trailing=0.1: PnL=-0.09%, Trades=12
+2026-08-10 02:01:35,988 - INFO - BPF.UN stop=2.5× trailing=0.12: PnL=-0.26%, Trades=12
+2026-08-10 02:01:36,927 - INFO - BPF.UN stop=3.0× trailing=0.05: PnL=-1.16%, Trades=30
+2026-08-10 02:01:37,802 - INFO - BPF.UN stop=3.0× trailing=0.07: PnL=-0.22%, Trades=19
+2026-08-10 02:01:38,679 - INFO - BPF.UN stop=3.0× trailing=0.1: PnL=0.00%, Trades=11
+2026-08-10 02:01:39,532 - INFO - BPF.UN stop=3.0× trailing=0.12: PnL=-0.19%, Trades=11
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:01:39,997 - WARNING - No data for CASH-CAD
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:01:41,528 - INFO - CDZ stop=1.5× trailing=0.05: PnL=0.70%, Trades=19
+2026-08-10 02:01:42,409 - INFO - CDZ stop=1.5× trailing=0.07: PnL=0.73%, Trades=14
+2026-08-10 02:01:43,291 - INFO - CDZ stop=1.5× trailing=0.1: PnL=0.68%, Trades=12
+2026-08-10 02:01:44,225 - INFO - CDZ stop=1.5× trailing=0.12: PnL=0.61%, Trades=11
+2026-08-10 02:01:45,118 - INFO - CDZ stop=2.0× trailing=0.05: PnL=0.77%, Trades=16
+2026-08-10 02:01:45,998 - INFO - CDZ stop=2.0× trailing=0.07: PnL=0.75%, Trades=12
+2026-08-10 02:01:46,877 - INFO - CDZ stop=2.0× trailing=0.1: PnL=0.69%, Trades=10
+2026-08-10 02:01:47,850 - INFO - CDZ stop=2.0× trailing=0.12: PnL=0.64%, Trades=9
+2026-08-10 02:01:48,706 - INFO - CDZ stop=2.5× trailing=0.05: PnL=0.64%, Trades=16
+2026-08-10 02:01:49,583 - INFO - CDZ stop=2.5× trailing=0.07: PnL=0.65%, Trades=12
+2026-08-10 02:01:50,470 - INFO - CDZ stop=2.5× trailing=0.1: PnL=0.66%, Trades=9
+2026-08-10 02:01:51,341 - INFO - CDZ stop=2.5× trailing=0.12: PnL=0.62%, Trades=8
+2026-08-10 02:01:52,217 - INFO - CDZ stop=3.0× trailing=0.05: PnL=0.65%, Trades=15
+2026-08-10 02:01:53,086 - INFO - CDZ stop=3.0× trailing=0.07: PnL=0.61%, Trades=11
+2026-08-10 02:01:53,972 - INFO - CDZ stop=3.0× trailing=0.1: PnL=0.56%, Trades=9
+2026-08-10 02:01:54,875 - INFO - CDZ stop=3.0× trailing=0.12: PnL=0.53%, Trades=8
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:01:56,386 - INFO - CEF stop=1.5× trailing=0.05: PnL=0.60%, Trades=67
+2026-08-10 02:01:57,259 - INFO - CEF stop=1.5× trailing=0.07: PnL=0.51%, Trades=45
+2026-08-10 02:01:58,138 - INFO - CEF stop=1.5× trailing=0.1: PnL=1.63%, Trades=26
+2026-08-10 02:01:59,033 - INFO - CEF stop=1.5× trailing=0.12: PnL=3.29%, Trades=22
+2026-08-10 02:01:59,911 - INFO - CEF stop=2.0× trailing=0.05: PnL=0.98%, Trades=61
+2026-08-10 02:02:00,751 - INFO - CEF stop=2.0× trailing=0.07: PnL=0.90%, Trades=39
+2026-08-10 02:02:01,642 - INFO - CEF stop=2.0× trailing=0.1: PnL=1.94%, Trades=21
+2026-08-10 02:02:02,544 - INFO - CEF stop=2.0× trailing=0.12: PnL=3.33%, Trades=17
+2026-08-10 02:02:03,434 - INFO - CEF stop=2.5× trailing=0.05: PnL=0.89%, Trades=60
+2026-08-10 02:02:04,340 - INFO - CEF stop=2.5× trailing=0.07: PnL=0.93%, Trades=37
+2026-08-10 02:02:05,284 - INFO - CEF stop=2.5× trailing=0.1: PnL=1.93%, Trades=20
+2026-08-10 02:02:06,180 - INFO - CEF stop=2.5× trailing=0.12: PnL=3.24%, Trades=16
+2026-08-10 02:02:07,084 - INFO - CEF stop=3.0× trailing=0.05: PnL=0.88%, Trades=59
+2026-08-10 02:02:07,994 - INFO - CEF stop=3.0× trailing=0.07: PnL=0.82%, Trades=36
+2026-08-10 02:02:08,880 - INFO - CEF stop=3.0× trailing=0.1: PnL=1.81%, Trades=20
+2026-08-10 02:02:09,824 - INFO - CEF stop=3.0× trailing=0.12: PnL=3.06%, Trades=16
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:02:11,370 - INFO - CM stop=1.5× trailing=0.05: PnL=2.56%, Trades=46
+2026-08-10 02:02:12,235 - INFO - CM stop=1.5× trailing=0.07: PnL=2.05%, Trades=38
+2026-08-10 02:02:13,127 - INFO - CM stop=1.5× trailing=0.1: PnL=0.55%, Trades=32
+2026-08-10 02:02:14,008 - INFO - CM stop=1.5× trailing=0.12: PnL=0.41%, Trades=30
+2026-08-10 02:02:14,885 - INFO - CM stop=2.0× trailing=0.05: PnL=2.60%, Trades=45
+2026-08-10 02:02:15,779 - INFO - CM stop=2.0× trailing=0.07: PnL=2.03%, Trades=38
+2026-08-10 02:02:16,658 - INFO - CM stop=2.0× trailing=0.1: PnL=0.53%, Trades=32
+2026-08-10 02:02:17,557 - INFO - CM stop=2.0× trailing=0.12: PnL=0.39%, Trades=30
+2026-08-10 02:02:18,466 - INFO - CM stop=2.5× trailing=0.05: PnL=2.59%, Trades=45
+2026-08-10 02:02:19,356 - INFO - CM stop=2.5× trailing=0.07: PnL=2.06%, Trades=37
+2026-08-10 02:02:20,253 - INFO - CM stop=2.5× trailing=0.1: PnL=0.47%, Trades=32
+2026-08-10 02:02:21,113 - INFO - CM stop=2.5× trailing=0.12: PnL=0.37%, Trades=30
+2026-08-10 02:02:22,020 - INFO - CM stop=3.0× trailing=0.05: PnL=2.59%, Trades=45
+2026-08-10 02:02:22,937 - INFO - CM stop=3.0× trailing=0.07: PnL=2.05%, Trades=37
+2026-08-10 02:02:23,804 - INFO - CM stop=3.0× trailing=0.1: PnL=0.51%, Trades=31
+2026-08-10 02:02:24,688 - INFO - CM stop=3.0× trailing=0.12: PnL=0.36%, Trades=30
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:02:26,196 - INFO - CNR stop=1.5× trailing=0.05: PnL=-4.00%, Trades=199
+2026-08-10 02:02:27,068 - INFO - CNR stop=1.5× trailing=0.07: PnL=-2.75%, Trades=133
+2026-08-10 02:02:27,943 - INFO - CNR stop=1.5× trailing=0.1: PnL=-1.37%, Trades=72
+2026-08-10 02:02:28,836 - INFO - CNR stop=1.5× trailing=0.12: PnL=-1.11%, Trades=58
+2026-08-10 02:02:29,695 - INFO - CNR stop=2.0× trailing=0.05: PnL=-4.00%, Trades=199
+2026-08-10 02:02:30,540 - INFO - CNR stop=2.0× trailing=0.07: PnL=-2.72%, Trades=132
+2026-08-10 02:02:31,380 - INFO - CNR stop=2.0× trailing=0.1: PnL=-1.31%, Trades=69
+2026-08-10 02:02:32,280 - INFO - CNR stop=2.0× trailing=0.12: PnL=-1.04%, Trades=54
+2026-08-10 02:02:33,172 - INFO - CNR stop=2.5× trailing=0.05: PnL=-4.00%, Trades=199
+2026-08-10 02:02:34,033 - INFO - CNR stop=2.5× trailing=0.07: PnL=-2.72%, Trades=132
+2026-08-10 02:02:34,923 - INFO - CNR stop=2.5× trailing=0.1: PnL=-1.31%, Trades=69
+2026-08-10 02:02:35,800 - INFO - CNR stop=2.5× trailing=0.12: PnL=-1.05%, Trades=54
+2026-08-10 02:02:36,667 - INFO - CNR stop=3.0× trailing=0.05: PnL=-4.00%, Trades=199
+2026-08-10 02:02:37,497 - INFO - CNR stop=3.0× trailing=0.07: PnL=-2.72%, Trades=132
+2026-08-10 02:02:38,397 - INFO - CNR stop=3.0× trailing=0.1: PnL=-1.31%, Trades=69
+2026-08-10 02:02:39,289 - INFO - CNR stop=3.0× trailing=0.12: PnL=-1.04%, Trades=54
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:02:40,760 - INFO - EULIF stop=1.5× trailing=0.05: PnL=78.11%, Trades=240
+2026-08-10 02:02:41,617 - INFO - EULIF stop=1.5× trailing=0.07: PnL=55.22%, Trades=232
+2026-08-10 02:02:42,473 - INFO - EULIF stop=1.5× trailing=0.1: PnL=23.45%, Trades=204
+2026-08-10 02:02:43,323 - INFO - EULIF stop=1.5× trailing=0.12: PnL=10.41%, Trades=189
+2026-08-10 02:02:44,142 - INFO - EULIF stop=2.0× trailing=0.05: PnL=78.11%, Trades=240
+2026-08-10 02:02:45,000 - INFO - EULIF stop=2.0× trailing=0.07: PnL=55.22%, Trades=232
+2026-08-10 02:02:45,862 - INFO - EULIF stop=2.0× trailing=0.1: PnL=23.38%, Trades=203
+2026-08-10 02:02:46,720 - INFO - EULIF stop=2.0× trailing=0.12: PnL=9.57%, Trades=188
+2026-08-10 02:02:47,516 - INFO - EULIF stop=2.5× trailing=0.05: PnL=78.11%, Trades=240
+2026-08-10 02:02:48,381 - INFO - EULIF stop=2.5× trailing=0.07: PnL=55.22%, Trades=232
+2026-08-10 02:02:49,258 - INFO - EULIF stop=2.5× trailing=0.1: PnL=23.38%, Trades=203
+2026-08-10 02:02:50,113 - INFO - EULIF stop=2.5× trailing=0.12: PnL=10.07%, Trades=187
+2026-08-10 02:02:50,972 - INFO - EULIF stop=3.0× trailing=0.05: PnL=78.11%, Trades=240
+2026-08-10 02:02:51,838 - INFO - EULIF stop=3.0× trailing=0.07: PnL=55.22%, Trades=232
+2026-08-10 02:02:52,645 - INFO - EULIF stop=3.0× trailing=0.1: PnL=23.38%, Trades=203
+2026-08-10 02:02:53,496 - INFO - EULIF stop=3.0× trailing=0.12: PnL=10.66%, Trades=186
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:02:55,008 - INFO - FEZ stop=1.5× trailing=0.05: PnL=-0.21%, Trades=36
+2026-08-10 02:02:55,897 - INFO - FEZ stop=1.5× trailing=0.07: PnL=0.13%, Trades=19
+2026-08-10 02:02:56,789 - INFO - FEZ stop=1.5× trailing=0.1: PnL=0.13%, Trades=12
+2026-08-10 02:02:57,687 - INFO - FEZ stop=1.5× trailing=0.12: PnL=0.04%, Trades=11
+2026-08-10 02:02:58,584 - INFO - FEZ stop=2.0× trailing=0.05: PnL=-0.15%, Trades=33
+2026-08-10 02:02:59,442 - INFO - FEZ stop=2.0× trailing=0.07: PnL=0.09%, Trades=18
+2026-08-10 02:03:00,341 - INFO - FEZ stop=2.0× trailing=0.1: PnL=0.13%, Trades=11
+2026-08-10 02:03:01,230 - INFO - FEZ stop=2.0× trailing=0.12: PnL=0.04%, Trades=10
+2026-08-10 02:03:02,118 - INFO - FEZ stop=2.5× trailing=0.05: PnL=-0.19%, Trades=33
+2026-08-10 02:03:03,010 - INFO - FEZ stop=2.5× trailing=0.07: PnL=0.08%, Trades=17
+2026-08-10 02:03:03,918 - INFO - FEZ stop=2.5× trailing=0.1: PnL=0.09%, Trades=11
+2026-08-10 02:03:04,854 - INFO - FEZ stop=2.5× trailing=0.12: PnL=0.00%, Trades=10
+2026-08-10 02:03:05,746 - INFO - FEZ stop=3.0× trailing=0.05: PnL=-0.19%, Trades=33
+2026-08-10 02:03:06,663 - INFO - FEZ stop=3.0× trailing=0.07: PnL=0.05%, Trades=17
+2026-08-10 02:03:07,537 - INFO - FEZ stop=3.0× trailing=0.1: PnL=0.05%, Trades=11
+2026-08-10 02:03:08,439 - INFO - FEZ stop=3.0× trailing=0.12: PnL=-0.04%, Trades=10
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:03:09,956 - INFO - GLD stop=1.5× trailing=0.05: PnL=-0.64%, Trades=44
+2026-08-10 02:03:10,846 - INFO - GLD stop=1.5× trailing=0.07: PnL=-0.37%, Trades=30
+2026-08-10 02:03:11,729 - INFO - GLD stop=1.5× trailing=0.1: PnL=0.18%, Trades=14
+2026-08-10 02:03:12,620 - INFO - GLD stop=1.5× trailing=0.12: PnL=0.40%, Trades=13
+2026-08-10 02:03:13,519 - INFO - GLD stop=2.0× trailing=0.05: PnL=-0.48%, Trades=37
+2026-08-10 02:03:14,364 - INFO - GLD stop=2.0× trailing=0.07: PnL=-0.22%, Trades=23
+2026-08-10 02:03:15,229 - INFO - GLD stop=2.0× trailing=0.1: PnL=0.23%, Trades=12
+2026-08-10 02:03:16,075 - INFO - GLD stop=2.0× trailing=0.12: PnL=0.44%, Trades=11
+2026-08-10 02:03:16,920 - INFO - GLD stop=2.5× trailing=0.05: PnL=-0.42%, Trades=34
+2026-08-10 02:03:17,772 - INFO - GLD stop=2.5× trailing=0.07: PnL=-0.20%, Trades=22
+2026-08-10 02:03:18,643 - INFO - GLD stop=2.5× trailing=0.1: PnL=0.25%, Trades=11
+2026-08-10 02:03:19,534 - INFO - GLD stop=2.5× trailing=0.12: PnL=0.46%, Trades=10
+2026-08-10 02:03:20,430 - INFO - GLD stop=3.0× trailing=0.05: PnL=-0.39%, Trades=33
+2026-08-10 02:03:21,323 - INFO - GLD stop=3.0× trailing=0.07: PnL=-0.18%, Trades=21
+2026-08-10 02:03:22,163 - INFO - GLD stop=3.0× trailing=0.1: PnL=0.28%, Trades=10
+2026-08-10 02:03:23,052 - INFO - GLD stop=3.0× trailing=0.12: PnL=0.49%, Trades=9
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:03:24,526 - INFO - IEV stop=1.5× trailing=0.05: PnL=-0.37%, Trades=32
+2026-08-10 02:03:25,422 - INFO - IEV stop=1.5× trailing=0.07: PnL=-0.08%, Trades=17
+2026-08-10 02:03:26,309 - INFO - IEV stop=1.5× trailing=0.1: PnL=-0.05%, Trades=11
+2026-08-10 02:03:27,196 - INFO - IEV stop=1.5× trailing=0.12: PnL=-0.07%, Trades=11
+2026-08-10 02:03:28,090 - INFO - IEV stop=2.0× trailing=0.05: PnL=-0.37%, Trades=30
+2026-08-10 02:03:28,986 - INFO - IEV stop=2.0× trailing=0.07: PnL=-0.14%, Trades=17
+2026-08-10 02:03:29,888 - INFO - IEV stop=2.0× trailing=0.1: PnL=-0.11%, Trades=11
+2026-08-10 02:03:30,777 - INFO - IEV stop=2.0× trailing=0.12: PnL=-0.14%, Trades=11
+2026-08-10 02:03:31,660 - INFO - IEV stop=2.5× trailing=0.05: PnL=-0.35%, Trades=29
+2026-08-10 02:03:32,570 - INFO - IEV stop=2.5× trailing=0.07: PnL=-0.12%, Trades=16
+2026-08-10 02:03:33,451 - INFO - IEV stop=2.5× trailing=0.1: PnL=-0.07%, Trades=10
+2026-08-10 02:03:34,335 - INFO - IEV stop=2.5× trailing=0.12: PnL=-0.13%, Trades=10
+2026-08-10 02:03:35,253 - INFO - IEV stop=3.0× trailing=0.05: PnL=-0.27%, Trades=27
+2026-08-10 02:03:36,139 - INFO - IEV stop=3.0× trailing=0.07: PnL=-0.16%, Trades=16
+2026-08-10 02:03:37,007 - INFO - IEV stop=3.0× trailing=0.1: PnL=-0.10%, Trades=10
+2026-08-10 02:03:37,939 - INFO - IEV stop=3.0× trailing=0.12: PnL=-0.17%, Trades=10
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:03:39,012 - INFO - MICC stop=1.5× trailing=0.05: PnL=0.32%, Trades=7
+2026-08-10 02:03:39,618 - INFO - MICC stop=1.5× trailing=0.07: PnL=0.33%, Trades=4
+2026-08-10 02:03:40,223 - INFO - MICC stop=1.5× trailing=0.1: PnL=0.30%, Trades=3
+2026-08-10 02:03:40,828 - INFO - MICC stop=1.5× trailing=0.12: PnL=0.40%, Trades=2
+2026-08-10 02:03:41,416 - INFO - MICC stop=2.0× trailing=0.05: PnL=0.32%, Trades=7
+2026-08-10 02:03:42,024 - INFO - MICC stop=2.0× trailing=0.07: PnL=0.33%, Trades=4
+2026-08-10 02:03:42,626 - INFO - MICC stop=2.0× trailing=0.1: PnL=0.27%, Trades=3
+2026-08-10 02:03:43,234 - INFO - MICC stop=2.0× trailing=0.12: PnL=0.36%, Trades=2
+2026-08-10 02:03:43,839 - INFO - MICC stop=2.5× trailing=0.05: PnL=0.32%, Trades=7
+2026-08-10 02:03:44,444 - INFO - MICC stop=2.5× trailing=0.07: PnL=0.33%, Trades=4
+2026-08-10 02:03:45,048 - INFO - MICC stop=2.5× trailing=0.1: PnL=0.23%, Trades=3
+2026-08-10 02:03:45,660 - INFO - MICC stop=2.5× trailing=0.12: PnL=0.33%, Trades=2
+2026-08-10 02:03:46,258 - INFO - MICC stop=3.0× trailing=0.05: PnL=0.32%, Trades=7
+2026-08-10 02:03:46,860 - INFO - MICC stop=3.0× trailing=0.07: PnL=0.33%, Trades=4
+2026-08-10 02:03:47,467 - INFO - MICC stop=3.0× trailing=0.1: PnL=0.20%, Trades=3
+2026-08-10 02:03:48,077 - INFO - MICC stop=3.0× trailing=0.12: PnL=0.29%, Trades=2
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:03:49,565 - INFO - MMTMF stop=1.5× trailing=0.05: PnL=34.14%, Trades=166
+2026-08-10 02:03:50,444 - INFO - MMTMF stop=1.5× trailing=0.07: PnL=24.82%, Trades=136
+2026-08-10 02:03:51,321 - INFO - MMTMF stop=1.5× trailing=0.1: PnL=16.39%, Trades=103
+2026-08-10 02:03:52,193 - INFO - MMTMF stop=1.5× trailing=0.12: PnL=15.90%, Trades=83
+2026-08-10 02:03:53,065 - INFO - MMTMF stop=2.0× trailing=0.05: PnL=34.39%, Trades=165
+2026-08-10 02:03:53,976 - INFO - MMTMF stop=2.0× trailing=0.07: PnL=24.87%, Trades=135
+2026-08-10 02:03:54,825 - INFO - MMTMF stop=2.0× trailing=0.1: PnL=17.65%, Trades=98
+2026-08-10 02:03:55,708 - INFO - MMTMF stop=2.0× trailing=0.12: PnL=17.11%, Trades=77
+2026-08-10 02:03:56,565 - INFO - MMTMF stop=2.5× trailing=0.05: PnL=34.39%, Trades=165
+2026-08-10 02:03:57,435 - INFO - MMTMF stop=2.5× trailing=0.07: PnL=24.84%, Trades=135
+2026-08-10 02:03:58,367 - INFO - MMTMF stop=2.5× trailing=0.1: PnL=17.57%, Trades=98
+2026-08-10 02:03:59,249 - INFO - MMTMF stop=2.5× trailing=0.12: PnL=17.02%, Trades=77
+2026-08-10 02:04:00,076 - INFO - MMTMF stop=3.0× trailing=0.05: PnL=34.39%, Trades=165
+2026-08-10 02:04:00,930 - INFO - MMTMF stop=3.0× trailing=0.07: PnL=24.81%, Trades=135
+2026-08-10 02:04:01,779 - INFO - MMTMF stop=3.0× trailing=0.1: PnL=16.64%, Trades=97
+2026-08-10 02:04:02,619 - INFO - MMTMF stop=3.0× trailing=0.12: PnL=16.93%, Trades=77
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:04:04,115 - INFO - MTY stop=1.5× trailing=0.05: PnL=-1.17%, Trades=52
+2026-08-10 02:04:04,979 - INFO - MTY stop=1.5× trailing=0.07: PnL=-0.98%, Trades=35
+2026-08-10 02:04:05,851 - INFO - MTY stop=1.5× trailing=0.1: PnL=-1.02%, Trades=28
+2026-08-10 02:04:06,694 - INFO - MTY stop=1.5× trailing=0.12: PnL=-1.00%, Trades=23
+2026-08-10 02:04:07,521 - INFO - MTY stop=2.0× trailing=0.05: PnL=-1.17%, Trades=51
+2026-08-10 02:04:08,378 - INFO - MTY stop=2.0× trailing=0.07: PnL=-1.00%, Trades=34
+2026-08-10 02:04:09,231 - INFO - MTY stop=2.0× trailing=0.1: PnL=-0.81%, Trades=22
+2026-08-10 02:04:10,088 - INFO - MTY stop=2.0× trailing=0.12: PnL=-0.83%, Trades=18
+2026-08-10 02:04:11,000 - INFO - MTY stop=2.5× trailing=0.05: PnL=-1.17%, Trades=51
+2026-08-10 02:04:11,833 - INFO - MTY stop=2.5× trailing=0.07: PnL=-0.97%, Trades=33
+2026-08-10 02:04:12,704 - INFO - MTY stop=2.5× trailing=0.1: PnL=-0.73%, Trades=20
+2026-08-10 02:04:13,587 - INFO - MTY stop=2.5× trailing=0.12: PnL=-0.75%, Trades=16
+2026-08-10 02:04:14,440 - INFO - MTY stop=3.0× trailing=0.05: PnL=-1.17%, Trades=51
+2026-08-10 02:04:15,309 - INFO - MTY stop=3.0× trailing=0.07: PnL=-0.97%, Trades=33
+2026-08-10 02:04:16,183 - INFO - MTY stop=3.0× trailing=0.1: PnL=-0.75%, Trades=20
+2026-08-10 02:04:17,101 - INFO - MTY stop=3.0× trailing=0.12: PnL=-0.78%, Trades=16
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:04:18,600 - INFO - MX stop=1.5× trailing=0.05: PnL=-2.62%, Trades=127
+2026-08-10 02:04:19,459 - INFO - MX stop=1.5× trailing=0.07: PnL=-1.96%, Trades=84
+2026-08-10 02:04:20,321 - INFO - MX stop=1.5× trailing=0.1: PnL=-1.49%, Trades=53
+2026-08-10 02:04:21,227 - INFO - MX stop=1.5× trailing=0.12: PnL=-1.47%, Trades=47
+2026-08-10 02:04:22,069 - INFO - MX stop=2.0× trailing=0.05: PnL=-2.63%, Trades=127
+2026-08-10 02:04:22,956 - INFO - MX stop=2.0× trailing=0.07: PnL=-1.87%, Trades=82
+2026-08-10 02:04:23,833 - INFO - MX stop=2.0× trailing=0.1: PnL=-1.38%, Trades=49
+2026-08-10 02:04:24,723 - INFO - MX stop=2.0× trailing=0.12: PnL=-1.36%, Trades=42
+2026-08-10 02:04:25,605 - INFO - MX stop=2.5× trailing=0.05: PnL=-2.63%, Trades=127
+2026-08-10 02:04:26,487 - INFO - MX stop=2.5× trailing=0.07: PnL=-1.87%, Trades=82
+2026-08-10 02:04:27,389 - INFO - MX stop=2.5× trailing=0.1: PnL=-1.40%, Trades=49
+2026-08-10 02:04:28,291 - INFO - MX stop=2.5× trailing=0.12: PnL=-1.30%, Trades=40
+2026-08-10 02:04:29,121 - INFO - MX stop=3.0× trailing=0.05: PnL=-2.63%, Trades=127
+2026-08-10 02:04:29,963 - INFO - MX stop=3.0× trailing=0.07: PnL=-1.87%, Trades=82
+2026-08-10 02:04:30,858 - INFO - MX stop=3.0× trailing=0.1: PnL=-1.35%, Trades=48
+2026-08-10 02:04:31,743 - INFO - MX stop=3.0× trailing=0.12: PnL=-1.31%, Trades=40
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:04:33,210 - INFO - PDC stop=1.5× trailing=0.05: PnL=27.63%, Trades=109
+2026-08-10 02:04:34,043 - INFO - PDC stop=1.5× trailing=0.07: PnL=23.79%, Trades=101
+2026-08-10 02:04:34,938 - INFO - PDC stop=1.5× trailing=0.1: PnL=26.74%, Trades=86
+2026-08-10 02:04:35,784 - INFO - PDC stop=1.5× trailing=0.12: PnL=24.89%, Trades=77
+2026-08-10 02:04:36,600 - INFO - PDC stop=2.0× trailing=0.05: PnL=27.54%, Trades=109
+2026-08-10 02:04:37,412 - INFO - PDC stop=2.0× trailing=0.07: PnL=23.69%, Trades=101
+2026-08-10 02:04:38,239 - INFO - PDC stop=2.0× trailing=0.1: PnL=26.62%, Trades=86
+2026-08-10 02:04:39,120 - INFO - PDC stop=2.0× trailing=0.12: PnL=24.77%, Trades=77
+2026-08-10 02:04:39,963 - INFO - PDC stop=2.5× trailing=0.05: PnL=27.55%, Trades=108
+2026-08-10 02:04:40,787 - INFO - PDC stop=2.5× trailing=0.07: PnL=23.66%, Trades=100
+2026-08-10 02:04:41,651 - INFO - PDC stop=2.5× trailing=0.1: PnL=26.59%, Trades=85
+2026-08-10 02:04:42,498 - INFO - PDC stop=2.5× trailing=0.12: PnL=24.74%, Trades=76
+2026-08-10 02:04:43,384 - INFO - PDC stop=3.0× trailing=0.05: PnL=27.58%, Trades=107
+2026-08-10 02:04:44,257 - INFO - PDC stop=3.0× trailing=0.07: PnL=23.68%, Trades=99
+2026-08-10 02:04:45,134 - INFO - PDC stop=3.0× trailing=0.1: PnL=26.60%, Trades=84
+2026-08-10 02:04:45,988 - INFO - PDC stop=3.0× trailing=0.12: PnL=24.75%, Trades=75
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:04:47,511 - INFO - PMCUF stop=1.5× trailing=0.05: PnL=2.52%, Trades=61
+2026-08-10 02:04:48,395 - INFO - PMCUF stop=1.5× trailing=0.07: PnL=2.35%, Trades=48
+2026-08-10 02:04:49,295 - INFO - PMCUF stop=1.5× trailing=0.1: PnL=3.26%, Trades=36
+2026-08-10 02:04:50,172 - INFO - PMCUF stop=1.5× trailing=0.12: PnL=3.13%, Trades=26
+2026-08-10 02:04:51,039 - INFO - PMCUF stop=2.0× trailing=0.05: PnL=2.51%, Trades=58
+2026-08-10 02:04:51,922 - INFO - PMCUF stop=2.0× trailing=0.07: PnL=2.42%, Trades=43
+2026-08-10 02:04:52,848 - INFO - PMCUF stop=2.0× trailing=0.1: PnL=3.37%, Trades=29
+2026-08-10 02:04:53,713 - INFO - PMCUF stop=2.0× trailing=0.12: PnL=3.17%, Trades=22
+2026-08-10 02:04:54,591 - INFO - PMCUF stop=2.5× trailing=0.05: PnL=2.44%, Trades=57
+2026-08-10 02:04:55,421 - INFO - PMCUF stop=2.5× trailing=0.07: PnL=2.37%, Trades=41
+2026-08-10 02:04:56,316 - INFO - PMCUF stop=2.5× trailing=0.1: PnL=3.36%, Trades=26
+2026-08-10 02:04:57,181 - INFO - PMCUF stop=2.5× trailing=0.12: PnL=3.16%, Trades=20
+2026-08-10 02:04:58,038 - INFO - PMCUF stop=3.0× trailing=0.05: PnL=2.36%, Trades=56
+2026-08-10 02:04:58,957 - INFO - PMCUF stop=3.0× trailing=0.07: PnL=2.31%, Trades=40
+2026-08-10 02:04:59,851 - INFO - PMCUF stop=3.0× trailing=0.1: PnL=3.23%, Trades=26
+2026-08-10 02:05:00,707 - INFO - PMCUF stop=3.0× trailing=0.12: PnL=3.02%, Trades=20
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:05:01,823 - INFO - PMDIY stop=1.5× trailing=0.05: PnL=-0.25%, Trades=10
+2026-08-10 02:05:02,459 - INFO - PMDIY stop=1.5× trailing=0.07: PnL=-0.40%, Trades=10
+2026-08-10 02:05:03,087 - INFO - PMDIY stop=1.5× trailing=0.1: PnL=-0.48%, Trades=9
+2026-08-10 02:05:03,729 - INFO - PMDIY stop=1.5× trailing=0.12: PnL=-0.52%, Trades=9
+2026-08-10 02:05:04,362 - INFO - PMDIY stop=2.0× trailing=0.05: PnL=-0.30%, Trades=10
+2026-08-10 02:05:04,998 - INFO - PMDIY stop=2.0× trailing=0.07: PnL=-0.49%, Trades=10
+2026-08-10 02:05:05,642 - INFO - PMDIY stop=2.0× trailing=0.1: PnL=-0.64%, Trades=9
+2026-08-10 02:05:06,248 - INFO - PMDIY stop=2.0× trailing=0.12: PnL=-0.77%, Trades=9
+2026-08-10 02:05:06,883 - INFO - PMDIY stop=2.5× trailing=0.05: PnL=-0.30%, Trades=10
+2026-08-10 02:05:07,521 - INFO - PMDIY stop=2.5× trailing=0.07: PnL=-0.49%, Trades=10
+2026-08-10 02:05:08,104 - INFO - PMDIY stop=2.5× trailing=0.1: PnL=-0.65%, Trades=9
+2026-08-10 02:05:08,709 - INFO - PMDIY stop=2.5× trailing=0.12: PnL=-0.73%, Trades=8
+2026-08-10 02:05:09,340 - INFO - PMDIY stop=3.0× trailing=0.05: PnL=-0.30%, Trades=10
+2026-08-10 02:05:09,979 - INFO - PMDIY stop=3.0× trailing=0.07: PnL=-0.49%, Trades=10
+2026-08-10 02:05:10,560 - INFO - PMDIY stop=3.0× trailing=0.1: PnL=-0.56%, Trades=8
+2026-08-10 02:05:11,172 - INFO - PMDIY stop=3.0× trailing=0.12: PnL=-0.65%, Trades=7
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:05:12,705 - INFO - PZA stop=1.5× trailing=0.05: PnL=-0.65%, Trades=10
+2026-08-10 02:05:13,611 - INFO - PZA stop=1.5× trailing=0.07: PnL=-0.60%, Trades=10
+2026-08-10 02:05:14,474 - INFO - PZA stop=1.5× trailing=0.1: PnL=-0.60%, Trades=10
+2026-08-10 02:05:15,358 - INFO - PZA stop=1.5× trailing=0.12: PnL=-0.60%, Trades=10
+2026-08-10 02:05:16,256 - INFO - PZA stop=2.0× trailing=0.05: PnL=-0.68%, Trades=9
+2026-08-10 02:05:17,097 - INFO - PZA stop=2.0× trailing=0.07: PnL=-0.67%, Trades=9
+2026-08-10 02:05:18,006 - INFO - PZA stop=2.0× trailing=0.1: PnL=-0.67%, Trades=9
+2026-08-10 02:05:18,894 - INFO - PZA stop=2.0× trailing=0.12: PnL=-0.67%, Trades=9
+2026-08-10 02:05:19,812 - INFO - PZA stop=2.5× trailing=0.05: PnL=-0.69%, Trades=8
+2026-08-10 02:05:20,687 - INFO - PZA stop=2.5× trailing=0.07: PnL=-0.73%, Trades=8
+2026-08-10 02:05:21,588 - INFO - PZA stop=2.5× trailing=0.1: PnL=-0.73%, Trades=8
+2026-08-10 02:05:22,477 - INFO - PZA stop=2.5× trailing=0.12: PnL=-0.73%, Trades=8
+2026-08-10 02:05:23,322 - INFO - PZA stop=3.0× trailing=0.05: PnL=-0.68%, Trades=7
+2026-08-10 02:05:24,251 - INFO - PZA stop=3.0× trailing=0.07: PnL=-0.82%, Trades=7
+2026-08-10 02:05:25,147 - INFO - PZA stop=3.0× trailing=0.1: PnL=-0.78%, Trades=7
+2026-08-10 02:05:26,125 - INFO - PZA stop=3.0× trailing=0.12: PnL=-0.78%, Trades=7
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:05:27,581 - INFO - RGLD stop=1.5× trailing=0.05: PnL=-2.05%, Trades=105
+2026-08-10 02:05:28,486 - INFO - RGLD stop=1.5× trailing=0.07: PnL=-1.18%, Trades=61
+2026-08-10 02:05:29,337 - INFO - RGLD stop=1.5× trailing=0.1: PnL=-0.73%, Trades=41
+2026-08-10 02:05:30,246 - INFO - RGLD stop=1.5× trailing=0.12: PnL=-0.60%, Trades=34
+2026-08-10 02:05:31,119 - INFO - RGLD stop=2.0× trailing=0.05: PnL=-2.05%, Trades=105
+2026-08-10 02:05:31,999 - INFO - RGLD stop=2.0× trailing=0.07: PnL=-1.16%, Trades=60
+2026-08-10 02:05:32,893 - INFO - RGLD stop=2.0× trailing=0.1: PnL=-0.55%, Trades=33
+2026-08-10 02:05:33,802 - INFO - RGLD stop=2.0× trailing=0.12: PnL=-0.42%, Trades=26
+2026-08-10 02:05:34,680 - INFO - RGLD stop=2.5× trailing=0.05: PnL=-2.05%, Trades=105
+2026-08-10 02:05:35,561 - INFO - RGLD stop=2.5× trailing=0.07: PnL=-1.12%, Trades=59
+2026-08-10 02:05:36,465 - INFO - RGLD stop=2.5× trailing=0.1: PnL=-0.48%, Trades=30
+2026-08-10 02:05:37,349 - INFO - RGLD stop=2.5× trailing=0.12: PnL=-0.35%, Trades=23
+2026-08-10 02:05:38,220 - INFO - RGLD stop=3.0× trailing=0.05: PnL=-2.05%, Trades=105
+2026-08-10 02:05:39,081 - INFO - RGLD stop=3.0× trailing=0.07: PnL=-1.12%, Trades=59
+2026-08-10 02:05:39,983 - INFO - RGLD stop=3.0× trailing=0.1: PnL=-0.43%, Trades=29
+2026-08-10 02:05:40,831 - INFO - RGLD stop=3.0× trailing=0.12: PnL=-0.30%, Trades=22
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:05:42,342 - INFO - RUS stop=1.5× trailing=0.05: PnL=-0.89%, Trades=60
+2026-08-10 02:05:43,209 - INFO - RUS stop=1.5× trailing=0.07: PnL=-0.08%, Trades=39
+2026-08-10 02:05:44,084 - INFO - RUS stop=1.5× trailing=0.1: PnL=-0.17%, Trades=27
+2026-08-10 02:05:44,970 - INFO - RUS stop=1.5× trailing=0.12: PnL=-0.14%, Trades=23
+2026-08-10 02:05:45,805 - INFO - RUS stop=2.0× trailing=0.05: PnL=-0.85%, Trades=58
+2026-08-10 02:05:46,676 - INFO - RUS stop=2.0× trailing=0.07: PnL=-0.16%, Trades=37
+2026-08-10 02:05:47,554 - INFO - RUS stop=2.0× trailing=0.1: PnL=-0.06%, Trades=23
+2026-08-10 02:05:48,398 - INFO - RUS stop=2.0× trailing=0.12: PnL=0.20%, Trades=17
+2026-08-10 02:05:49,316 - INFO - RUS stop=2.5× trailing=0.05: PnL=-0.81%, Trades=57
+2026-08-10 02:05:50,155 - INFO - RUS stop=2.5× trailing=0.07: PnL=-0.20%, Trades=36
+2026-08-10 02:05:51,026 - INFO - RUS stop=2.5× trailing=0.1: PnL=-0.17%, Trades=23
+2026-08-10 02:05:51,909 - INFO - RUS stop=2.5× trailing=0.12: PnL=0.13%, Trades=17
+2026-08-10 02:05:52,773 - INFO - RUS stop=3.0× trailing=0.05: PnL=-0.73%, Trades=56
+2026-08-10 02:05:53,620 - INFO - RUS stop=3.0× trailing=0.07: PnL=-0.14%, Trades=35
+2026-08-10 02:05:54,488 - INFO - RUS stop=3.0× trailing=0.1: PnL=-0.09%, Trades=21
+2026-08-10 02:05:55,378 - INFO - RUS stop=3.0× trailing=0.12: PnL=0.26%, Trades=15
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:05:55,836 - WARNING - No data for RY
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:05:57,372 - INFO - SPEU stop=1.5× trailing=0.05: PnL=-0.39%, Trades=34
+2026-08-10 02:05:58,255 - INFO - SPEU stop=1.5× trailing=0.07: PnL=-0.12%, Trades=19
+2026-08-10 02:05:59,169 - INFO - SPEU stop=1.5× trailing=0.1: PnL=0.00%, Trades=11
+2026-08-10 02:06:00,077 - INFO - SPEU stop=1.5× trailing=0.12: PnL=-0.02%, Trades=11
+2026-08-10 02:06:00,984 - INFO - SPEU stop=2.0× trailing=0.05: PnL=-0.34%, Trades=30
+2026-08-10 02:06:01,915 - INFO - SPEU stop=2.0× trailing=0.07: PnL=-0.11%, Trades=17
+2026-08-10 02:06:02,820 - INFO - SPEU stop=2.0× trailing=0.1: PnL=-0.10%, Trades=11
+2026-08-10 02:06:03,721 - INFO - SPEU stop=2.0× trailing=0.12: PnL=-0.10%, Trades=11
+2026-08-10 02:06:04,613 - INFO - SPEU stop=2.5× trailing=0.05: PnL=-0.30%, Trades=29
+2026-08-10 02:06:05,507 - INFO - SPEU stop=2.5× trailing=0.07: PnL=-0.10%, Trades=16
+2026-08-10 02:06:06,416 - INFO - SPEU stop=2.5× trailing=0.1: PnL=-0.05%, Trades=10
+2026-08-10 02:06:07,311 - INFO - SPEU stop=2.5× trailing=0.12: PnL=-0.09%, Trades=10
+2026-08-10 02:06:08,211 - INFO - SPEU stop=3.0× trailing=0.05: PnL=-0.35%, Trades=29
+2026-08-10 02:06:09,077 - INFO - SPEU stop=3.0× trailing=0.07: PnL=-0.17%, Trades=16
+2026-08-10 02:06:09,983 - INFO - SPEU stop=3.0× trailing=0.1: PnL=-0.08%, Trades=10
+2026-08-10 02:06:10,835 - INFO - SPEU stop=3.0× trailing=0.12: PnL=-0.15%, Trades=10
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:06:12,315 - INFO - SRV.UN stop=1.5× trailing=0.05: PnL=-4.14%, Trades=59
+2026-08-10 02:06:13,173 - INFO - SRV.UN stop=1.5× trailing=0.07: PnL=-1.83%, Trades=30
+2026-08-10 02:06:14,056 - INFO - SRV.UN stop=1.5× trailing=0.1: PnL=0.03%, Trades=15
+2026-08-10 02:06:14,913 - INFO - SRV.UN stop=1.5× trailing=0.12: PnL=0.08%, Trades=13
+2026-08-10 02:06:15,771 - INFO - SRV.UN stop=2.0× trailing=0.05: PnL=-3.72%, Trades=54
+2026-08-10 02:06:16,639 - INFO - SRV.UN stop=2.0× trailing=0.07: PnL=-1.54%, Trades=25
+2026-08-10 02:06:17,532 - INFO - SRV.UN stop=2.0× trailing=0.1: PnL=0.01%, Trades=13
+2026-08-10 02:06:18,441 - INFO - SRV.UN stop=2.0× trailing=0.12: PnL=0.05%, Trades=11
+2026-08-10 02:06:19,316 - INFO - SRV.UN stop=2.5× trailing=0.05: PnL=-3.89%, Trades=54
+2026-08-10 02:06:20,189 - INFO - SRV.UN stop=2.5× trailing=0.07: PnL=-1.67%, Trades=24
+2026-08-10 02:06:21,082 - INFO - SRV.UN stop=2.5× trailing=0.1: PnL=-0.03%, Trades=12
+2026-08-10 02:06:21,961 - INFO - SRV.UN stop=2.5× trailing=0.12: PnL=-0.27%, Trades=9
+2026-08-10 02:06:22,868 - INFO - SRV.UN stop=3.0× trailing=0.05: PnL=-3.92%, Trades=54
+2026-08-10 02:06:23,708 - INFO - SRV.UN stop=3.0× trailing=0.07: PnL=-1.77%, Trades=24
+2026-08-10 02:06:24,619 - INFO - SRV.UN stop=3.0× trailing=0.1: PnL=-0.14%, Trades=12
+2026-08-10 02:06:25,531 - INFO - SRV.UN stop=3.0× trailing=0.12: PnL=-0.38%, Trades=9
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:06:27,020 - INFO - SU stop=1.5× trailing=0.05: PnL=-1.50%, Trades=90
+2026-08-10 02:06:27,899 - INFO - SU stop=1.5× trailing=0.07: PnL=-0.46%, Trades=51
+2026-08-10 02:06:28,753 - INFO - SU stop=1.5× trailing=0.1: PnL=-0.11%, Trades=32
+2026-08-10 02:06:29,629 - INFO - SU stop=1.5× trailing=0.12: PnL=-0.12%, Trades=26
+2026-08-10 02:06:30,499 - INFO - SU stop=2.0× trailing=0.05: PnL=-1.41%, Trades=88
+2026-08-10 02:06:31,375 - INFO - SU stop=2.0× trailing=0.07: PnL=-0.38%, Trades=48
+2026-08-10 02:06:32,224 - INFO - SU stop=2.0× trailing=0.1: PnL=0.02%, Trades=27
+2026-08-10 02:06:33,187 - INFO - SU stop=2.0× trailing=0.12: PnL=-0.15%, Trades=23
+2026-08-10 02:06:34,034 - INFO - SU stop=2.5× trailing=0.05: PnL=-1.46%, Trades=88
+2026-08-10 02:06:34,939 - INFO - SU stop=2.5× trailing=0.07: PnL=-0.37%, Trades=48
+2026-08-10 02:06:35,844 - INFO - SU stop=2.5× trailing=0.1: PnL=0.01%, Trades=26
+2026-08-10 02:06:36,739 - INFO - SU stop=2.5× trailing=0.12: PnL=-0.19%, Trades=22
+2026-08-10 02:06:37,622 - INFO - SU stop=3.0× trailing=0.05: PnL=-1.46%, Trades=88
+2026-08-10 02:06:38,471 - INFO - SU stop=3.0× trailing=0.07: PnL=-0.37%, Trades=48
+2026-08-10 02:06:39,366 - INFO - SU stop=3.0× trailing=0.1: PnL=-0.02%, Trades=26
+2026-08-10 02:06:40,252 - INFO - SU stop=3.0× trailing=0.12: PnL=-0.20%, Trades=22
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:06:41,711 - INFO - TFII stop=1.5× trailing=0.05: PnL=-1.09%, Trades=102
+2026-08-10 02:06:42,583 - INFO - TFII stop=1.5× trailing=0.07: PnL=-0.67%, Trades=66
+2026-08-10 02:06:43,479 - INFO - TFII stop=1.5× trailing=0.1: PnL=-0.60%, Trades=52
+2026-08-10 02:06:44,370 - INFO - TFII stop=1.5× trailing=0.12: PnL=-0.62%, Trades=47
+2026-08-10 02:06:45,220 - INFO - TFII stop=2.0× trailing=0.05: PnL=-1.09%, Trades=102
+2026-08-10 02:06:46,090 - INFO - TFII stop=2.0× trailing=0.07: PnL=-0.65%, Trades=65
+2026-08-10 02:06:46,977 - INFO - TFII stop=2.0× trailing=0.1: PnL=-0.61%, Trades=50
+2026-08-10 02:06:47,897 - INFO - TFII stop=2.0× trailing=0.12: PnL=-0.55%, Trades=44
+2026-08-10 02:06:48,771 - INFO - TFII stop=2.5× trailing=0.05: PnL=-1.09%, Trades=102
+2026-08-10 02:06:49,659 - INFO - TFII stop=2.5× trailing=0.07: PnL=-0.65%, Trades=65
+2026-08-10 02:06:50,556 - INFO - TFII stop=2.5× trailing=0.1: PnL=-0.57%, Trades=49
+2026-08-10 02:06:51,440 - INFO - TFII stop=2.5× trailing=0.12: PnL=-0.53%, Trades=43
+2026-08-10 02:06:52,293 - INFO - TFII stop=3.0× trailing=0.05: PnL=-1.09%, Trades=102
+2026-08-10 02:06:53,185 - INFO - TFII stop=3.0× trailing=0.07: PnL=-0.65%, Trades=65
+2026-08-10 02:06:54,094 - INFO - TFII stop=3.0× trailing=0.1: PnL=-0.57%, Trades=49
+2026-08-10 02:06:54,954 - INFO - TFII stop=3.0× trailing=0.12: PnL=-0.48%, Trades=42
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:06:56,447 - INFO - THXPF stop=1.5× trailing=0.05: PnL=17.48%, Trades=182
+2026-08-10 02:06:57,311 - INFO - THXPF stop=1.5× trailing=0.07: PnL=14.42%, Trades=140
+2026-08-10 02:06:58,210 - INFO - THXPF stop=1.5× trailing=0.1: PnL=8.66%, Trades=103
+2026-08-10 02:06:59,101 - INFO - THXPF stop=1.5× trailing=0.12: PnL=5.73%, Trades=81
+2026-08-10 02:06:59,956 - INFO - THXPF stop=2.0× trailing=0.05: PnL=17.65%, Trades=181
+2026-08-10 02:07:00,827 - INFO - THXPF stop=2.0× trailing=0.07: PnL=14.61%, Trades=139
+2026-08-10 02:07:01,704 - INFO - THXPF stop=2.0× trailing=0.1: PnL=8.51%, Trades=103
+2026-08-10 02:07:02,607 - INFO - THXPF stop=2.0× trailing=0.12: PnL=5.37%, Trades=80
+2026-08-10 02:07:03,440 - INFO - THXPF stop=2.5× trailing=0.05: PnL=17.81%, Trades=180
+2026-08-10 02:07:04,313 - INFO - THXPF stop=2.5× trailing=0.07: PnL=14.58%, Trades=139
+2026-08-10 02:07:05,201 - INFO - THXPF stop=2.5× trailing=0.1: PnL=8.49%, Trades=103
+2026-08-10 02:07:06,071 - INFO - THXPF stop=2.5× trailing=0.12: PnL=5.27%, Trades=80
+2026-08-10 02:07:06,980 - INFO - THXPF stop=3.0× trailing=0.05: PnL=17.81%, Trades=180
+2026-08-10 02:07:07,863 - INFO - THXPF stop=3.0× trailing=0.07: PnL=14.55%, Trades=139
+2026-08-10 02:07:08,791 - INFO - THXPF stop=3.0× trailing=0.1: PnL=8.46%, Trades=103
+2026-08-10 02:07:09,678 - INFO - THXPF stop=3.0× trailing=0.12: PnL=4.77%, Trades=79
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:07:11,208 - INFO - UL stop=1.5× trailing=0.05: PnL=-1.22%, Trades=47
+2026-08-10 02:07:12,085 - INFO - UL stop=1.5× trailing=0.07: PnL=-1.10%, Trades=37
+2026-08-10 02:07:12,988 - INFO - UL stop=1.5× trailing=0.1: PnL=-0.86%, Trades=28
+2026-08-10 02:07:13,895 - INFO - UL stop=1.5× trailing=0.12: PnL=-0.76%, Trades=24
+2026-08-10 02:07:14,799 - INFO - UL stop=2.0× trailing=0.05: PnL=-1.08%, Trades=41
+2026-08-10 02:07:15,694 - INFO - UL stop=2.0× trailing=0.07: PnL=-1.05%, Trades=33
+2026-08-10 02:07:16,590 - INFO - UL stop=2.0× trailing=0.1: PnL=-0.85%, Trades=24
+2026-08-10 02:07:17,448 - INFO - UL stop=2.0× trailing=0.12: PnL=-0.73%, Trades=20
+2026-08-10 02:07:18,331 - INFO - UL stop=2.5× trailing=0.05: PnL=-1.14%, Trades=39
+2026-08-10 02:07:19,207 - INFO - UL stop=2.5× trailing=0.07: PnL=-1.03%, Trades=30
+2026-08-10 02:07:20,112 - INFO - UL stop=2.5× trailing=0.1: PnL=-0.86%, Trades=22
+2026-08-10 02:07:20,954 - INFO - UL stop=2.5× trailing=0.12: PnL=-0.74%, Trades=18
+2026-08-10 02:07:21,798 - INFO - UL stop=3.0× trailing=0.05: PnL=-1.07%, Trades=35
+2026-08-10 02:07:22,703 - INFO - UL stop=3.0× trailing=0.07: PnL=-0.78%, Trades=24
+2026-08-10 02:07:23,601 - INFO - UL stop=3.0× trailing=0.1: PnL=-0.59%, Trades=16
+2026-08-10 02:07:24,513 - INFO - UL stop=3.0× trailing=0.12: PnL=-0.49%, Trades=13
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:07:26,038 - INFO - VET.TO stop=1.5× trailing=0.05: PnL=-2.53%, Trades=101
+2026-08-10 02:07:26,887 - INFO - VET.TO stop=1.5× trailing=0.07: PnL=-0.99%, Trades=61
+2026-08-10 02:07:27,785 - INFO - VET.TO stop=1.5× trailing=0.1: PnL=-0.85%, Trades=43
+2026-08-10 02:07:28,687 - INFO - VET.TO stop=1.5× trailing=0.12: PnL=-0.25%, Trades=34
+2026-08-10 02:07:29,569 - INFO - VET.TO stop=2.0× trailing=0.05: PnL=-2.53%, Trades=101
+2026-08-10 02:07:30,460 - INFO - VET.TO stop=2.0× trailing=0.07: PnL=-1.01%, Trades=60
+2026-08-10 02:07:31,334 - INFO - VET.TO stop=2.0× trailing=0.1: PnL=-1.03%, Trades=41
+2026-08-10 02:07:32,199 - INFO - VET.TO stop=2.0× trailing=0.12: PnL=-0.63%, Trades=32
+2026-08-10 02:07:33,066 - INFO - VET.TO stop=2.5× trailing=0.05: PnL=-2.53%, Trades=101
+2026-08-10 02:07:33,973 - INFO - VET.TO stop=2.5× trailing=0.07: PnL=-1.03%, Trades=60
+2026-08-10 02:07:34,848 - INFO - VET.TO stop=2.5× trailing=0.1: PnL=-1.09%, Trades=41
+2026-08-10 02:07:35,770 - INFO - VET.TO stop=2.5× trailing=0.12: PnL=-0.69%, Trades=32
+2026-08-10 02:07:36,652 - INFO - VET.TO stop=3.0× trailing=0.05: PnL=-2.53%, Trades=101
+2026-08-10 02:07:37,518 - INFO - VET.TO stop=3.0× trailing=0.07: PnL=-1.03%, Trades=60
+2026-08-10 02:07:38,405 - INFO - VET.TO stop=3.0× trailing=0.1: PnL=-1.08%, Trades=41
+2026-08-10 02:07:39,294 - INFO - VET.TO stop=3.0× trailing=0.12: PnL=-0.67%, Trades=32
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:07:40,805 - INFO - WDOFF stop=1.5× trailing=0.05: PnL=-6.26%, Trades=218
+2026-08-10 02:07:41,651 - INFO - WDOFF stop=1.5× trailing=0.07: PnL=-4.46%, Trades=134
+2026-08-10 02:07:42,532 - INFO - WDOFF stop=1.5× trailing=0.1: PnL=-1.15%, Trades=70
+2026-08-10 02:07:43,410 - INFO - WDOFF stop=1.5× trailing=0.12: PnL=-1.25%, Trades=56
+2026-08-10 02:07:44,276 - INFO - WDOFF stop=2.0× trailing=0.05: PnL=-6.26%, Trades=218
+2026-08-10 02:07:45,146 - INFO - WDOFF stop=2.0× trailing=0.07: PnL=-4.17%, Trades=130
+2026-08-10 02:07:46,043 - INFO - WDOFF stop=2.0× trailing=0.1: PnL=-1.11%, Trades=67
+2026-08-10 02:07:46,923 - INFO - WDOFF stop=2.0× trailing=0.12: PnL=-1.26%, Trades=50
+2026-08-10 02:07:47,773 - INFO - WDOFF stop=2.5× trailing=0.05: PnL=-6.26%, Trades=218
+2026-08-10 02:07:48,614 - INFO - WDOFF stop=2.5× trailing=0.07: PnL=-4.17%, Trades=130
+2026-08-10 02:07:49,492 - INFO - WDOFF stop=2.5× trailing=0.1: PnL=-1.14%, Trades=66
+2026-08-10 02:07:50,362 - INFO - WDOFF stop=2.5× trailing=0.12: PnL=-1.54%, Trades=50
+2026-08-10 02:07:51,208 - INFO - WDOFF stop=3.0× trailing=0.05: PnL=-6.26%, Trades=218
+2026-08-10 02:07:52,058 - INFO - WDOFF stop=3.0× trailing=0.07: PnL=-4.17%, Trades=130
+2026-08-10 02:07:52,917 - INFO - WDOFF stop=3.0× trailing=0.1: PnL=-1.15%, Trades=66
+2026-08-10 02:07:53,793 - INFO - WDOFF stop=3.0× trailing=0.12: PnL=-1.47%, Trades=50
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:07:55,267 - INFO - WJX stop=1.5× trailing=0.05: PnL=0.37%, Trades=62
+2026-08-10 02:07:56,139 - INFO - WJX stop=1.5× trailing=0.07: PnL=0.71%, Trades=35
+2026-08-10 02:07:57,000 - INFO - WJX stop=1.5× trailing=0.1: PnL=1.03%, Trades=20
+2026-08-10 02:07:57,853 - INFO - WJX stop=1.5× trailing=0.12: PnL=0.79%, Trades=16
+2026-08-10 02:07:58,721 - INFO - WJX stop=2.0× trailing=0.05: PnL=0.46%, Trades=60
+2026-08-10 02:07:59,560 - INFO - WJX stop=2.0× trailing=0.07: PnL=0.73%, Trades=33
+2026-08-10 02:08:00,393 - INFO - WJX stop=2.0× trailing=0.1: PnL=1.05%, Trades=18
+2026-08-10 02:08:01,243 - INFO - WJX stop=2.0× trailing=0.12: PnL=0.72%, Trades=15
+2026-08-10 02:08:02,095 - INFO - WJX stop=2.5× trailing=0.05: PnL=0.46%, Trades=60
+2026-08-10 02:08:02,955 - INFO - WJX stop=2.5× trailing=0.07: PnL=0.70%, Trades=33
+2026-08-10 02:08:03,831 - INFO - WJX stop=2.5× trailing=0.1: PnL=1.18%, Trades=16
+2026-08-10 02:08:04,703 - INFO - WJX stop=2.5× trailing=0.12: PnL=0.84%, Trades=13
+2026-08-10 02:08:05,597 - INFO - WJX stop=3.0× trailing=0.05: PnL=0.46%, Trades=60
+2026-08-10 02:08:06,416 - INFO - WJX stop=3.0× trailing=0.07: PnL=0.67%, Trades=33
+2026-08-10 02:08:07,316 - INFO - WJX stop=3.0× trailing=0.1: PnL=1.14%, Trades=16
+2026-08-10 02:08:08,202 - INFO - WJX stop=3.0× trailing=0.12: PnL=0.80%, Trades=13
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:08:08,667 - WARNING - No data for WVN613
+/home/ksf_stockmarket/ksf_stockmarket/atr_sweep_mariadb.py:50: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(f"""
+2026-08-10 02:08:09,130 - WARNING - No data for WVN618
+
+=== TOP 10 RESULTS BY PnL ===
+EULIF stop=1.5× trailing=0.05%: PnL=78.11% Trades=240
+EULIF stop=2.0× trailing=0.05%: PnL=78.11% Trades=240
+EULIF stop=2.5× trailing=0.05%: PnL=78.11% Trades=240
+EULIF stop=3.0× trailing=0.05%: PnL=78.11% Trades=240
+EULIF stop=1.5× trailing=0.07%: PnL=55.22% Trades=232
+EULIF stop=2.0× trailing=0.07%: PnL=55.22% Trades=232
+EULIF stop=2.5× trailing=0.07%: PnL=55.22% Trades=232
+EULIF stop=3.0× trailing=0.07%: PnL=55.22% Trades=232
+MMTMF stop=2.0× trailing=0.05%: PnL=34.39% Trades=165
+MMTMF stop=2.5× trailing=0.05%: PnL=34.39% Trades=165
+
+=== AVERAGE BY STOP FACTOR ===
+2026-08-10 02:08:09,132 - INFO - Stop 1.5×: Avg PnL 3.30%
+2026-08-10 02:08:09,133 - INFO - Stop 2.0×: Avg PnL 3.35%
+2026-08-10 02:08:09,133 - INFO - Stop 2.5×: Avg PnL 3.34%
+2026-08-10 02:08:09,134 - INFO - Stop 3.0×: Avg PnL 3.33%

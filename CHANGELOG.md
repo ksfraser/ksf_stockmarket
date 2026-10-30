@@ -90,7 +90,7 @@ All notable changes to the OWL Investment Dashboard project.
 - PHP: PSR-4 autoloading, `declare(strict_types=1)`, DI via constructors, SRP controllers
 - Python: Type hints, abstract base classes, config-driven factory pattern
 - Hybrid: PHP web UI + Python analysis, shared MySQL at ksfraser.ca
-- Apache serves `/stockmarket/` and `/dashboard/` from `/var/www/stockmarket-app/`
+- Apache serves `/stockmarket/` and `/dashboard/` from `/home/ksf_stockmarket/ksf_stockmarket/`
 
 ---
 

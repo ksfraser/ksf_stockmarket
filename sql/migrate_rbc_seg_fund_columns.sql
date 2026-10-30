@@ -2,7 +2,7 @@
 -- Source: https://lipper.rbcinsurance.com/rbc/list (tabs: Fund Details, Short Term,
 --         Long Term, Calendar Year, Quartile Rankings, Buy Guide) + the email-gateway
 --         CSV rbc_gif_funds_2026-08-17.csv.
--- Run on the stockmarket-app DB host (local MySQL is not running on the dev box).
+-- Run on the dev tree DB host (local MySQL is not running on the dev box).
 -- One-time; review before re-running (MySQL ALTER has no IF NOT EXISTS per column
 -- prior to 8.0.29 — for 5.7 guard each ADD with a pre-check if re-running).
 --

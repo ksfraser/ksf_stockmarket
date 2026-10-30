@@ -18,7 +18,7 @@
     js/                       ← Static assets
     uploads/                  ← User uploads (writable by apache)
 
-/var/www/stockmarket-app/     ← Private app workspace (authoritative source)
+/home/ksf_stockmarket/ksf_stockmarket/     ← Private app workspace (authoritative source)
     php/templates/            ← Main templates
     python/detail.php etc.    ← Enhanced templates  
     dashboard/templates/      ← Dashboard templates
@@ -36,7 +36,7 @@
 
 ```
 public_html → /var/www/html/stockmarket/
-app         → /var/www/stockmarket-app/
+app         → /home/ksf_stockmarket/ksf_stockmarket/
 ```
 
 Only `index.php`, `js/`, and `uploads/` are in the webroot. Everything else is outside the document root and cannot be fetched directly via URL.

@@ -7,7 +7,7 @@
 $APP_ROOT = getenv('APP_ROOT');
 if (!$APP_ROOT) {
     // Prefer explicit private app root; only fall back to webroot if it owns vendor
-    if (is_dir('/var/www/stockmarket-app/vendor') && is_dir('/var/www/stockmarket-app/src/Controller')) {
+    if (is_dir('/home/ksf_stockmarket/ksf_stockmarket/vendor') && is_dir('/home/ksf_stockmarket/ksf_stockmarket/src/Controller')) {
         $APP_ROOT = '/var/www/stockmarket-app';
     } elseif (is_dir(__DIR__ . '/vendor')) {
         $APP_ROOT = __DIR__;

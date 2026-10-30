@@ -1,18 +1,10 @@
 #!/usr/bin/env bash
 # deploy.sh — Deploy stockmarket app to VPS or shared hosting
 #
-# Repo layout (source):
-#   public_html/               ← public entry points + assets
-#   php/index.php              ← CANONICAL front controller
-#   php/templates/             ← main PHP templates (36 files)
-#   php/src/                   ← PHP controllers, models, services
-#   python/*.php               ← enhanced/detail templates + controllers (legacy name)
-#   python/src/                ← Python backend
-#   dashboard/                 ← dashboard templates + controllers
-#   scripts/                   ← CLI scripts
-#   tests/                     ← test suites
-#   external/                  ← docs, reference files
-#   vendor/                    ← (gitignored) Composer deps, run composer install
+# Repo layout (source, DEV TREE):
+#   /home/ksf_stockmarket/ksf_stockmarket/   ← All development code (python, src, scripts, etc.)
+#   /var/www/html/stockmarket/              ← Deployed PHP router (index.php, .htaccess, templates symlink)
+#   /var/www/stockmarket-app/               ← Backend code (python, src, config, .env)
 #
 # VPS deploy result:
 #   /var/www/html/stockmarket/    ← webroot (index.php, js/, uploads/, .htaccess)
@@ -33,8 +25,18 @@
 
 set -euo pipefail
 
-MODE="${1:-vps}"
-shift || true
+# Validation: This script MUST be run from the ksf_stockmarket dev tree
+# Source: /home/ksf_stockmarket/ksf_stockmarket
+# Target: /var/www/html/stockmarket (webroot), /var/www/stockmarket-app (backend)
+
+REPO_DIR="/home/ksf_stockmarket/ksf_stockmarket"
+if [[ ! -d "$REPO_DIR" ]]; then
+    echo "ERROR: Deploy script must be run from $REPO_DIR"
+    echo "ERROR: Are you sure you're in the right place?"
+    exit 1
+fi
+
+# 2) Templates from all sources → app root
 
 case "$MODE" in
   vps)

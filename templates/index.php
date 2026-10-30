@@ -13,13 +13,13 @@ spl_autoload_register(function ($class) {
     // App\ namespace → src/
     if (strpos($class, 'App\\') === 0) {
         $relative = str_replace('App\\', '', $class);
-        $file = '/var/www/stockmarket-app/src/' . str_replace('\\', '/', $relative) . '.php';
+        $file = '/home/ksf_stockmarket/ksf_stockmarket/src/' . str_replace('\\', '/', $relative) . '.php';
         if (file_exists($file)) { require_once $file; return; }
     }
     // Legacy controller/model paths
     $paths = [
-        '/var/www/stockmarket-app/src/Controller/' . $class . '.php',
-        '/var/www/stockmarket-app/src/Model/' . $class . '.php',
+        '/home/ksf_stockmarket/ksf_stockmarket/src/Controller/' . $class . '.php',
+        '/home/ksf_stockmarket/ksf_stockmarket/src/Model/' . $class . '.php',
     ];
     foreach ($paths as $p) {
         if (file_exists($p)) { require_once $p; return; }
@@ -27,7 +27,7 @@ spl_autoload_register(function ($class) {
 });
 
 // Helpers
-require_once '/var/www/stockmarket-app/src/View/helpers.php';
+require_once '/home/ksf_stockmarket/ksf_stockmarket/src/View/helpers.php';
 
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
@@ -139,7 +139,7 @@ if ($action === 'login') {
         $pageTitle = $result['pageTitle'] ?? 'Login';
         $template = $result['template'] ?? 'login';
         $data = $result;
-        require '/var/www/stockmarket-app/templates/layout.php';
+        require '/home/ksf_stockmarket/ksf_stockmarket/templates/layout.php';
     }
     exit;
 }
@@ -156,7 +156,7 @@ if ($action === 'register') {
     $pageTitle = 'Register';
     $template = 'register';
     $data = $result;
-    require '/var/www/stockmarket-app/templates/layout.php';
+    require '/home/ksf_stockmarket/ksf_stockmarket/templates/layout.php';
     exit;
 }
 
@@ -229,7 +229,7 @@ switch ($action) {
         $template = 'stop_orders';
         break;
     case 'broker_stops':
-        require_once '/var/www/stockmarket-app/src/Controller/BrokerStopController.php';
+        require_once '/home/ksf_stockmarket/ksf_stockmarket/src/Controller/BrokerStopController.php';
         $ctrl = new BrokerStopController();
         
         // Handle form submissions
@@ -286,14 +286,14 @@ switch ($action) {
         $template = 'admin_symbols';
         break;
     case 'admin_settings':
-        require_once '/var/www/stockmarket-app/src/Controller/AdminSettingsController.php';
+        require_once '/home/ksf_stockmarket/ksf_stockmarket/src/Controller/AdminSettingsController.php';
         $ctrl = new AdminSettingsController();
         $data = array_merge($data, $ctrl->index());
         $pageTitle = 'Admin Settings';
         $template = 'admin_settings';
         break;
     case 'refresh_all_prices':
-        require_once '/var/www/stockmarket-app/src/Controller/AdminSettingsController.php';
+        require_once '/home/ksf_stockmarket/ksf_stockmarket/src/Controller/AdminSettingsController.php';
         $ctrl = new AdminSettingsController();
         $data = array_merge($data, $ctrl->refreshAllPrices());
         // refreshAllPrices handles its own redirect + exit
@@ -305,7 +305,7 @@ switch ($action) {
         $template = 'indicators';
         break;
     case 'transactions':
-        require_once '/var/www/stockmarket-app/src/Controller/TransactionController.php';
+        require_once '/home/ksf_stockmarket/ksf_stockmarket/src/Controller/TransactionController.php';
         $ctrl = new TransactionController();
 
         // Handle delete action - only for manual_entry transactions
@@ -391,14 +391,14 @@ case 'strategy_timing':
         $template = 'screener';
         break;
     case 'upload':
-        require_once '/var/www/stockmarket-app/src/Controller/DocumentUploadController.php';
+        require_once '/home/ksf_stockmarket/ksf_stockmarket/src/Controller/DocumentUploadController.php';
         $ctrl = new DocumentUploadController();
         $data = array_merge($data, $ctrl->handle());
         $pageTitle = $data['pageTitle'] ?? 'Upload Documents';
         $template = $data['template'] ?? 'upload';
         break;
     case 'export':
-        require_once '/var/www/stockmarket-app/src/Controller/ExportController.php';
+        require_once '/home/ksf_stockmarket/ksf_stockmarket/src/Controller/ExportController.php';
         $ctrl = new ExportController();
         $result = $ctrl->handle();
         // If the controller returned raw OFX data, output it directly
@@ -413,35 +413,35 @@ case 'strategy_timing':
         $template = $data['template'] ?? 'export';
         break;
     case 'alerts_status':
-        require_once '/var/www/stockmarket-app/src/Controller/AlertsController.php';
+        require_once '/home/ksf_stockmarket/ksf_stockmarket/src/Controller/AlertsController.php';
         $ctrl = new AlertsController();
         $data = array_merge($data, $ctrl->index());
         $pageTitle = 'Alerts & Cron Status';
         $template = 'alerts_status';
         break;
     case 'stablecoin':
-        require_once '/var/www/stockmarket-app/src/Service/StablecoinYieldTracker.php';
+        require_once '/home/ksf_stockmarket/ksf_stockmarket/src/Service/StablecoinYieldTracker.php';
         $tracker = new StablecoinYieldTracker();
         $data['positions'] = $tracker->getPositions($userId ?? 1);
         $pageTitle = 'Stablecoin Yields';
         $template = 'stablecoin';
         break;
     case 'forex':
-        require_once '/var/www/stockmarket-app/src/Service/ForexTracker.php';
+        require_once '/home/ksf_stockmarket/ksf_stockmarket/src/Service/ForexTracker.php';
         $tracker = new ForexTracker();
         $data['pairs'] = $tracker->getForexPairs();
         $pageTitle = 'Forex';
         $template = 'forex';
         break;
     case 'futures':
-        require_once '/var/www/stockmarket-app/src/Service/FuturesTracker.php';
+        require_once '/home/ksf_stockmarket/ksf_stockmarket/src/Service/FuturesTracker.php';
         $tracker = new FuturesTracker();
         $data['futures'] = $tracker->getFuturesSymbols();
         $pageTitle = 'Futures';
         $template = 'futures';
         break;
     case 'risk':
-        require_once '/var/www/stockmarket-app/src/Controller/RiskController.php';
+        require_once '/home/ksf_stockmarket/ksf_stockmarket/src/Controller/RiskController.php';
         $ctrl = new RiskController();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data['gate_result'] = $ctrl->preTradeGate($_POST);
@@ -477,7 +477,7 @@ case 'strategy_timing':
             header('Location: ?action=login');
             exit;
         }
-        require_once '/var/www/stockmarket-app/src/Controller/SharedWithMeController.php';
+        require_once '/home/ksf_stockmarket/ksf_stockmarket/src/Controller/SharedWithMeController.php';
         $ctrl = new SharedWithMeController();
         $data = array_merge($data, $ctrl->index());
         $pageTitle = 'Shared with Me';
@@ -489,4 +489,4 @@ case 'strategy_timing':
         $template = 'overview';
 }
 
-require '/var/www/stockmarket-app/templates/layout.php';
+require '/home/ksf_stockmarket/ksf_stockmarket/templates/layout.php';

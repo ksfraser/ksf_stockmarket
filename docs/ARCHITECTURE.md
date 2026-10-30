@@ -99,7 +99,7 @@ From the 222-indicator correlation study:
 
 **Directory Layout:**
 ```
-/var/www/stockmarket-app/          ← Workspace (authoritative)
+/home/ksf_stockmarket/ksf_stockmarket/          ← Workspace (authoritative)
   index.php                        ← Front controller
   src/Controller/                  ← PSR-4 controllers
     DashboardController.php        ← App-level overview
@@ -375,7 +375,7 @@ class DBConnection(ABC):
 
 | Component | Path |
 |---|---|
-| PHP workspace | `/var/www/stockmarket-app/` |
+| PHP workspace | `/home/ksf_stockmarket/ksf_stockmarket/` |
 | Apache web root | `/var/www/html/stockmarket/` |
 | Dashboard alias | `/var/www/html/dashboard-owl/` |
 | Python project | `/home/ksf_stockmarket/ksf_stockmarket/` |

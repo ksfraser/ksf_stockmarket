@@ -54,7 +54,7 @@ final class ZacksRwConfig
             getenv('KSF_CONFIG') ?: null,
             './config.yaml',
             __DIR__ . '/../../config.yaml',
-            '/var/www/stockmarket-app/config.yaml',
+            '/home/ksf_stockmarket/ksf_stockmarket/config.yaml',
         ];
         foreach ($candidates as $c) {
             if ($c && is_file($c)) {

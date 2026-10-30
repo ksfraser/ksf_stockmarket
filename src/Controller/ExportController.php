@@ -103,7 +103,7 @@ class ExportController
      */
     private function generateOfx(?string $accountType, string $startDate, string $endDate): string
     {
-        $script = '/var/www/stockmarket-app/scripts/pdf_parser/ofx_export.py';
+        $script = '/home/ksf_stockmarket/ksf_stockmarket/scripts/pdf_parser/ofx_export.py';
 
         if (!file_exists($script)) {
             return '';

@@ -167,7 +167,7 @@ Pod: ksf_stockmarket
     - Image: python:3.10-slim (or custom)
     - Runs monitoring scripts
     - Shares network with webserver
-    - Volume: /var/www/stockmarket-app/python:/app
+    - Volume: /home/ksf_stockmarket/ksf_stockmarket/python:/app
 ```
 
 #### FR-05: Firewall Rules

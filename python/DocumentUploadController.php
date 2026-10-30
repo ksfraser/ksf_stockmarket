@@ -21,7 +21,7 @@ class DocumentUploadController
     public function __construct()
     {
         $this->pdo = Database::get();
-        $this->uploadDir = '/var/www/stockmarket-app/uploads/documents/';
+        $this->uploadDir = '/home/ksf_stockmarket/ksf_stockmarket/uploads/documents/';
         if (!is_dir($this->uploadDir)) {
             mkdir($this->uploadDir, 0750, true);
         }
@@ -318,7 +318,7 @@ class DocumentUploadController
 
     private function parsePdf(string $path): array
     {
-        $script = '/var/www/stockmarket-app/scripts/parse_pdf_statement.py';
+        $script = '/home/ksf_stockmarket/ksf_stockmarket/scripts/parse_pdf_statement.py';
 
         if (file_exists($script)) {
             $output = [];

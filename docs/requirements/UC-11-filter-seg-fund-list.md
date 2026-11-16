@@ -28,10 +28,19 @@
 - A row exists in `user_screens` with the chosen filter JSON if Save was invoked.
 - URL is shareable: anyone with the URL sees the same result set (filters live in URL;
   the named screen is a convenience for re-loading).
+- Screener tab: `?action=seg_funds&screener=ranked` shows ranked by `composite_return`;
+  `?action=seg_funds&screener=risk_adjusted` shows ranked by `risk_adjusted`.
 
 ## UI
-- 5 Risk Rating checkboxes (single-select per dimension, multi-value within).
-- 2 Death Benefit checkboxes (75, 100), 2 Maturity Benefit (75, 100).
-- 4 bucket dropdowns (1Y, 5Y, 10Y, YTD).
+- Same as UC-11, plus:
+- **Screener tab**: ranked fund list with:
+  - Rank column
+  - Carrier, Fund Name
+  - 10Y, 5Y, 3Y, 1Y returns
+  - Standard Deviation (std_dev)
+  - Composite Return (Formula 2)
+  - Risk-Adjusted Score (Formula 3)
+- Sort toggle: "All Funds" (by composite_return) or "Top Risk-Adjusted"
 - "Clear" button on the right.
 - "Save Filters" button is primary-blue.
+- Tooltip: "Bucket ranges computed from current active distribution"

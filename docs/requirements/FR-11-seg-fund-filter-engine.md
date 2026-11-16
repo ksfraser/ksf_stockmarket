@@ -67,3 +67,17 @@ from the live distribution.
 ## Related
 - BR-11, BR-12
 - FR-12 (Personal Screens — same filter engine is reused)
+
+## Fund Screener Scoring (NEW - 2026-11)
+The Seg-Fund list supports risk-adjusted screening via the `fund_screener` view:
+
+| # | Formula | Description |
+|---|---------|-------------|
+| **F1** | **Effective LT Return** | `10yr` with fallback to `5yr` if 10yr missing |
+| **F2** | **Weighted Composite Return** | `0.45*10yr + 0.30*5yr + 0.15*3yr + 0.10*1yr` |
+| **F3** | **Risk-Adjusted Score** | `composite / std_dev` |
+| **F4** | **Hybrid Score** | `rank(composite) + rank(std_dev ascending)` |
+
+**Implementation:** MariaDB view `fund_screener`, Python engine `python/fund_screener.py`, outputs `fund_screener_ranked.csv` + `fund_screener_top_risk_adjusted.csv`.
+
+**Data notes:** `std_dev` not yet populated in MariaDB for most rows; Formula 3/4 require backfill from `seg_fund_screen` table or Google Sheets.

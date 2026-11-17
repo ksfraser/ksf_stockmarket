@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ksf\StockMarket\Service;
+namespace ksfraser\StockMarket\Service;
 
 use Ksf\ResearchWizard\Model\Operator;
-use Ksf\StockMarket\Util\ZacksFieldResolver;
+use ksfraser\StockMarket\Util\ZacksFieldResolver;
 
 /**
  * Evaluates stored Zacks RW rule sets against the live universe.

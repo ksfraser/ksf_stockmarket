@@ -29,7 +29,16 @@ more than alpha significance). Advisor rules encode this domain knowledge.
 | satellite_spec | kelly_position | 0.00 | yes | Half-Kelly always required |
 
 ## Priority
-Should Have
+Must Have
+
+## Related test outlines
+
+- `docs/requirements/UT-10-01-001-statistical-validation-basic.md` — FR-10-01 Layer 1 tests
+- `docs/requirements/UT-10-02-001-route-hypothesis-keywords.md` — FR-10-02 LLM hypothesis routing
+- `docs/requirements/UT-10-03-statistical-validation-layer3.md` — this requirement (FR-10-03)
+- `docs/requirements/UT-10-04-half-kelly-sizing.md` — FR-10-04 half-Kelly sizing
+- `docs/requirements/UT-11-llm-fundamental-data.md` — FR-11 LLM data tables
+- `docs/requirements/UT-12-rw-formula-advisors.md` — FR-12 RW formula advisors
 
 ## Acceptance Criteria
 - [ ] `apply_advisor_stat_rules(conn, symbol, strategy_types, val_result)` returns 3 lists: passed, failed, warned

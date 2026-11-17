@@ -1,4 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
+namespace ksfraser\StockMarket\Controller;
+
+use ksfraser\StockMarket\Model\Database;
+
+
+
 /**
  * SharedWithMeController — read-only access to other users' portfolios/transactions.
  */

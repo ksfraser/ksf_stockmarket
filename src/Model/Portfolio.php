@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ksf\StockMarket\Model;
+namespace ksfraser\StockMarket\Model;
 
 use PDO;
 use InvalidArgumentException;

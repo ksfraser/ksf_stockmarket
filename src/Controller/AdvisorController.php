@@ -1,4 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
+namespace ksfraser\StockMarket\Controller;
+
+use ksfraser\StockMarket\Model\Database;
+use ksfraser\StockMarket\Util\SymbolResolver;
+
+
+
 /**
  * AdvisorController — Risk gate + research brief router for the paper-trading firm.
  *

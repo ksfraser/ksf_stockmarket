@@ -4,6 +4,7 @@
 set -uo pipefail
 REPO_DIR="/var/www/stockmarket-app"
 cd "$REPO_DIR"
+export PYTHONPATH="$REPO_DIR/python:$REPO_DIR"
 if [[ -f ".env" ]]; then
     set -a && . ./.env && set +a
 fi

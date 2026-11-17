@@ -1,0 +1,15 @@
+{
+  "ref": "2026-10-14-detection-triggers-sqlite-run-baseline",
+  "target": "Documents/stockmarket/php/stockmarket-app/data/analysis_results.db",
+  "table": "alert_queue",
+  "baseline_total_rows": 25,
+  "baseline_by_type": {
+    "gap_up": 14,
+    "oscillator_extremes": 11,
+    "natr_spike": 0,
+    "volume_spike": 0
+  },
+  "baseline_min_created_at": "2026-10-13T13:38:53",
+  "baseline_max_created_at": "2026-10-14T12:32:30",
+  "notes": "Prior app-root-shim detection_triggers.py --sqlite run left 25 rows (gap_up=14, oscillator_extremes=11). New rows from this run will have created_at >= run_start."
+}

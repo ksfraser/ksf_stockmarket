@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ksf\StockMarket\Tests\Unit;
+namespace ksfraser\StockMarket\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Ksf\StockMarket\App;
+use ksfraser\StockMarket\App;
 
 /**
  * Tests for the App bootstrap class.

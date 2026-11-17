@@ -1,4 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
+namespace ksfraser\StockMarket\Controller;
+
+use ksfraser\StockMarket\Model\Database;
+
+
+
 /**
  * AdminSettingsController - System-level configuration (webhooks, LLM settings).
  * Requires admin role - for settings that affect all users.
@@ -23,8 +32,33 @@ class AdminSettingsController {
         $pdo = Database::get();
         $message = '';
         $error = '';
+        $users = [];
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Admin user password reset (POST from user list)
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action']) && $_POST['action'] === 'admin_reset_password') {
+            $userId = (int) ($_POST['user_id'] ?? 0);
+            $newPass = $_POST['new_password'] ?? '';
+            if ($userId > 0 && strlen($newPass) >= 8) {
+                try {
+                    $userModel = new \ksfraser\StockMarket\Model\User();
+                    $userModel->adminResetPassword($userId, $newPass);
+                    $message = 'Password reset for user ID ' . $userId . '.';
+                } catch (\Exception $e) {
+                    $error = 'Reset failed: ' . $e->getMessage();
+                }
+            } else {
+                $error = 'Invalid user or password (min 8 chars).';
+            }
+        }
+
+        // Load user list for admin view
+        try {
+            $users = $pdo->query('SELECT id, username, email, role, is_active FROM users ORDER BY username')->fetchAll();
+        } catch (\Exception $e) {
+            // ignore
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') !== 'admin_reset_password') {
             $message = $this->saveSettings($pdo);
         }
 
@@ -37,6 +71,7 @@ class AdminSettingsController {
             'message' => $message,
             'error' => $error,
             'user' => $this->currentUser,
+            'users' => $users,
         ];
     }
 
@@ -52,15 +87,6 @@ class AdminSettingsController {
             'llm_model' => 'string',
             'llm_api_key' => 'password',
             'llm_base_url' => 'string',
-            'llm_primary_url' => 'string',
-            'llm_primary_model' => 'string',
-            'llm_primary_token' => 'password',
-            'llm_secondary_url' => 'string',
-            'llm_secondary_model' => 'string',
-            'llm_secondary_token' => 'password',
-            'llm_fallback_url' => 'string',
-            'llm_fallback_model' => 'string',
-            'llm_fallback_token' => 'password',
             'ta_run_frequency' => 'string',
             'alert_check_frequency' => 'string',
             'max_symbols_per_run' => 'integer',
@@ -134,15 +160,6 @@ class AdminSettingsController {
             'llm_model' => 'anthropic/claude-sonnet-4',
             'llm_api_key' => '',
             'llm_base_url' => '',
-            'llm_primary_url' => '',
-            'llm_primary_model' => '',
-            'llm_primary_token' => '',
-            'llm_secondary_url' => '',
-            'llm_secondary_model' => '',
-            'llm_secondary_token' => '',
-            'llm_fallback_url' => '',
-            'llm_fallback_model' => '',
-            'llm_fallback_token' => '',
             'ta_run_frequency' => 'daily',
             'alert_check_frequency' => '15min',
             'max_symbols_per_run' => '100',
@@ -186,110 +203,6 @@ class AdminSettingsController {
         } catch (Exception $e) {
             return '';
         }
-    }
-
-    /**
-     * Get advisor-LLM profile assignments as JSON (for AJAX loading).
-     */
-    public function getLlmProfiles(): void {
-        header('Content-Type: application/json');
-        try {
-            $pdo = Database::get();
-            $stmt = $pdo->query("SELECT advisor_id, llm_profile FROM advisor_llm_profiles");
-            $profiles = [];
-            while ($row = $stmt->fetch()) {
-                $profiles[$row['advisor_id']] = $row['llm_profile'];
-            }
-            echo json_encode($profiles);
-        } catch (Exception $e) {
-            echo json_encode(['error' => $e->getMessage()]);
-        }
-        exit;
-    }
-
-    /**
-     * Test LLM endpoint connectivity (for AJAX health check).
-     */
-    public function testLlmEndpoint(): void {
-        header('Content-Type: application/json');
-        $profile = $_GET['llm_test'] ?? 'primary';
-        $keys = [
-            'primary' => ['llm_primary_url', 'llm_primary_model', 'llm_primary_token'],
-            'secondary' => ['llm_secondary_url', 'llm_secondary_model', 'llm_secondary_token'],
-            'fallback' => ['llm_fallback_url', 'llm_fallback_model', 'llm_fallback_token'],
-        ];
-        if (!isset($keys[$profile])) {
-            echo json_encode(['available' => false, 'error' => 'Invalid profile']);
-            exit;
-        }
-        list($url_key, $model_key, $token_key) = $keys[$profile];
-        $url = self::getSetting($url_key);
-        $model = self::getSetting($model_key);
-        $token = self::getSetting($token_key);
-
-        if (!$url || !$model || !$token) {
-            echo json_encode(['available' => false, 'error' => 'Not configured']);
-            exit;
-        }
-
-        $start = microtime(true);
-        $ch = curl_init();
-        curl_setopt_array($ch, [
-            CURLOPT_URL => rtrim($url, '/') . '/chat/completions',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT => 10,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode([
-                'model' => $model,
-                'messages' => [['role' => 'user', 'content' => 'Respond with exactly one word: OK']],
-                'max_tokens' => 5,
-            ]),
-            CURLOPT_HTTPHEADER => [
-                'Content-Type: application/json',
-                'Authorization: Bearer ' . $token,
-            ],
-        ]);
-        $resp = curl_exec($ch);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $err = curl_error($ch);
-        curl_close($ch);
-        $latency = round((microtime(true) - $start) * 1000);
-
-        if ($http_code === 200 && $resp) {
-            echo json_encode(['available' => true, 'latency_ms' => $latency]);
-        } else {
-            echo json_encode(['available' => false, 'latency_ms' => $latency, 'error' => $err ?: "HTTP $http_code"]);
-        }
-        exit;
-    }
-
-    /**
-     * Handle advisor-LLM profile assignment (AJAX POST).
-     */
-    public function setLlmProfile(): void {
-        header('Content-Type: application/json');
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            echo json_encode(['error' => 'Method not allowed']);
-            exit;
-        }
-        $advisor_id = $_POST['advisor_id'] ?? '';
-        $profile = $_POST['profile'] ?? 'primary';
-        if (!in_array($profile, ['primary', 'secondary', 'fallback'])) {
-            echo json_encode(['error' => 'Invalid profile']);
-            exit;
-        }
-        try {
-            $pdo = Database::get();
-            $stmt = $pdo->prepare(
-                "INSERT INTO advisor_llm_profiles (advisor_id, llm_profile) VALUES (:aid, :prof)
-                 ON DUPLICATE KEY UPDATE llm_profile = :prof2"
-            );
-            $stmt->execute([':aid' => $advisor_id, ':prof' => $profile, ':prof2' => $profile]);
-            echo json_encode(['success' => true, 'advisor_id' => $advisor_id, 'profile' => $profile]);
-        } catch (Exception $e) {
-            echo json_encode(['error' => $e->getMessage()]);
-        }
-        exit;
     }
 
     /**

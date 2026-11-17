@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ksf\StockMarket\Util;
+namespace ksfraser\StockMarket\Util;
 
 /**
  * Reads the `zacks_rw:` block from config.yaml (the canonical app config).

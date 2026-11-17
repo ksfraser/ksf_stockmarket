@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+namespace ksfraser\StockMarket\Controller;
+
+use ksfraser\StockMarket\Model\Database;
+
+
 use App\Strategy\StrategyRegistry;
 use App\Strategy\StrategyFactory;
 

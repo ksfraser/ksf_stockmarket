@@ -1,0 +1,1 @@
+Verdict: 2026-10-21 13:46 UTC — cancel-dupes: No pending jobs.; run --limit 5: Queue empty — nothing to retry. Corroborating tally (MariaDB ksfraser_stock_market): cancelled=71819 | completed=1031 | running=27 (abandoned, attempts=0, >2mo) | pending=0 | total=72877. Queue genuinely idle; no jobs claimed.

@@ -1,4 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
+namespace ksfraser\StockMarket\Service;
+
+
 /**
  * DeFi Stablecoin Yield Tracker
  * 

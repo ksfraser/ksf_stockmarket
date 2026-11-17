@@ -15,7 +15,7 @@ declare(strict_types=1);
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
-\Ksf\StockMarket\App::getInstance()->bootstrap(dirname(__DIR__));
+\ksfraser\StockMarket\App::getInstance()->bootstrap(dirname(__DIR__));
 
 // App::bootstrap() loads .env into $_ENV only; mirror to the real environment
 // so config/database.php (getenv-based) resolves credentials in CLI context.
@@ -36,9 +36,9 @@ spl_autoload_register(function (string $class): void {
     }
 });
 
-use Ksf\StockMarket\Service\ZacksRankPopulator;
-use Ksf\StockMarket\Service\ZacksScreenImporter;
-use Ksf\StockMarket\Util\ZacksRwConfig;
+use ksfraser\StockMarket\Service\ZacksRankPopulator;
+use ksfraser\StockMarket\Service\ZacksScreenImporter;
+use ksfraser\StockMarket\Util\ZacksRwConfig;
 
 $opts = [
     'dir' => null,

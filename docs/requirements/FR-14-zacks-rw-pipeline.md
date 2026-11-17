@@ -292,8 +292,22 @@ Acceptance: each UT above passes against the corresponding code path; tests that
 - UAT-14d: Backtest one screen with a 1-week hold and again with a 4-week hold, with and without a stop-loss; verify the full stat set appears and is sensible (return %, $ CAGR, win ratio, turnover, stops, stretches, drawdown).
 - UAT-14e: Create a running Advisor portfolio from a screen; run two rebalance cycles; verify running totals accumulate across the two runs (return, drawdown, periods, turnover, stops).
 
-## 10. Non-functional requirements applicable
+## 10. Related test outlines
+
+- `docs/requirements/UT-14-zacks-rw-pipeline.md` — Zacks RW pipeline tests (this document)
+- `docs/requirements/UT-12-rw-formula-advisors.md` — RW formula advisor picking tests (FR-12)
+- `docs/requirements/UT-11-llm-fundamental-data.md` — LLM fundamental data tests (FR-11)
+- `docs/requirements/UT-16-timing-backtesting.md` — Timing-aware backtesting tests (FR-16)
+
+## 11. Non-functional requirements applicable
 
 - NFR-1.3 (daily monitor signal generation < 30s) applies to the EPS-revision signal dispatch portion; the full nightly scrape is exempt (it is bound by the number of active symbols and Zacks rate limits).
 - NFR-2.2 (graceful degradation when a data source is unavailable) applies: if the Zacks site is unreachable for a symbol or the whole run, the pipeline reports failures per symbol and continues, and screens that depend on missing fields skip those atoms rather than crashing.
 - NFR-4.4 (BABOK-format documentation) is satisfied by this document plus BR-14, UC-14a, UC-14b, and the RTM rows.
+
+## 11. Related test outlines
+
+- `docs/requirements/UT-14-zacks-rw-pipeline.md` — Zacks RW pipeline tests (this document)
+- `docs/requirements/UT-12-rw-formula-advisors.md` — RW formula advisor picking tests (FR-12)
+- `docs/requirements/UT-11-llm-fundamental-data.md` — LLM fundamental data tests (FR-11)
+- `docs/requirements/UT-16-timing-backtesting.md` — Timing-aware backtesting tests (FR-16)

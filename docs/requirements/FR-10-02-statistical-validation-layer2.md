@@ -33,6 +33,15 @@ These are written to the scoring table alongside the LLM qualitative scores.
 ## Priority
 Must Have
 
+## Related test outlines
+
+- `docs/requirements/UT-10-01-001-statistical-validation-basic.md` — FR-10-01 Layer 1 tests
+- `docs/requirements/UT-10-02-001-route-hypothesis-keywords.md` — this requirement (FR-10-02)
+- `docs/requirements/UT-10-03-statistical-validation-layer3.md` — FR-10-03 advisor configurable rules
+- `docs/requirements/UT-10-04-half-kelly-sizing.md` — FR-10-04 half-Kelly sizing
+- `docs/requirements/UT-11-llm-fundamental-data.md` — FR-11 LLM data tables
+- `docs/requirements/UT-12-rw-formula-advisors.md` — FR-12 RW formula advisors
+
 ## Acceptance Criteria
 - [ ] `run_llm_research()` called from `run_llm_analysis()` before `write_llm_scores()`
 - [ ] Fallback graceful: if returns unavailable, skip quant test without failing LLM score write

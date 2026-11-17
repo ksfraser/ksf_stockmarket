@@ -4,6 +4,11 @@
     "type": "project",
     "license": "proprietary",
     "repositories": {
+        "ksf-common-db": {
+            "type": "path",
+            "url": "/home/kevin/Documents/ksf_common_db",
+            "canonical": false
+        },
         "research-wizard": {
             "type": "vcs",
             "url": "https://github.com/ksfraser/research-wizard-reader"
@@ -19,8 +24,12 @@
         "ext-mbstring": "*",
         "ext-pdo": "*",
         "ksfraser/financial-models": "dev-main",
+        "ksfraser/ksf-common-db": "dev-main",
         "ksfraser/research-wizard-reader": "^1.0",
         "monolog/monolog": "^3.0",
+        "symfony/mailer": "^6.0",
+        "symfony/security-bundle": "^6.4",
+        "symfony/security-csrf": "^6.4",
         "twig/twig": "^3.0",
         "vlucas/phpdotenv": "^5.5"
     },
@@ -32,24 +41,18 @@
     },
     "autoload": {
         "psr-4": {
-            "Ksf\\StockMarket\\": "src/",
-            "Ksf\\StockMarket\\Controller\\": "src/Controller/",
-            "Ksf\\StockMarket\\Model\\": "src/Model/",
-            "Ksf\\StockMarket\\Service\\": "src/Service/",
-            "Ksf\\StockMarket\\TA\\": "src/TA/",
-            "Ksf\\StockMarket\\Module\\": "src/Module/",
-            "Ksf\\StockMarket\\View\\": "src/View/"
+            "ksfraser\\StockMarket\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Ksf\\StockMarket\\Tests\\": "tests/"
+            "ksfraser\\StockMarket\\Tests\\": "tests/"
         }
     },
     "config": {
         "optimize-autoloader": true,
         "sort-packages": true
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true
 }

@@ -21,16 +21,29 @@ import tempfile
 
 def _decrypt_vault(vault_path: str, password_file: str) -> dict:
     """Decrypt an Ansible Vault YAML file and return its contents as a dict."""
+    # NOTE: site-wide /etc/ansible/ansible.cfg sets vault_password_file, which
+    # overrides the CLI --vault-password-file flag in this environment and
+    # points at a nonexistent ~/.ansible/.vaultpass. Pass the password via the
+    # ANSIBLE_VAULT_PASSWORD_FILE env var (takes precedence over config file)
+    # and drop ANSIBLE_CONFIG so no site config can shadow the explicit file.
+    env = os.environ.copy()
+    env['ANSIBLE_VAULT_PASSWORD_FILE'] = password_file
+    env.pop('ANSIBLE_CONFIG', None)
     result = subprocess.run(
-        ['ansible-vault', 'view',
-         '--vault-password-file', password_file,
-         vault_path],
-        capture_output=True, text=True
+        ['ansible-vault', 'view', vault_path],
+        capture_output=True, text=True,
+        env=env,
     )
-    if result.returncode != 0:
+    if result.returncode != 0 and 'not vault encrypted' not in result.stderr:
         raise RuntimeError(
             f"Failed to decrypt vault {vault_path}: {result.stderr.strip()}"
         )
+    # Guard against a leftover plaintext vault file (e.g. from a prior
+    # ansible-vault decrypt step): fall back to reading it directly.
+    if result.returncode != 0:
+        with open(vault_path, 'r', encoding='utf-8') as fh:
+            data = yaml.safe_load(fh) or {}
+        return data if isinstance(data, dict) else {}
     data = yaml.safe_load(result.stdout)
     return data if isinstance(data, dict) else {}
 

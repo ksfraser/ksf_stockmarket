@@ -28,6 +28,10 @@ $source = $data['source'] ?? null;
                 <?= (int)$result['universe_size']; ?> active symbols » matched
                 <strong><?= count($result['symbols']); ?></strong>.
                 Fully executed: <?= $result['fully_executed'] ? 'yes' : 'no'; ?>
+                <?php if (!empty($data['persisted_count'])): ?>
+                    | Saved <strong><?= (int)$data['persisted_count']; ?></strong> results
+                    (preset: <code><?= htmlspecialchars($data['preset_name'] ?? ''); ?></code>)
+                <?php endif; ?>
             </p>
 
             <?php if (!empty($result['skipped'])): ?>

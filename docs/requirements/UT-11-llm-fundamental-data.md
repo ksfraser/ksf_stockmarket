@@ -1,111 +1,63 @@
-# Unit Test Outline: UT-11 — LLM Fundamental Data
+# Unit Test Outline — LLM Fundamental Data (UT-11)
 
-## Requirement Coverage
-- FR-11: LLM Fundamental Data Tables
-- BR-9: LLM-Enhanced Fundamental Analysis
+Test the LLM fundamental data tables and analyzer.
 
-## Preconditions
-- Test database with `llm_insider_trading`, `llm_news_events`, `llm_product_dev`, `llm_regulatory` tables created
-- Test symbol data in `symbol_master`
-- LLM service mock or stub (no real LLM API calls in unit tests)
+## UT-11-001: llm_news insert and query
 
-## Test Cases
+**Given** `llm_news` table exists
 
-### TC-11-01: Create llm_insider_trading table
-**Given** a fresh test database
-**When** the migration creates the `llm_insider_trading` table
-**Then** the table exists with all columns: id, symbol, event_date, as_of, source, headline, details, confidence, conviction_score, is_verified, created_at, updated_at
-**And** indexes on (symbol, event_date) and (conviction_score) exist
+**When** a row is inserted with symbol, headline, event_date, source
 
-### TC-11-02: Create llm_news_events table
-**Given** a fresh test database
-**When** the migration creates the `llm_news_events` table
-**Then** the table exists with all columns including category ENUM
-**And** indexes on (symbol, event_date) and (category) exist
+**Then** the row is queryable by symbol and event_date; is_analyzed defaults to 0
 
-### TC-11-03: Create llm_product_dev table
-**Given** a fresh test database
-**When** the migration creates the `llm_product_dev` table
-**Then** the table exists with lifecycle_stage ENUM('concept','prototype','production_rollout','market_launch','modification','end_of_life')
-**And** indexes on (symbol, lifecycle_stage) and (event_date) exist
+## UT-11-002: llm_guidance sentiment values
 
-### TC-11-04: Create llm_regulatory table
-**Given** a fresh test database
-**When** the migration creates the `llm_regulatory` table
-**Then** the table exists with regulatory_type and status ENUMs
-**And** indexes on (symbol, regulatory_type) and (event_date) exist
+**Given** `llm_guidance` table exists
 
-### TC-11-05: Insert and read llm_insider_trading row
-**Given** the `llm_insider_trading` table exists
-**When** a row is inserted for symbol 'AAPL' with event_date '2026-01-15'
-**Then** the row can be read back by symbol
-**And** conviction_score is stored as DECIMAL(5,2)
-**And** is_verified defaults to 0
+**When** rows are inserted with sentiment='positive', 'negative', 'neutral'
 
-### TC-11-06: Insert and read llm_news_events row
-**Given** the `llm_news_events` table exists
-**When** a row is inserted with category 'earnings'
-**Then** the row can be read back by symbol and category
-**And** sentiment_score and conviction_score are stored correctly
+**Then** all three sentiment values are accepted; invalid values are rejected
 
-### TC-11-07: Insert and read llm_product_dev row
-**Given** the `llm_product_dev` table exists
-**When** a row is inserted with lifecycle_stage 'market_launch'
-**Then** the row can be read back by symbol and lifecycle_stage
-**And** expected_impact is stored correctly
+## UT-11-003: llm_regulatory status values
 
-### TC-11-08: Insert and read llm_regulatory row
-**Given** the `llm_regulatory` table exists
-**When** a row is inserted with regulatory_type 'approval' and status 'approved'
-**Then** the row can be read back by symbol and regulatory_type
-**And** jurisdiction is stored correctly
+**Given** `llm_regulatory` table exists
 
-### TC-11-09: LLM advisor reads all four tables by symbol
-**Given** rows exist in all four llm_* tables for symbol 'MSFT'
-**When** the LLM advisor queries by symbol='MSFT'
-**Then** all rows across all four tables are returned
-**And** the advisor can iterate over insider_trading, news_events, product_dev, and regulatory rows
+**When** rows are inserted with status='pending', 'approved', 'denied', 'withdrawn'
 
-### TC-11-10: LLM advisor updates conviction_score on existing row
-**Given** an existing row in `llm_news_events` with conviction_score = 50.00
-**When** the LLM advisor updates the conviction_score to 75.50
-**Then** the row reflects the new conviction_score
-**And** updated_at is set to the current timestamp
-**And** created_at remains unchanged
+**Then** all four status values are accepted; invalid values are rejected
 
-### TC-11-11: Duplicate event prevention
-**Given** a row exists in `llm_news_events` for symbol 'GOOG' with event_date '2026-03-01' and a specific headline
-**When** the LLM advisor attempts to insert a row with the same symbol, date, and headline hash
-**Then** the duplicate is not inserted (upsert or reject)
-**And** no duplicate rows exist for the same symbol + date + headline
+## UT-11-004: llm_analysis_sessions tracks provider
 
-### TC-11-12: is_verified flag management
-**Given** an unverified row (is_verified = 0) in `llm_insider_trading`
-**When** a human analyst marks it as verified
-**Then** is_verified is set to 1
-**And** the row is included in verified-only queries
+**Given** `llm_analysis_sessions` table exists
 
-### TC-11-13: Old unverified low-confidence rows flagged
-**Given** a row in `llm_news_events` with is_verified = 0, confidence = 30, and event_date > 90 days ago
-**When** the flagging query runs
-**Then** the row is included in the flagged-for-review set
-**And** rows with confidence >= 50 or is_verified = 1 are not flagged
+**When** a session row is inserted with provider_used and model_used
 
-### TC-11-14: Investment thesis summary stored in evalsummary
-**Given** an LLM analysis produces a thesis summary for symbol 'TSLA'
-**When** the advisor completes analysis
-**Then** the thesis summary is stored in `evalsummary.llm_recommendation` for symbol 'TSLA'
-**And** the evalsummary row is linked to the latest llm_* events for that symbol
+**Then** the row stores which LLM provider and model performed the analysis
 
-## Postconditions
-- All four llm_* tables exist and are functional
-- LLM advisor can read and write to all four tables
-- Duplicate events are prevented
-- Old low-confidence unverified rows are flaggable
-- Investment thesis summaries are stored in evalsummary
+## UT-11-005: LLM analyzer reads unanalyzed news
 
-## Related
-- FR-11: LLM Fundamental Data Tables
-- BR-9: LLM-Enhanced Fundamental Analysis
-- `docs/advisors/REQUIREMENTS_DESIGN.md` §LLM Fundamental Data
-- `docs/architecture/architecture-document.md` §10.5
+**Given** `llm_news` has 5 rows with is_analyzed=0 and 3 rows with is_analyzed=1
+
+**When** the LLM analyzer queries for unanalyzed items
+
+**Then** only the 5 unanalyzed rows are returned
+
+## UT-11-006: LLM analyzer writes new findings
+
+**Given** the LLM analyzer discovers a new regulatory event not in llm_regulatory
+
+**When** the analyzer writes the finding
+
+**Then** a new row is inserted into llm_regulatory with status='pending', llm_model set, created_at populated
+
+## UT-11-007: Advisor reads LLM fundamental data
+
+**Given** an advisor strategy is scoring candidates
+
+**When** the strategy queries llm_news for material_impact='high' events in the last 30 days
+
+**Then** the strategy receives the relevant news items and can adjust scores
+
+---
+
+*Prerequisite test infrastructure:* `tests/Unit/LlmFundamentalTest.php` — new file. Database tests use a test fixture SQLite DB (same pattern as existing unit tests). Integration tests require a test MariaDB with the llm_* tables created via migration.

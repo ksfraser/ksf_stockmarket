@@ -1,4 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
+namespace ksfraser\StockMarket\Controller;
+
+use ksfraser\StockMarket\Model\Database;
+
+
+
 /**
  * ATRSweepController — best ATR stop factor per symbol + portfolio stats + charts.
  */

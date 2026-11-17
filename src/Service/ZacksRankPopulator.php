@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ksf\StockMarket\Service;
+namespace ksfraser\StockMarket\Service;
 
 use PDO;
 

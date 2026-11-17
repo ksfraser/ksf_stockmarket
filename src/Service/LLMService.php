@@ -8,6 +8,8 @@
 
 declare(strict_types=1);
 
+namespace ksfraser\StockMarket\Service;
+
 class LLMService
 {
     private static ?LLMService $instance = null;

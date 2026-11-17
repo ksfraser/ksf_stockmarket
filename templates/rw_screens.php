@@ -9,6 +9,7 @@ $currentUser = $data['current_user'] ?? null;
     <div class="card-header">
         <h3>Zacks Research Wizard Screens</h3>
         <span class="text-muted"><?= count($screens); ?> stock screens imported from .und files</span>
+        <a href="?action=create_rw_screen" class="btn" style="float:right;background:var(--accent);color:#fff;padding:6px 12px;border-radius:4px;text-decoration:none;font-size:0.85em;">+ Create Screen</a>
     </div>
     <div class="card-body">
         <?php if (!$screens): ?>

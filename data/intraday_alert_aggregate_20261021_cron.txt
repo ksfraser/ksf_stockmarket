@@ -1,0 +1,37 @@
+=== detection_triggers.py --sqlite AGGREGATE (cron run 2026-10-21T18:45:51Z) ===
+=== alert_queue by alert_type (full table) ===
+  gap_up: count=23 symbols=3 first=2026-10-21T07:31:04.583704 last=2026-10-21T12:45:27.377735
+  TOTAL: count=23 distinct_symbols=3
+=== rows created after this run started (12:30) ===
+  gap_up: 2
+  NEW TOTAL: 2
+    - 2026-10-21T12:43:49.911175 | gap_up | TSLA | medium | {"gap_pct": 2.09, "open_price": 381.51, "previous_close": 373.71, "current_price": 387.43, "gap_filled": false, "triggered_at": "2026-10-21T12:43:49.911043"}
+    - 2026-10-21T12:45:27.377735 | gap_up | NVDA | medium | {"gap_pct": 2.07, "open_price": 220.96, "previous_close": 216.47, "current_price": 221.63, "gap_filled": false, "triggered_at": "2026-10-21T12:45:27.377688"}
+=== error tally (404 / errors in stdout+stderr log) ===
+  MICC.TO"}}}: 4
+  NPI"}}}: 4
+  XFN"}}}: 4
+  XIT"}}}: 4
+  TOTAL error/404 lines: 16
+=== final stdout tail ===
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: NPI"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: NPI"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: NPI"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: NPI"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XIT"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XIT"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XIT"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XIT"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XFN"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XFN"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XFN"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XFN"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: MICC.TO"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: MICC.TO"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: MICC.TO"}}}
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: MICC.TO"}}}
+
+Alerts queued:
+  [TSLA] Gap up: 2.09% (medium)
+  [NVDA] Gap up: 2.07% (medium)
+=== ALL DONE ===

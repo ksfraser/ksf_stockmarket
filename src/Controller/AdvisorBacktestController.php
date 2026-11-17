@@ -1,6 +1,11 @@
 <?php
 declare(strict_types=1);
 
+namespace ksfraser\StockMarket\Controller;
+
+use ksfraser\StockMarket\Model\Database;
+
+
 class AdvisorBacktestController
 {
     public function leaderboard(): array

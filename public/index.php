@@ -16,7 +16,7 @@ define('ROOT_DIR', dirname(__DIR__));
 require_once ROOT_DIR . '/vendor/autoload.php';
 
 // Bootstrap application
-use Ksf\StockMarket\App;
+use ksfraser\StockMarket\App;
 
 $app = App::getInstance();
 $app->bootstrap(ROOT_DIR);

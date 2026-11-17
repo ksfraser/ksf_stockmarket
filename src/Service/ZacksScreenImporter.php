@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Ksf\StockMarket\Service;
+namespace ksfraser\StockMarket\Service;
 
 use Ksf\ResearchWizard\Discovery\InputRepository;
 use Ksf\ResearchWizard\Parser\UndParser;
 use Ksf\ResearchWizard\Parser\ParserResult;
-use Ksf\StockMarket\Util\ZacksRwConfig;
+use ksfraser\StockMarket\Util\ZacksRwConfig;
 use PDO;
 
 /**

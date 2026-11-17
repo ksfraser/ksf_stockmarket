@@ -1,0 +1,516 @@
+###############################################################################
+# config.yaml v3 — Investment Agent Configuration
+#
+# Architecture: SLEEVES not consensus. Each strategy is a separate allocation
+# bucket with its own signals, time horizon, and exit rules. The Blender
+# decides how much capital goes to each sleeve, not how signals are averaged.
+#
+# Every numeric value here is a config variable. Research-backed defaults.
+# GA/NN/RL will optimize subsets.
+###############################################################################
+version: "3.0"
+last_updated: "2025-05-30"
+
+#═══════════════════════════════════════════════════════════════════════════
+# ACCOUNTS
+#═══════════════════════════════════════════════════════════════════════════
+accounts:
+  tfsa:
+    initial_balance:          20000.0    # CAD
+    annual_room:              7000.0     # 2024 limit (indexed yearly)
+    room_inflation:           0.03
+    withdraw_tax_rate:        0.0        # Tax-free
+    contribution_type:        "after-tax"  # no deduction
+
+  rrsp:
+    initial_balance:          30000.0
+    annual_room:              6000.0     # based on prior year earned income
+    withdraw_tax_rate:        0.25       # effective in retirement (lower bracket)
+    withdraw_marginal_rate:   0.39       # current marginal rate (if withdrawn now)
+    # RRSP deregistration / withdrawal strategy:
+    # During low-income years, withdraw from RRSP at lower tax and
+    # immediately TFSA-contribute the after-tax proceeds.
+    # Cost = income tax on withdrawal + administrative fees.
+    deregistration:
+      enabled:                true
+      withholding_tax_rate:   0.10       # 10% on first $5K, scales up
+      cibc_transfer_fee:       0.0       # $0 cash withdrawal, $150 in-kind transfer
+      min_income_threshold:    55000.0    # only trigger if income < this
+      max_annual_withdrawal:   35000.0    # keep within lower bracket
+      target_income_bracket:   1          # aim for 1st bracket if possible
+      tfsa_sweep:              true       # auto-contribute to TFSA after withdrawal
+    withdrawal_order:         2          # 2nd priority (after TFSA) unless dereg
+
+  margin:
+    initial_balance:          0.0
+    available_credit:         50000.0
+    daily_interest_rate:      0.0002     # ~7.3% annual
+
+#═══════════════════════════════════════════════════════════════════════════
+# RETIREMENT GOAL
+#═══════════════════════════════════════════════════════════════════════════
+retirement:
+  horizon_years:              10
+  start_year:                 2025
+  annual_withdrawal:          12000.0    # Dec withdrawal for living expenses
+  annual_withdrawal_growth:   0.02       # keep pace with inflation
+  withdrawal_month:           12
+  target_terminal_value:      250000.0   # minimum portfolio at retirement
+  income_tax_bracket:         3          # current: 3rd bracket
+  province:                   "AB"
+  # Income during transition may drop — model this for RRSP dereg strategy
+  income_trajectory:          "declining"  # "stable", "declining", "rising"
+  income_trajectory_rate:     -0.05       # -5% per year (part-time transition)
+
+#═══════════════════════════════════════════════════════════════════════════
+# SLEEVE DEFINITIONS — competing strategies in separate allocation buckets
+# Each sleeve has its own signal set, holding period, and exit rules.
+#═══════════════════════════════════════════════════════════════════════════
+sleeves:
+
+  # ── CORE: Buffett Quality (long-term, fundamentals-heavy) ──
+  core_buffett:
+    enabled:                  true
+    allocation_pct:           0.40       # 40% of investable capital
+    target_account:           "TFSA"     # long-term growth in tax shelter
+    time_horizon_years:       [3, 10]    # buy and hold
+    rebalance_frequency_days: 365        # annual check only
+
+    screener:
+      # These override the global screener for this sleeve
+      min_roe:                0.15       # 5yr avg ROE > 15% (Buffett's #1 filter)
+      min_roic:               0.12       # return on invested capital
+      max_debt_equity:        0.30       # very conservative balance sheet
+      min_gross_margin:       0.40       # wide moat indicator
+      min_fcf_5yr_streak:     5          # positive FCF every year, 5 years
+      min_revenue_growth_3y:  0.03       # growing top line
+      max_pe:                 25.0       # not overpaying
+      min_div_yield:          0.01       # some dividend nice but not required
+      min_market_cap:         5.0e9      # $5B+ — large, stable companies
+      max_beta:               1.2        # not hyper-volatile
+      avoid_sectors:          []         # no sector exclusions for core
+
+    signals:
+      primary:                "fundamentals"   # not technicals
+      entry:                  "anytime_dca"    # don't time, just DCA in
+      entry_dca_days:         [0, 10, 20]     # 3 tranches over a month
+      # Weak technical filters only for sanity (don't buy tumbling knife)
+      avoid_if_rsi_below:     20        # unless RSI < 20 (contrarian value)
+      avoid_if_bb_lower:      true      # don't add if today's close below lower BB
+      require_adx_above:      15        # avoid if trendless
+
+    exit:
+      exit_on_roe_drop:       true      # exit if ROE falls below 10%
+      exit_on_debt_rise:      true      # exit if D/E exceeds 0.6
+      exit_on_fcf_negative:   true      # exit if FCF turns negative
+      trailing_stop_atr_mult: 3.0       # wide stop — this is long-term
+      hold_minimum_days:      365       # don't flip
+      tax_loss_harvest:       true      # Dec harvest if unrealized loss > 10%
+
+    position_sizing:
+      model:                  "equal_weight"
+      max_single_position:    0.20       # 20% max in one stock
+      max_positions:          10         # 10 names = concentrated conviction
+
+    # What exchange geography this sleeve prefers
+    min_cdn_pct:              0.50       # Buffett loves Canadian banks, pipelines
+    max_us_pct:               0.50
+    max_intl_pct:             0.10
+    forex_aware:              true       # adjust for USD/CAD when shifting US/CA
+
+  # ── TACTICAL: 60-day Swing (technicals + decent fundamentals) ──
+  tactical_swing:
+    enabled:                  true
+    allocation_pct:           0.30       # 30%
+    target_account:           "RRSP"     # shelter from frequent trading
+    time_horizon_days:        [30, 90]   # hold 1-3 months
+    rebalance_frequency_days: 30         # monthly review
+
+    screener:
+      # Decent company + reasonable volatility
+      min_roe:                0.10       # okay but not demanding
+      max_debt_equity:        0.8        # more relaxed
+      min_gross_margin:       0.25
+      min_fcf_5yr_streak:     2          # 2 of 5 years positive
+      min_market_cap:         1.0e9      # $1B+
+      min_volatility_annual:  0.20       # min 20% annual vol (need movement)
+      max_volatility_annual:  0.50       # max 50% annual vol (no crazy)
+      min_avg_volume:         200000     # need liquidity for entry/exit
+      avoid_sectors:          ["Utilities", "REITs"]  # too slow for swing
+
+    signals:
+      primary:                "technicals"
+      # Entry triggers (all must agree)
+      entry:
+        bb_position_max:      0.3        # price near or below lower BB (30th pctile)
+        rsi_max:              35         # oversold but not dead
+        macd_cross:           "bullish"  # MACD > signal
+        adx_min:              20         # trending (not choppy)
+        volume_confirm:       true       # volume > 50d avg
+        linreg_slope:         "rising"   # LinReg angle > 0
+        tsf_above:            true       # price above time series forecast
+
+      # What indicators to use for exit
+      exit:
+        rsi_exit_above:       65         # overbought
+        macd_cross_bear:      true       # MACD < signal = exit trigger
+        bb_upper_touch:       true       # price at upper BB
+        profit_target_pct:    0.08       # 8% gain target
+        loss_limit_pct:       -0.03      # 3% stop loss
+        time_stop_days:       60         # exit if no movement in 60 days
+
+      # Indicator horizons (from correlation study)
+      lookback_short:         3          # BB position, short-term mean
+      lookback_medium:        20         # RSI, MACD, ADX
+
+    position_sizing:
+      model:                  "atr_risk"
+      atr_stop_mult:          1.5        # tighter stops for swing
+      max_risk_per_trade:     0.01       # 1% risk
+      max_positions:          8          # more names, smaller sizes
+      max_sector:             0.40
+
+    min_cdn_pct:              0.20
+    max_us_pct:               0.60
+    max_intl_pct:             0.20
+    forex_aware:              true
+
+  # ── INCOME: Dividend Star Strategy (yield + growth) ──
+  income_dividend:
+    enabled:                  true
+    allocation_pct:           0.20       # 20%
+    target_account:           "MARGINAL" # eligible divs get DTC in marginal
+    time_horizon_years:       [1, 5]     # longer-term income
+    rebalance_frequency_days: 90         # quarterly = dividend cycle
+
+    screener:
+      min_div_yield:          0.025      # > 2.5% yield
+      max_payout_ratio:       0.75       # sustainable
+      min_div_years_streak:   5          # 5+ consecutive years paying
+      min_div_growth_5y:      0.03       # 3% annual dividend growth
+      min_roe:                0.10
+      max_debt_equity:        0.60
+      min_market_cap:         2.0e9      # $2B+
+      max_pe:                 25.0
+      # Dividend frequency matters for cash flow timing
+      require_quarterly_plus: true       # at least quarterly, monthly preferred
+
+    signals:
+      primary:                "dividend_calendar"
+      # Dividend calendar — map ex-div dates across portfolio
+      div_calendar:
+        lookahead_days:       90        # plan 3 quarters
+        enter_before_ex_div:  5         # buy 5 days before ex-div (capture)
+        exit_after_ex_div:    false     # don't sell right after ex-div
+        min_yield_on_cost:    0.025     # sell if yield on cost drops below 2.5%
+
+      # Also check quality isn't deteriorating
+      quality_check:
+        exit_if_earnings_drop:  0.20     # >20% earnings drop = red flag
+        exit_if_payout_above:   0.85     # unsustainable payout
+        exit_if_div_cut:        true     # automatic exit on dividend cut
+
+      entry:
+        dca_enabled:          true
+        dca_installments:     2         # 2 tranches over 10 days
+
+      exit:
+        trailing_stop_atr_mult: 2.0     # moderate
+        yield_on_cost_exit_below: 0.015 # exit if yield on cost < 1.5%
+
+    position_sizing:
+      model:                  "yield_weighted"  # higher yield = larger position
+      max_single_position:    0.15
+      max_positions:          12        # more names for diversification
+
+    min_cdn_pct:              0.40       # Canadian eligible dividends preferred
+    max_us_pct:               0.40
+    max_intl_pct:             0.20
+    forex_aware:              true
+
+  # ── SATELLITE: Speculative (conviction, high-vol, options) ──
+  satellite_spec:
+    enabled:                  true
+    allocation_pct:           0.10       # 10%
+    target_account:           "TFSA"     # limit downside in shelter
+    time_horizon_days:        [7, 180]   # shortest hold period
+    rebalance_frequency_days: 7          # weekly for fast-moving
+
+    screener:
+      min_market_cap:         5.0e8      # $500M+ (no micro-caps)
+      min_avg_volume:         100000
+      min_volatility_annual:  0.30       # want high vol
+      min_roe:                0.05       # lower quality OK in satellite
+      min_options_volume:     100        # options need liquidity
+
+    signals:
+      primary:                "momentum"
+      # Earnings plays, breakouts, mean-reversion
+      entry:
+        momentum_12m_min:     0.20       # 12-month momentum > 20%
+        earnings_beat:        true       # recent earnings surprise
+        iv_percentile_entry:  25         # buy options when IV cheap
+        breakout_52w:         "testing"  # price testing 52-week high
+        high_put_call:        true       # unusual options activity
+
+      exit:
+        profit_target_pct:    0.25       # 25% asymmetric target
+        loss_limit_pct:       -0.08      # 8% stop (wider for vol)
+        time_stop_days:       30         # fast moves or get out
+        conviction_drop_exit: true
+
+      options:
+        enabled:              true
+        max_options_pct:      0.50       # 50% of satellite in options
+        strategies:
+          covered_calls:      true      # on existing positions
+          cash_secured_puts:  true     # on high-conviction watchlist names
+        min_expiry_days:      30
+        max_expiry_days:      90
+        target_delta:         0.30      # 30 delta for CSP, 0.15 for CC
+
+    position_sizing:
+      model:                  "kelly_fractional"  # fractional Kelly
+      kelly_fraction:         0.25       # quarter Kelly (conservative)
+      max_single_position:    0.30       # concentrated in satellite OK
+      max_positions:          5
+
+    min_cdn_pct:              0.10
+    max_us_pct:               0.70
+    max_intl_pct:             0.20
+    forex_aware:              true
+
+#═══════════════════════════════════════════════════════════════════════════
+# LAYER 0 — GLOBAL SCREENER (applies basic filter before sleeve-specific)
+#═══════════════════════════════════════════════════════════════════════════
+screener:
+  symbol_source:              "currentdata_html"   # 404 symbols from CurrentData/
+  cibc_eligible:              true
+
+  # Hard filters — nothing passes without these
+  min_price:                  5.0        # no penny stocks
+  min_avg_volume:             100000     # 3-month avg shares/day
+  min_market_cap:             5.0e8      # $500M minimum
+  max_price:                  5000.0     # sanity cap
+
+  # Exchange eligibility
+  exchanges_allowed:          ["TSX", "TSXV", "NYSE", "NASDAQ", "AMEX"]
+  exchanges_forbidden:        ["OTC", "PINK", "OTCBB"]
+
+  # News scanning
+  news_scan:
+    enabled:                  true
+    lookback_days:            14
+    flag_earnings:            true       # earnings within 30 days
+    flag_insider_buys:        true       # insider buying = bullish
+    flag_regulatory:          true       # FDA, SEC, etc.
+    flag_mergers:             true       # M&A activity
+
+#═══════════════════════════════════════════════════════════════════════════
+# LAYER 1 — SIGNAL ENGINE (per-sleeve, multi-horizon)
+#═══════════════════════════════════════════════════════════════════════════
+signals:
+  # Shared indicator horizons — from correlation study
+  horizon_short_days:         3
+  horizon_medium_days:        20
+  horizon_dividend_days:       90
+
+  # Regime filter (filters all sleeves)
+  adx_min_for_trend:          20
+  vix_max_for_entry:          30
+  market_regime_check:        true       # SPY trend > 200d MA = bull market
+
+  # Exit/sell signal rules (InvestorsObserver 18 warning signs coverage)
+  exit_signals:
+    # 1. Technical trailing stops (covers: price drop 10-15%, stagnation, overbought)
+    trailing_stop_atr_mult_core:      3.0      # core sleeve: wide stop
+    trailing_stop_atr_mult_tactical:  1.5      # tactical: tight stop
+    trailing_stop_atr_mult_income:    2.0      # income: moderate
+    trailing_stop_atr_mult_satellite: 2.0      # satellite: wider for vol
+    rsi_exit_above:                   65       # overbought exit (tactical)
+    bb_upper_touch_exit:              true     # exit at upper Bollinger Band
+    time_stop_days_core:              365      # max hold without action
+    time_stop_days_tactical:          60
+    time_stop_days_income:            180
+    time_stop_days_satellite:         30
+
+    # 2. Fundamental deterioration (covers: falling earnings, dividend cuts, FCF burn)
+    exit_on_roe_drop_below:           0.10     # core: ROE < 10%
+    exit_on_debt_equity_above:        0.60     # core: D/E > 0.6
+    exit_on_fcf_negative:             true     # core: FCF turns negative
+    exit_if_earnings_drop_pct:        0.20     # income: >20% earnings drop
+    exit_if_payout_above:             0.85     # income: unsustainable payout
+    exit_on_dividend_cut:             true     # income: auto-exit on cut
+    min_yield_on_cost_exit:           0.015    # income: yield on cost < 1.5%
+
+    # 3. Valuation extremes (covers: P/E too high, stock "discovered")
+    max_pe_core:                      25.0
+    max_pe_tactical:                  30.0
+    max_pe_income:                    25.0
+    max_pe_satellite:                 40.0
+    price_vs_ma200_exit_below:        0.95     # exit if >5% below 200d MA
+
+    # 4. Insider/corporate signals (covers: insider selling, bad acquisitions)
+    exit_on_insider_selling_pct:      0.50     # exit if >50% insider trades are sells (90d)
+    flag_corporate_events:            true     # M&A, delisting, bankruptcy filings
+
+    # 5. Sector/relative strength (covers: industry problems, too big for growth)
+    sector_relative_strength_min:     -0.10    # exit if sector underperforms by >10%
+    max_market_cap_growth_sleeve:     50e9     # satellite: avoid mega-caps for growth
+
+    # 6. Cash burn / financial distress (covers: burning cash, declining sales)
+    min_fcf_yield:                    0.02     # exit if FCF yield < 2%
+    max_debt_to_ebitda:               4.0      # exit if Debt/EBITDA > 4x
+
+#═══════════════════════════════════════════════════════════════════════════
+# SYMBOL MAPPING — for backtesting continuity across ticker changes
+#═══════════════════════════════════════════════════════════════════════════
+symbol_mapping:
+  # old_symbol -> new_symbol (for historical continuity in backtests)
+  "RNK":           "RNK"           # Rainmaker Entertainment - delisted 2013 (no successor)
+  "RNK-UN.TO":     "REI-UN.TO"     # Was misclassified; RioCan is REI-UN.TO (still active)
+  "SIF-UN.TO":     "SIA.TO"        # Sienna Senior Living - ticker change
+  "TOC.TO":        "TRI.TO"        # Thomson Reuters - ticker change
+  "UPL":           "UPL"           # Ultra Petroleum - bankrupt (no successor)
+  "VMW":           "AVGO"          # VMware acquired by Broadcom
+  "UTX":           "RTX"           # United Tech merged with Raytheon
+  "WYE":           "PFE"           # Wyeth acquired by Pfizer
+  "XTO":           "XOM"           # XTO Energy acquired by ExxonMobil
+  "SWY":           "SWY"           # Safeway merged with Albertsons (private)
+  "TSX:MFC.PR.L":  "MFC.PR.L.TO"   # Manulife preferred - symbol format change
+  "TSX:VITL.UN":   "VITL.UN.TO"    # Vital Trust - symbol format change
+
+#═══════════════════════════════════════════════════════════════════════════
+# LAYER 2 — MONEY MANAGEMENT
+#═══════════════════════════════════════════════════════════════════════════
+money_management:
+  max_portfolio_risk:         0.08       # 8% total portfolio heat
+  cash_buffer_pct:            0.05       # always keep 5% cash
+  emergency_dd_threshold:     0.25       # >25% DD → shift 30% cash
+  emergency_shift_pct:        0.30
+
+#═══════════════════════════════════════════════════════════════════════════
+# PORTFOLIO CONSTRUCTION
+#═══════════════════════════════════════════════════════════════════════════
+portfolio:
+  # Forex-aware geographic allocation
+  # These are CONSTRAINTS, not targets. GA optimizes within them.
+  forex:
+    track_forex:              true
+    usdcad_symbol:            "USDCAD=X"  # yfinance
+    # When CAD depreciates (USD rises), US assets are more expensive to buy.
+    # When USD assets rise AND CAD depreciates, CAD-equivalent return is amplified.
+    # GA signal: shift US allocation +5% when USD/CAD 20d trend is rising.
+    trend_signal_enabled:     true
+    trend_lookback_days:      20
+    shift_per_trend_signal:   0.05       # +/- 5% shift per forex signal
+    # Max exposure to non-CAD before the cost of hedging outweighs benefit
+    max_non_cad_exposure:     0.50
+
+  tax_loss_harvest:
+    enabled:                  true
+    tlh_month:                12
+    min_loss_pct:             0.05
+    max_harvest_per_year:     10000.0   # max capital loss to realize
+
+#═══════════════════════════════════════════════════════════════════════════
+# GA OPTIMIZER
+#═══════════════════════════════════════════════════════════════════════════
+ga:
+  population_size:            200
+  generations:                100
+  crossover_prob:             0.7
+  mutation_prob:              0.2
+  elitism:                    true
+  elite_pct:                  0.05
+  # GA optimizes: sleeve weights, symbol selection, position sizing,
+  # DCA schedule, hold period, and forex adjustment factor
+  fitness_objective:          "after_tax_terminal_value"
+  penalty_drawdown:           2.0
+  penalty_cash_depletion:     10.0      # 10x penalty if portfolio hits $0
+  n_workers:                  4
+
+#═══════════════════════════════════════════════════════════════════════════
+# NN (PyTorch LSTM)
+#═══════════════════════════════════════════════════════════════════════════
+nn:
+  model:                      "LSTM"
+  input_features:             120       # indicators
+  lookback_days:              60        # 3 months daily data
+  predict_horizon:            20        # predict 20d forward return
+  hidden_size:                128
+  num_layers:                 2
+  dropout:                    0.2
+  batch_size:                 64
+  epochs:                     50
+  learning_rate:              0.001
+  uncertainty_head:           true      # predict return distribution, not point
+
+#═══════════════════════════════════════════════════════════════════════════
+# RL (SB3 PPO)
+#═══════════════════════════════════════════════════════════════════════════
+rl:
+  algorithm:                  "PPO"
+  timesteps:                  100000
+  learning_rate:              0.0003
+  n_steps:                    2048
+  batch_size:                 64
+  gamma:                      0.99
+  gae_lambda:                 0.95
+  clip_range:                 0.2
+  reward_function:            "after_tax_pnl_minus_costs"
+
+#═══════════════════════════════════════════════════════════════════════════
+# BLENDER
+#═══════════════════════════════════════════════════════════════════════════
+blender:
+  # Blender optimizes SLEEVE allocations, not signal weights
+  ga_sleeve_weight:          0.50       # GA drives sleeve static allocation
+  nn_tactical_weight:        0.30       # NN drives hold-period timing
+  rl_dynamic_weight:         0.20       # RL drives rebalancing decisions
+  rebalance_interval_days:   90         # re-blend quarterly
+
+#═══════════════════════════════════════════════════════════════════════════
+# BACKTESTING
+#═══════════════════════════════════════════════════════════════════════════
+backtesting:
+  walk_forward:               true
+  train:                      "1990-2018"
+  test:                       "2019-2024"
+  step_forward_days:          252
+  transaction_cost:           9.95
+  slippage_pct:               0.001
+  fill_model:                 "midpoint"
+  benchmark:                  "XIC.TO"
+
+#═══════════════════════════════════════════════════════════════════════════
+# ── SECRETS (Ansible Vault) ───────────────────────────────────────────────
+# db_password and other secrets are stored in an encrypted vault file.
+# vault_password_file is chmod 600 and owned by ksf_stockmarket.
+vault:
+  vault_path: "group_vars/vault.yml"
+  vault_password_file: "/home/ksf_stockmarket/.vault_pass"
+
+# DATA & LOGGING
+#═══════════════════════════════════════════════════════════════════════════
+data:
+  price_source:               "yfinance"
+  fundamental_source:         "yfinance"
+  forex_source:               "yfinance"
+  options_source:             "yfinance"
+  db_host:                    "ksfraser.ca"
+  db_name:                    "ksfraser_stock_market"
+  db_user:                    "ksfraser_stockmarket"
+  backup_dir:                 "/root/.hermes/workspace/ksf_stockmarket/backups/"
+
+# ZACKS RESEARCH WIZARD IMPORT
+#════════════════════════════════
+zacks_rw:
+  inputs_dir:                 "/root/Inputs"     # .und/.rpd corpus directory
+  import_owner:               "zacks_rw"         # system user owning imported screens
+  max_rules_per_screen:       0                  # 0 = store all rules
+
+logging:
+  level:                      "INFO"
+  log_dir:                    "/root/.hermes/workspace/ksf_stockmarket/logs/"
+  alert_on_drawdown:          0.05

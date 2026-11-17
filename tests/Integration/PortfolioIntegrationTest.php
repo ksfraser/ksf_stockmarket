@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Ksf\StockMarket\Tests\Integration;
+namespace ksfraser\StockMarket\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
-use Ksf\StockMarket\Model\Portfolio;
-use Ksf\StockMarket\Model\Database;
+use ksfraser\StockMarket\Model\Portfolio;
+use ksfraser\StockMarket\Model\Database;
 
 /**
  * Integration tests for the Portfolio model.

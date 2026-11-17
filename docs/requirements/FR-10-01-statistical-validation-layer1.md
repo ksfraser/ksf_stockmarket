@@ -1,23 +1,15 @@
 # FR-10-01: Statistical Validation — Automatic Baseline Layer
 
-## Requirement
-The system shall automatically compute statistical validation metrics for every
-symbol during the daily scoring cycle, without requiring analyst or LLM intervention.
+**Parent requirements**: FR-10-01 (this document), FR-11 (LLM fundamental data), FR-12 (RW formula advisors), FR-16 (timing-aware backtesting).
 
-## Rationale (BR-3)
-Consistent, comparable quantitative data across the full symbol universe is
-required before any advisor or LLM adds interpretation. This layer is the
-evidence floor that Layers 2 and 3 build upon.
-
-## Tests Run
-| Test | Purpose | Null Hypothesis |
-|------|---------|----------------|
-| One-sample t-test | Mean daily return ≠ 0 | μ = 0 |
-| Jarque-Bera | Return distribution normality | Normal |
-| ADF stationarity | Return mean-reversion vs trend | Unit root |
-
-## Position Sizing
-Half-Kelly fraction `f* = 0.5 × (μ / σ²)` capped at 2% of capital per position.
+**Related test outlines**:
+- `docs/requirements/UT-10-01-001-statistical-validation-basic.md` — this requirement
+- `docs/requirements/UT-10-02-001-route-hypothesis-keywords.md` — FR-10-02
+- `docs/requirements/UT-11-06-llm-admin-console.md` — FR-11.6 LLM admin console
+- `docs/requirements/UT-11-llm-fundamental-data.md` — FR-11 LLM data tables
+- `docs/requirements/UT-12-rw-formula-advisors.md` — FR-12 RW formula advisors
+- `docs/requirements/UT-14-zacks-rw-pipeline.md` — FR-14 Zacks RW
+- `docs/requirements/UT-16-timing-backtesting.md` — FR-16 timing-aware backtesting
 
 ## Priority
 Must Have

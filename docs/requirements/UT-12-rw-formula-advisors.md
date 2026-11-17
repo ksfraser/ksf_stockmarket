@@ -1,107 +1,127 @@
-# Unit Test Outline: UT-12 — RW Formula Advisors
+# Unit Test Outline — Research Wizard Formula Advisors (UT-12)
 
-## Requirement Coverage
-- FR-12: Research Wizard Formula Integration
-- BR-8: Zacks / Research Wizard Pre-Defined Filter Integration
+Test the RwFormulaParser integration and formula-based advisor picking.
 
-## Preconditions
-- Test database with `symbol_master` and `stockprices` tables populated with test symbols
-- RW formula parser module available
-- Formula cache mechanism available
+## UT-12-001: RwFormulaParser parses field ref with time-lag offset
 
-## Test Cases
+**Given** formula string `i95 > i95[Recent-4Q]`
 
-### TC-12-01: Parse simple comparison formula
-**Given** the RW formula parser
-**When** parsing "price GT 10"
-**Then** the parser produces an AST representing: field='price', op='GT', literal=10
-**And** parse time is < 100ms
+**When** `RwFormulaParser::parse()` is called
 
-### TC-12-02: Parse compound AND formula
-**Given** the RW formula parser
-**When** parsing "price GT 10 AND volume GT 1000000"
-**Then** the parser produces an AST with AND node having two comparison children
-**And** field references are preserved for resolution
+**Then** the AST contains a BinaryNode with operator '>', left FieldNode code=95, right FieldNode code=95 with timeframe Recent-4Q
 
-### TC-12-03: Parse compound OR formula
-**Given** the RW formula parser
-**When** parsing "pe_ratio LT 15 OR dividend_yield GT 3"
-**Then** the parser produces an AST with OR node having two comparison children
+## UT-12-002: RwFormulaParser parses MovingMean call
 
-### TC-12-04: Parse nested parentheses
-**Given** the RW formula parser
-**When** parsing "(price GT 10 AND volume GT 1000000) OR zacks_rank LTE 2"
-**Then** the parser produces an AST respecting parentheses precedence
-**And** the AND group is a child of the OR node
+**Given** formula string `MovingMean2(i5) > MovingMean4(i5)`
 
-### TC-12-05: Parse NOT operator
-**Given** the RW formula parser
-**When** parsing "NOT (zacks_rank GT 3)"
-**Then** the parser produces an AST with NOT node wrapping the comparison
+**When** `RwFormulaParser::parse()` is called
 
-### TC-12-06: Field resolution - price
-**Given** the field resolver
-**When** resolving field name 'price'
-**Then** it maps to stockprices.close (latest bar close price)
+**Then** the AST contains CallNodes for MovingMean2 and MovingMean4 with argument FieldNode code=5
 
-### TC-12-07: Field resolution - zacks_rank
-**Given** the field resolver
-**When** resolving field name 'zacks_rank'
-**Then** it maps to zacks_broker_recommendations.zacks_rank or equivalent table
+## UT-12-003: RwFormulaParser parses scoped reference
 
-### TC-12-08: Field resolution - rsi_14
-**Given** the field resolver
-**When** resolving field name 'rsi_14'
-**Then** it maps to ta_values where indicator = 'rsi_14' for the symbol
+**Given** formula string `i13[,qqq] > 0`
 
-### TC-12-09: Execute formula against test universe
-**Given** a test universe of 20 symbols with known price, volume, pe_ratio, zacks_rank values
-**And** a parsed formula "price GT 50 AND zacks_rank LTE 2"
-**When** the formula is executed against the universe
-**Then** only symbols with price > 50 AND zacks_rank <= 2 are returned
-**And** the evaluate time for 2000 symbols is < 30 seconds
+**When** `RwFormulaParser::parse()` is called
 
-### TC-12-10: Formula caching
-**Given** the same formula parsed twice
-**When** the cache is queried with the formula text hash
-**Then** the second parse returns the cached AST
-**And** cache hit time is < 10ms
+**Then** the AST contains FieldNode code=13 with scope='qqq'
 
-### TC-12-11: Advisor loads RW formula as screening criteria
-**Given** an RWFormulaAdvisor configured with formula "price GT 10 AND volume GT 1000000"
-**When** the advisor's screen() method is called with a universe
-**Then** the advisor returns only symbols matching the formula
-**And** the advisor's pick() method selects from the screened results
+## UT-12-004: RwFormulaParser parses AND/OR grouping
 
-### TC-12-12: Multiple advisors with different formulas
-**Given** advisor A with formula "pe_ratio LT 15"
-**And** advisor B with formula "price GT 100 AND zacks_rank LTE 2"
-**When** both advisors screen the same universe
-**Then** advisor A returns different results than advisor B
-**And** each advisor's results match its own formula
+**Given** formula string `i22 >= i22[Recent-1W] And i22[Recent-1W] >= i22[Recent-2W]`
 
-### TC-12-13: Invalid formula rejection
-**Given** the RW formula parser
-**When** parsing an invalid formula (unmatched parentheses, unknown operator)
-**Then** the parser raises a parse error
-**And** the error message indicates the issue (without leaking sensitive data)
+**When** `RwFormulaParser::parse()` is called
 
-### TC-12-14: Formula editor preview
-**Given** a user pastes formula "price GT 10" into the formula editor UI
-**When** the user clicks Preview
-**Then** the UI shows a list of symbols matching the formula
-**And** the preview loads in < 5 seconds
+**Then** the AST is a BoolNode with op='and' and two BinaryNode children
 
-## Postconditions
-- Parser handles all required syntax elements
-- Field resolver maps all required RW field names
-- Formula evaluate is performant (< 30s for 2000 symbols)
-- Caching works correctly
-- Multiple advisors with different formulas produce different results
+## UT-12-005: RwFormulaParser parses coalesce fallback
 
-## Related
-- FR-12: Research Wizard Formula Integration
-- BR-8: Zacks / Research Wizard Pre-Defined Filter Integration
-- `docs/advisors/REQUIREMENTS_DESIGN.md` §Research Wizard Formula Integration
-- `docs/architecture/architecture-document.md` §10.6
-- `docs/architecture/stock-filter-engine.md` §11
+**Given** formula string `(1/(i192=1)) | (3/(i192=2))`
+
+**When** `RwFormulaParser::parse()` is called
+
+**Then** the AST contains BinaryNodes with operator '|' for the coalesce chain
+
+## UT-12-006: ZacksFieldResolver binds known field codes
+
+**Given** field codes 5 (close), 19 (beta), 192 (zacks_rank)
+
+**When** `ZacksFieldResolver::spec()` is called for each
+
+**Then** each returns a non-null spec with source, key, and approx flag
+
+## UT-12-007: ZacksFieldResolver returns null for unknown field codes
+
+**Given** a field code not in SPECS (e.g. 9999)
+
+**When** `ZacksFieldResolver::spec()` is called
+
+**Then** the method returns null (caller should skip this field)
+
+## UT-12-008: Formula engine evaluates simple field comparison
+
+**Given** formula `i5 > 100` (close > 100), symbol data with close=150
+
+**When** the formula engine evaluates against the symbol
+
+**Then** the result is true (symbol passes the filter)
+
+## UT-12-009: Formula engine evaluates field comparison fails
+
+**Given** formula `i5 > 100`, symbol data with close=50
+
+**When** the formula engine evaluates against the symbol
+
+**Then** the result is false (symbol fails the filter)
+
+## UT-12-010: Formula engine skips unknown field codes
+
+**Given** formula `i9999 > 0` (unknown field code)
+
+**When** the formula engine evaluates against any symbol
+
+**Then** the field is skipped with a report entry; the symbol is not filtered out (neutral), and fully_executed=false
+
+## UT-12-011: Formula engine evaluates AND group
+
+**Given** formula `i5 > 50 And i19 < 2.0`, symbol data with close=100, beta=1.5
+
+**When** the formula engine evaluates against the symbol
+
+**Then** the result is true (both conditions pass)
+
+## UT-12-012: Formula engine evaluates OR group
+
+**Given** formula `i5 > 200 Or i19 < 1.0`, symbol data with close=100, beta=0.8
+
+**When** the formula engine evaluates against the symbol
+
+**Then** the result is true (second condition passes, OR is satisfied)
+
+## UT-12-013: Formula engine with time-lag offset evaluates correctly
+
+**Given** formula `i5 > i5[Recent-4Q]`, symbol data with current close=150 and 4-quarters-ago close=100
+
+**When** the formula engine evaluates against the symbol
+
+**Then** the result is true (150 > 100)
+
+## UT-12-014: Advisor stores formula in profile_json
+
+**Given** an advisor with formula-based picking
+
+**When** the advisor account is saved
+
+**Then** profile_json contains picking.formula (the formula string) and picking.method='rw_formula'
+
+## UT-12-015: Advisor picking runs formula against universe
+
+**Given** an advisor with a valid formula and a universe of 100 symbols
+
+**When** the advisor picking runs
+
+**Then** the formula is parsed once, field codes are bound via ZacksFieldResolver, the AST is evaluated per symbol, and matching symbols are returned with a skipped report if any fields were unavailable
+
+---
+
+*Prerequisite test infrastructure:* `tests/Unit/RwFormulaAdvisorTest.php` — new file. Reuses the existing `RwFormulaParser` and `ZacksFieldResolver` from `ksfraser/research-wizard-reader`. Formula evaluation tests need a small hand-built symbol data array (mimicking the data sources the resolver returns). The advisor profile_json tests need the advisor_accounts table or a mock.

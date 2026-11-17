@@ -1,100 +1,95 @@
-# Unit Test Outline: UT-16 — Timing Backtesting
+# Unit Test Outline — Timing-Aware Backtesting (UT-16)
 
-## Requirement Coverage
-- FR-16: Timing Variables in Advisor Control Plane
-- BR-10: Timing-Aware Backtesting
+Test timing dimension capture and aggregation in the backtest engine.
 
-## Preconditions
-- Test database with historical price data for at least 2 years
-- Backtest engine available (optimize.py, five_year_backtest.py)
-- Test universe of symbols with known market cap tiers
+## UT-16-001: Backtest captures day_of_week per trade
 
-## Test Cases
+**Given** a backtest simulation with 10 trades on known dates
 
-### TC-16-01: Backtest with default timing (no timing filters)
-**Given** a backtest configuration with no timing variables set
-**When** the backtest runs for a 1-year period
-**Then** trades are executed on any day of the week
-**And** the result includes win rate, Sharpe, max drawdown, total return
+**When** the backtest engine records each trade
 
-### TC-16-02: Backtest with entry day-of-week filter
-**Given** a backtest configuration with entry_day_of_week = 3 (Thursday)
-**When** the backtest runs
-**Then** entries are only executed on Thursdays
-**And** exits are not restricted by day-of-week (default)
+**Then** each trade's timing_buckets row has the correct day_of_week (Mon=1..Fri=5) derived from the trade date
 
-### TC-16-03: Backtest with exit day-of-week filter
-**Given** a backtest configuration with exit_day_of_week = 1 (Tuesday)
-**When** the backtest runs
-**Then** exits are only executed on Tuesdays
-**And** entries are not restricted by day-of-week (default)
+## UT-16-002: Backtest captures period_of_month per trade
 
-### TC-16-04: Backtest with both entry and exit day-of-week filters
-**Given** entry_day_of_week = 3 (Thursday) and exit_day_of_week = 1 (Tuesday)
-**When** the backtest runs
-**Then** entries only on Thursdays, exits only on Tuesdays
-**And** the result reflects the timing-constrained trade schedule
+**Given** a backtest with trades on day 5 (early), day 15 (mid), day 25 (late)
 
-### TC-16-05: Backtest with entry week-of-month filter
-**Given** entry_week_of_month = 1 (first week of month)
-**When** the backtest runs
-**Then** entries are only allowed during the first week of each month
-**And** entries in other weeks are skipped
+**When** the backtest engine records each trade
 
-### TC-16-06: Backtest with market-cap-aware position sizing
-**Given** a configuration with market_cap_position_limit = {micro: 2, small: 3, mid: 4, large: 5}
-**When** the backtest runs and enters positions in stocks of different cap tiers
-**Then** micro-cap positions are capped at 2% of portfolio
-**And** large-cap positions are capped at 5% of portfolio
-**And** no position exceeds its tier limit
+**Then** the timing_buckets rows have period_of_month = early, mid, late respectively
 
-### TC-16-07: Backtest with max_position_pct cap
-**Given** max_position_pct = 3
-**When** the backtest enters a position in a large-cap stock (tier limit = 5%)
-**Then** the position is capped at 3% (the max_position_pct override)
-**And** no position exceeds 3% of portfolio value
+## UT-16-003: Backtest captures near_month_end flag
 
-### TC-16-08: Backtest with sector rotation enabled
-**Given** sector_rotation_enabled = TRUE and sector_momentum_lookback = 50
-**When** the backtest runs
-**Then** entries are only allowed in sectors with positive 50-day momentum
-**And** positions in sectors with fading momentum are reduced or exited
+**Given** trades on day 28, 29, 30, 31 of a 31-day month
 
-### TC-16-09: Timing scenario comparison report
-**Given** backtest results for 3 timing scenarios (default, Thu entry/Tue exit, Mon entry/Fri exit)
-**When** the comparison report is generated
-**Then** the report shows win rate, Sharpe, max drawdown, and total return for each scenario
-**And** the scenarios are comparable side by side
+**When** the backtest engine records each trade
 
-### TC-16-10: Timing optimization scan - day-of-week
-**Given** a backtest configuration and a 1-year historical period
-**When** the optimization scan runs all 25 day-of-week combinations (5 entry x 5 exit)
-**Then** all 25 scenarios complete
-**And** the total scan time is < 10 minutes
-**And** the best Sharpe ratio scenario is identified
+**Then** near_month_end = 1 for days 28-31 (within 3 days of month end); near_month_end = 0 for other days
 
-### TC-16-11: Advisor control plane stores timing config
-**Given** an advisor with timing_config JSON column
-**When** the admin sets entry_day_of_week = 3, exit_day_of_week = 1
-**Then** the timing_config is stored in the advisor's row
-**And** the backtest engine reads the timing_config when running for that advisor
+## UT-16-004: Backtest captures near_options_expiry flag
 
-### TC-16-12: No timing restrictions = all trades allowed
-**Given** a backtest with all timing variables set to default (no restrictions)
-**When** the backtest runs
-**Then** the number of trades equals the unrestricted trade count
-**And** results match the default (no timing) backtest
+**Given** trades on the 3rd Friday of the month (options expiry) and 2 days before
 
-## Postconditions
-- Backtest engine correctly filters trades by day-of-week
-- Backtest engine correctly filters trades by week-of-month
-- Market-cap-aware position sizing caps positions per tier
-- Sector rotation timing signals are applied when enabled
-- Timing scenario comparison is available in the UI
-- Optimization scan completes within performance target
+**When** the backtest engine records each trade
 
-## Related
-- FR-16: Timing Variables in Advisor Control Plane
-- BR-10: Timing-Aware Backtesting
-- `docs/advisors/REQUIREMENTS_DESIGN.md` §Timing-Aware Trading
-- `docs/architecture/architecture-document.md` §10.7
+**Then** near_options_expiry = 1 for trades within 3 days of monthly options expiry; 0 otherwise
+
+## UT-16-005: Timing bucket aggregation by day_of_week
+
+**Given** a backtest with 100 trades spread across all 5 weekdays
+
+**When** the timing aggregation query runs
+
+**Then** the result shows win rate, average return, and trade count per day_of_week
+
+## UT-16-006: Timing bucket aggregation by period_of_month
+
+**Given** a backtest with trades in early, mid, and late periods
+
+**When** the timing aggregation query runs
+
+**Then** the result shows win rate, average return, and trade count per period_of_month
+
+## UT-16-007: Best/worst timing bucket reported per strategy
+
+**Given** a completed backtest with timing data
+
+**When** the backtest results are compiled
+
+**Then** the run metadata includes best_timing_bucket and worst_timing_bucket (by win rate)
+
+## UT-16-008: Advisor timing preferences stored in profile_json
+
+**Given** an advisor account with timing preferences
+
+**When** the advisor account is saved
+
+**Then** profile_json contains timing.preferred_entry_day, timing.preferred_exit_day, timing.preferred_entry_period, timing.avoid_month_end_entry
+
+## UT-16-009: Running portfolio respects timing preferences
+
+**Given** a running advisor portfolio with preferred_entry_day='Thursday'
+
+**When** a rebalance is scheduled on a Tuesday
+
+**Then** the rebalance is skipped (or deferred to nearest Thursday); no trades are executed on Tuesday
+
+## UT-16-010: Market-cap position limits in backtest
+
+**Given** a backtest with max_position_pct_of_micro_cap=5 and a small-cap stock (market_cap < $300M)
+
+**When** the backtest engine allocates positions
+
+**Then** the small-cap position is capped at 5% of portfolio value, not the default allocation
+
+## UT-16-011: Sector concentration limits in backtest
+
+**Given** a backtest with max_sector_pct=20 and a sector that would receive 25% allocation
+
+**When** the backtest engine allocates positions
+
+**Then** the sector allocation is capped at 20%; excess is redistributed or held as cash
+
+---
+
+*Prerequisite test infrastructure:* `tests/Unit/TimingBacktestTest.php` — new file. Requires a backtest engine test harness that can run simulations against historical price data and inspect timing_buckets rows. Use a small hand-built price series (10-20 days) for deterministic tests.

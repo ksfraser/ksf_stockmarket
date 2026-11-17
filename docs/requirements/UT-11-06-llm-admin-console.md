@@ -1,95 +1,71 @@
-# Unit Test Outline: UT-11-06 — LLM Admin Console
+# Unit Test Outline — LLM Admin Console (UT-11.6)
 
-## Requirement Coverage
-- FR-13: LLM Advisor Admin Screen
-- BR-11: LLM Admin & Configuration
+Test the LLM provider fallback chain and admin settings.
 
-## Preconditions
-- Test database with `system_settings` table
-- Admin user account with admin role
-- Mock LLM endpoints (or recorded responses) for connection testing
+## UT-11.6-001: LLMService fallback chain configuration
 
-## Test Cases
+**Given** `system_settings` has `llm_primary_provider=openrouter`, `llm_secondary_provider=openai`, `llm_fallback_provider=ollama`, `llm_fallback_mode=failover`
 
-### TC-11-06-01: Admin screen loads for admin user
-**Given** an admin user is logged in
-**When** the user navigates to `/admin/llm-config`
-**Then** the page loads in < 2 seconds
-**And** all three endpoint sections (primary, secondary, fallback) are visible
-**And** the advisor-LLM profile assignment table is visible
-**And** the connection health dashboard is visible
+**When** `LLMService::getInstance()` loads settings
 
-### TC-11-06-02: Admin screen denied for non-admin user
-**Given** a non-admin user (trader or viewer role) is logged in
-**When** the user navigates to `/admin/llm-config`
-**Then** access is denied (403 or redirect to login)
+**Then** the service has 3 provider configs in priority order: openrouter, openai, ollama
 
-### TC-11-06-03: Save primary endpoint configuration
-**Given** the admin is on the LLM config screen
-**When** the admin enters URL, model, and token for the primary endpoint
-**And** clicks Save
-**Then** the values are stored in `system_settings` with keys `llm_primary_url`, `llm_primary_model`, `llm_primary_token`
-**And** the token is stored encrypted (not plaintext)
+## UT-11.6-002: Failed primary falls through to secondary
 
-### TC-11-06-04: Save all three endpoints
-**Given** the admin is on the LLM config screen
-**When** the admin enters URL, model, and token for all three endpoints
-**And** clicks Save
-**Then** all 9 values (3 endpoints x 3 fields) are stored correctly
-**And** the connection health dashboard shows the saved values
+**Given** primary provider returns HTTP 500
 
-### TC-11-06-05: Test connection button - successful
-**Given** a valid LLM endpoint URL and token are configured
-**When** the admin clicks Test Connection on the primary endpoint
-**Then** the system pings the endpoint
-**And** the UI shows success status with latency (e.g., "Online (120ms)")
-**And** the token is NOT logged or displayed in the response
+**When** `LLMService::complete()` is called
 
-### TC-11-06-06: Test connection button - failed
-**Given** an invalid LLM endpoint URL is configured
-**When** the admin clicks Test Connection
-**Then** the UI shows failure status (e.g., "Offline (connection refused)")
-**And** the error message does NOT contain the token (shows [REDACTED])
+**Then** the service tries secondary provider and returns its response if successful
 
-### TC-11-06-07: Add advisor-LLM profile mapping
-**Given** the admin is on the LLM config screen
-**When** the admin selects an advisor from the dropdown
-**And** selects a LLM profile (primary/secondary/fallback)
-**And** clicks Add mapping
-**Then** a new row is added to `advisor_llm_profiles`
-**And** the mapping appears in the assignment table
+## UT-11.6-003: Rate limit triggers fallback
 
-### TC-11-06-08: Remove advisor-LLM profile mapping
-**Given** an existing advisor-LLM profile mapping
-**When** the admin clicks Remove on the mapping
-**Then** the row is deleted from `advisor_llm_profiles`
-**And** the mapping disappears from the assignment table
+**Given** primary provider returns HTTP 429
 
-### TC-11-06-09: Fallback chain routing
-**Given** primary endpoint is configured but unreachable
-**And** secondary endpoint is configured and reachable
-**When** an LLM-enabled advisor makes a request
-**Then** the system routes to the secondary endpoint
-**And** the response is returned successfully
+**When** `LLMService::complete()` is called
 
-### TC-11-06-10: Fallback chain - all endpoints down
-**Given** all three endpoints are unreachable
-**When** an LLM-enabled advisor makes a request
-**Then** the system returns an error or uses cached data
-**And** no token values are leaked in the error message
+**Then** the service logs the rate limit and tries secondary provider, without retrying primary
 
-### TC-11-06-11: Credential security - no token in logs
-**Given** the system is configured with LLM tokens
-**When** any operation is performed (save, test, query)
-**Then** no log file, error message, or API response contains the token value in plaintext
-**And** all token references show [REDACTED]
+## UT-11.6-004: All providers fail returns null
 
-## Postconditions
-- `system_settings` contains the configured LLM endpoint values
-- `advisor_llm_profiles` contains the configured mappings
-- No tokens are present in any log file or error output
+**Given** primary, secondary, and fallback all return errors
 
-## Related
-- FR-13: LLM Advisor Admin Screen
-- `docs/advisors/REQUIREMENTS_DESIGN.md` §LLM Admin Screen
-- `docs/architecture/architecture-document.md` §10.8
+**When** `LLMService::complete()` is called
+
+**Then** the method returns null (graceful degradation per NFR-2.2)
+
+## UT-11.6-005: round_robin mode cycles providers
+
+**Given** `llm_fallback_mode=round_robin` with 3 providers configured
+
+**When** `LLMService::complete()` is called 3 times successfully
+
+**Then** each call uses a different provider in round-robin order
+
+## UT-11.6-006: primary_only mode does not fallback
+
+**Given** `llm_fallback_mode=primary_only`
+
+**When** primary provider fails
+
+**Then** the method returns null without attempting secondary or fallback
+
+## UT-11.6-007: Admin settings save persists all LLM fields
+
+**Given** admin POST to `?action=admin_settings` with all LLM fields
+
+**When** `AdminSettingsController::saveSettings()` runs
+
+**Then** all 12 LLM settings (primary/secondary/fallback × provider/model/key/url) are stored in `system_settings`
+
+## UT-11.6-008: LLM keys are not exposed in UI
+
+**Given** admin views `?action=admin_settings&tab=llm`
+
+**When** the template renders
+
+**Then** API key fields show masked values (e.g. `****`) or empty fields, never the raw key
+
+---
+
+*Prerequisite test infrastructure:* `tests/Unit/LLMServiceTest.php` — new file, follows existing `tests/Unit/AppTest.php` pattern. Requires mocking HTTP calls to LLM providers (use `Mockery` or PHPUnit built-in mocking for the curl calls in `LLMService`).

@@ -1,4 +1,7 @@
 <?php
+
+use ksfraser\StockMarket\Util\SymbolResolver;
+
 /**
  * FundamentalsController — handles fundamental data display.
  */

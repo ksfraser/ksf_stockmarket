@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Ksf\StockMarket\Tests\Unit;
+namespace ksfraser\StockMarket\Tests\Unit;
 
 use Ksf\ResearchWizard\Contract\FieldBinding;
-use Ksf\StockMarket\Util\ZacksFieldResolver;
+use ksfraser\StockMarket\Util\ZacksFieldResolver;
 use PHPUnit\Framework\TestCase;
 
 /**

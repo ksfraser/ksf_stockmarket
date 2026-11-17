@@ -1,0 +1,65 @@
+# Hermes agent backup repo — ONLY memory, skills, and safe config are tracked.
+# Everything else (secrets, runtime state, caches, sessions) is excluded on purpose.
+
+# ── Secrets / credentials ──
+.env
+auth.json
+auth.json.*
+auth.lock
+config.yaml
+config.yaml.*
+mcp.json
+gateway
+gateway.*
+gateway_state.json
+processes.json
+channel_directory.json
+models_dev_cache.json
+provider_models_cache.json
+ollama_cloud_models_cache.json
+context_length_cache.yaml
+
+# ── Large runtime state ──
+state.db
+state.db-*
+state-snapshots/
+sessions/
+cache/
+logs/
+kanban.db
+kanban.db.*
+backups/
+.hermes_history
+checkpoints/
+lsp/
+crypto/
+data/
+shared/
+sandboxes/
+platforms/
+whatsapp/
+pairing/
+hooks/
+audio_cache/
+image_cache/
+tradingview-mcp/
+cron/
+
+# ── Ephemeral / junk ──
+*.log
+.advisor_backtest_queue
+.install_method
+.restart_last_processed.json
+.update_check
+interrupt_debug.log
+.skills_prompt_snapshot.json
+.curator_backups
+
+# ── Skill backup archives (redundant with git history) ──
+skills/.archive/
+skills/.curator_backups/
+
+# ── Regenerable caches / compiled ──
+**/__pycache__/
+*.pyc
+skills/.hub/

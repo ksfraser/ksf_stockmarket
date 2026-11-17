@@ -13,7 +13,7 @@
 
 set -euo pipefail
 
-REPO_DIR="/home/ksf_stockmarket/ksf_stockmarket"
+REPO_DIR="/root/Documents/stockmarket/php/stockmarket-app"
 
 # Source DB credentials from .env (required — no hardcoded fallback)
 if [[ -f "${REPO_DIR}/.env" ]]; then
@@ -61,7 +61,7 @@ backup_table() {
         --single-transaction \
         --quick \
         --lock-tables=false \
-        --set-gtid-purged=OFF \
+        -h"${DB_HOST}" \
         -u"${DB_USER}" -p"${DB_PASS}" \
         "${DB_NAME}" "${table}" > "${outfile}" 2>/dev/null; then
         
@@ -92,7 +92,7 @@ backup_partition() {
         --single-transaction \
         --quick \
         --lock-tables=false \
-        --set-gtid-purged=OFF \
+        -h"${DB_HOST}" \
         -u"${DB_USER}" -p"${DB_PASS}" \
         "${DB_NAME}" "${table}" \
         --where "price_year = ${partition#p_}" > "${outfile}" 2>/dev/null; then

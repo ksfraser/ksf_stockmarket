@@ -1,4 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
+namespace ksfraser\StockMarket\Model;
+
+use PDO;
 /**
  * Database — MySQL connection singleton.
  *

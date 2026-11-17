@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Ksf\StockMarket\Util;
+namespace ksfraser\StockMarket\Util;
 
 use Ksf\ResearchWizard\Contract\FieldBinding;
 use Ksf\ResearchWizard\Contract\FieldResolverInterface;
@@ -117,6 +117,12 @@ final class ZacksFieldResolver implements FieldResolverInterface
     public function supports(int $code): bool
     {
         return isset(self::SPECS[$code]);
+    }
+
+    /** @return array<int, array{0:string,1:string,2:string,3:string,4:bool}> */
+    public static function allSpecs(): array
+    {
+        return self::SPECS;
     }
 
     private function higherIsBetter(int $code): bool

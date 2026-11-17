@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
+namespace ksfraser\StockMarket\Controller;
+
 use App\Strategy\StrategyRegistry;
 use App\Strategy\StrategyFactory;
+use ksfraser\StockMarket\Util\SymbolResolver;
 
 /**
  * StrategyController — Displays backtested strategy results and methodology.

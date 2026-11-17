@@ -1,608 +1,453 @@
-# Solution Design Document
+# Architecture Document
 ## KSF Stock Market Analysis System
-### BABOK Format -- Solution Architecture
 
 ---
 
-## 1. Architecture Overview
+## 1. System Overview
 
-**Pattern**: Hybrid PHP + Python + MariaDB
+KSF Stock Market Analysis is a hybrid PHP + Python application for:
+- Portfolio tracking and management
+- Technical and fundamental analysis
+- Strategy backtesting — including timing-aware evaluation (day-of-week, day-of-month, calendar period)
+- Seg fund screening
+- Screener-driven universe building (US + Canadian dividends, value, quality compounders, low-cost index funds)
+- Zacks Research Wizard screen import, execution, and backtesting as Advisor portfolios
+- AI advisor personas with LLM-powered fundamental analysis (guidance, news, regulatory, product development)
+- LLM admin console with multi-provider fallback chain configuration
+- Symbol master synchronization with screener data
+- AI advisor runs (sector, balanced fund, bond basket strategies)
+
+---
+
+## 2. Architecture Pattern
+
+**Hybrid Architecture: PHP (Presentation) + Python (Analysis) + MariaDB (Data)**
 
 ```
-[Browser] -> [Apache 2.4 + PHP 8.1] -> [MariaDB 10.6+]
-                v mod_proxy
-           [Python Flask :5000]
-                v
-           [yfinance / TA-Lib / LLM]
+┌─────────────────────────────────────────────────────────────────┐
+│                        Apache 2.4                                │
+│  ┌──────────────────────┐    ┌──────────────────────────────┐   │
+│  │   PHP 8.1+           │    │  mod_proxy                   │   │
+│  │   Front Controller   │    │                              │   │
+│  │   ┌──────────────┐   │    │  /api/* → 127.0.0.1:5000    │   │
+│  │   │ Controllers  │   │    └──────────┬───────────────────┘   │
+│  │   ├──────────────┤   │               │                       │
+│  │   │ Services     │   │               │                       │
+│  │   │  - LLMService|   │               │                       │
+│  │   │  - TimingService|   │               │                       │
+│  │   ├──────────────┤   │               │                       │
+│  │   │ Models (PDO) │   │               │                       │
+│  │   ├──────────────┤   │               │                       │
+│  │   │ PythonBridge │◄──┼───────────────┼──── HTTP ──────────┐ │
+│  │   └──────────────┘   │               │                    │ │
+│  └──────────────────────┘               │                    │ │
+│                                         │                    │ │
+└─────────────────────────────────────────┼────────────────────┼─┘
+                                          │                    │
+                                          ▼                    │
+                              ┌──────────────────────┐         │
+                              │  Python 3.11+         │         │
+                              │  Flask API :5000      │         │
+                              │  ┌────────────────┐  │         │
+                              │  │ TA Engine      │  │         │
+                              │  │ Backtest Engine│  │         │
+                              │  │  - Timing-aware│  │         │
+                              │  │ Strategies     │  │         │
+                              │  │ RW Formula Eng │  │         │
+                              │  │ Data Import    │  │         │
+                              │  │ LLM Analyzer   │  │         │
+                              │  │ Reports        │  │         │
+                              │  └────────────────┘  │         │
+                              └──────────┬───────────┘         │
+                                         │                     │
+                                         ▼                     │
+                              ┌──────────────────────┐         │
+                              │  MariaDB 10.6+        │◄────────┘
+                              │  ┌────────────────┐  │
+                              │  │ Portfolio data  │  │
+                              │  │ OHLCV prices    │  │
+                              │  │ Transactions    │  │
+                              │  │ Backtest results│  │
+                              │  │ Timing buckets  │  │
+                              │  │ LLM fundamental │  │
+                              │  │   data tables   │  │
+                              │  │ RW screen store │  │
+                              │  │ User accounts   │  │
+                              │  └────────────────┘  │
+                              └──────────────────────┘
 ```
 
-## 2. Database Design
+---
 
-### 2.1 Partitioning Strategy
-- **stockprices**, **daily_indicators**, **daily_tier2**, **ta_values**: Partitioned by `YEAR(price_date)`
-- 10 partitions covering 2008-2026+ (~8-10 years of data per partition)
-- Partition pruning for backtest queries (WHERE on date range -> only relevant partitions scanned)
-- Per-year backup via `mysqldump --where "YEAR(date)=2025"`
+## 3. Database Schema Architecture
 
-### 2.2 Three-Tier Indicator Architecture
+### 3.1 Strategy: Partitioned Tables + Tiered Indicators
 
-|| Tier | When | How | Storage | Indicators |
-|---|---|---|---|---|---|
-| 1 | Per INSERT | MySQL trigger | Wide columns in `daily_indicators` | daily_return, gap, SMA-20/50/200, vol_sma_20 |
-| 2 | Daily batch | MySQL event (window functions) | Wide columns in `daily_tier2` | Bollinger, ATR-14, vol ratios, trend |
-| 3 | Daily batch | Python cron (TA-Lib vectorized) | Name-value in `ta_values` | RSI, MACD, candlestick patterns, custom |
+The legacy `stock_market` DB had ~130 tables with no partitioning and the `back_finance` DB had 21 tables — both using MyISAM with latin1 charset. The modernized schema consolidates to ~30 focused tables on InnoDB with utf8mb4, using:
 
-**Rationale**: 
-- Tier 1 is O(1) per row -- cheap enough for trigger
-- Tier 2 needs 14-20 row window -- expensive per insert, cheap once daily
-- Tier 3 needs full array (250+ rows) -- only efficient as batch vectorized operation
+1. **Partition by YEAR**: `stockprices`, `daily_indicators`, `daily_tier2` all partitioned by `YEAR(date)` into ~10 partitions. Enables partition pruning for backtest queries and per-year backup.
+2. **Tier 1 indicators via trigger**: `daily_indicators` table populated on each INSERT into `stockprices` (daily return, gap, SMA-20/50/200, volume SMA-20).
+3. **Tier 2 indicators via daily event**: `daily_tier2` table populated once per day using MySQL event scheduler with window functions (Bollinger Bands, ATR-14, volume ratios, trend classification). Avoids recalculating expensive window functions on every INSERT.
+4. **Unified view**: `v_stock_analysis` joins prices + both indicator tiers for backtesting and UI consumption.
 
-### 2.3 Scoring System Design
+### 3.2 Partitioning: By Year (Not By Symbol)
 
-10 scoring tables preserved from legacy, enhanced with LLM integration:
+**Decision: Partition by YEAR, not by symbol.**
+- ~8-10 partitions (one per year) vs 2000+ partitions (one per symbol)
+- Partition pruning handles backtest date-range queries transparently
+- Per-year backup via `mysqldump --where "YEAR(date)=2025"` solves the 2013 4GB dump trauma
+- Adding a new partition each year is trivial: `ALTER TABLE ... ADD PARTITION`
 
-|| Table | Purpose | LLM Role |
+### 3.3 Tier 2 Materialized Table (Not View)
+
+**Decision: Materialized table `daily_tier2`, not a VIEW.**
+- Window functions (Bollinger, ATR) need 14-20 rows per symbol per calculation
+- Calculating on every INSERT would be O(n_symbols) per insert — prohibitive
+- Daily refresh is sufficient because indicator weightings change slowly (weeks/months)
+- Populated by MySQL event scheduler at 10 PM ET daily (after market data refresh)
+- Python cron can also populate this as an alternative to MySQL events
+- `signal_weights` table stores per-symbol, per-signal-type weights that evolve over time via backtesting optimization
+
+### 3.4 Signal Weights: Evolving Over Time
+
+The `signal_weights` table stores optimized weights for each indicator/signal type per symbol:
+- `signal_type`: e.g., `RSI_OVERSOLD`, `MACD_CROSS`, `BB_TOUCH`, `GOLDEN_CROSS`
+- `weight`: Optimized weight (decreases for unreliable signals, increases for reliable ones)
+- `win_rate`: Historical win rate tracked per signal per symbol
+- `updated_by`: `backtest`, `manual`, or `python_ml`
+- Weights start at 1.0 (default) and are refined by backtesting
+
+### 3.5 Timing Buckets (UPDATED — FR-16)
+
+The `timing_buckets` table captures timing dimensions per backtest trade:
+
+| Column | Type | Meaning |
 |---|---|---|
-| evalsummary | Composite score (out of 36) | Investment thesis summary, recommendation |
-| motleyfool | MF screening criteria | Check criteria against 10-K data |
-| investorplace | IP screening (24 criteria) | Analyze press releases for restructuring, buybacks |
-| tenets | 12 Buffett-style tenets | Analyze annual letters, proxy statements |
-| evalbusiness | Business quality | Evaluate business model, competitive moat |
-| ratios | Financial ratios + attractiveness | Python calculates, LLM assesses quality |
-| quarter_statement | Quarterly financials | Extract from 10-Q filings |
-| evalmanagement | Management quality | Analyze MD&A, proxy statements |
-| evalmarket | Market evaluation | Assess market conditions |
-| evalvalue | Intrinsic value | Assist with qualitative value factors |
-| scoring_history | Audit trail | Track LLM vs human changes |
+| id | bigint PK | |
+| run_id | bigint FK → backtest_runs | |
+| ticker | varchar(20) | |
+| signal_date | date | |
+| day_of_week | enum(Mon,Tue,Wed,Thu,Fri) | Day of week of entry/exit |
+| day_of_month | tinyint | Day of month (1-31) |
+| period_of_month | enum(early,mid,late) | Early(1-10)/Mid(11-20)/Late(21+) |
+| month_of_year | tinyint | 1-12 |
+| near_month_end | tinyint | Within 3 days of month end |
+| near_options_expiry | tinyint | Within 3 days of monthly opex |
+| outcome | enum(WIN,LOSS,HOLD) | |
+| return_pct | double | Period return |
+| holding_days | int | Days held |
 
-**LLM Integration Pattern** (all scoring tables):
-- `source` / `source_date`: What document was analyzed
-- `is_llm_generated`: Whether LLM populated this score
-- `llm_confidence`: Confidence level (0-1)
-- `llm_reasoning`: LLM explanation
-- `human_overridden`: Human changed the LLM's score
-- `human_recommendation`: Human analyst's recommendation
+**Aggregation queries** compute per-bucket win rate, average return, turnover, and holding period — enabling the backtest engine to report "best day to buy: Thursday, best day to sell: Tuesday" or "best period: mid-month, worst: month-end."
 
-### 2.4 Signal Weight Correlation Design
-
-**Problem**: Signals fire at different times -- some lead, some lag, some coincide.
-
-**Solution**: `signal_weights` table tracks correlation and lead/lag:
-- `avg_lead_days`: Days between signal and price move (+ leads, - lags)
-- `is_pre_indicator`: 1 if signal consistently leads
-- `correlation`: Correlation with future 5-day return
-- `correlates_with`: JSON of correlated signals with lag times
-- `weight_boosted`: Effective weight when pre-indicator confirmed
-
-**Boost Formula**:
-```
-effective_weight = base_weight x (1 + correlation x 0.5) x recency_factor
+**Advisor timing preferences** stored per-advisor in `advisor_accounts.profile_json`:
+```json
+{
+  "timing": {
+    "preferred_entry_day": "Thursday",
+    "preferred_exit_day": "Tuesday",
+    "preferred_entry_period": "mid",
+    "avoid_month_end_entry": true,
+    "near_opex_entry": false
+  }
+}
 ```
 
-**Example**: RSI_OVERSOLD (55% win rate alone) -> 1.36x weight when MACD_CROSS hasn't confirmed (78% win rate for sequence).
+### 3.6 LLM Fundamental Data Tables (NEW — FR-11)
 
-## 3. Application Design
-
-### 3.1 PHP Layer
-- PSR-4 autoloading under `Ksf\StockMarket\`
-- Front controller pattern (index.php dispatcher)
-- Twig templates
-- PDO for database access
-- PythonBridge HTTP client to Flask API
-- Admin settings screen for LLM config (FR-13)
-
-### 3.2 Python Layer
-- Flask REST API on :5000
-- TA-Lib for vectorized indicator calculation
-- pandas for data manipulation
-- yfinance for market data
-- LLM integration for qualitative scoring
-- Cron jobs for daily processing
-- LLM Fundamental Analyzer service (FR-11)
-- Research Wizard Formula Parser service (FR-12)
-- Timing-aware backtest engine (FR-16)
-
-### 3.3 Data Flow
-
-```
-Daily Processing Flow:
-1. Market closes (4 PM ET)
-2. yfinance fetches latest prices -> stockprices (trigger fires Tier 1)
-3. MySQL event runs Tier 2 (window functions)
-4. Python cron runs Tier 3 (TA-Lib vectorized batch)
-5. Python cron runs scoring analysis (LLM + fundamental)
-6. Python cron updates signal_weights (correlation analysis)
-7. Results available for UI and monitoring
-```
-
-### 3.4 LLM Fundamental Analysis Data Flow (NEW -- FR-11)
-
-```
-LLM Fundamental Analysis Flow:
-1. LLM-enabled advisor starts analysis session
-2. Reads llm_insider_trading, llm_news_events, llm_product_dev, llm_regulatory tables for target symbols
-3. Fetches current news/guidance/regulatory data from external sources (if enabled)
-4. LLM analyzes: forward guidance changes, news sentiment, product lifecycle stage, regulatory status
-5. Updates tables with new findings (inserts new events, updates conviction scores)
-6. Produces investment thesis summary with conviction score
-7. Coordinates with scoring tables (evalsummary, evalbusiness, evalmanagement, evalvalue)
-8. Results feed into backtest and recommendation engines
-```
-
-### 3.5 Research Wizard Formula Integration Data Flow (NEW -- FR-12)
-
-```
-RW Formula Integration Flow:
-1. User (or advisor config) selects/pastes RW pre-defined filter formula
-2. Formula parser validates syntax and resolves field references to DB columns
-3. Parser produces executable filter conditions (SQL WHERE or Python filter chain)
-4. Advisor loads formula as its screening criteria
-5. On screener run: parser executes against symbol_master + scoring tables
-6. Results cached per run (FR-12.4)
-7. UI formula editor allows preview of matching stocks before saving
-```
-
-### 3.6 External Provider Auth Architecture
-
-**Pattern**: OAuth 2.0 Authorization Code + PKCE-ready
-
-```
-[Browser] -> [Apache/PHP] -> Reddit OAuth endpoint
-                v
-         [Callback handler]
-                v
-         [external_auth_tokens DB]
-                v
-         [research_agent.py reads token]
-                v
-         [Authenticated Reddit API]
-```
-
-**Security**:
-- Client secrets stored as `password` type in `system_settings`
-- Access/refresh tokens stored as `password` semantics in `external_auth_tokens`
-- Never logged -- controller uses `[REDACTED]` in all error messages
-- Unique per user/provider -- supports multi-user token isolation
-
-**Extensibility**:
-- Add new provider by extending `ExternalAuthController::$map` (scopes, endpoints)
-- Register new provider in `external_auth.json`
-- Admin adds credentials via Admin Settings
-
-## 4. Migration Strategy
-
-### Phase 1: Schema + Foundation
-- Deploy partitioned schema
-- Import legacy data via migration scripts
-- Verify triggers and events
-
-### Phase 2: Scoring Engine
-- Python scripts populate scoring tables
-- LLM analyzes filings for qualitative criteria
-- Human review workflow
-
-### Phase 3: PHP Modernization
-- Port legacy classes to PSR-4
-- Build UI for scoring dashboard
-- FA module integration
-
-### Phase 4: Optimization
-- Signal weight correlation analysis
-- Backtesting with optimized weights
-- Performance tuning
-
-### Phase 5: Paperclip Zero-Human Trading Firm (2026-07)
-- Research Agent: internal + external brief generation
-- Risk Gate: pre-trade Sharpe/drawdown checks
-- External Provider Auth: Reddit OAuth, TradingView/arXiv API keys
-- Hermes Skill + Nightly Cron: automated brief generation at 02:00
-- Paper-only execution via advisor_backtest.php
-
-### Phase 6: LLM Fundamental Analysis + RW Formula Integration + Timing-Aware Backtesting (NEW -- 2026-09-18)
-
-#### 6.1 LLM Fundamental Analysis Tables (FR-11)
-- Create 4 new tables: `llm_insider_trading`, `llm_news_events`, `llm_product_dev`, `llm_regulatory`
-- Each table: `id, symbol, event_date, as_of, source, headline, details, confidence, conviction_score, is_verified, created_at, updated_at`
-- Backfill existing known events from historical data (earnings surprises, product launches, regulatory actions)
-- Wire LLM advisor reads to these tables at session start
-- Wire LLM advisor writes to update tables when new info found
-
-#### 6.2 Research Wizard Formula Parser (FR-12)
-- Implement RW formula parser: GT, LT, GTE, LTE, EQ, NEQ, AND, OR, parentheses, field refs, literals
-- Field reference resolver: map RW field names to DB columns / computed values
-- Formula cache per screener run
-- Formula editor UI: paste/select formula, preview matching stocks
-
-#### 6.3 Timing-Aware Backtest Extension (FR-16)
-- Extend backtest engine to accept timing configurations:
-  - `entry_day_of_week`: preferred day for entries (0=Monday ... 4=Friday)
-  - `exit_day_of_week`: preferred day for exits
-  - `entry_week_of_month`: week-of-month bias for entries (1=first ... 5=last)
-  - `exit_week_of_month`: week-of-month bias for exits
-  - `market_cap_position_limit`: base position % scaled by market cap tier
-  - `sector_rotation_enabled`: whether sector momentum timing is active
-- Backtest engine reports: win rate, Sharpe, max drawdown, total return by timing scenario
-- Advisor control plane exposes timing preferences per advisor
-
-#### 6.4 LLM Admin Screen (FR-13)
-- Admin UI: `/admin/llm-console` (or `?action=admin&view=llm-config`)
-- Fields: primary_url, primary_model, primary_token, secondary_url, secondary_model, secondary_token, fallback_url, fallback_model, fallback_token
-- Per-advisor LLM profile dropdown (maps advisor -> LLM config set)
-- Connection health test button (ping each endpoint, report latency/success)
-- Credential storage: hashed/encrypted, never logged
-
-## 5. Security Design
-
-### 5.1 Authentication & Authorization
-- User authentication via username/password (bcrypt/argon2 hashing)
-- RBAC: admin, trader, viewer roles
-- Session management with secure cookies
-- API token authentication for Python service
-
-### 5.2 Data Security
-- PDO prepared statements (SQL injection prevention)
-- Twig auto-escaping (XSS prevention)
-- Password fields stored as hashed values
-- No plaintext credentials in logs or code
-- HTTPS required in production
-
-### 5.3 LLM Credential Security (NEW -- FR-13.5)
-- LLM API tokens stored encrypted in `system_settings` (password-type DB fields)
-- Tokens never logged -- `[REDACTED]` in all error messages and logs
-- Admin screen requires admin role to access
-- Fallback chain tested without exposing tokens
-
-## 6. LLM Fundamental Analysis Design (NEW -- FR-11)
-
-### 6.1 LLM-Enabled Advisor Architecture
-
-```
-                    ++++++++++++++++++++++++++++
-                    +   LLM-Enabled Advisor     +
-                    +   (fundamental analyst)   +
-                    ++++++++++++++++++++++++++++
-                                 + reads
-                    +++++++++++++v++++++++++++++
-                    +  llm_* tables (4 tables)  +
-                    +  - insider_trading         +
-                    +  - news_events             +
-                    +  - product_dev             +
-                    +  - regulatory              +
-                    ++++++++++++++++++++++++++++
-                                 + fetches
-                    +++++++++++++v++++++++++++++
-                    +  External Sources         +
-                    +  - News APIs              +
-                    +  - SEC filings            +
-                    +  - Regulatory databases   +
-                    +  - Product announcements  +
-                    ++++++++++++++++++++++++++++
-                                 + analyzes
-                    +++++++++++++v++++++++++++++
-                    +  LLM Service              +
-                    +  (primary -> secondary ->   +
-                    +   fallback chain)         +
-                    ++++++++++++++++++++++++++++
-                                 + produces
-                    +++++++++++++v++++++++++++++
-                    +  Conviction Scores +      +
-                    +  Investment Thesis        +
-                    +  (updates llm_* tables)   +
-                    ++++++++++++++++++++++++++++
-                                 + feeds
-                    +++++++++++++v++++++++++++++
-                    +  Scoring Tables +          +
-                    +  Backtest Engine           +
-                    +++++++++++++++++++++++++++++
-```
-
-### 6.2 LLM Table Schemas
-
-**llm_insider_trading**:
-```sql
-CREATE TABLE llm_insider_trading (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    symbol VARCHAR(20) NOT NULL,
-    event_date DATE NOT NULL,
-    as_of DATE NOT NULL,
-    source VARCHAR(255),
-    headline VARCHAR(500),
-    details TEXT,
-    confidence TINYINT UNSIGNED,  -- 0-100
-    conviction_score DECIMAL(5,2), -- -100 to +100
-    is_verified TINYINT UNSIGNED DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_symbol_date (symbol, event_date),
-    INDEX idx_conviction (conviction_score)
-);
-```
-
-**llm_news_events**:
-```sql
-CREATE TABLE llm_news_events (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    symbol VARCHAR(20) NOT NULL,
-    event_date DATE NOT NULL,
-    as_of DATE NOT NULL,
-    source VARCHAR(255),
-    headline VARCHAR(500),
-    details TEXT,
-    category ENUM('earnings', 'product_launch', 'regulatory', 'executive', 'financial', 'market', 'other'),
-    confidence TINYINT UNSIGNED,
-    sentiment_score DECIMAL(5,2), -- -100 to +100
-    conviction_score DECIMAL(5,2), -- -100 to +100
-    is_verified TINYINT UNSIGNED DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_symbol_date (symbol, event_date),
-    INDEX idx_category (category)
-);
-```
-
-**llm_product_dev**:
-```sql
-CREATE TABLE llm_product_dev (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    symbol VARCHAR(20) NOT NULL,
-    product_name VARCHAR(255),
-    lifecycle_stage ENUM('concept', 'prototype', 'production_rollout', 'market_launch', 'modification', 'end_of_life') NOT NULL,
-    event_date DATE NOT NULL,
-    as_of DATE NOT NULL,
-    source VARCHAR(255),
-    headline VARCHAR(500),
-    details TEXT,
-    expected_impact ENUM('positive', 'neutral', 'negative'),
-    confidence TINYINT UNSIGNED,
-    conviction_score DECIMAL(5,2),
-    is_verified TINYINT UNSIGNED DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_symbol_stage (symbol, lifecycle_stage),
-    INDEX idx_date (event_date)
-);
-```
-
-**llm_regulatory**:
-```sql
-CREATE TABLE llm_regulatory (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    symbol VARCHAR(20) NOT NULL,
-    event_date DATE NOT NULL,
-    as_of DATE NOT NULL,
-    source VARCHAR(255),
-    headline VARCHAR(500),
-    details TEXT,
-    regulatory_type ENUM('approval', 'pending_review', 'industry_change', 'compliance_action', 'investigation', 'other'),
-    jurisdiction VARCHAR(100),
-    status ENUM('approved', 'pending', 'rejected', 'withdrawn', 'ongoing'),
-    confidence TINYINT UNSIGNED,
-    conviction_score DECIMAL(5,2),
-    is_verified TINYINT UNSIGNED DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_symbol_type (symbol, regulatory_type),
-    INDEX idx_date (event_date)
-);
-```
-
-### 6.3 LLM Fundamental Analyzer Service
-
-The LLM Fundamental Analyzer is a Python service that:
-
-1. **Reads** the 4 llm_* tables for target symbols at session start
-2. **Fetches** current data from external sources (news APIs, SEC EDGAR, regulatory databases)
-3. **Analyzes** using LLM (primary -> secondary -> fallback chain):
-   - Forward guidance changes vs. prior guidance
-   - News sentiment and conviction
-   - Product lifecycle stage transitions
-   - Regulatory approval/pending status
-4. **Updates** llm_* tables with new findings (new rows + conviction score updates)
-5. **Produces** investment thesis summary (1-3 paragraphs) with conviction score (-100 to +100)
-6. **Coordinates** with scoring tables: updates evalsummary.llm_recommendation, evalbusiness, evalmanagement, evalvalue
-
-### 6.4 LLM Fallback Chain
-
-```
-Primary LLM Endpoint (configured URL + model + token)
-       v (timeout / error / rate limit / 5xx)
-Secondary LLM Endpoint (configured URL + model + token)
-       v (timeout / error / rate limit / 5xx)
-Fallback LLM Endpoint (configured URL + model + token)
-       v (all failed)
-Return error / use cached data / skip analysis
-```
-
-Admin screen (FR-13) configures the 3 endpoints and per-advisor assignment.
-
-## 7. Research Wizard Formula Integration Design (NEW -- FR-12)
-
-### 7.1 Formula Syntax
-
-Research Wizard pre-defined filters use a simple declarative syntax:
-
-```
-// Comparison operators
-price GT 10          // price > 10
-price LT 50          // price < 50
-price GTE 25         // price >= 25
-price LTE 100        // price <= 100
-price EQ 30          // price = 30
-price NEQ 0          // price != 0
-
-// Logical operators
-AND, OR, NOT, (, )
-
-// Field references (resolved to DB columns / computed values)
-price, open, high, low, close, volume, avg_volume
-market_cap, pe_ratio, eps, dividend_yield, beta
-sma_50, sma_200, rsi_14, macd, bollinger_upper, bollinger_lower
-zacks_rank, zacks_consensus, zacks_eps_change
-
-// Literals
-10, 50.5, "string", TRUE, FALSE
-
-// Examples from RW pre-defined filters:
-// "Stock Price > 10" -> price GT 10
-// "Price to Sales Ratio < 1.5" -> price_to_sales LT 1.5
-// "Relative Volume > 1.5" -> relative_volume GT 1.5
-```
-
-### 7.2 Formula Parser Design
-
-```
-Input: RW formula string
-  v
-Lexer: tokenize into tokens (FIELD, OP, LITERAL, LOGIC, PAREN)
-  v
-Parser: build AST from tokens
-  v
-Resolver: map field names to DB columns / computed values
-  v
-Code generator: produce executable filter (SQL WHERE clause or Python lambda)
-  v
-Cache: store parsed result per formula hash (FR-12.4)
-```
-
-### 7.3 Field Reference Resolution
-
-|| RW Field Name | DB Source / Computation |
+| Table | Purpose | Key Columns |
 |---|---|---|
-| price | stockprices.close (latest) |
-| open, high, low | stockprices (latest bar) |
-| volume | stockprices.volume (latest) |
-| avg_volume | Computed: AVG(volume) over lookback |
-| market_cap | symbol_master.market_cap or computed |
-| pe_ratio | Computed: close / eps or from fundamentals |
-| eps | fundamentals.eps or zacks_eps |
-| dividend_yield | Computed: annual_dividend / price |
-| beta | Computed or from symbol_master |
-| sma_50, sma_200 | daily_indicators or ta_values |
-| rsi_14 | ta_values |
-| macd | ta_values |
-| bollinger_upper, bollinger_lower | daily_tier2 |
-| zacks_rank | zacks_broker_recommendations or zacks_rank |
-| zacks_consensus | zacks_broker_recommendations |
-| zacks_eps_change | fundamentals.zacks_eps_change_f1_4w |
+| `llm_guidance` | Forward guidance extracted from earnings releases, conference calls, SEC filings | symbol, guidance_text, source, source_date, sentiment (positive/negative/neutral), confidence, llm_model, created_at |
+| `llm_news` | News events with material impact assessment | symbol, headline, source, event_date, summary, material_impact (none/low/medium/high), llm_analysis, llm_model, analyzed_at, created_at |
+| `llm_regulatory` | Pending/approved regulatory actions (FDA, SEC, patents) | symbol, event_type, description, status (pending/approved/denied/withdrawn), expected_date, actual_date, material_impact, llm_analysis, llm_model, created_at, updated_at |
+| `llm_product_dev` | Product launches, R&D milestones, pipeline updates | symbol, product_name, stage, description, expected_date, actual_date, material_impact, llm_analysis, llm_model, created_at, updated_at |
+| `llm_analysis_sessions` | Audit trail of LLM analysis runs | session_id, trigger (scheduled/manual/advisor), symbols_analyzed, total_findings, findings_written, provider_used, model_used, started_at, completed_at, error |
 
-### 7.4 Advisor Integration
+**LLM Read/Write pattern**:
+- On scheduled run (or advisor-triggered analysis), the LLM analyzer reads all pending/unanalyzed rows from `llm_news` and new filings from `llm_guidance` / `llm_regulatory` / `llm_product_dev`
+- For each item, the LLM produces a structured assessment: material impact, suggested action (hold/sell/increase/decrease/watch), reasoning
+- If the LLM discovers new guidance, news, regulatory events, or product developments not yet in the tables, it writes them
+- The advisor picking engine reads from these tables when scoring candidates: a pending FDA approval with high material impact boosts a biotech stock's score; negative guidance revision lowers it
+- `llm_analysis_sessions` provides traceability: which model analyzed what, when, and how many findings were written
 
-Each newsletter-style advisor (FR-14) can adopt an RW formula as its screening criteria:
+### 3.7 Zacks Research Wizard Tables (FR-14 / BR-8)
 
-```python
-class RwFormulaAdvisor:
-    def __init__(self, formula_text, trade_day="Monday"):
-        self.parser = RwFormulaParser()
-        self.filter = self.parser.parse(formula_text)
-        self.trade_day = trade_day
-    
-    def screen(self, universe):
-        """Return stocks matching the RW formula."""
-        return self.filter.evaluate(universe)
-    
-    def pick(self, screen_results, portfolio):
-        """Pick from screened stocks using advisor's trade logic."""
-        # ... advisor-specific pick logic ...
+| Table | Purpose |
+|---|---|
+| `user_screens` | Imported `.und` screen definitions with `filters_json` (engine='zacks_rw') |
+| `zacks_broker_recommendations` | Per-firm broker rows (firm, analyst, grade, price_target, action, rec_date) |
+| `zacks_ratios_history` | Multi-year ratio series per symbol |
+| `stock_performance_windows` | Precomputed price windows (Hermes + RW sets) |
+| `fundamentals` | Zacks_* columns + valuation fundamentals + composite/rank/grades |
+
+See `docs/requirements/FR-14-zacks-rw-pipeline.md` for full schema and calculation contracts.
+
+### 3.8 Advisor Tables (BR-7)
+
+| Table | Purpose |
+|---|---|
+| `advisor_accounts` | Advisor persona accounts (slug, display_name, strategy, profile_json) |
+| `portfolio_visibilities` | Public/private visibility per user/portfolio |
+| `advisor_runs` | Per-advisor run metadata (trade_date, status, result_json) |
+| `advisor_trades` | Individual advisor trades (symbol, action, shares, price, commission, news_impact_json) |
+
+See `docs/advisors/REQUIREMENTS_DESIGN.md` for full design.
+
+## 3. Legacy Schema Comparison
+
+| Property | `stock_market` (old) | `back_finance` (new) | `ksf_stockmarket` (modern) |
+|---|---|---|---|
+| Origin | Original web app | Finance/trading module | Modernized PHP app |
+| Tables | ~130 (FA + legacy SQL) | 21 tables | ~30 focused tables |
+| Engine | MyISAM / InnoDB mix | MyISAM mostly | InnoDB |
+| Charset | latin1 | latin1 | utf8mb4 |
+| Partitioned | No | No | **Yes** (prices, indicators) |
+| Tier 1 (trigger) | No | No | **Yes** |
+| Tier 2 (materialized) | No | No | **Yes** |
+| Signal weights | No | No | **Yes** |
+| Timing buckets | No | No | **Yes** (extended) |
+| LLM fundamental data | No | No | **Yes** (new) |
+| RW screen storage | No | No | **Yes** (new) |
+| RBAC | No | No | **Yes** |
+
+See `database-comparison.md` for detailed column-level comparison.
+
+## 4. Component Responsibilities
+
+### PHP Layer (Web Application)
+| Component | Responsibility |
+|---|---|
+| Controllers | Handle HTTP requests, input validation, routing |
+| Services | Business logic, orchestration |
+| Models | Data access via PDO, domain objects |
+| Views | Twig templates, HTML rendering |
+| PythonBridge | HTTP client to Flask API |
+| FA Module | FrontAccounting journal entry creation |
+| LLMService | Multi-provider LLM completion with fallback chain (NEW — FR-11.6) |
+| AdminSettingsController | LLM provider chain config UI (NEW — FR-11.6) |
+| TimingService | Timing dimension capture and aggregation for backtests (NEW — FR-16) |
+| RwFormulaService | RwFormulaParser + ZacksFieldResolver evaluation for advisor picking (NEW — FR-12) |
+
+### Python Layer (Analysis Engine)
+| Component | Responsibility |
+|---|---|
+| Flask API | REST endpoints for PHP bridge |
+| Backtest Engine | Portfolio simulation, trade execution, metrics — timing-aware (UPDATED — FR-16) |
+| TA Library | Candlestick patterns, indicators, Turtle system |
+| Strategies | Motley Fool, Buffett, Combined screening |
+| Fetchers | yFinance/Google/SEDAR/SEC → normalized DTOs |
+| Repositories | DTO ↔ SQLite/MariaDB storage, column mapping |
+| Detection | Volume/NATR/RSI/gap triggers read from local DB |
+| Reports | HTML/PDF report generation |
+| Advisor Notifier | Email/Discord/WhatsApp recommendation delivery |
+| Risk Engine | Optional rules enforcement in backtest + live |
+| RW Formula Engine | RwFormulaParser + ZacksFieldResolver for advisor picking (NEW — FR-12) |
+| LLM Fundamental Analyzer | Reads/writes llm_* tables for guidance, news, regulatory, product dev (NEW — FR-11) |
+| Zacks Scraper + Rank Populator | Scrapes Zacks pages, computes composite/rank/grades (FR-14) |
+| RW Screen Runner | Executes imported .und screens against live universe (FR-14) |
+
+### Database Layer
+| Table Group | Tables |
+|---|---|
+| Portfolio | portfolio, portfolio_history, user_trades |
+| Market Data | stockprices (partitioned), dividends, stockinfo |
+| Tier 1 Indicators | daily_indicators (partitioned, trigger-populated) |
+| Tier 2 Indicators | daily_tier2 (partitioned, daily event-populated) |
+| Signal Weights | signal_weights (per-symbol, evolving) |
+| Backtesting | backtest_runs, backtest_trades, backtest_periods (timing-extended), timing_buckets (timing-extended) |
+| Users & RBAC | users, roles, watchlists, watchlist_symbols |
+| Advisors | user_advisors, advisor_recommendations, strategy_rules, risk_rules, optional_rules, kb_articles, advisor_accounts, portfolio_visibilities, advisor_runs, advisor_trades |
+| LLM Fundamental Data | llm_guidance, llm_news, llm_regulatory, llm_product_dev, llm_analysis_sessions (NEW) |
+| Alerts | alerts, alerts_raised |
+| Screener | tradingview_screener_results (preset_name+market+symbol unique), symbol_master |
+| Zacks RW | user_screens, zacks_broker_recommendations, zacks_ratios_history, stock_performance_windows, fundamentals (zacks_* columns) |
+| FA Integration | fa_transfers |
+| Operations | data_import_log |
+
+---
+
+## 5. Technology Stack
+
+| Layer | Technology | Version | Notes |
+|---|---|---|---|
+| Web Server | Apache | 2.4+ | mod_proxy, mod_rewrite |
+| Backend | PHP | 8.1+ | PSR-4 autoloading, typed |
+| Backend | Python | 3.11+ | Flask, pandas, numpy |
+| Database | MariaDB | 10.6+ | InnoDB, utf8mb4, partitioning |
+| ORM/DBAL | PDO (native) | — | No ORM — raw PDO for performance |
+| Templating | Twig | 3.x | Auto-escaping, sandboxing |
+| Logging | Monolog | 3.x | PSR-3 compatible |
+| Config | phpdotenv | 5.x | .env files |
+| Testing | PHPUnit | 10.x | Unit + integration tests |
+| Analysis | yfinance | — | Yahoo Finance data |
+| Analysis | ta-lib / pandas-ta | — | Technical indicators |
+| LLM | OpenRouter/OpenAI/Ollama | — | Multi-provider fallback chain (NEW) |
+| RW Parser | ksfraser/research-wizard-reader | — | Formula parser, field resolver, .und parser (NEW) |
+| CSS Framework | Custom/Tailwind | — | To be decided in Phase 4 |
+
+---
+
+## 6. Deployment Architecture
+
+### Container Structure (via ksf_Infrastructure Ansible)
+
+```
+Pod: ksf-stockmarket
+├── Container: ksf-stockmarket-web
+│   ├── Apache 2.4 + PHP 8.1
+│   ├── Document root: /var/www/html/public
+│   └── Port: {{ http_port }} (default 8080)
+├── Container: ksf-stockmarket-api
+│   ├── Python 3.11 + Flask
+│   ├── Port: 5000 (internal)
+│   └── Gunicorn WSGI server
+├── Container: ksf-stockmarket-db
+│   ├── MariaDB 10.6
+│   ├── Port: {{ db_port }} (default 3306)
+│   └── Volume: /var/lib/mysql
+└── Shared Volumes:
+    ├── {{ app_dir }}:/var/www/html
+    ├── {{ data_dir }}:/var/lib/mysql
+    └── {{ csv_data_dir }}:/var/www/html/data/csv
 ```
 
-### 7.5 Performance Targets (NEW -- Sec.7.5)
+### Ansible Recipe Requirements (from ksf_Infrastructure)
+The existing recipe needs these additions:
+1. Configurable ports: `{{ http_port }}`, `{{ db_port }}`
+2. Named containers with prefix: `{{ app_name }}-web`, `{{ app_name }}-db`, `{{ app_name }}-api`
+3. Bind mounts from host paths
+4. Environment variables via `.env` file
+5. Python API container (new)
 
-- Formula parse: < 100ms per formula (one-time cost, cached)
-- Formula evaluate (screen 2000 symbols): < 30 seconds
-- Formula cache hit: < 5 seconds for full screen
-- Formula editor preview (UI): < 5 seconds for preview
+---
 
-## 8. Timing-Aware Trading Design (NEW -- FR-16)
+## 7. API Contract (PHP ↔ Python)
 
-### 8.1 Timing Variables
+### Endpoints
 
-| Variable | Scope | Description |
+| Method | Path | Request Body | Response |
+|---|---|---|---|
+| POST | /api/backtest/run | strategy, params, dates, timing_buckets=true | { run_id, status } |
+| GET | /api/backtest/status/{id} | — | { status, metrics } |
+| GET | /api/backtest/results/{id} | — | { trades, metrics, timing_buckets } |
+| POST | /api/ta/analyze | symbol, indicators | { signals, values } |
+| POST | /api/screen/run | screen_type, universe | { results: [...] } |
+| GET | /api/data/prices/{symbol} | ?from=&to= | { prices: [...] } |
+| POST | /api/data/import | symbols[], source | { import_log } |
+| GET | /api/health | — | { status: "ok" } |
+| GET | api_screener | ?preset= | HTML fragment |
+| GET | /api/advisor/recommendations | ?user_id=N | { recommendations: [...] } |
+| GET/POST | /api/advisor/preferences | ?user_id=N | { prefs } |
+| POST | /api/advisor/notifications/whatsapp/send | to, message | { message_id } |
+| POST | /api/advisor/notifications/whatsapp/status | provider payload | { status } |
+| POST | /api/llm/analyze | symbol, analysis_type, data | { result, provider_used } |
+| GET | /api/timing/performance | ?strategy=&period= | { buckets: [...], optimal: {...} } |
+| POST | /api/rw/formula/evaluate | formula, symbol_data | { result, skipped: [...] } |
+
+---
+
+## 8. Security Model
+
+### Authentication
+- PHP session-based authentication for web UI
+- Password hashing via `password_hash()` (bcrypt)
+- API key for PHP ↔ Python bridge (localhost only)
+- LLM API keys stored as password-type in system_settings, never exposed to UI
+
+### Authorization (RBAC)
+| Role | Permissions |
+|---|---|
+| admin | Full access: manage users, run backtests, modify data, configure LLM providers, view advisor timing preferences |
+| trader | View data, run backtests, manage own watchlists, run screens |
+| viewer | View-only: dashboards, reports, watchlists, public advisor portfolios |
+
+---
+
+## 9. Migration Strategy
+
+### Parallel Operation
+The legacy PHP application runs alongside the new code during migration:
+- Legacy code: untouched in original directories (`application/`, `class/`, `model/`, etc.)
+- New code: under `src/` with PSR-4 autoloading
+- Shared database: old tables preserved, new tables added
+- Feature flags in config control which code path is active
+
+### Migration Sequence
+1. Phase 1: Foundation (this phase) — parallel structure
+2. Phase 2: Core models — port `class/` and `model/` incrementally
+3. Phase 3: Analysis engine — Python takes over backtesting/TA
+4. Phase 4: UI — port controllers to front controller pattern
+5. Phase 5: FA integration — new module
+6. Phase 6: Reporting + data migration
+7. Phase 7: LLM fundamental data + RW formula advisors + timing-aware backtesting (NEW)
+
+---
+
+## 10. Optional Python Worker Fallback
+
+### 10.1 Problem
+When the stockmarket app runs in a container, the PHP process cannot `proc_open()` a local Python interpreter. To preserve the existing bare-metal behaviour while supporting containerized deployments, controllers now use a curl-fallback to a FastAPI worker.
+
+### 10.2 Worker Endpoint
+`POST /worker/refresh_prices` accepts:
+- `symbol` — single ticker to fetch/update
+- `full_history` — boolean; bypass day calc
+- `days` — optional day window
+
+The worker shells out to `fetch_prices.py` and returns HTTP status.
+
+### 10.3 Configuration
+| Variable | Purpose | Default |
 |---|---|---|
-| `entry_day_of_week` | Per-advisor | Day of week to prefer for entries (0=Mon ... 4=Fri) |
-| `exit_day_of_week` | Per-advisor | Day of week to prefer for exits |
-| `entry_week_of_month` | Per-advisor | Week-of-month bias for entries (1=first ... 5=last) |
-| `exit_week_of_month` | Per-advisor | Week-of-month bias for exits |
-| `market_cap_position_limit` | Per-advisor | Base position % scaled by market cap tier (e.g., large cap = 5%, small cap = 2%) |
-| `sector_rotation_enabled` | Per-advisor | Whether sector momentum timing signals are active |
+| `PYTHON_WORKER_URL` | URL of FastAPI worker | unset (bare metal uses `proc_open`) |
+| `WORKER_PORT` | Worker container port | `8000` |
+| `STOCKMARKET_PYTHON_DIR` | Host path mounted into the worker container | `/home/ksf_stockmarket/ksf_stockmarket/python` |
 
-### 8.2 Backtest Engine Extension
+### 10.4 Container Deployment (optional)
+`ksf_Infrastructure` defines an optional service `stockmarket-python-worker` on profile `stockmarket`. Enable via Ansible with `enable_stockmarket_python_worker=true` or via Podman Compose with `--profile stockmarket`.
 
-The backtest engine (`src/backtest/optimize.py`, `five_year_backtest.py`) extends to:
+---
 
-1. **Accept timing configuration** per advisor/scenario
-2. **Filter trades** by timing rules:
-   - Only allow entries on preferred entry day (or within N days of it)
-   - Only allow exits on preferred exit day
-   - Only allow entries during preferred week-of-month
-3. **Apply market-cap-aware position sizing**:
-   - Compute market cap tier for each stock (micro < $300M, small < $2B, mid < $10B, large >= $10B)
-   - Scale position % by tier (capped at advisor max)
-4. **Apply sector rotation timing** (if enabled):
-   - Compute sector momentum (e.g., 50-day SMA of sector ETF)
-   - Only allow entries in sectors with confirmed momentum
-   - Reduce/exit positions in sectors with fading momentum
-5. **Report** per-scenario metrics:
-   - Win rate, Sharpe ratio, max drawdown, total return
-   - By timing configuration (so user can compare scenarios)
+## 11. Methodology Alignment (BABOK / PMBOK)
 
-### 8.3 Timing Optimization
+### 11.1 Knowledge Area Mapping
 
-Backtest engine supports scanning timing configurations:
+| System Capability | BABOK Knowledge Area | PMBOK Process Group | Primary Artifacts |
+|---|---|---|---|
+| Portfolio tracking + taxonomies | Business Analysis Planning and Monitoring, Requirements Analysis | Planning, Executing | `requirements-specification.md`, `traceability-matrix.md`, `architecture-document.md` |
+| Advisor hiring + recommendations | Requirements Analysis, Solution Evaluation | Planning, Executing, Monitoring | `business-requirements.md`, `solution-design.md`, advisor migrations/backends |
+| T+2 settlement + cash flow | Requirements Analysis, Solution Assessment and Validation | Executing, Monitoring and Controlling | `strategy_pipeline.py`, `runner.py`, `rules_backtest.py` |
+| Optional risk rules (leverage/buffer/blacklist) | Requirements Analysis, Solution Evaluation | Planning, Executing | `strategy_rules` schema seeds, `AdminSettingsController` |
+| ATR trailing stops + backtest | Requirements Analysis, Solution Assessment and Validation | Planning, Executing | `risk.py`, `rules_backtest.py`, `atr_methodology.php` |
+| Multi-gateway delivery (email/Discord/WhatsApp) | Requirements Analysis, Solution Evaluation | Executing, Monitoring and Controlling | `advisor_notifier.py`, `AdvisorNotificationController` |
+| Heat maps + performance reports | Requirements Analysis, Solution Assessment and Validation | Planning, Executing | `performance.py`, `reports.php` template |
+| Rebalancing workflows | Requirements Analysis, Solution Evaluation | Planning, Executing | `rebalancing.py`, `RebalancingController` |
+| LLM admin console + fallback chain | Requirements Analysis, Solution Evaluation | Planning, Executing | `AdminSettingsController`, `LLMService`, FR-11.6 |
+| LLM fundamental data tables | Requirements Analysis, Solution Evaluation | Planning, Executing | `llm_*` tables, FR-11 |
+| Timing-aware backtesting | Requirements Analysis, Solution Assessment and Validation | Planning, Executing | `TimingService`, FR-16 |
+| Research Wizard formula advisors | Requirements Analysis, Solution Evaluation | Planning, Executing | `RwFormulaParser`, `ZacksFieldResolver`, FR-12 |
 
-```python
-# Example: scan day-of-week for entries
-for entry_dow in range(5):  # Mon-Fri
-    for exit_dow in range(5):
-        config = TimingConfig(entry_dow=entry_dow, exit_dow=exit_dow)
-        result = backtest.run(config=config)
-        results.append((entry_dow, exit_dow, result.sharpe, result.win_rate))
-```
+### 11.2 BABOK Alignment Summary
 
-## 9. LLM Admin Screen Design (NEW -- FR-13)
+- **Strategy Analysis**: requirements/BRD, stakeholder elicitation captured in `business-requirements.md` BR-1..BR-9.
+- **Requirements Analysis**: formalized in `requirements-specification.md` with FR/NFR IDs aligned to BR traceability, including FR-11 (LLM data), FR-12 (RW formulas), FR-16 (timing), FR-14 (Zacks RW).
+- **Solution Assessment and Validation**: ATR methodology, backtest results, timing analysis, and T+2 settlement validation feed acceptance criteria.
+- **Business Analysis Planning and Monitoring**: documentation versioning, change log, traceability matrix maintained in `docs/`.
 
-### 9.1 Admin Screen Layout
+### 11.3 PMBOK Alignment Summary
 
-```
-URL: /admin/llm-config (or ?action=admin&view=llm-config)
-Role: admin only
+- **Scope Management**: PortfolioPerformance parity target list = formal scope baseline; traceability matrix links requirements to design and tests.
+- **Schedule Management**: nightly cron, weekly backtest cadence, and advisor daily signal cadence modeled as scheduled deliverables.
+- **Cost Management**: backtest simulation validates capital-at-risk rules before live deployment.
+- **Quality Management**: validation scripts, syntax checks, schema migrations, and RW formula parser unit tests enforce build quality.
+- **Risk Management**: emergency buffer, leverage/margin rules, ATR stops, and LLM fallback chain are formal risk response strategies.
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+ LLM Provider Configuration                                    +
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+ Primary Endpoint                                              +
-+   URL:    [_________________________]                        +
-+   Model:  [_________________________]                        +
-+   Token:  [_________________________]  (password field)     +
-+   [Test Connection]                                           +
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+ Secondary Endpoint (fallback)                                +
-+   URL:    [_________________________]                        +
-+   Model:  [_________________________]                        +
-+   Token:  [_________________________]  (password field)     +
-+   [Test Connection]                                           +
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+ Fallback Endpoint (last resort)                              +
-+   URL:    [_________________________]                        +
-+   Model:  [_________________________]                        +
-+   Token:  [_________________________]  (password field)     +
-+   [Test Connection]                                           +
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+ Per-Advisor LLM Profile Assignment                           +
-+   [Advisor dropdown] -> [LLM config set dropdown]            +
-+   [Add mapping] [Remove mapping]                             +
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-+ Connection Health Dashboard                                   +
-+   Primary:    [OK] Online (120ms) / [FAIL] Offline (error)          +
-+   Secondary:  [OK] Online (150ms) / [FAIL] Offline (error)          +
-+   Fallback:   [OK] Online (200ms) / [FAIL] Offline (error)          +
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-```
+### 11.4 Supporting Diagrams
 
-### 9.2 Credential Storage
+Architecture UML views are in `docs/methodology/uml/`:
+- `deployment.puml` — deployment context
+- `class.puml` — core class diagram
+- `sequence.puml` — advisor recommendation sequence
+- `state.puml` — alert lifecycle state machine
+- `activity.puml` — daily run activity flow
 
-LLM tokens stored in `system_settings` table with `setting_type = 'llm_token'` and `value` encrypted. Never logged. Admin screen requires admin role. Test connection uses token but does not log it.
-
-## 10. Change Log
-
-- 2026-09-18: Added Sec.6 LLM Fundamental Analysis, Sec.7 RW Formula Integration, Sec.8 Timing-Aware Trading, Sec.9 LLM Admin Screen (FR-11, FR-12, FR-16, FR-13)
-- 2026-07: Added Phase 5 (Paperclip Zero-Human Trading Firm: FR-7, FR-8, FR-9, FR-10)
+All diagrams map to the knowledge areas and process groups above.

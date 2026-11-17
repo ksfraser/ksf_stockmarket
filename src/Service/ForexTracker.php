@@ -1,4 +1,10 @@
 <?php
+
+declare(strict_types=1);
+
+namespace ksfraser\StockMarket\Service;
+
+
 /**
  * Forex Tracker - For EUR/USD, USD/CAD, etc.
  * 

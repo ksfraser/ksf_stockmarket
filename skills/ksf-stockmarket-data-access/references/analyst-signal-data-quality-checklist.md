@@ -1,0 +1,1 @@
+# Analyst Signal Data-Quality Checklist (2026-09-22 worked example)

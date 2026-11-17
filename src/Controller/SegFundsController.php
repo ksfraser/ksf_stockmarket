@@ -1,4 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
+namespace ksfraser\StockMarket\Controller;
+
+use ksfraser\StockMarket\Model\Database;
+use ksfraser\StockMarket\Util\SegFundFilter;
+
+
+
 /**
  * SegFundsController — handles segregated fund listing, detail, and search.
  */
@@ -11,9 +21,8 @@ class SegFundsController {
 
     /**
      * GET /?action=seg_funds — List all seg funds with filters.
-     * Supports BR-11/FR-11 risk_rating, death_pct, mat_pct, and bucket_1y/5y/10y/ytd.
      */
-    public function listFunds(
+    public function index(
         string $carrier = '',
         string $category = '',
         string $series = '',

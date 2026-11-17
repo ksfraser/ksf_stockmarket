@@ -20,6 +20,16 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Bootstrap: manually load .env (Dotenv safeLoad fails silently in this environment)
+$content = file_get_contents($APP_ROOT . '/.env');
+$lines = explode("\n", $content);
+foreach ($lines as $line) {
+    $line = trim($line);
+    if (strpos($line, '#') === 0 || $line === '') continue;
+    $parts = explode('=', $line, 2);
+    if (count($parts) === 2) putenv($parts[0] . '=' . $parts[1]);
+}
+
 // Autoload — PSR-4 style for App namespace
 spl_autoload_register(function ($class) {
     // App\ namespace → src/
